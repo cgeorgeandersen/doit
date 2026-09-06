@@ -1,0 +1,369 @@
+date,customer_id,customer_name,email,plan,mrr,channel,rating,comment
+2026-03-02,C-1826,Lena Ashford,lashford@kestrel.dev,Business,749,In-app survey,1,Been on hold 9 minutes twice today. Gave up both times.
+2026-03-03,C-1385,Bjorn Bright,bbright@meridiangroup.net,Starter,49,Support ticket,5,Billing issue fixed same day and they credited me without me asking.
+2026-03-04,C-1700,Jonah Adeyemi,jadeyemi@havenlabs.io,Starter,49,In-app survey,3,Stopped charging entirely after a month. Not acceptable for the price.
+2026-03-04,C-2043,Emeka Kowalski,ekowalski@oakfield.org,Business,749,Support ticket,2,You billed me after I cancelled. That's the third month running.
+2026-03-04,C-1532,Gretchen Kowalski,gkowalski@kestrel.dev,Business,749,In-app survey,1,Rude response to a simple question. Made me feel like an inconvenience.
+2026-03-05,C-2008,Cyrus Barreto,cbarreto@meridiangroup.net,Growth,199,Support ticket,3,The unit failed after 10 weeks. Same fault as the one you replaced.
+2026-03-05,C-1889,Colette Ashford,cashford@northwind.co,Business,749,App store review,3,Received the order. Setting it up this week.
+2026-03-05,C-1567,Pascal Ferrante,pferrante@oakfield.org,Growth,199,In-app survey,1,Your chatbot loops me back to the same article that doesn't answer the question.
+2026-03-05,C-1070,Emeka Barreto,ebarreto@oakfield.org,Starter,49,Support ticket,3,The new update wiped my saved filters and there's no way to get them back.
+2026-03-06,C-1406,Renee Nakamura,rnakamura@brightbay.com,Growth,199,Email,1,Dashboard has been showing stale numbers for days. I can't trust anything in it.
+2026-03-06,C-1917,Leif Mbeki,lmbeki@meridiangroup.net,Enterprise,2900,Support ticket,5,Support sorted this in under an hour. Genuinely impressed.
+2026-03-06,C-1861,Mira Delacroix,mdelacroix@meridiangroup.net,Growth,199,Support ticket,1,Status page said operational the whole time it was down.
+2026-03-07,C-1301,Mira Fontaine,mfontaine@havenlabs.io,Starter,49,Support ticket,5,"Quick, clear answer on the first reply. Exactly what I needed."
+2026-03-07,C-1959,Marisol Bright,mbright@oakfield.org,Business,749,Phone log,2,Opened a ticket 30 days ago and still no reply. Not even an acknowledgement.
+2026-03-08,C-1679,Aisha Adeyemi,aadeyemi@kestrel.dev,Growth,199,Support ticket,1,Support closed my ticket without resolving it and marked it solved. That's just gaming the metric.
+2026-03-08,C-1546,Yara Thibault,ythibault@oakfield.org,Starter,49,App store review,5,Love the update. The keyboard shortcuts save me real time.
+2026-03-09,C-1553,Gretchen Vasquez,gvasquez@northwind.co,Growth,199,Support ticket,5,The agent was patient and actually understood the problem. Rare and appreciated.
+2026-03-09,C-1847,Gretchen Rasmussen,grasmussen@havenlabs.io,Business,749,In-app survey,3,It's fine. Does what it says.
+2026-03-09,C-1462,Hugo Okonkwo,hokonkwo@northwind.co,Starter,49,Support ticket,2,Restocking fee wasn't mentioned anywhere until after I shipped it back.
+2026-03-10,C-1140,Nadia Venkatesan,nvenkatesan@oakfield.org,Starter,49,In-app survey,5,Support sorted this in under an hour. Genuinely impressed.
+2026-03-11,C-1392,Renee Ivanova,rivanova@meridiangroup.net,Growth,199,In-app survey,3,"Average experience overall, no strong feelings either way."
+2026-03-11,C-2001,Iris Sandoval,isandoval@havenlabs.io,Starter,49,Email,1,No response to my last two emails. I don't know if anyone is even reading them.
+2026-03-11,C-1070,Emeka Barreto,ebarreto@oakfield.org,Starter,49,Email,5,Fast dispatch and the tracking was accurate the whole way.
+2026-03-14,C-1224,Devon Muldoon,dmuldoon@oakfield.org,Growth,199,Support ticket,4,Received the order. Setting it up this week.
+2026-03-14,C-2015,Anya Ashford,aashford@meridiangroup.net,Starter,49,In-app survey,3,"Average experience overall, no strong feelings either way."
+2026-03-15,C-1574,Priya Whitfield,pwhitfield@northwind.co,Growth,199,In-app survey,5,Support sorted this in under an hour. Genuinely impressed.
+2026-03-15,C-1560,Aisha Mbeki,ambeki@havenlabs.io,Growth,199,Support ticket,1,The unit failed after 12 weeks. Same fault as the one you replaced.
+2026-03-15,C-1378,Amir Barreto,abarreto@brightbay.com,Business,749,Email,2,Password reset email never arrives. Checked spam. Locked out for 20 days now.
+2026-03-16,C-1105,Declan Duarte,dduarte@havenlabs.io,Business,749,In-app survey,4,"Build quality is excellent, feels solid. Very happy with it."
+2026-03-17,C-1378,Amir Barreto,abarreto@brightbay.com,Business,749,Email,1,Return has been 'processing' for 25 weeks. Where is my money?
+2026-03-17,C-1924,Silas Ferrante,sferrante@northwind.co,Growth,199,In-app survey,3,Delivered on time. Nothing to report.
+2026-03-18,C-1602,Gretchen Venkatesan,gvenkatesan@meridiangroup.net,Starter,49,Support ticket,4,How do I change the billing contact on the account?
+2026-03-19,C-1651,Priya Adeyemi,padeyemi@northwind.co,Starter,49,Support ticket,1,Return has been 'processing' for 12 weeks. Where is my money?
+2026-03-19,C-1203,Nadia Barreto,nbarreto@oakfield.org,Growth,199,Support ticket,5,"Build quality is excellent, feels solid. Very happy with it."
+2026-03-19,C-1749,Rosalind Muldoon,rmuldoon@oakfield.org,Starter,49,App store review,5,"Friendly, competent, no script-reading. Great experience."
+2026-03-19,C-1861,Mira Delacroix,mdelacroix@meridiangroup.net,Growth,199,Email,3,Delivered on time. Nothing to report.
+2026-03-19,C-1630,Ike Bright,ibright@kestrel.dev,Starter,49,Support ticket,5,The agent was patient and actually understood the problem. Rare and appreciated.
+2026-03-20,C-1840,Leif Sandoval,lsandoval@northwind.co,Growth,199,Support ticket,4,It's fine. Does what it says.
+2026-03-20,C-1763,Tomas Delacroix,tdelacroix@kestrel.dev,Starter,49,Support ticket,3,Moving the export feature behind Enterprise feels like a cash grab.
+2026-03-20,C-1315,Jonah Halvorsen,jhalvorsen@oakfield.org,Starter,49,Email,4,Delivered on time. Nothing to report.
+2026-03-20,C-1889,Colette Ashford,cashford@northwind.co,Business,749,Support ticket,4,The agent was patient and actually understood the problem. Rare and appreciated.
+2026-03-22,C-1798,Otto Ostrowski,oostrowski@kestrel.dev,Starter,49,Email,3,"Average experience overall, no strong feelings either way."
+2026-03-22,C-1378,Amir Barreto,abarreto@brightbay.com,Business,749,In-app survey,5,"Been using it daily for three months, still perfect."
+2026-03-22,C-1196,Colette Duarte,cduarte@oakfield.org,Growth,199,Phone log,5,The new dashboard is a big improvement. Much faster.
+2026-03-23,C-2064,Rafael Bergstrom,rbergstrom@brightbay.com,Growth,199,Phone log,1,The unit failed after 30 weeks. Same fault as the one you replaced.
+2026-03-23,C-1434,Devon Quintero,dquintero@meridiangroup.net,Growth,199,In-app survey,2,Restocking fee wasn't mentioned anywhere until after I shipped it back.
+2026-03-24,C-1203,Nadia Barreto,nbarreto@oakfield.org,Growth,199,App store review,3,Does the Business plan include the API? The pricing page is ambiguous.
+2026-03-24,C-1630,Ike Bright,ibright@kestrel.dev,Starter,49,Email,4,It's fine. Does what it says.
+2026-03-26,C-1560,Aisha Mbeki,ambeki@havenlabs.io,Growth,199,App store review,4,Billing issue fixed same day and they credited me without me asking.
+2026-03-26,C-1882,Iris Venkatesan,ivenkatesan@havenlabs.io,Business,749,Support ticket,5,The new dashboard is a big improvement. Much faster.
+2026-03-28,C-1630,Ike Bright,ibright@kestrel.dev,Starter,49,Phone log,4,It's fine. Does what it says.
+2026-03-28,C-1973,Colette Kowalski,ckowalski@northwind.co,Business,749,Phone log,1,Still waiting on my delivery. Tracking hasn't updated in 11 days and nobody can tell me where it is.
+2026-03-29,C-1581,Yara Duarte,yduarte@meridiangroup.net,Starter,49,Support ticket,3,Still waiting on my delivery. Tracking hasn't updated in 40 days and nobody can tell me where it is.
+2026-03-29,C-1427,Lena Sato,lsato@meridiangroup.net,Business,749,In-app survey,3,Delivered on time. Nothing to report.
+2026-03-29,C-1294,Yara Venkatesan,yvenkatesan@havenlabs.io,Starter,49,In-app survey,4,Received the order. Setting it up this week.
+2026-03-29,C-1301,Mira Fontaine,mfontaine@havenlabs.io,Starter,49,Email,1,Package showed up damaged again. Second time this month. Whoever is doing your fulfilment is careless.
+2026-03-29,C-1042,Anya Ferrante,aferrante@northwind.co,Growth,199,App store review,3,Received the order. Setting it up this week.
+2026-03-30,C-1238,Marisol Ostrowski,mostrowski@meridiangroup.net,Growth,199,App store review,3,Is there a way to export the report to CSV?
+2026-03-30,C-1686,Iris Rasmussen,irasmussen@brightbay.com,Starter,49,In-app survey,2,The site logged me out 30 times while I was completing an order.
+2026-03-30,C-1854,Jonah Bergstrom,jbergstrom@meridiangroup.net,Starter,49,In-app survey,3,"Average experience overall, no strong feelings either way."
+2026-03-31,C-1567,Pascal Ferrante,pferrante@oakfield.org,Growth,199,Support ticket,1,Package showed up damaged again. Second time this month. Whoever is doing your fulfilment is careless.
+2026-03-31,C-1665,Kwame Perreault,kperreault@havenlabs.io,Starter,49,In-app survey,3,The return portal rejects my order number and there's no way around it.
+2026-04-01,C-1098,Aisha Thibault,athibault@havenlabs.io,Growth,199,In-app survey,1,The return portal rejects my order number and there's no way around it.
+2026-04-03,C-1763,Tomas Delacroix,tdelacroix@kestrel.dev,Starter,49,Support ticket,5,"Been using it daily for three months, still perfect."
+2026-04-03,C-1231,Camila Adeyemi,cadeyemi@havenlabs.io,Growth,199,Phone log,2,Opened a ticket 12 days ago and still no reply. Not even an acknowledgement.
+2026-04-04,C-1875,Priya Lindqvist,plindqvist@kestrel.dev,Starter,49,In-app survey,4,Received the order. Setting it up this week.
+2026-04-04,C-1511,Iris Muldoon,imuldoon@northwind.co,Business,749,Support ticket,5,Fast dispatch and the tracking was accurate the whole way.
+2026-04-06,C-1609,Beatriz Nakamura,bnakamura@brightbay.com,Enterprise,2900,Email,5,The agent was patient and actually understood the problem. Rare and appreciated.
+2026-04-06,C-1133,Ike Castellanos,icastellanos@havenlabs.io,Enterprise,2900,In-app survey,2,The new pricing is hard to justify. We're paying 9% more for the same feature set.
+2026-04-06,C-1917,Leif Mbeki,lmbeki@meridiangroup.net,Enterprise,2900,Email,2,Seams came apart on first use. Clearly not inspected.
+2026-04-07,C-1049,Devon Perreault,dperreault@kestrel.dev,Growth,199,Support ticket,4,Received the order. Setting it up this week.
+2026-04-07,C-1588,Beatriz Thibault,bthibault@meridiangroup.net,Growth,199,In-app survey,3,Does the Business plan include the API? The pricing page is ambiguous.
+2026-04-07,C-1791,Rafael Perreault,rperreault@kestrel.dev,Growth,199,App store review,3,Delivered on time. Nothing to report.
+2026-04-08,C-1917,Leif Mbeki,lmbeki@meridiangroup.net,Enterprise,2900,Phone log,5,"Been using it daily for three months, still perfect."
+2026-04-09,C-1602,Gretchen Venkatesan,gvenkatesan@meridiangroup.net,Starter,49,Phone log,2,Two-factor keeps rejecting valid codes. I've had to phone in every single time.
+2026-04-10,C-1546,Yara Thibault,ythibault@oakfield.org,Starter,49,Email,5,"Been using it daily for three months, still perfect."
+2026-04-11,C-1182,Fenwick Thibault,fthibault@havenlabs.io,Starter,49,Email,3,Third defective item in a row. At this point I don't trust the QC.
+2026-04-11,C-1931,Sunita Fontaine,sfontaine@brightbay.com,Growth,199,Support ticket,1,Search is broken. Returns nothing for terms that obviously exist.
+2026-04-11,C-1980,Zainab Ashford,zashford@oakfield.org,Business,749,Support ticket,5,Billing issue fixed same day and they credited me without me asking.
+2026-04-11,C-1952,Bjorn Vasquez,bvasquez@meridiangroup.net,Starter,49,In-app survey,3,"Charged twice this month. I need the duplicate refunded today, not in 5-7 business days."
+2026-04-13,C-1161,Hollis Barreto,hbarreto@oakfield.org,Enterprise,2900,In-app survey,5,The new dashboard is a big improvement. Much faster.
+2026-04-13,C-1161,Hollis Barreto,hbarreto@oakfield.org,Enterprise,2900,App store review,4,Does the Business plan include the API? The pricing page is ambiguous.
+2026-04-13,C-1462,Hugo Okonkwo,hokonkwo@northwind.co,Starter,49,Support ticket,5,"Quick, clear answer on the first reply. Exactly what I needed."
+2026-04-13,C-1602,Gretchen Venkatesan,gvenkatesan@meridiangroup.net,Starter,49,App store review,5,The agent was patient and actually understood the problem. Rare and appreciated.
+2026-04-14,C-1049,Devon Perreault,dperreault@kestrel.dev,Growth,199,Email,2,"App crashes every time I open the reports tab. iOS, latest build."
+2026-04-14,C-1903,Owen Kowalski,okowalski@brightbay.com,Business,749,In-app survey,3,Stopped charging entirely after a month. Not acceptable for the price.
+2026-04-15,C-1791,Rafael Perreault,rperreault@kestrel.dev,Growth,199,Support ticket,5,"Build quality is excellent, feels solid. Very happy with it."
+2026-04-16,C-1385,Bjorn Bright,bbright@meridiangroup.net,Starter,49,Support ticket,5,Whoever I spoke to was fantastic. Went well beyond what I expected.
+2026-04-17,C-1483,Ike Ivanova,iivanova@meridiangroup.net,Starter,49,In-app survey,3,Package showed up damaged again. Second time this month. Whoever is doing your fulfilment is careless.
+2026-04-18,C-2085,Tomas Sato,tsato@meridiangroup.net,Growth,199,Email,3,How do I change the billing contact on the account?
+2026-04-18,C-1455,Vera Castellanos,vcastellanos@northwind.co,Growth,199,In-app survey,2,The maintenance window took the system down during our month end. Zero warning.
+2026-04-18,C-1707,Vera Ivanova,vivanova@brightbay.com,Business,749,Phone log,3,Delivered on time. Nothing to report.
+2026-04-20,C-1518,Anya Fontaine,afontaine@brightbay.com,Starter,49,In-app survey,5,"Good value for what we get, especially at the Growth tier."
+2026-04-21,C-1476,Aisha Halvorsen,ahalvorsen@oakfield.org,Business,749,Support ticket,2,Been on hold 20 minutes twice today. Gave up both times.
+2026-04-22,C-1840,Leif Sandoval,lsandoval@northwind.co,Growth,199,In-app survey,2,Invoice doesn't match the quote at all. There's an extra $3 line item nobody explained.
+2026-04-23,C-1294,Yara Venkatesan,yvenkatesan@havenlabs.io,Starter,49,Support ticket,3,Delivered on time. Nothing to report.
+2026-04-23,C-2078,Otto Bergstrom,obergstrom@oakfield.org,Growth,199,Phone log,2,"Delivery window was 2-4 days, it took 14. I planned an install day around this and lost it."
+2026-04-23,C-1812,Camila Achebe,cachebe@havenlabs.io,Business,749,In-app survey,3,How do I change the billing contact on the account?
+2026-04-25,C-1504,Owen Thibault,othibault@meridiangroup.net,Enterprise,2900,In-app survey,1,Nobody told me the item was backordered. Found out 7 days later by chase-emailing.
+2026-04-26,C-1280,Tilda Eriksen,teriksen@kestrel.dev,Starter,49,Support ticket,4,It's fine. Does what it says.
+2026-04-26,C-1056,Hollis Ashford,hashford@northwind.co,Enterprise,2900,Email,4,"Rollout went well overall, though the reporting export is slower than we'd like."
+2026-04-26,C-1840,Leif Sandoval,lsandoval@northwind.co,Growth,199,Support ticket,3,Is there a way to export the report to CSV?
+2026-04-28,C-1882,Iris Venkatesan,ivenkatesan@havenlabs.io,Business,749,App store review,5,Billing issue fixed same day and they credited me without me asking.
+2026-04-28,C-1693,Anya Quintero,aquintero@brightbay.com,Growth,199,Email,5,The agent was patient and actually understood the problem. Rare and appreciated.
+2026-04-30,C-1413,Hollis Vasquez,hvasquez@meridiangroup.net,Business,749,Email,2,The agent was dismissive and talked over me the entire call.
+2026-04-30,C-1077,Aisha Duarte,aduarte@meridiangroup.net,Starter,49,Email,5,Support sorted this in under an hour. Genuinely impressed.
+2026-04-30,C-1518,Anya Fontaine,afontaine@brightbay.com,Starter,49,App store review,1,Order arrived 9 days late with no warning. This is not what I paid expedited shipping for.
+2026-04-30,C-1581,Yara Duarte,yduarte@meridiangroup.net,Starter,49,Email,3,Been on hold 9 minutes twice today. Gave up both times.
+2026-05-02,C-2029,Rafael Achebe,rachebe@northwind.co,Growth,199,In-app survey,2,The agent was dismissive and talked over me the entire call.
+2026-05-02,C-1931,Sunita Fontaine,sfontaine@brightbay.com,Growth,199,Support ticket,4,"Good value for what we get, especially at the Growth tier."
+2026-05-03,C-1959,Marisol Bright,mbright@oakfield.org,Business,749,In-app survey,5,"Good value for what we get, especially at the Growth tier."
+2026-05-03,C-2057,Silas Fontaine,sfontaine@kestrel.dev,Enterprise,2900,App store review,1,Stopped charging entirely after a month. Not acceptable for the price.
+2026-05-05,C-1315,Jonah Halvorsen,jhalvorsen@oakfield.org,Starter,49,Email,5,"Quick, clear answer on the first reply. Exactly what I needed."
+2026-05-06,C-1840,Leif Sandoval,lsandoval@northwind.co,Growth,199,Support ticket,3,Does the Business plan include the API? The pricing page is ambiguous.
+2026-05-07,C-1511,Iris Muldoon,imuldoon@northwind.co,Business,749,Support ticket,2,The maintenance window took the system down during our month end. Zero warning.
+2026-05-08,C-1371,Colette Nakamura,cnakamura@havenlabs.io,Growth,199,Email,1,The new pricing is hard to justify. We're paying 20% more for the same feature set.
+2026-05-09,C-1427,Lena Sato,lsato@meridiangroup.net,Business,749,App store review,3,Password reset email never arrives. Checked spam. Locked out for 5 days now.
+2026-05-09,C-2078,Otto Bergstrom,obergstrom@oakfield.org,Growth,199,App store review,3,How do I change the billing contact on the account?
+2026-05-11,C-1560,Aisha Mbeki,ambeki@havenlabs.io,Growth,199,Email,2,The courier left it in the rain. Box was soaked through. Really disappointing.
+2026-05-11,C-1126,Pascal Adeyemi,padeyemi@northwind.co,Growth,199,In-app survey,5,The new dashboard is a big improvement. Much faster.
+2026-05-11,C-1630,Ike Bright,ibright@kestrel.dev,Starter,49,Support ticket,5,Support sorted this in under an hour. Genuinely impressed.
+2026-05-11,C-1924,Silas Ferrante,sferrante@northwind.co,Growth,199,Phone log,2,Status page said operational the whole time it was down.
+2026-05-11,C-1182,Fenwick Thibault,fthibault@havenlabs.io,Starter,49,In-app survey,3,How do I change the billing contact on the account?
+2026-05-13,C-1609,Beatriz Nakamura,bnakamura@brightbay.com,Enterprise,2900,Email,3,"App crashes every time I open the reports tab. iOS, latest build."
+2026-05-13,C-1084,Sunita Okonkwo,sokonkwo@oakfield.org,Enterprise,2900,Support ticket,1,Stopped charging entirely after a month. Not acceptable for the price.
+2026-05-14,C-1406,Renee Nakamura,rnakamura@brightbay.com,Growth,199,App store review,3,Surprise price increase with no notice. Finding out via a credit card statement is a terrible look.
+2026-05-14,C-1084,Sunita Okonkwo,sokonkwo@oakfield.org,Enterprise,2900,Support ticket,2,Two-factor keeps rejecting valid codes. I've had to phone in every single time.
+2026-05-14,C-1371,Colette Nakamura,cnakamura@havenlabs.io,Growth,199,In-app survey,1,Search is broken. Returns nothing for terms that obviously exist.
+2026-05-14,C-1126,Pascal Adeyemi,padeyemi@northwind.co,Growth,199,App store review,2,"App crashes every time I open the reports tab. iOS, latest build."
+2026-05-14,C-1301,Mira Fontaine,mfontaine@havenlabs.io,Starter,49,In-app survey,3,"Average experience overall, no strong feelings either way."
+2026-05-15,C-1056,Hollis Ashford,hashford@northwind.co,Enterprise,2900,In-app survey,1,Restocking fee wasn't mentioned anywhere until after I shipped it back.
+2026-05-15,C-1119,Marcus Rasmussen,mrasmussen@kestrel.dev,Business,749,Support ticket,5,"Genuinely excellent service today, thank you."
+2026-05-16,C-1560,Aisha Mbeki,ambeki@havenlabs.io,Growth,199,Email,4,Is there a way to export the report to CSV?
+2026-05-16,C-1707,Vera Ivanova,vivanova@brightbay.com,Business,749,Support ticket,2,Nobody told me the item was backordered. Found out 25 days later by chase-emailing.
+2026-05-16,C-1931,Sunita Fontaine,sfontaine@brightbay.com,Growth,199,Phone log,2,Been on hold 5 minutes twice today. Gave up both times.
+2026-05-17,C-1308,Gretchen Duarte,gduarte@brightbay.com,Growth,199,In-app survey,3,Stopped charging entirely after a month. Not acceptable for the price.
+2026-05-19,C-1490,Nadia Adeyemi,nadeyemi@oakfield.org,Starter,49,Support ticket,5,The agent was patient and actually understood the problem. Rare and appreciated.
+2026-05-19,C-1434,Devon Quintero,dquintero@meridiangroup.net,Growth,199,In-app survey,2,Your chatbot loops me back to the same article that doesn't answer the question.
+2026-05-19,C-1952,Bjorn Vasquez,bvasquez@meridiangroup.net,Starter,49,Support ticket,5,"Quick, clear answer on the first reply. Exactly what I needed."
+2026-05-20,C-1903,Owen Kowalski,okowalski@brightbay.com,Business,749,Email,2,Shipment split into three boxes and only two arrived. Nobody flagged it.
+2026-05-20,C-1343,Colette Fontaine,cfontaine@brightbay.com,Starter,49,App store review,1,The courier left it in the rain. Box was soaked through. Really disappointing.
+2026-05-20,C-1847,Gretchen Rasmussen,grasmussen@havenlabs.io,Business,749,In-app survey,5,Support sorted this in under an hour. Genuinely impressed.
+2026-05-21,C-1077,Aisha Duarte,aduarte@meridiangroup.net,Starter,49,In-app survey,1,Whoever handled my case was blunt to the point of hostile.
+2026-05-21,C-2022,Emeka Nakamura,enakamura@brightbay.com,Growth,199,Phone log,5,Whoever I spoke to was fantastic. Went well beyond what I expected.
+2026-05-21,C-1665,Kwame Perreault,kperreault@havenlabs.io,Starter,49,Email,5,The new dashboard is a big improvement. Much faster.
+2026-05-22,C-1189,Yara Nakamura,ynakamura@northwind.co,Starter,49,Email,3,Received the order. Setting it up this week.
+2026-05-22,C-1084,Sunita Okonkwo,sokonkwo@oakfield.org,Enterprise,2900,Phone log,2,Billing has been wrong three months running and each time I have to chase it myself.
+2026-05-24,C-1336,Emeka Venkatesan,evenkatesan@kestrel.dev,Business,749,Email,4,Arrived a day early and well packed. No complaints at all.
+2026-05-24,C-1462,Hugo Okonkwo,hokonkwo@northwind.co,Starter,49,In-app survey,2,Nobody told me the item was backordered. Found out 2 days later by chase-emailing.
+2026-05-24,C-1567,Pascal Ferrante,pferrante@oakfield.org,Growth,199,In-app survey,3,"App crashes every time I open the reports tab. iOS, latest build."
+2026-05-25,C-1630,Ike Bright,ibright@kestrel.dev,Starter,49,Email,1,Third defective item in a row. At this point I don't trust the QC.
+2026-05-26,C-1364,Marisol Delacroix,mdelacroix@havenlabs.io,Starter,49,Support ticket,3,I've explained my issue to four different agents. Nobody reads the ticket history.
+2026-05-26,C-1532,Gretchen Kowalski,gkowalski@kestrel.dev,Business,749,In-app survey,5,Fast dispatch and the tracking was accurate the whole way.
+2026-05-26,C-1245,Tomas Vasquez,tvasquez@meridiangroup.net,Business,749,Email,3,Does the Business plan include the API? The pricing page is ambiguous.
+2026-05-26,C-1098,Aisha Thibault,athibault@havenlabs.io,Growth,199,In-app survey,3,Build quality feels cheaper than the previous generation. The hinge is already loose.
+2026-05-27,C-1805,Iris Eriksen,ieriksen@meridiangroup.net,Enterprise,2900,Phone log,4,Arrived a day early and well packed. No complaints at all.
+2026-05-28,C-1294,Yara Venkatesan,yvenkatesan@havenlabs.io,Starter,49,In-app survey,2,No response to my last two emails. I don't know if anyone is even reading them.
+2026-05-28,C-1546,Yara Thibault,ythibault@oakfield.org,Starter,49,In-app survey,3,How do I change the billing contact on the account?
+2026-05-28,C-1119,Marcus Rasmussen,mrasmussen@kestrel.dev,Business,749,Phone log,3,Received the wrong colour and the wrong size. Order was clear.
+2026-05-28,C-1077,Aisha Duarte,aduarte@meridiangroup.net,Starter,49,Support ticket,1,Order arrived 2 days late with no warning. This is not what I paid expedited shipping for.
+2026-05-28,C-1658,Otto Whitfield,owhitfield@meridiangroup.net,Business,749,Support ticket,3,Does the Business plan include the API? The pricing page is ambiguous.
+2026-05-29,C-1924,Silas Ferrante,sferrante@northwind.co,Growth,199,In-app survey,2,Received the wrong colour and the wrong size. Order was clear.
+2026-05-30,C-1273,Renee Ashford,rashford@northwind.co,Enterprise,2900,Email,5,"Quick, clear answer on the first reply. Exactly what I needed."
+2026-05-31,C-1987,Jonah Ferrante,jferrante@brightbay.com,Starter,49,In-app survey,2,Late again. I've stopped promising my own customers dates because of your shipping.
+2026-05-31,C-1112,Leif Whitfield,lwhitfield@oakfield.org,Starter,49,App store review,4,Is there a way to export the report to CSV?
+2026-06-01,C-2071,Amir Whitfield,awhitfield@oakfield.org,Enterprise,2900,Email,4,The new dashboard is a big improvement. Much faster.
+2026-06-01,C-1385,Bjorn Bright,bbright@meridiangroup.net,Starter,49,App store review,4,How do I change the billing contact on the account?
+2026-06-02,C-1532,Gretchen Kowalski,gkowalski@kestrel.dev,Business,749,Support ticket,4,"Friendly, competent, no script-reading. Great experience."
+2026-06-02,C-1427,Lena Sato,lsato@meridiangroup.net,Business,749,In-app survey,5,"Friendly, competent, no script-reading. Great experience."
+2026-06-02,C-1434,Devon Quintero,dquintero@meridiangroup.net,Growth,199,In-app survey,2,No response to my last two emails. I don't know if anyone is even reading them.
+2026-06-03,C-1252,Tomas Bright,tbright@oakfield.org,Starter,49,In-app survey,4,Arrived a day early and well packed. No complaints at all.
+2026-06-03,C-1497,Hugo Bergstrom,hbergstrom@northwind.co,Growth,199,Email,2,"App crashes every time I open the reports tab. iOS, latest build."
+2026-06-03,C-1560,Aisha Mbeki,ambeki@havenlabs.io,Growth,199,Support ticket,5,The agent was patient and actually understood the problem. Rare and appreciated.
+2026-06-03,C-1791,Rafael Perreault,rperreault@kestrel.dev,Growth,199,Support ticket,1,No response to my last two emails. I don't know if anyone is even reading them.
+2026-06-03,C-1315,Jonah Halvorsen,jhalvorsen@oakfield.org,Starter,49,In-app survey,1,Value for money has gone downhill since the repackaging.
+2026-06-04,C-1567,Pascal Ferrante,pferrante@oakfield.org,Growth,199,Email,3,Does the Business plan include the API? The pricing page is ambiguous.
+2026-06-05,C-2043,Emeka Kowalski,ekowalski@oakfield.org,Business,749,In-app survey,2,Return has been 'processing' for 2 weeks. Where is my money?
+2026-06-06,C-1896,Kwame Mbeki,kmbeki@northwind.co,Starter,49,Support ticket,4,Received the order. Setting it up this week.
+2026-06-06,C-2022,Emeka Nakamura,enakamura@brightbay.com,Growth,199,Email,5,"Build quality is excellent, feels solid. Very happy with it."
+2026-06-06,C-1679,Aisha Adeyemi,aadeyemi@kestrel.dev,Growth,199,Support ticket,3,Password reset email never arrives. Checked spam. Locked out for 11 days now.
+2026-06-06,C-1854,Jonah Bergstrom,jbergstrom@meridiangroup.net,Starter,49,App store review,5,Billing issue fixed same day and they credited me without me asking.
+2026-06-06,C-1770,Otto Eriksen,oeriksen@meridiangroup.net,Business,749,Support ticket,2,Nobody told me the item was backordered. Found out 9 days later by chase-emailing.
+2026-06-07,C-1847,Gretchen Rasmussen,grasmussen@havenlabs.io,Business,749,In-app survey,5,Fast dispatch and the tracking was accurate the whole way.
+2026-06-08,C-1574,Priya Whitfield,pwhitfield@northwind.co,Growth,199,Email,5,"Build quality is excellent, feels solid. Very happy with it."
+2026-06-10,C-1553,Gretchen Vasquez,gvasquez@northwind.co,Growth,199,App store review,5,Billing issue fixed same day and they credited me without me asking.
+2026-06-10,C-1812,Camila Achebe,cachebe@havenlabs.io,Business,749,In-app survey,5,Love the update. The keyboard shortcuts save me real time.
+2026-06-10,C-2085,Tomas Sato,tsato@meridiangroup.net,Growth,199,Email,3,Is there a way to export the report to CSV?
+2026-06-11,C-2064,Rafael Bergstrom,rbergstrom@brightbay.com,Growth,199,In-app survey,5,"Quick, clear answer on the first reply. Exactly what I needed."
+2026-06-11,C-1490,Nadia Adeyemi,nadeyemi@oakfield.org,Starter,49,Phone log,3,Does the Business plan include the API? The pricing page is ambiguous.
+2026-06-11,C-1273,Renee Ashford,rashford@northwind.co,Enterprise,2900,Support ticket,2,Return has been 'processing' for 3 weeks. Where is my money?
+2026-06-11,C-1280,Tilda Eriksen,teriksen@kestrel.dev,Starter,49,Email,3,How do I change the billing contact on the account?
+2026-06-12,C-1840,Leif Sandoval,lsandoval@northwind.co,Growth,199,Support ticket,2,The unit failed after 20 weeks. Same fault as the one you replaced.
+2026-06-12,C-1063,Nadia Kowalski,nkowalski@oakfield.org,Business,749,Email,2,"Support response times have really slipped. Used to be hours, now it's days."
+2026-06-13,C-1644,Fenwick Whitfield,fwhitfield@oakfield.org,Business,749,In-app survey,1,"App crashes every time I open the reports tab. iOS, latest build."
+2026-06-13,C-1812,Camila Achebe,cachebe@havenlabs.io,Business,749,Phone log,4,"Average experience overall, no strong feelings either way."
+2026-06-14,C-1175,Colette Thibault,cthibault@oakfield.org,Growth,199,Support ticket,2,"Delivery window was 2-4 days, it took 11. I planned an install day around this and lost it."
+2026-06-14,C-1504,Owen Thibault,othibault@meridiangroup.net,Enterprise,2900,Support ticket,5,Arrived a day early and well packed. No complaints at all.
+2026-06-15,C-1791,Rafael Perreault,rperreault@kestrel.dev,Growth,199,Email,4,The agent was patient and actually understood the problem. Rare and appreciated.
+2026-06-15,C-1497,Hugo Bergstrom,hbergstrom@northwind.co,Growth,199,Email,3,Is there a way to export the report to CSV?
+2026-06-15,C-1882,Iris Venkatesan,ivenkatesan@havenlabs.io,Business,749,Support ticket,2,"Charged twice this month. I need the duplicate refunded today, not in 5-7 business days."
+2026-06-16,C-1154,Zainab Ferrante,zferrante@oakfield.org,Business,749,In-app survey,5,"Quick, clear answer on the first reply. Exactly what I needed."
+2026-06-16,C-1483,Ike Ivanova,iivanova@meridiangroup.net,Starter,49,In-app survey,4,Does the Business plan include the API? The pricing page is ambiguous.
+2026-06-16,C-1854,Jonah Bergstrom,jbergstrom@meridiangroup.net,Starter,49,In-app survey,2,Third defective item in a row. At this point I don't trust the QC.
+2026-06-16,C-1182,Fenwick Thibault,fthibault@havenlabs.io,Starter,49,App store review,2,"Charged twice this month. I need the duplicate refunded today, not in 5-7 business days."
+2026-06-18,C-1756,Bjorn Barreto,bbarreto@brightbay.com,Starter,49,Support ticket,5,The new dashboard is a big improvement. Much faster.
+2026-06-18,C-1833,Zainab Bergstrom,zbergstrom@brightbay.com,Growth,199,In-app survey,4,The agent was patient and actually understood the problem. Rare and appreciated.
+2026-06-19,C-1217,Declan Nakamura,dnakamura@oakfield.org,Starter,49,Support ticket,5,The agent was patient and actually understood the problem. Rare and appreciated.
+2026-06-19,C-1259,Sunita Venkatesan,svenkatesan@kestrel.dev,Starter,49,Email,4,Is there a way to export the report to CSV?
+2026-06-19,C-1301,Mira Fontaine,mfontaine@havenlabs.io,Starter,49,Phone log,1,I've explained my issue to four different agents. Nobody reads the ticket history.
+2026-06-20,C-2043,Emeka Kowalski,ekowalski@oakfield.org,Business,749,In-app survey,2,Value for money has gone downhill since the repackaging.
+2026-06-22,C-1679,Aisha Adeyemi,aadeyemi@kestrel.dev,Growth,199,Support ticket,2,Moving the export feature behind Enterprise feels like a cash grab.
+2026-06-22,C-1784,Marcus Lindqvist,mlindqvist@meridiangroup.net,Growth,199,App store review,4,Delivered on time. Nothing to report.
+2026-06-23,C-1476,Aisha Halvorsen,ahalvorsen@oakfield.org,Business,749,App store review,3,Received the order. Setting it up this week.
+2026-06-24,C-1525,Ike Muldoon,imuldoon@northwind.co,Enterprise,2900,Email,5,Fast dispatch and the tracking was accurate the whole way.
+2026-06-24,C-1616,Ike Sato,isato@meridiangroup.net,Growth,199,Support ticket,4,"Been using it daily for three months, still perfect."
+2026-06-24,C-1140,Nadia Venkatesan,nvenkatesan@oakfield.org,Starter,49,Support ticket,4,"Quick, clear answer on the first reply. Exactly what I needed."
+2026-06-25,C-1476,Aisha Halvorsen,ahalvorsen@oakfield.org,Business,749,Support ticket,1,Restocking fee wasn't mentioned anywhere until after I shipped it back.
+2026-06-25,C-1056,Hollis Ashford,hashford@northwind.co,Enterprise,2900,In-app survey,2,Second month of missed delivery dates. Our ops team is losing patience and so am I.
+2026-06-26,C-1077,Aisha Duarte,aduarte@meridiangroup.net,Starter,49,Support ticket,3,Two-factor keeps rejecting valid codes. I've had to phone in every single time.
+2026-06-27,C-1063,Nadia Kowalski,nkowalski@oakfield.org,Business,749,Support ticket,1,"Sent me someone else's order, complete with their invoice. Data protection issue too."
+2026-06-27,C-1140,Nadia Venkatesan,nvenkatesan@oakfield.org,Starter,49,App store review,3,Dashboard has been showing stale numbers for days. I can't trust anything in it.
+2026-06-29,C-1077,Aisha Duarte,aduarte@meridiangroup.net,Starter,49,App store review,2,Build quality feels cheaper than the previous generation. The hinge is already loose.
+2026-06-30,C-1511,Iris Muldoon,imuldoon@northwind.co,Business,749,Support ticket,3,"Sent me someone else's order, complete with their invoice. Data protection issue too."
+2026-06-30,C-1798,Otto Ostrowski,oostrowski@kestrel.dev,Starter,49,Phone log,2,The maintenance window took the system down during our month end. Zero warning.
+2026-06-30,C-1434,Devon Quintero,dquintero@meridiangroup.net,Growth,199,In-app survey,1,Whoever handled my case was blunt to the point of hostile.
+2026-06-30,C-1875,Priya Lindqvist,plindqvist@kestrel.dev,Starter,49,Email,1,Support closed my ticket without resolving it and marked it solved. That's just gaming the metric.
+2026-07-01,C-1665,Kwame Perreault,kperreault@havenlabs.io,Starter,49,App store review,3,Order arrived 11 days late with no warning. This is not what I paid expedited shipping for.
+2026-07-01,C-1707,Vera Ivanova,vivanova@brightbay.com,Business,749,In-app survey,1,The proration on my upgrade is wrong and support keeps telling me it's correct. It isn't.
+2026-07-02,C-1525,Ike Muldoon,imuldoon@northwind.co,Enterprise,2900,Support ticket,5,"Good value for what we get, especially at the Growth tier."
+2026-07-02,C-1945,Ike Bergstrom,ibergstrom@meridiangroup.net,Growth,199,Phone log,5,The agent was patient and actually understood the problem. Rare and appreciated.
+2026-07-02,C-1665,Kwame Perreault,kperreault@havenlabs.io,Starter,49,App store review,2,The new update wiped my saved filters and there's no way to get them back.
+2026-07-02,C-1959,Marisol Bright,mbright@oakfield.org,Business,749,In-app survey,2,Whoever handled my case was blunt to the point of hostile.
+2026-07-04,C-1322,Cyrus Bergstrom,cbergstrom@northwind.co,Growth,199,In-app survey,1,"Sent me someone else's order, complete with their invoice. Data protection issue too."
+2026-07-04,C-1301,Mira Fontaine,mfontaine@havenlabs.io,Starter,49,In-app survey,1,Your chatbot loops me back to the same article that doesn't answer the question.
+2026-07-05,C-1553,Gretchen Vasquez,gvasquez@northwind.co,Growth,199,In-app survey,5,Support sorted this in under an hour. Genuinely impressed.
+2026-07-06,C-1105,Declan Duarte,dduarte@havenlabs.io,Business,749,Email,5,The agent was patient and actually understood the problem. Rare and appreciated.
+2026-07-06,C-1105,Declan Duarte,dduarte@havenlabs.io,Business,749,Email,2,Wrong items twice in a row and the returns portal won't accept the order numbers.
+2026-07-07,C-1434,Devon Quintero,dquintero@meridiangroup.net,Growth,199,App store review,3,Is there a way to export the report to CSV?
+2026-07-07,C-1847,Gretchen Rasmussen,grasmussen@havenlabs.io,Business,749,In-app survey,2,Your chatbot loops me back to the same article that doesn't answer the question.
+2026-07-08,C-1315,Jonah Halvorsen,jhalvorsen@oakfield.org,Starter,49,Email,2,Moving the export feature behind Enterprise feels like a cash grab.
+2026-07-08,C-1728,Gretchen Barreto,gbarreto@kestrel.dev,Starter,49,Support ticket,2,I've explained my issue to four different agents. Nobody reads the ticket history.
+2026-07-08,C-1175,Colette Thibault,cthibault@oakfield.org,Growth,199,Support ticket,5,The agent was patient and actually understood the problem. Rare and appreciated.
+2026-07-08,C-1546,Yara Thibault,ythibault@oakfield.org,Starter,49,In-app survey,2,The new update wiped my saved filters and there's no way to get them back.
+2026-07-08,C-1658,Otto Whitfield,owhitfield@meridiangroup.net,Business,749,In-app survey,4,The agent was patient and actually understood the problem. Rare and appreciated.
+2026-07-09,C-1644,Fenwick Whitfield,fwhitfield@oakfield.org,Business,749,Support ticket,4,Does the Business plan include the API? The pricing page is ambiguous.
+2026-07-10,C-1518,Anya Fontaine,afontaine@brightbay.com,Starter,49,In-app survey,2,"Charged twice this month. I need the duplicate refunded today, not in 5-7 business days."
+2026-07-11,C-2078,Otto Bergstrom,obergstrom@oakfield.org,Growth,199,In-app survey,4,"Friendly, competent, no script-reading. Great experience."
+2026-07-11,C-1231,Camila Adeyemi,cadeyemi@havenlabs.io,Growth,199,App store review,5,Support sorted this in under an hour. Genuinely impressed.
+2026-07-11,C-1854,Jonah Bergstrom,jbergstrom@meridiangroup.net,Starter,49,Support ticket,3,It's fine. Does what it says.
+2026-07-12,C-1861,Mira Delacroix,mdelacroix@meridiangroup.net,Growth,199,Phone log,5,The agent was patient and actually understood the problem. Rare and appreciated.
+2026-07-12,C-1476,Aisha Halvorsen,ahalvorsen@oakfield.org,Business,749,Support ticket,1,The courier left it in the rain. Box was soaked through. Really disappointing.
+2026-07-12,C-1427,Lena Sato,lsato@meridiangroup.net,Business,749,Support ticket,5,Billing issue fixed same day and they credited me without me asking.
+2026-07-12,C-1084,Sunita Okonkwo,sokonkwo@oakfield.org,Enterprise,2900,Support ticket,1,Charged twice again. I've now spent more time on your invoicing than on the product.
+2026-07-12,C-1518,Anya Fontaine,afontaine@brightbay.com,Starter,49,Support ticket,3,Does the Business plan include the API? The pricing page is ambiguous.
+2026-07-12,C-2078,Otto Bergstrom,obergstrom@oakfield.org,Growth,199,Email,1,"App crashes every time I open the reports tab. iOS, latest build."
+2026-07-13,C-1882,Iris Venkatesan,ivenkatesan@havenlabs.io,Business,749,Support ticket,1,Honestly at this price I expected far more. Competitors do this for half.
+2026-07-13,C-1119,Marcus Rasmussen,mrasmussen@kestrel.dev,Business,749,Support ticket,5,Another smooth month. The new dashboard is a real improvement.
+2026-07-13,C-1077,Aisha Duarte,aduarte@meridiangroup.net,Starter,49,App store review,4,Does the Business plan include the API? The pricing page is ambiguous.
+2026-07-14,C-1168,Renee Eriksen,reriksen@havenlabs.io,Starter,49,Support ticket,3,How do I change the billing contact on the account?
+2026-07-14,C-1154,Zainab Ferrante,zferrante@oakfield.org,Business,749,In-app survey,3,It's fine. Does what it says.
+2026-07-15,C-1294,Yara Venkatesan,yvenkatesan@havenlabs.io,Starter,49,App store review,2,Asked to speak to a manager and was told none were available. Twice.
+2026-07-16,C-1287,Declan Fontaine,dfontaine@kestrel.dev,Business,749,Phone log,1,Been on hold 7 minutes twice today. Gave up both times.
+2026-07-16,C-1616,Ike Sato,isato@meridiangroup.net,Growth,199,Email,2,The return portal rejects my order number and there's no way around it.
+2026-07-17,C-1581,Yara Duarte,yduarte@meridiangroup.net,Starter,49,Support ticket,4,"Been using it daily for three months, still perfect."
+2026-07-18,C-1959,Marisol Bright,mbright@oakfield.org,Business,749,In-app survey,3,Received the order. Setting it up this week.
+2026-07-19,C-1210,Cyrus Achebe,cachebe@brightbay.com,Growth,199,Email,5,Fast dispatch and the tracking was accurate the whole way.
+2026-07-19,C-1357,Noor Perreault,nperreault@meridiangroup.net,Growth,199,Support ticket,1,Late again. I've stopped promising my own customers dates because of your shipping.
+2026-07-19,C-1742,Fenwick Bright,fbright@meridiangroup.net,Business,749,Support ticket,2,Opened a ticket 3 days ago and still no reply. Not even an acknowledgement.
+2026-07-19,C-1623,Fenwick Halvorsen,fhalvorsen@meridiangroup.net,Starter,49,Support ticket,4,Arrived a day early and well packed. No complaints at all.
+2026-07-20,C-1868,Fenwick Mbeki,fmbeki@meridiangroup.net,Starter,49,In-app survey,1,"Sent me someone else's order, complete with their invoice. Data protection issue too."
+2026-07-20,C-1889,Colette Ashford,cashford@northwind.co,Business,749,Support ticket,2,Half the order is missing and the packing slip says complete.
+2026-07-20,C-1749,Rosalind Muldoon,rmuldoon@oakfield.org,Starter,49,Support ticket,5,"Friendly, competent, no script-reading. Great experience."
+2026-07-21,C-1063,Nadia Kowalski,nkowalski@oakfield.org,Business,749,In-app survey,1,Nobody told me the item was backordered. Found out 5 days later by chase-emailing.
+2026-07-23,C-1238,Marisol Ostrowski,mostrowski@meridiangroup.net,Growth,199,In-app survey,2,Still waiting on my delivery. Tracking hasn't updated in 2 days and nobody can tell me where it is.
+2026-07-23,C-1840,Leif Sandoval,lsandoval@northwind.co,Growth,199,Support ticket,3,"App crashes every time I open the reports tab. iOS, latest build."
+2026-07-24,C-1574,Priya Whitfield,pwhitfield@northwind.co,Growth,199,In-app survey,1,Shipment split into three boxes and only two arrived. Nobody flagged it.
+2026-07-24,C-2008,Cyrus Barreto,cbarreto@meridiangroup.net,Growth,199,Support ticket,2,Support closed my ticket without resolving it and marked it solved. That's just gaming the metric.
+2026-07-25,C-1875,Priya Lindqvist,plindqvist@kestrel.dev,Starter,49,Support ticket,5,Arrived a day early and well packed. No complaints at all.
+2026-07-25,C-1819,Cyrus Whitfield,cwhitfield@havenlabs.io,Enterprise,2900,App store review,4,"Friendly, competent, no script-reading. Great experience."
+2026-07-25,C-2064,Rafael Bergstrom,rbergstrom@brightbay.com,Growth,199,In-app survey,5,"Quick, clear answer on the first reply. Exactly what I needed."
+2026-07-26,C-1063,Nadia Kowalski,nkowalski@oakfield.org,Business,749,App store review,1,Third time reporting the same defect. Each replacement fails the same way.
+2026-07-27,C-1861,Mira Delacroix,mdelacroix@meridiangroup.net,Growth,199,In-app survey,2,Two-factor keeps rejecting valid codes. I've had to phone in every single time.
+2026-07-27,C-1798,Otto Ostrowski,oostrowski@kestrel.dev,Starter,49,In-app survey,2,Rude response to a simple question. Made me feel like an inconvenience.
+2026-07-27,C-1581,Yara Duarte,yduarte@meridiangroup.net,Starter,49,Support ticket,5,"Been using it daily for three months, still perfect."
+2026-07-28,C-1588,Beatriz Thibault,bthibault@meridiangroup.net,Growth,199,Email,5,The agent was patient and actually understood the problem. Rare and appreciated.
+2026-07-28,C-1672,Anya Nakamura,anakamura@meridiangroup.net,Growth,199,Support ticket,2,Invoice doesn't match the quote at all. There's an extra $20 line item nobody explained.
+2026-07-29,C-1245,Tomas Vasquez,tvasquez@meridiangroup.net,Business,749,Support ticket,1,Late again. I've stopped promising my own customers dates because of your shipping.
+2026-07-29,C-1784,Marcus Lindqvist,mlindqvist@meridiangroup.net,Growth,199,In-app survey,2,"Sent me someone else's order, complete with their invoice. Data protection issue too."
+2026-07-30,C-1329,Hollis Rasmussen,hrasmussen@brightbay.com,Enterprise,2900,Email,1,Half the order is missing and the packing slip says complete.
+2026-07-30,C-1567,Pascal Ferrante,pferrante@oakfield.org,Growth,199,In-app survey,3,Password reset email never arrives. Checked spam. Locked out for 18 days now.
+2026-07-30,C-1945,Ike Bergstrom,ibergstrom@meridiangroup.net,Growth,199,Support ticket,5,The agent was patient and actually understood the problem. Rare and appreciated.
+2026-07-31,C-2085,Tomas Sato,tsato@meridiangroup.net,Growth,199,Support ticket,5,Support sorted this in under an hour. Genuinely impressed.
+2026-07-31,C-1259,Sunita Venkatesan,svenkatesan@kestrel.dev,Starter,49,In-app survey,2,I've explained my issue to four different agents. Nobody reads the ticket history.
+2026-08-01,C-1378,Amir Barreto,abarreto@brightbay.com,Business,749,In-app survey,1,The courier left it in the rain. Box was soaked through. Really disappointing.
+2026-08-01,C-1238,Marisol Ostrowski,mostrowski@meridiangroup.net,Growth,199,App store review,5,Arrived a day early and well packed. No complaints at all.
+2026-08-02,C-1630,Ike Bright,ibright@kestrel.dev,Starter,49,Email,2,Dashboard has been showing stale numbers for days. I can't trust anything in it.
+2026-08-03,C-1868,Fenwick Mbeki,fmbeki@meridiangroup.net,Starter,49,Email,3,Order arrived 18 days late with no warning. This is not what I paid expedited shipping for.
+2026-08-04,C-1581,Yara Duarte,yduarte@meridiangroup.net,Starter,49,Support ticket,5,Arrived a day early and well packed. No complaints at all.
+2026-08-05,C-1833,Zainab Bergstrom,zbergstrom@brightbay.com,Growth,199,In-app survey,5,"Been using it daily for three months, still perfect."
+2026-08-06,C-1490,Nadia Adeyemi,nadeyemi@oakfield.org,Starter,49,In-app survey,1,The agent was dismissive and talked over me the entire call.
+2026-08-08,C-1868,Fenwick Mbeki,fmbeki@meridiangroup.net,Starter,49,App store review,2,Dashboard has been showing stale numbers for days. I can't trust anything in it.
+2026-08-08,C-1721,Tilda Fontaine,tfontaine@havenlabs.io,Growth,199,Support ticket,2,Asked to speak to a manager and was told none were available. Twice.
+2026-08-08,C-1994,Hollis Perreault,hperreault@meridiangroup.net,Growth,199,In-app survey,2,Package showed up damaged again. Second time this month. Whoever is doing your fulfilment is careless.
+2026-08-08,C-1056,Hollis Ashford,hashford@northwind.co,Enterprise,2900,App store review,1,This is the fourth escalation on the same issue and nobody has owned it. Still waiting after 9 days.
+2026-08-10,C-1707,Vera Ivanova,vivanova@brightbay.com,Business,749,Email,5,Fast dispatch and the tracking was accurate the whole way.
+2026-08-11,C-1175,Colette Thibault,cthibault@oakfield.org,Growth,199,In-app survey,3,The new update wiped my saved filters and there's no way to get them back.
+2026-08-12,C-2043,Emeka Kowalski,ekowalski@oakfield.org,Business,749,Email,5,"Been using it daily for three months, still perfect."
+2026-08-12,C-1105,Declan Duarte,dduarte@havenlabs.io,Business,749,Support ticket,1,Still no refund four weeks after you received the return. This is the last time I order.
+2026-08-13,C-1238,Marisol Ostrowski,mostrowski@meridiangroup.net,Growth,199,Support ticket,1,Late again. I've stopped promising my own customers dates because of your shipping.
+2026-08-13,C-2071,Amir Whitfield,awhitfield@oakfield.org,Enterprise,2900,Email,3,Dashboard has been showing stale numbers for days. I can't trust anything in it.
+2026-08-13,C-2078,Otto Bergstrom,obergstrom@oakfield.org,Growth,199,Support ticket,2,Got charged the annual rate when I'm on monthly. Fix this please.
+2026-08-13,C-1623,Fenwick Halvorsen,fhalvorsen@meridiangroup.net,Starter,49,Email,1,Been on hold 5 minutes twice today. Gave up both times.
+2026-08-14,C-1623,Fenwick Halvorsen,fhalvorsen@meridiangroup.net,Starter,49,Phone log,5,The new dashboard is a big improvement. Much faster.
+2026-08-14,C-1490,Nadia Adeyemi,nadeyemi@oakfield.org,Starter,49,Support ticket,2,"Delivery window was 2-4 days, it took 5. I planned an install day around this and lost it."
+2026-08-14,C-1686,Iris Rasmussen,irasmussen@brightbay.com,Starter,49,Email,3,"Delivery window was 2-4 days, it took 10. I planned an install day around this and lost it."
+2026-08-15,C-1525,Ike Muldoon,imuldoon@northwind.co,Enterprise,2900,Support ticket,2,Rude response to a simple question. Made me feel like an inconvenience.
+2026-08-15,C-1623,Fenwick Halvorsen,fhalvorsen@meridiangroup.net,Starter,49,Email,2,Rude response to a simple question. Made me feel like an inconvenience.
+2026-08-15,C-1140,Nadia Venkatesan,nvenkatesan@oakfield.org,Starter,49,App store review,3,The proration on my upgrade is wrong and support keeps telling me it's correct. It isn't.
+2026-08-16,C-1168,Renee Eriksen,reriksen@havenlabs.io,Starter,49,In-app survey,2,Late again. I've stopped promising my own customers dates because of your shipping.
+2026-08-16,C-1133,Ike Castellanos,icastellanos@havenlabs.io,Enterprise,2900,In-app survey,1,The agent on Tuesday was openly rude to a member of my team. I want that call reviewed and I want a manager to call me back today. We are two weeks from renewal and this is not the impression you want to leave.
+2026-08-17,C-1777,Vera Fontaine,vfontaine@meridiangroup.net,Starter,49,In-app survey,5,Arrived a day early and well packed. No complaints at all.
+2026-08-17,C-2001,Iris Sandoval,isandoval@havenlabs.io,Starter,49,Support ticket,2,Received the wrong colour and the wrong size. Order was clear.
+2026-08-18,C-1203,Nadia Barreto,nbarreto@oakfield.org,Growth,199,Email,1,Order arrived 4 days late with no warning. This is not what I paid expedited shipping for.
+2026-08-19,C-1357,Noor Perreault,nperreault@meridiangroup.net,Growth,199,Email,5,The new dashboard is a big improvement. Much faster.
+2026-08-19,C-1462,Hugo Okonkwo,hokonkwo@northwind.co,Starter,49,Email,2,Return has been 'processing' for 4 weeks. Where is my money?
+2026-08-19,C-1735,Emeka Delacroix,edelacroix@kestrel.dev,Starter,49,App store review,5,Love the update. The keyboard shortcuts save me real time.
+2026-08-19,C-1497,Hugo Bergstrom,hbergstrom@northwind.co,Growth,199,Email,2,Invoice doesn't match the quote at all. There's an extra $4 line item nobody explained.
+2026-08-19,C-1259,Sunita Venkatesan,svenkatesan@kestrel.dev,Starter,49,In-app survey,5,The new dashboard is a big improvement. Much faster.
+2026-08-19,C-1385,Bjorn Bright,bbright@meridiangroup.net,Starter,49,In-app survey,3,Status page said operational the whole time it was down.
+2026-08-20,C-1539,Amir Adeyemi,aadeyemi@havenlabs.io,Starter,49,Email,4,"Friendly, competent, no script-reading. Great experience."
+2026-08-20,C-1882,Iris Venkatesan,ivenkatesan@havenlabs.io,Business,749,In-app survey,4,Arrived a day early and well packed. No complaints at all.
+2026-08-20,C-1749,Rosalind Muldoon,rmuldoon@oakfield.org,Starter,49,In-app survey,1,"Delivery window was 2-4 days, it took 18. I planned an install day around this and lost it."
+2026-08-21,C-1553,Gretchen Vasquez,gvasquez@northwind.co,Growth,199,Support ticket,1,Half the order is missing and the packing slip says complete.
+2026-08-21,C-1140,Nadia Venkatesan,nvenkatesan@oakfield.org,Starter,49,Phone log,3,Got charged the annual rate when I'm on monthly. Fix this please.
+2026-08-21,C-2036,Sunita Halvorsen,shalvorsen@brightbay.com,Growth,199,Support ticket,5,Fast dispatch and the tracking was accurate the whole way.
+2026-08-21,C-1861,Mira Delacroix,mdelacroix@meridiangroup.net,Growth,199,Email,1,Still waiting on my delivery. Tracking hasn't updated in 40 days and nobody can tell me where it is.
+2026-08-21,C-1077,Aisha Duarte,aduarte@meridiangroup.net,Starter,49,In-app survey,2,You billed me after I cancelled. That's the third month running.
+2026-08-21,C-1084,Sunita Okonkwo,sokonkwo@oakfield.org,Enterprise,2900,Email,1,I've asked for a cancellation quote and I'm taking this to our procurement lead. Considering a chargeback for the duplicate charges.
+2026-08-22,C-1189,Yara Nakamura,ynakamura@northwind.co,Starter,49,App store review,5,Fast dispatch and the tracking was accurate the whole way.
+2026-08-22,C-1385,Bjorn Bright,bbright@meridiangroup.net,Starter,49,In-app survey,2,Late again. I've stopped promising my own customers dates because of your shipping.
+2026-08-23,C-1273,Renee Ashford,rashford@northwind.co,Enterprise,2900,Email,5,Arrived a day early and well packed. No complaints at all.
+2026-08-23,C-1119,Marcus Rasmussen,mrasmussen@kestrel.dev,Business,749,Support ticket,5,Still very happy. Renewing without hesitation.
+2026-08-24,C-1973,Colette Kowalski,ckowalski@northwind.co,Business,749,Email,4,Arrived a day early and well packed. No complaints at all.
+2026-08-24,C-1042,Anya Ferrante,aferrante@northwind.co,Growth,199,Email,2,The maintenance window took the system down during our month end. Zero warning.
+2026-08-24,C-1812,Camila Achebe,cachebe@havenlabs.io,Business,749,In-app survey,2,Invoice doesn't match the quote at all. There's an extra $2 line item nobody explained.
+2026-08-25,C-1896,Kwame Mbeki,kmbeki@northwind.co,Starter,49,In-app survey,4,Fast dispatch and the tracking was accurate the whole way.
+2026-08-25,C-1693,Anya Quintero,aquintero@brightbay.com,Growth,199,Support ticket,5,"Quick, clear answer on the first reply. Exactly what I needed."
+2026-08-25,C-1063,Nadia Kowalski,nkowalski@oakfield.org,Business,749,Support ticket,1,Absolutely done with this. Cancel my account. I've moved the team to a competitor already and I'll be warning others.
+2026-08-26,C-1938,Hollis Okonkwo,hokonkwo@kestrel.dev,Enterprise,2900,Support ticket,1,"Sent me someone else's order, complete with their invoice. Data protection issue too."
+2026-08-26,C-1658,Otto Whitfield,owhitfield@meridiangroup.net,Business,749,App store review,1,Your chatbot loops me back to the same article that doesn't answer the question.
+2026-08-27,C-1798,Otto Ostrowski,oostrowski@kestrel.dev,Starter,49,In-app survey,5,Fast dispatch and the tracking was accurate the whole way.
+2026-08-29,C-1189,Yara Nakamura,ynakamura@northwind.co,Starter,49,Support ticket,3,"App crashes every time I open the reports tab. iOS, latest build."
+2026-08-29,C-1056,Hollis Ashford,hashford@northwind.co,Enterprise,2900,Email,1,We're starting a formal review of alternatives. If the January renewal comes round with this service level we will not be renewing. I need someone senior to call me this week.
+2026-08-30,C-1042,Anya Ferrante,aferrante@northwind.co,Growth,199,App store review,4,Support sorted this in under an hour. Genuinely impressed.
+2026-08-30,C-1882,Iris Venkatesan,ivenkatesan@havenlabs.io,Business,749,In-app survey,2,Password reset email never arrives. Checked spam. Locked out for 11 days now.
+2026-08-31,C-1175,Colette Thibault,cthibault@oakfield.org,Growth,199,In-app survey,5,Support sorted this in under an hour. Genuinely impressed.
+2026-08-31,C-1644,Fenwick Whitfield,fwhitfield@oakfield.org,Business,749,In-app survey,1,Package showed up damaged again. Second time this month. Whoever is doing your fulfilment is careless.
+2026-08-31,C-1658,Otto Whitfield,owhitfield@meridiangroup.net,Business,749,App store review,2,Shipment split into three boxes and only two arrived. Nobody flagged it.
+2026-08-31,C-1063,Nadia Kowalski,nkowalski@oakfield.org,Business,749,Phone log,5,Fast dispatch and the tracking was accurate the whole way.
+2026-09-01,C-2085,Tomas Sato,tsato@meridiangroup.net,Growth,199,Support ticket,2,Search is broken. Returns nothing for terms that obviously exist.
+2026-09-01,C-1679,Aisha Adeyemi,aadeyemi@kestrel.dev,Growth,199,Email,3,The courier left it in the rain. Box was soaked through. Really disappointing.
+2026-09-01,C-1413,Hollis Vasquez,hvasquez@meridiangroup.net,Business,749,Support ticket,2,The unit failed after 11 weeks. Same fault as the one you replaced.
+2026-09-01,C-1686,Iris Rasmussen,irasmussen@brightbay.com,Starter,49,In-app survey,2,Surprise price increase with no notice. Finding out via a credit card statement is a terrible look.
+2026-09-01,C-1784,Marcus Lindqvist,mlindqvist@meridiangroup.net,Growth,199,Support ticket,1,"Delivery window was 2-4 days, it took 30. I planned an install day around this and lost it."
+2026-09-02,C-1119,Marcus Rasmussen,mrasmussen@kestrel.dev,Business,749,Support ticket,1,Search is broken. Returns nothing for terms that obviously exist.
+2026-09-02,C-1105,Declan Duarte,dduarte@havenlabs.io,Business,749,In-app survey,1,"No refund, no reply, no accountability. I'm disputing this with my bank and closing the account."
+2026-09-03,C-1588,Beatriz Thibault,bthibault@meridiangroup.net,Growth,199,Email,1,Status page said operational the whole time it was down.
+2026-09-03,C-1385,Bjorn Bright,bbright@meridiangroup.net,Starter,49,Support ticket,2,Order arrived 3 days late with no warning. This is not what I paid expedited shipping for.
