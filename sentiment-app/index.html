@@ -189,6 +189,11 @@ th.num{text-align:right}
 .note{font-size:12.5px;color:var(--muted);margin-top:9px;max-width:80ch}
 .hidden{display:none!important}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+#toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(8px);background:var(--ink);color:var(--surface);
+  padding:11px 17px;border-radius:var(--r);font-size:13px;font-weight:500;box-shadow:var(--shadow);z-index:70;
+  opacity:0;pointer-events:none;transition:opacity .16s,transform .16s;max-width:min(440px,90vw)}
+#toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
 #drop{position:fixed;inset:0;background:color-mix(in srgb,var(--accent) 22%,var(--plane));display:none;align-items:center;justify-content:center;z-index:60;font-size:18px;font-weight:600;border:3px dashed var(--accent)}
 #drop.on{display:flex}
 
@@ -212,6 +217,7 @@ th.num{text-align:right}
 .callout .eyebrow{display:block;margin-bottom:6px}
 </style>
 
+<div id="toast" role="status" aria-live="polite"></div>
 <div id="drop">Drop a CSV, TSV or JSON file to analyze</div>
 
 <header class="mast">
@@ -13167,10 +13173,25 @@ function loadDataset(text, name){
   $("#fQ").value="";
   applyFilters();
 }
-function exportCSV(){
+let toastT;
+function toast(msg){
+  const t=$("#toast"); t.textContent=msg; t.classList.add("on");
+  clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove("on"), 4200);
+}
+/* Published pages cannot start their own downloads — a blob link is inert in the
+   artifact viewer — so route through the downloads capability when the runtime is
+   present, and keep the blob path for a local copy of this file. */
+const HAS_RUNTIME = !!(window.claude && window.claude.use);
+let DOWNLOADS=null;
+if(HAS_RUNTIME) window.claude.use("downloads")
+  .then(d=>{ DOWNLOADS=d;
+    if(!d){ const b=$("#btnExport"); b.disabled=true; b.title="Saving files is not available in this view."; } })
+  .catch(()=>{ const b=$("#btnExport"); b.disabled=true; b.title="Saving files is not available in this view."; });
+
+function buildOutreachCSV(){
   const {customers, ds}=STATE;
   const list=customers.filter(c=>c.score>=38);
-  if(!list.length){ alert("Nothing to export — no customer in the current slice clears the priority threshold."); return; }
+  if(!list.length) return null;
   const cols=["rank","priority_score","band","customer_id","customer_name","email","phone","segment",
     ...(ds.hasValue?["account_value"]:[]),
     "comments","negative_comments","last_comment","signals","top_patterns","key_comment_score","key_comment",
@@ -13186,12 +13207,31 @@ function exportCSV(){
       ...FACTORS.filter(f=>f.k!=="value"||ds.hasValue).map(f=>(c.parts[f.k]||0).toFixed(2))
     ].map(q).join(","));
   });
-  const blob=new Blob(["﻿"+lines.join("\r\n")],{type:"text/csv;charset=utf-8"});
+  return {csv:"﻿"+lines.join("\r\n"), n:list.length};
+}
+async function exportCSV(){
+  const built=buildOutreachCSV();
+  if(!built){ toast("Nothing to export — no customer in the current slice clears the priority threshold."); return; }
+  const filename="outreach-list-"+iso(new Date())+".csv";
+  if(HAS_RUNTIME){
+    if(!DOWNLOADS){ toast("Saving files is not available in this view."); return; }
+    try{
+      await DOWNLOADS.save({filename, data:built.csv});
+      toast(`Outreach list saved — ${built.n} customers.`);
+    }catch(e){
+      const c=e&&e.code;
+      if(c==="declined") return;                       // viewer said no; never retry
+      if(c==="rate_limited") toast("A save prompt is already open — try again in a moment.");
+      else toast("Could not save the file"+(e&&e.message?": "+e.message:"."));
+    }
+    return;
+  }
+  const blob=new Blob([built.csv],{type:"text/csv;charset=utf-8"});
   const a=document.createElement("a");
-  a.href=URL.createObjectURL(blob);
-  a.download="outreach-list-"+iso(new Date())+".csv";
+  a.href=URL.createObjectURL(blob); a.download=filename;
   document.body.appendChild(a); a.click(); a.remove();
   setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+  toast(`Outreach list exported — ${built.n} customers.`);
 }
 document.querySelectorAll(".tab").forEach(t=> t.onclick=()=>go(t.dataset.p));
 ["#fRange","#fTheme","#fSeg","#fChan","#fSent"].forEach(s=>$(s).addEventListener("change",applyFilters));
