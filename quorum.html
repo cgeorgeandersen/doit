@@ -1,0 +1,1717 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>QUORUM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;450;500;600;700&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&display=swap">
+<style>
+/* ---------------------------------------------------------------
+   Tokens. Light is the base; dark redefines only the values.
+   Two accents carry the argument of the whole tool:
+     evidence (teal)  = what the data says
+     consensus (ochre)= what the network says
+   --------------------------------------------------------------- */
+:root{
+  --paper:#EFF2F1;
+  --card:#FFFFFF;
+  --card2:#F7F9F8;
+  --sunk:#E7ECEA;
+  --ink:#141A1C;
+  --ink2:#4C585C;
+  --ink3:#7E8B8E;
+  --rule:#DCE3E1;
+  --rule2:#C4CFCC;
+  --evidence:#0C7C77;
+  --evidence-soft:rgba(12,124,119,.13);
+  --consensus:#A96F17;
+  --consensus-soft:rgba(169,111,23,.14);
+  --fund:#1C4E7E;
+  --fund-soft:rgba(28,78,126,.12);
+  --good:#2C7A50;
+  --warn:#A8760F;
+  --bad:#A33A34;
+  --good-soft:rgba(44,122,80,.13);
+  --warn-soft:rgba(168,118,15,.14);
+  --bad-soft:rgba(163,58,52,.13);
+  --shadow:0 1px 2px rgba(16,32,36,.06), 0 8px 24px -12px rgba(16,32,36,.18);
+  --sans:'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --serif:'IBM Plex Serif',Georgia,'Times New Roman',serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#0D1113;
+    --card:#151A1C;
+    --card2:#1A2123;
+    --sunk:#101517;
+    --ink:#E4EAE8;
+    --ink2:#9DAAA9;
+    --ink3:#6E7C7B;
+    --rule:#242D2F;
+    --rule2:#34403F;
+    --evidence:#3EB6AF;
+    --evidence-soft:rgba(62,182,175,.16);
+    --consensus:#D6A24C;
+    --consensus-soft:rgba(214,162,76,.16);
+    --fund:#5C9BD6;
+    --fund-soft:rgba(92,155,214,.16);
+    --good:#54B47F;
+    --warn:#D6A24C;
+    --bad:#D97A72;
+    --good-soft:rgba(84,180,127,.15);
+    --warn-soft:rgba(214,162,76,.15);
+    --bad-soft:rgba(217,122,114,.15);
+    --shadow:0 1px 2px rgba(0,0,0,.5), 0 10px 30px -14px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0D1113; --card:#151A1C; --card2:#1A2123; --sunk:#101517;
+  --ink:#E4EAE8; --ink2:#9DAAA9; --ink3:#6E7C7B; --rule:#242D2F; --rule2:#34403F;
+  --evidence:#3EB6AF; --evidence-soft:rgba(62,182,175,.16);
+  --consensus:#D6A24C; --consensus-soft:rgba(214,162,76,.16);
+  --fund:#5C9BD6; --fund-soft:rgba(92,155,214,.16);
+  --good:#54B47F; --warn:#D6A24C; --bad:#D97A72;
+  --good-soft:rgba(84,180,127,.15); --warn-soft:rgba(214,162,76,.15); --bad-soft:rgba(217,122,114,.15);
+  --shadow:0 1px 2px rgba(0,0,0,.5), 0 10px 30px -14px rgba(0,0,0,.7);
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:var(--sans);font-size:13.5px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;overflow:hidden;
+}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--evidence);outline-offset:2px;border-radius:3px}
+::-webkit-scrollbar{width:11px;height:11px}
+::-webkit-scrollbar-thumb{background:var(--rule2);border-radius:8px;border:3px solid transparent;background-clip:content-box}
+::-webkit-scrollbar-track{background:transparent}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+
+/* ---------------- shell ---------------- */
+#app{display:grid;grid-template-rows:54px 1fr 40px;height:100vh;height:100dvh}
+header{
+  display:flex;align-items:center;gap:18px;padding:0 16px;
+  background:var(--card);border-bottom:1px solid var(--rule);
+}
+.brand{display:flex;align-items:baseline;gap:10px;flex:0 0 auto}
+.brand h1{margin:0;font-size:16px;font-weight:600;letter-spacing:.22em}
+.brand span{font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink3)}
+header .scen{
+  flex:1 1 auto;min-width:0;display:flex;align-items:center;gap:9px;
+}
+header .scen label{font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3)}
+header .scen input{
+  border:1px solid transparent;background:transparent;padding:5px 8px;border-radius:5px;
+  font-size:13.5px;font-weight:500;max-width:340px;width:100%;
+}
+header .scen input:hover{border-color:var(--rule)}
+header .scen input:focus{border-color:var(--rule2);background:var(--card2);outline:none}
+.hbtns{display:flex;gap:6px;flex:0 0 auto}
+
+.btn{
+  border:1px solid var(--rule2);background:var(--card);color:var(--ink2);
+  padding:6px 11px;border-radius:6px;font-size:11.5px;cursor:pointer;
+  display:inline-flex;align-items:center;gap:6px;transition:background .12s,color .12s,border-color .12s;
+}
+.btn:hover{background:var(--card2);color:var(--ink);border-color:var(--ink3)}
+.btn.primary{background:var(--ink);color:var(--card);border-color:var(--ink)}
+.btn.primary:hover{background:var(--ink2);border-color:var(--ink2)}
+.btn.sm{padding:4px 8px;font-size:11px}
+.btn.danger:hover{color:var(--bad);border-color:var(--bad)}
+
+#body{display:grid;grid-template-columns:286px 1fr;min-height:0}
+#rail{
+  background:var(--card);border-right:1px solid var(--rule);overflow-y:auto;padding-bottom:20px;
+}
+#main{min-width:0;display:grid;grid-template-rows:auto 1fr;min-height:0;background:var(--paper)}
+
+/* ---------------- rail ---------------- */
+.grp{border-bottom:1px solid var(--rule);padding:12px 16px 14px}
+.grp>h2{
+  margin:0 0 11px;font-size:9.5px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--ink3);font-weight:600;display:flex;align-items:center;gap:7px;
+}
+.grp>h2 .q{
+  margin-left:auto;width:15px;height:15px;border-radius:50%;border:1px solid var(--rule2);
+  display:grid;place-items:center;font-size:9px;color:var(--ink3);cursor:help;letter-spacing:0;text-transform:none;
+}
+.grp>h2 .q:hover{color:var(--ink);border-color:var(--ink3)}
+.fld{margin-bottom:13px}
+.fld:last-child{margin-bottom:0}
+.fld .top{display:flex;align-items:baseline;gap:8px;margin-bottom:5px}
+.fld .top .nm{font-size:11.5px;color:var(--ink2)}
+.fld .top .vl{margin-left:auto;font-size:11.5px;font-weight:500}
+.fld .top .sub{font-size:10px;color:var(--ink3)}
+
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:16px;background:transparent;cursor:pointer;display:block;margin:0}
+input[type=range]::-webkit-slider-runnable-track{height:4px;border-radius:2px;background:var(--sunk)}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:14px;height:14px;border-radius:50%;margin-top:-5px;
+  background:var(--card);border:1.5px solid var(--ink2);box-shadow:0 1px 2px rgba(0,0,0,.2);
+}
+input[type=range]:hover::-webkit-slider-thumb{border-color:var(--ink)}
+input[type=range]::-moz-range-track{height:4px;border-radius:2px;background:var(--sunk)}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;border:1.5px solid var(--ink2);border-radius:50%;background:var(--card)}
+
+/* the blend control — the argument of the tool, made visible */
+.blend{margin-bottom:12px}
+.blendBar{
+  display:flex;height:30px;border-radius:6px;overflow:hidden;border:1px solid var(--rule2);
+  font-size:10.5px;letter-spacing:.04em;
+}
+.blendBar div{display:flex;align-items:center;justify-content:center;color:#fff;white-space:nowrap;overflow:hidden;transition:flex-basis .12s}
+.blendBar .ev{background:var(--evidence)}
+.blendBar .co{background:var(--consensus)}
+.blendLbl{display:flex;justify-content:space-between;margin-top:6px;font-size:10px;color:var(--ink3)}
+
+.seg{display:flex;border:1px solid var(--rule2);border-radius:6px;overflow:hidden}
+.seg button{
+  flex:1;border:none;background:var(--card);padding:6px 4px;font-size:11px;color:var(--ink3);cursor:pointer;
+  border-right:1px solid var(--rule2);transition:background .12s,color .12s;
+}
+.seg button:last-child{border-right:none}
+.seg button:hover{background:var(--card2);color:var(--ink)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--card)}
+.note{font-family:var(--serif);font-size:11.5px;line-height:1.62;color:var(--ink2);margin:10px 0 0}
+.note b{font-weight:500;color:var(--ink)}
+
+/* ---------------- tabs ---------------- */
+#tabs{display:flex;gap:0;background:var(--card);border-bottom:1px solid var(--rule);padding:0 16px;overflow-x:auto}
+#tabs button{
+  border:none;background:none;padding:11px 14px 9px;font-size:12.5px;color:var(--ink3);cursor:pointer;
+  border-bottom:2px solid transparent;white-space:nowrap;transition:color .12s,border-color .12s;
+}
+#tabs button:hover{color:var(--ink)}
+#tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--evidence);font-weight:500}
+#views{overflow-y:auto;min-height:0;padding:18px 20px 40px}
+.view{display:none;max-width:1240px}
+.view.on{display:block}
+
+/* ---------------- generic surfaces ---------------- */
+.panel{background:var(--card);border:1px solid var(--rule);border-radius:8px;margin-bottom:16px}
+.panel>.ph{
+  display:flex;align-items:baseline;gap:10px;padding:12px 16px;border-bottom:1px solid var(--rule);
+}
+.panel>.ph h3{margin:0;font-size:12.5px;font-weight:600}
+.panel>.ph p{margin:0;font-size:11px;color:var(--ink3)}
+.panel>.ph .right{margin-left:auto;display:flex;gap:7px;align-items:center}
+.pb{padding:14px 16px 16px}
+.why{
+  font-family:var(--serif);font-size:12px;line-height:1.68;color:var(--ink2);
+  border-left:2px solid var(--evidence);padding:2px 0 2px 12px;margin:0 0 14px;
+}
+.why b{color:var(--ink);font-weight:500}
+.why code{font-family:var(--mono);font-size:11px;background:var(--sunk);padding:1px 4px;border-radius:3px}
+
+.verdict{
+  display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:8px;margin-bottom:16px;
+  border:1px solid var(--rule);background:var(--card);
+}
+.verdict .badge{
+  font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;padding:4px 9px;border-radius:4px;flex:0 0 auto;
+}
+.verdict.ok .badge{background:var(--good-soft);color:var(--good)}
+.verdict.warn .badge{background:var(--warn-soft);color:var(--warn)}
+.verdict.bad .badge{background:var(--bad-soft);color:var(--bad)}
+.verdict p{margin:0;font-size:12.5px;color:var(--ink2)}
+.verdict p b{color:var(--ink);font-weight:600}
+
+table{border-collapse:collapse;width:100%}
+th{
+  text-align:left;font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--ink3);
+  font-weight:600;padding:0 10px 8px;border-bottom:1px solid var(--rule2);white-space:nowrap;
+}
+th.r,td.r{text-align:right}
+th.c,td.c{text-align:center}
+td{padding:8px 10px;border-bottom:1px solid var(--rule);vertical-align:middle;font-size:12.5px}
+tbody tr:last-child td{border-bottom:none}
+tr.clk{cursor:pointer}
+tr.clk:hover td{background:var(--card2)}
+tr.sel td{background:var(--evidence-soft)}
+.chip{
+  display:inline-block;font-size:10px;padding:2px 6px;border-radius:3px;letter-spacing:.03em;white-space:nowrap;
+  border:1px solid transparent;
+}
+.chip.m{background:var(--evidence-soft);color:var(--evidence)}
+.chip.e{background:var(--warn-soft);color:var(--warn)}
+.chip.a{background:var(--bad-soft);color:var(--bad)}
+.chip.fund{background:var(--fund);color:#fff;font-weight:500}
+.chip.out{background:var(--sunk);color:var(--ink3)}
+.bar{height:7px;border-radius:2px;background:var(--sunk);overflow:hidden;display:flex;min-width:54px}
+.bar i{display:block;height:100%}
+svg{display:block;overflow:visible}
+.axis{font-family:var(--mono);font-size:9.5px;fill:var(--ink3)}
+.gridline{stroke:var(--rule);stroke-width:1}
+
+/* ---------------- footer ---------------- */
+footer{
+  display:flex;align-items:center;gap:0;padding:0 16px;background:var(--card);border-top:1px solid var(--rule);
+  font-size:11.5px;overflow-x:auto;white-space:nowrap;
+}
+footer .cell{padding:0 15px;border-right:1px solid var(--rule);display:flex;gap:7px;align-items:baseline;height:22px}
+footer .cell:first-child{padding-left:0}
+footer .cell:last-child{border-right:none}
+footer .k{font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--ink3)}
+footer .v{font-family:var(--mono);font-variant-numeric:tabular-nums;font-weight:500}
+
+/* ---------------- modal ---------------- */
+.veil{
+  position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:26px;
+  background:rgba(10,16,18,.42);backdrop-filter:blur(3px);
+}
+.veil[hidden]{display:none}
+.sheet{
+  background:var(--card);border:1px solid var(--rule2);border-radius:10px;box-shadow:var(--shadow);
+  max-width:760px;width:100%;max-height:88vh;overflow-y:auto;
+}
+.sheet .sh{display:flex;align-items:center;gap:10px;padding:15px 22px;border-bottom:1px solid var(--rule);position:sticky;top:0;background:var(--card);z-index:1}
+.sheet .sh h2{margin:0;font-size:15px;font-weight:600}
+.sheet .sb{padding:20px 22px 26px}
+.sheet h4{margin:22px 0 7px;font-size:12.5px;font-weight:600}
+.sheet h4:first-child{margin-top:0}
+.sheet p{margin:0 0 10px;font-family:var(--serif);font-size:13px;line-height:1.72;color:var(--ink2)}
+.sheet p b{color:var(--ink);font-weight:500}
+.sheet code,.eqn{font-family:var(--mono);font-size:11.5px}
+.eqn{display:block;background:var(--sunk);padding:10px 13px;border-radius:6px;margin:8px 0 12px;color:var(--ink);overflow-x:auto}
+.sheet ul{margin:0 0 12px;padding-left:18px;font-family:var(--serif);font-size:13px;line-height:1.7;color:var(--ink2)}
+.sheet li{margin-bottom:5px}
+textarea{
+  width:100%;min-height:150px;font-family:var(--mono);font-size:11.5px;padding:10px;border-radius:6px;
+  border:1px solid var(--rule2);background:var(--card2);color:var(--ink);resize:vertical;
+}
+.tip{position:relative}
+.tip .tt{
+  position:absolute;z-index:30;left:0;top:calc(100% + 6px);width:250px;padding:9px 11px;border-radius:6px;
+  background:var(--ink);color:var(--paper);font-size:11px;line-height:1.55;font-family:var(--sans);
+  opacity:0;pointer-events:none;transition:opacity .13s;box-shadow:var(--shadow);letter-spacing:0;text-transform:none;font-weight:400;
+}
+.tip:hover .tt{opacity:1}
+
+.gridwrap{overflow-x:auto;border:1px solid var(--rule);border-radius:8px;background:var(--card)}
+.gridwrap table{min-width:820px}
+.gridwrap td,.gridwrap th{padding:5px 8px;font-size:12px}
+.cellin{
+  width:100%;border:1px solid transparent;background:transparent;padding:3px 5px;border-radius:4px;
+  font-family:var(--mono);font-size:11.5px;text-align:right;font-variant-numeric:tabular-nums;
+}
+.cellin:hover{border-color:var(--rule)}
+.cellin:focus{border-color:var(--evidence);background:var(--card2);outline:none}
+.cellin.txt{text-align:left;font-family:var(--sans);font-size:12.5px}
+.cellin.bad{border-color:var(--bad)}
+select.cellin{text-align:left;font-family:var(--sans);font-size:11.5px;cursor:pointer;border-color:var(--rule)}
+
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:11px;color:var(--ink3);margin-top:10px}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:1180px){ .two{grid-template-columns:1fr} }
+@media (max-width:900px){
+  #body{grid-template-columns:1fr}
+  #rail{position:fixed;z-index:40;top:54px;bottom:40px;width:286px;transform:translateX(-101%);transition:transform .22s;box-shadow:var(--shadow)}
+  body.railOpen #rail{transform:none}
+}
+#railToggle{display:none}
+@media (max-width:900px){ #railToggle{display:inline-flex} }
+</style>
+</head>
+<body>
+<div id="app">
+
+<header>
+  <button class="btn sm" id="railToggle" aria-label="Model controls">Model</button>
+  <div class="brand"><h1>QUORUM</h1><span>portfolio decision workbench</span></div>
+  <div class="scen">
+    <label for="scenName">Scenario</label>
+    <input id="scenName" value="FY26 Q2 platform backlog — bottler network">
+  </div>
+  <div class="hbtns">
+    <button class="btn" id="bData">Edit data</button>
+    <button class="btn" id="bMethods">Methods</button>
+    <button class="btn" id="bExport">Export CSV</button>
+  </div>
+</header>
+
+<div id="body">
+
+  <!-- ============ model rail ============ -->
+  <aside id="rail">
+    <div class="grp">
+      <h2>Evidence / consensus blend
+        <span class="q tip">?<span class="tt">How much of the composite score comes from measured evidence versus stakeholder votes. Your framework runs at about 30% evidence.</span></span>
+      </h2>
+      <div class="blend">
+        <div class="blendBar"><div class="ev" id="blendEv">30%</div><div class="co" id="blendCo">70%</div></div>
+        <div class="blendLbl"><span>evidence</span><span>consensus</span></div>
+      </div>
+      <input type="range" id="alpha" min="0" max="1" step="0.01" value="0.30">
+      <p class="note" id="alphaNote"></p>
+    </div>
+
+    <div class="grp">
+      <h2>Evidence weights
+        <span class="q tip">?<span class="tt">Relative weight of each criterion inside the evidence half. Normalised to sum to 100%, so only the ratios matter.</span></span>
+      </h2>
+      <div class="fld"><div class="top"><span class="nm">Revenue impact</span><span class="vl num" id="wRevV">40%</span></div>
+        <input type="range" id="wRev" min="0" max="100" step="1" value="40"></div>
+      <div class="fld"><div class="top"><span class="nm">UX / adoption</span><span class="vl num" id="wUxV">30%</span></div>
+        <input type="range" id="wUx" min="0" max="100" step="1" value="30"></div>
+      <div class="fld"><div class="top"><span class="nm">Commercial capability</span><span class="vl num" id="wCapV">30%</span></div>
+        <input type="range" id="wCap" min="0" max="100" step="1" value="30"></div>
+    </div>
+
+    <div class="grp">
+      <h2>Aggregation
+        <span class="q tip">?<span class="tt">Mean rating uses the numbers bottlers wrote down. Borda uses only the order each bottler put items in, which cancels out generous and stingy raters.</span></span>
+      </h2>
+      <div class="fld">
+        <div class="top"><span class="nm">Votes become a score by</span></div>
+        <div class="seg" id="segAgg">
+          <button data-v="mean" aria-pressed="true">Mean rating</button>
+          <button data-v="borda" aria-pressed="false">Borda ranks</button>
+        </div>
+      </div>
+      <div class="fld">
+        <div class="top"><span class="nm">Evidence normalised by</span></div>
+        <div class="seg" id="segNorm">
+          <button data-v="minmax" aria-pressed="true">Min–max</button>
+          <button data-v="z" aria-pressed="false">Z-score</button>
+        </div>
+      </div>
+      <p class="note" id="aggNote"></p>
+    </div>
+
+    <div class="grp">
+      <h2>Delivery capacity</h2>
+      <div class="fld">
+        <div class="top"><span class="nm">Engineer-weeks available</span><span class="vl num" id="capV">60</span></div>
+        <input type="range" id="cap" min="5" max="200" step="1" value="60">
+        <div class="top" style="margin-top:6px"><span class="sub" id="capSub"></span></div>
+      </div>
+    </div>
+
+    <div class="grp">
+      <h2>Uncertainty model
+        <span class="q tip">?<span class="tt">Every score carries a tier. Measured ±0.5, Estimated ±1.2, Asserted ±2.2 on the 0–10 scale, times this multiplier. Voters are resampled with replacement each trial.</span></span>
+      </h2>
+      <div class="fld"><div class="top"><span class="nm">Simulation trials</span><span class="vl num" id="trialsV">4,000</span></div>
+        <input type="range" id="trials" min="500" max="20000" step="500" value="4000"></div>
+      <div class="fld"><div class="top"><span class="nm">Uncertainty scale</span><span class="vl num" id="uncV">1.00×</span></div>
+        <input type="range" id="unc" min="0" max="2" step="0.05" value="1"></div>
+      <div class="fld"><button class="btn" id="bRun" style="width:100%;justify-content:center">Re-run simulation</button></div>
+      <p class="note" id="mcNote"></p>
+    </div>
+  </aside>
+
+  <!-- ============ main ============ -->
+  <main id="main">
+    <nav id="tabs" role="tablist">
+      <button role="tab" data-v="rank"  aria-selected="true">Ranking</button>
+      <button role="tab" data-v="robust" aria-selected="false">Robustness</button>
+      <button role="tab" data-v="port"  aria-selected="false">Portfolio</button>
+      <button role="tab" data-v="align" aria-selected="false">Alignment</button>
+      <button role="tab" data-v="data"  aria-selected="false">Data</button>
+    </nav>
+
+    <div id="views">
+
+      <section class="view on" id="v-rank">
+        <div class="verdict" id="rankVerdict"><span class="badge">—</span><p></p></div>
+        <div class="panel">
+          <div class="ph">
+            <h3>Ranked backlog</h3>
+            <p>click a row for its evidence, its votes and what would move it</p>
+            <span class="right"><span class="legend" style="margin:0">
+              <span><i style="background:var(--evidence)"></i>evidence</span>
+              <span><i style="background:var(--consensus)"></i>consensus</span>
+              <span><i style="background:var(--fund)"></i>funded</span>
+            </span></span>
+          </div>
+          <div class="pb" style="padding:0 6px 6px" id="rankTable"></div>
+        </div>
+      </section>
+
+      <section class="view" id="v-robust">
+        <div class="panel">
+          <div class="ph"><h3>Where each item can land</h3><p>rank distribution across the simulation</p></div>
+          <div class="pb">
+            <p class="why">Every score in this backlog is an estimate with a tier attached, and the eleven bottlers who voted are a sample of the ones who could have. The simulation redraws both — perturbing each score by its tier's uncertainty and resampling voters with replacement — then re-ranks from scratch. <b>A dark band means the item lands in that rank almost every time; a smeared band means its position is an artefact of noise, not a finding.</b></p>
+            <div id="ribbon"></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="ph"><h3>Regime map</h3><p>who is #1 as the blend and the weights move</p></div>
+          <div class="pb">
+            <p class="why">Sweeping one parameter from 0 to 1 and re-ranking at each step shows the <b>regions where the answer does not change</b>. If your current setting sits in the middle of a wide band, the meeting about that weight is not worth having. If it sits near an edge, the ranking is a coin-flip on a number nobody measured.</p>
+            <div id="regimes"></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="ph"><h3>What would have to change</h3><p>the smallest single move that reorders the top of the list</p></div>
+          <div class="pb"><div id="flips"></div></div>
+        </div>
+      </section>
+
+      <section class="view" id="v-port">
+        <div class="panel">
+          <div class="ph"><h3>Value against effort</h3><p>composite score against engineer-weeks — the frontier, and what capacity actually buys</p></div>
+          <div class="pb">
+            <p class="why">An item is <b>dominated</b> when something else scores at least as high for no more effort — there is no weighting of your criteria under which it deserves the slot. Filled markers are the funded set chosen by exact optimisation under your capacity; hollow markers were left out.</p>
+            <div id="scatter"></div>
+          </div>
+        </div>
+        <div class="two">
+          <div class="panel">
+            <div class="ph"><h3>Selection method</h3><p>optimal packing vs working down the list</p></div>
+            <div class="pb"><div id="methods"></div></div>
+          </div>
+          <div class="panel">
+            <div class="ph"><h3>Funded set</h3><p>with the share of simulations that fund each item</p></div>
+            <div class="pb" style="padding:0 6px 6px"><div id="fundList"></div></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="view" id="v-align">
+        <div class="panel">
+          <div class="ph"><h3>Who votes together</h3><p>rank correlation between bottlers, ordered so blocs sit adjacent</p></div>
+          <div class="pb">
+            <p class="why">Each cell is <b>Kendall's τ-b</b>: of all the pairs of backlog items two bottlers both ranked, the share they ordered the same way, scaled to run from −1 to +1. Rows are reordered by average-linkage clustering, so voting blocs appear as dark squares on the diagonal. A network that looks like one square is a network with one opinion.</p>
+            <div id="tau"></div>
+          </div>
+        </div>
+        <div class="two">
+          <div class="panel">
+            <div class="ph"><h3>Influence</h3><p>how far the ranking moves if a bottler abstains</p></div>
+            <div class="pb"><div id="influence"></div></div>
+          </div>
+          <div class="panel">
+            <div class="ph"><h3>Contested items</h3><p>spread of votes, widest first</p></div>
+            <div class="pb"><div id="dispersion"></div></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="view" id="v-data">
+        <div class="panel">
+          <div class="ph">
+            <h3>Backlog</h3><p>scores are 0–10; the tier next to each sets its uncertainty</p>
+            <span class="right">
+              <button class="btn sm" id="bAddItem">Add item</button>
+              <button class="btn sm" id="bImport">Import / paste</button>
+              <button class="btn sm danger" id="bReset">Reset to sample</button>
+            </span>
+          </div>
+          <div class="pb"><div class="gridwrap" id="itemGrid"></div></div>
+        </div>
+        <div class="panel">
+          <div class="ph">
+            <h3>Votes</h3><p>1 = do not build, 5 = build first</p>
+            <span class="right">
+              <button class="btn sm" id="bAddVoter">Add bottler</button>
+            </span>
+          </div>
+          <div class="pb"><div class="gridwrap" id="voteGrid"></div></div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<footer>
+  <div class="cell"><span class="k">Funded</span><span class="v" id="fFund">—</span></div>
+  <div class="cell"><span class="k">Capacity</span><span class="v" id="fCap">—</span></div>
+  <div class="cell"><span class="k">Value captured</span><span class="v" id="fVal">—</span></div>
+  <div class="cell"><span class="k">Cost of ranking by list</span><span class="v" id="fGap">—</span></div>
+  <div class="cell"><span class="k">Top-3 stable</span><span class="v" id="fStab">—</span></div>
+  <div class="cell"><span class="k">Network agreement</span><span class="v" id="fAgree">—</span></div>
+  <div class="cell" style="margin-left:auto;border:none"><span class="k" id="fTime">—</span></div>
+</footer>
+</div>
+
+<div class="veil" id="modal" hidden>
+  <div class="sheet">
+    <div class="sh"><h2 id="modalT">Methods</h2><button class="btn sm" id="modalX" style="margin-left:auto">Close</button></div>
+    <div class="sb" id="modalB"></div>
+  </div>
+</div>
+
+<script>
+"use strict";
+(function(){
+/* ==================================================================
+   QUORUM — a decision workbench for a backlog scored by many orgs.
+   Everything below is computed in the browser from the data in the
+   Data tab: nothing is pre-baked, and the simulation is seeded so the
+   same inputs always give the same answer.
+   ================================================================== */
+
+const $  = s => document.querySelector(s);
+const clamp = (v,a,b) => v<a?a:v>b?b:v;
+const fmt = (v,d=2) => (v==null||!isFinite(v)) ? '—' : v.toFixed(d);
+const pct = v => (v*100).toFixed(0) + '%';
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const sum = a => a.reduce((x,y)=>x+y,0);
+const mean = a => a.length ? sum(a)/a.length : 0;
+const sd = a => { if(a.length<2) return 0; const m=mean(a); return Math.sqrt(sum(a.map(x=>(x-m)*(x-m)))/(a.length-1)); };
+
+/* deterministic PRNG — a decision tool that gives different answers on
+   refresh is not a decision tool */
+function mulberry32(a){
+  return function(){
+    a |= 0; a = a + 0x6D2B79F5 | 0;
+    let t = Math.imul(a ^ a >>> 15, 1 | a);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+function gaussFactory(rnd){
+  let spare = null;
+  return function(){
+    if(spare !== null){ const s = spare; spare = null; return s; }
+    let u, v, s2;
+    do { u = rnd()*2-1; v = rnd()*2-1; s2 = u*u + v*v; } while(s2 >= 1 || s2 === 0);
+    const f = Math.sqrt(-2*Math.log(s2)/s2);
+    spare = v*f; return u*f;
+  };
+}
+
+const TIER = { M:{n:'Measured', sd:0.5, e:0.10}, E:{n:'Estimated', sd:1.2, e:0.22}, A:{n:'Asserted', sd:2.2, e:0.40} };
+const CRIT = ['Revenue impact','UX / adoption','Commercial capability'];
+const CRIT_SHORT = ['Revenue','UX','Capability'];
+
+/* ------------------------------------------------------------------
+   1. THE SAMPLE SCENARIO
+   Item theme loadings drive the seeded votes: three currents run
+   through a bottler network — margin discipline, self-serve
+   enablement, and AI/experience — and bottlers weight them differently.
+   ------------------------------------------------------------------ */
+const SEED_ITEMS = [
+  {n:'Unified customer-type dimension v2', s:[6,8,9], t:['E','M','E'], e:14, et:'E', th:[.34,.92,.30]},
+  {n:'Route-level margin dashboard',       s:[9,6,5], t:['M','M','E'], e:10, et:'M', th:[.96,.16,.06]},
+  {n:'Self-serve attribution builder',     s:[7,9,8], t:['E','E','M'], e:22, et:'E', th:[.26,.95,.36]},
+  {n:'GA4 → Snowflake ingestion hardening',s:[3,4,7], t:['M','A','E'], e:6,  et:'M', th:[.44,.40,.22]},
+  {n:'Equivalent-unit conversion service', s:[5,5,9], t:['E','E','M'], e:8,  et:'M', th:[.62,.58,.10]},
+  {n:'Cooler telemetry ingest (IoT)',      s:[8,3,6], t:['A','A','A'], e:26, et:'A', th:[.72,.10,.30]},
+  {n:'Promotion lift measurement',         s:[9,5,7], t:['E','E','E'], e:18, et:'E', th:[.90,.24,.20]},
+  {n:'Spend-quintile segmentation refresh',s:[4,6,5], t:['M','E','E'], e:5,  et:'M', th:[.52,.50,.14]},
+  {n:'Semantic layer for NL query',        s:[5,9,8], t:['A','E','A'], e:20, et:'E', th:[.12,.42,.97]},
+  {n:'Outlet-level demand forecast',       s:[8,5,8], t:['E','A','E'], e:24, et:'A', th:[.80,.22,.44]},
+  {n:'Data-quality SLA monitoring',        s:[4,5,8], t:['M','E','M'], e:9,  et:'M', th:[.50,.44,.12]},
+  {n:'Bottler-configurable KPI registry',  s:[3,7,9], t:['E','M','E'], e:16, et:'E', th:[.20,.88,.28]},
+];
+const SEED_VOTERS = [
+  {n:'Great Lakes',   a:[.72,.20,.08], g: 0.10},
+  {n:'Southeast',     a:[.68,.22,.10], g:-0.30},
+  {n:'Mid-Atlantic',  a:[.62,.26,.12], g: 0.55},
+  {n:'Gulf Coast',    a:[.66,.20,.14], g: 0.00},
+  {n:'Central Plains',a:[.42,.42,.16], g:-0.10},
+  {n:'Northeast',     a:[.35,.48,.17], g: 0.30},
+  {n:'Southwest',     a:[.40,.32,.28], g: 0.00},
+  {n:'Mountain',      a:[.18,.66,.16], g:-0.45},
+  {n:'Great Basin',   a:[.15,.70,.15], g: 0.20},
+  {n:'Pacific NW',    a:[.16,.50,.34], g: 0.10},
+  {n:'Rio Grande',    a:[.20,.38,.42], g: 0.65},
+];
+function buildSample(){
+  const rnd = mulberry32(20260908), g = gaussFactory(rnd);
+  const voters = SEED_VOTERS.map((v,i)=>({id:'b'+i, name:v.n}));
+  const items = SEED_ITEMS.map((it,i)=>({
+    id:'i'+i, name:it.n, s:it.s.slice(), t:it.t.slice(), e:it.e, et:it.et,
+    v: SEED_VOTERS.map(vt => {
+      const fit = vt.a[0]*it.th[0] + vt.a[1]*it.th[1] + vt.a[2]*it.th[2];
+      return clamp(Math.round(1 + 4*fit + vt.g + g()*0.42), 1, 5);
+    })
+  }));
+  return {name:'FY26 Q2 platform backlog — bottler network', items, voters};
+}
+
+/* ------------------------------------------------------------------
+   2. STATE
+   ------------------------------------------------------------------ */
+let ST = buildSample();
+let M  = {alpha:0.30, w:[40,30,30], agg:'mean', norm:'minmax', cap:60, trials:4000, unc:1};
+let sel = null;            // selected item id
+let R = null;              // last computed result bundle
+const KEY = 'quorum.v1';
+
+function save(){
+  try{ localStorage.setItem(KEY, JSON.stringify({ST, M})); }catch(e){}
+}
+function load(){
+  try{
+    const raw = localStorage.getItem(KEY);
+    if(!raw) return false;
+    const o = JSON.parse(raw);
+    if(!o || !o.ST || !Array.isArray(o.ST.items) || !o.ST.items.length) return false;
+    ST = o.ST; M = Object.assign(M, o.M || {});
+    return true;
+  }catch(e){ return false; }
+}
+
+/* ------------------------------------------------------------------
+   3. THE MODEL
+   ------------------------------------------------------------------ */
+function wNorm(){
+  const t = sum(M.w) || 1;
+  return M.w.map(x => x/t);
+}
+/* Normalise one criterion column into [0,1].
+   min-max is relative to THIS backlog — add one huge item and everything
+   else is squashed. z-score is relative to the spread, and is mapped
+   through ±2.5 standard deviations, so outliers saturate instead of
+   dominating. */
+function normCol(vals, method, out){
+  const n = vals.length;
+  if(method === 'minmax'){
+    let lo = Infinity, hi = -Infinity;
+    for(let i=0;i<n;i++){ if(vals[i]<lo) lo=vals[i]; if(vals[i]>hi) hi=vals[i]; }
+    const d = hi - lo;
+    for(let i=0;i<n;i++) out[i] = d < 1e-9 ? 0.5 : (vals[i]-lo)/d;
+  }else{
+    let m = 0; for(let i=0;i<n;i++) m += vals[i]; m /= n;
+    let v = 0; for(let i=0;i<n;i++) v += (vals[i]-m)*(vals[i]-m);
+    const s = Math.sqrt(v/Math.max(1,n-1));
+    for(let i=0;i<n;i++) out[i] = s < 1e-9 ? 0.5 : clamp(0.5 + (vals[i]-m)/(s*5), 0, 1);
+  }
+  return out;
+}
+function evidence(scores, method, wn, n, scratch){
+  const col = scratch.col, raw = scratch.raw, E = scratch.E;
+  for(let i=0;i<n;i++) E[i] = 0;
+  for(let k=0;k<3;k++){
+    for(let i=0;i<n;i++) raw[i] = scores[i*3+k];
+    normCol(raw, method, col);
+    for(let i=0;i<n;i++) E[i] += wn[k]*col[i];
+  }
+  return E;
+}
+/* Votes → a [0,1] score.
+   mean  : uses the numbers as written. A bottler who rates everything 5
+           counts for more than one who uses the whole scale.
+   borda : uses only each bottler's ordering. Scale-use washes out —
+           the common denominator under eleven different rating habits. */
+function consensus(votes, V, n, voterIdx, agg, scratch){
+  const C = scratch.C, m = voterIdx.length;
+  for(let i=0;i<n;i++) C[i] = 0;
+  if(agg === 'mean'){
+    for(let q=0;q<m;q++){ const j = voterIdx[q]; for(let i=0;i<n;i++) C[i] += votes[i*V+j]; }
+    for(let i=0;i<n;i++) C[i] = (C[i]/m - 1) / 4;
+    return C;
+  }
+  const ord = scratch.ord;
+  for(let q=0;q<m;q++){
+    const j = voterIdx[q];
+    for(let i=0;i<n;i++) ord[i] = i;
+    ord.sort((a,b) => votes[b*V+j] - votes[a*V+j]);
+    let k = 0;
+    while(k < n){
+      let e = k;
+      while(e+1 < n && votes[ord[e+1]*V+j] === votes[ord[k]*V+j]) e++;
+      const avg = (k+e)/2;                       // average rank over the tie block
+      const pts = n === 1 ? 1 : (n-1-avg)/(n-1);
+      for(let q2=k;q2<=e;q2++) C[ord[q2]] += pts;
+      k = e+1;
+    }
+  }
+  for(let i=0;i<n;i++) C[i] /= m;
+  return C;
+}
+function composite(E, C, alpha, n, out){
+  for(let i=0;i<n;i++) out[i] = alpha*E[i] + (1-alpha)*C[i];
+  return out;
+}
+function rankOf(S, n, idx){
+  for(let i=0;i<n;i++) idx[i] = i;
+  idx.sort((a,b) => S[b] - S[a] || a - b);
+  return idx;                                     // idx[r] = item index at rank r
+}
+/* exact 0/1 knapsack — the funded set that maximises total score under
+   the effort budget. Effort is rounded to whole weeks for the table. */
+function knapsack(vals, wts, cap, n, buf){
+  const W = Math.max(0, Math.round(cap));
+  const stride = W + 1;
+  const need = (n+1)*stride;
+  if(!buf.dp || buf.dp.length < need) buf.dp = new Float64Array(need);
+  const dp = buf.dp;
+  dp.fill(0, 0, need);
+  const iw = buf.iw && buf.iw.length >= n ? buf.iw : (buf.iw = new Int32Array(Math.max(n,16)));
+  for(let i=0;i<n;i++) iw[i] = Math.max(1, Math.round(wts[i]));
+  for(let i=1;i<=n;i++){
+    const wi = iw[i-1], vi = vals[i-1], row = i*stride, prev = (i-1)*stride;
+    for(let c=0;c<stride;c++){
+      let best = dp[prev+c];
+      if(c >= wi){ const cand = dp[prev+c-wi] + vi; if(cand > best) best = cand; }
+      dp[row+c] = best;
+    }
+  }
+  const set = [];
+  let c = W;
+  for(let i=n;i>=1;i--){
+    if(dp[i*stride+c] > dp[(i-1)*stride+c] + 1e-12){ set.push(i-1); c -= iw[i-1]; }
+  }
+  set.reverse();
+  return {value: dp[n*stride+W], set};
+}
+/* take items in rank order until the next one does not fit and stop —
+   what a prioritised list actually produces in a planning meeting */
+function greedyByRank(vals, wts, cap, order){
+  let used = 0, val = 0; const set = [];
+  for(const i of order){
+    const w = Math.max(1, Math.round(wts[i]));
+    if(used + w <= cap){ used += w; val += vals[i]; set.push(i); }
+  }
+  return {value: val, set, used};
+}
+function greedyByDensity(vals, wts, cap, n){
+  const order = Array.from({length:n},(_,i)=>i)
+    .sort((a,b) => (vals[b]/Math.max(1,wts[b])) - (vals[a]/Math.max(1,wts[a])));
+  return greedyByRank(vals, wts, cap, order);
+}
+/* Kendall's tau-b over two score vectors (higher = better) */
+function kendall(a, b, n){
+  let nc=0, nd=0, tA=0, tB=0;
+  for(let i=0;i<n;i++) for(let j=i+1;j<n;j++){
+    const da = Math.sign(a[i]-a[j]), db = Math.sign(b[i]-b[j]);
+    if(da === 0 && db === 0) continue;
+    if(da === 0){ tA++; continue; }
+    if(db === 0){ tB++; continue; }
+    if(da === db) nc++; else nd++;
+  }
+  const den = Math.sqrt((nc+nd+tA)*(nc+nd+tB));
+  return den < 1e-12 ? 0 : (nc-nd)/den;
+}
+/* average-linkage seriation so blocs land adjacent in the matrix */
+function seriate(D, n){
+  let cl = Array.from({length:n}, (_,i)=>[i]);
+  const d = (A,B) => { let s=0; for(const x of A) for(const y of B) s += D[x*n+y]; return s/(A.length*B.length); };
+  while(cl.length > 1){
+    let bi=0, bj=1, bd=Infinity;
+    for(let i=0;i<cl.length;i++) for(let j=i+1;j<cl.length;j++){
+      const v = d(cl[i], cl[j]);
+      if(v < bd){ bd=v; bi=i; bj=j; }
+    }
+    const merged = cl[bi].concat(cl[bj]);
+    cl = cl.filter((_,k)=> k!==bi && k!==bj);
+    cl.push(merged);
+  }
+  return cl[0];
+}
+
+/* ------------------------------------------------------------------
+   4. COMPUTE EVERYTHING
+   ------------------------------------------------------------------ */
+let TRIALS_OVERRIDE = null;
+function mkScratch(n){
+  return {col:new Float64Array(n), raw:new Float64Array(n), E:new Float64Array(n),
+          C:new Float64Array(n), ord:new Array(n)};
+}
+function compute(){
+  const t0 = performance.now();
+  const items = ST.items, voters = ST.voters, n = items.length, V = voters.length;
+  if(!n || !V) return null;
+
+  const scores = new Float64Array(n*3), votes = new Float64Array(n*V), eff = new Float64Array(n);
+  for(let i=0;i<n;i++){
+    for(let k=0;k<3;k++) scores[i*3+k] = +items[i].s[k] || 0;
+    eff[i] = Math.max(0.5, +items[i].e || 1);
+    for(let j=0;j<V;j++) votes[i*V+j] = clamp(+items[i].v[j] || 3, 1, 5);
+  }
+  const wn = wNorm();
+  const sc = mkScratch(n), sc2 = mkScratch(n), kbuf = {};
+  const allV = Array.from({length:V},(_,j)=>j);
+
+  const Eb = Float64Array.from(evidence(scores, M.norm, wn, n, sc));
+  const Cb = Float64Array.from(consensus(votes, V, n, allV, M.agg, sc));
+  const S  = composite(Eb, Cb, M.alpha, n, new Float64Array(n));
+  const order = rankOf(S, n, new Array(n));
+  const rank = new Int32Array(n);
+  order.forEach((it,r) => rank[it] = r);
+
+  /* --- selection under capacity ------------------------------------ */
+  const knap   = knapsack(S, eff, M.cap, n, kbuf);
+  const gRank  = greedyByRank(S, eff, M.cap, order);
+  const gDens  = greedyByDensity(S, eff, M.cap, n);
+  const funded = new Set(knap.set);
+  const usedWeeks = sum(knap.set.map(i => Math.max(1, Math.round(eff[i]))));
+  const totalEffort = sum(Array.from(eff, v => Math.round(v)));
+  const totalValue = sum(Array.from(S));
+
+  /* --- dominated items --------------------------------------------- */
+  const dominated = new Uint8Array(n);
+  for(let i=0;i<n;i++) for(let j=0;j<n;j++){
+    if(i===j) continue;
+    if(S[j] >= S[i] - 1e-12 && eff[j] <= eff[i] + 1e-12 && (S[j] > S[i] + 1e-12 || eff[j] < eff[i] - 1e-12)){
+      dominated[i] = 1; break;
+    }
+  }
+
+  /* --- Monte Carlo --------------------------------------------------- */
+  const T = TRIALS_OVERRIDE || M.trials;
+  const rankCount = new Float64Array(n*n), fundCount = new Float64Array(n), topKc = new Float64Array(n);
+  const pS = new Float64Array(n*3), pE = new Float64Array(n), Sm = new Float64Array(n);
+  const idx = new Array(n), vIdx = new Array(V);
+  const rnd = mulberry32(0x51F0C7), G = gaussFactory(rnd);
+  const base3 = order.slice(0, Math.min(3,n)).slice().sort((a,b)=>a-b);
+  let top1Hold = 0, top3Hold = 0;
+  const mcBuf = {};
+  for(let t=0;t<T;t++){
+    for(let i=0;i<n;i++) for(let k=0;k<3;k++){
+      const s = TIER[items[i].t[k]].sd * M.unc;
+      pS[i*3+k] = s > 0 ? clamp(scores[i*3+k] + G()*s, 0, 10) : scores[i*3+k];
+    }
+    const Em = evidence(pS, M.norm, wn, n, sc);
+    for(let j=0;j<V;j++) vIdx[j] = (rnd()*V) | 0;
+    const Cm = consensus(votes, V, n, vIdx, M.agg, sc2);
+    composite(Em, Cm, M.alpha, n, Sm);
+    for(let i=0;i<n;i++){
+      const se = TIER[items[i].et].e * M.unc;
+      pE[i] = Math.max(1, eff[i] * (se > 0 ? Math.exp(G()*se) : 1));
+    }
+    rankOf(Sm, n, idx);
+    for(let r=0;r<n;r++){ rankCount[idx[r]*n + r]++; if(r < 3) topKc[idx[r]]++; }
+    if(idx[0] === order[0]) top1Hold++;
+    if(n >= 3){
+      const t3 = [idx[0],idx[1],idx[2]].sort((a,b)=>a-b);
+      if(t3[0]===base3[0] && t3[1]===base3[1] && t3[2]===base3[2]) top3Hold++;
+    }
+    const kk = knapsack(Sm, pE, M.cap, n, mcBuf);
+    for(const i of kk.set) fundCount[i]++;
+  }
+  const pRank = new Float64Array(n*n);
+  for(let i=0;i<n*n;i++) pRank[i] = rankCount[i]/T;
+  const pFund = Array.from(fundCount, c => c/T);
+  const pTop3 = Array.from(topKc, c => c/T);
+  const expRank = Array.from({length:n}, (_,i) => {
+    let s = 0; for(let r=0;r<n;r++) s += (r+1)*pRank[i*n+r]; return s;
+  });
+  const bandRank = Array.from({length:n}, (_,i) => {
+    let acc = 0, lo = null, hi = null;
+    for(let r=0;r<n;r++){ acc += pRank[i*n+r]; if(lo===null && acc >= 0.10) lo = r+1; if(hi===null && acc >= 0.90) hi = r+1; }
+    return [lo||1, hi||n];
+  });
+
+  /* --- regime sweeps -------------------------------------------------- */
+  const Ssw = new Float64Array(n);
+  function sweep(kind){
+    const out = new Int32Array(101);
+    for(let s=0;s<=100;s++){
+      let alpha = M.alpha, w = wn.slice();
+      if(kind === 'alpha') alpha = s/100;
+      else{
+        const k = kind, tgt = s/100, o = [0,1,2].filter(x => x !== k);
+        const rest = wn[o[0]] + wn[o[1]];
+        w = [0,0,0]; w[k] = tgt;
+        if(rest > 1e-9){ w[o[0]] = (1-tgt)*wn[o[0]]/rest; w[o[1]] = (1-tgt)*wn[o[1]]/rest; }
+        else { w[o[0]] = w[o[1]] = (1-tgt)/2; }
+      }
+      const Es = evidence(scores, M.norm, w, n, sc2);
+      composite(Es, Cb, alpha, n, Ssw);
+      let bi = 0; for(let i=1;i<n;i++) if(Ssw[i] > Ssw[bi]) bi = i;
+      out[s] = bi;
+    }
+    return out;
+  }
+  const regimes = {alpha: sweep('alpha'), c0: sweep(0), c1: sweep(1), c2: sweep(2)};
+
+  /* --- what would have to change ------------------------------------- */
+  const ranges = [0,1,2].map(k => {
+    const col = Array.from({length:n}, (_,i) => scores[i*3+k]);
+    if(M.norm === 'minmax'){ const d = Math.max(...col) - Math.min(...col); return d < 1e-9 ? null : d; }
+    const s = sd(col); return s < 1e-9 ? null : s*5;
+  });
+  const flips = [];
+  for(let r=0; r < Math.min(5, n-1); r++){
+    const a = order[r], b = order[r+1], gap = S[a] - S[b];
+    const dE = Eb[a]-Eb[b], dC = Cb[a]-Cb[b];
+    const den = dC - dE;
+    let aStar = Math.abs(den) < 1e-9 ? null : dC/den;
+    if(aStar !== null && (aStar < 0 || aStar > 1)) aStar = null;
+    const opts = [];
+    for(let k=0;k<3;k++){
+      if(ranges[k] === null || wn[k] < 1e-9 || M.alpha < 1e-9) continue;
+      const dSdx = M.alpha * wn[k] / ranges[k];
+      const need = gap / dSdx;
+      const cur = scores[b*3+k];
+      if(cur + need <= 10.0001) opts.push({kind:'score', k, need, cur, target: cur+need});
+    }
+    if(M.alpha < 0.9999){
+      const dC_need = gap / (1 - M.alpha);
+      if(M.agg === 'mean'){
+        const dv = dC_need * 4;
+        opts.push({kind:'vote', voters: Math.ceil(dv*V - 1e-9), dv});
+      }else{
+        opts.push({kind:'borda', moves: Math.ceil(dC_need*(n-1)*V - 1e-9)});
+      }
+    }
+    flips.push({a, b, gap, aStar, opts});
+  }
+
+  /* --- alignment ------------------------------------------------------ */
+  const vv = Array.from({length:V}, (_,j) => Float64Array.from({length:n}, (_,i) => votes[i*V+j]));
+  const tau = new Float64Array(V*V);
+  for(let i=0;i<V;i++){ tau[i*V+i] = 1;
+    for(let j=i+1;j<V;j++){ const t = kendall(vv[i], vv[j], n); tau[i*V+j] = tau[j*V+i] = t; } }
+  const D = new Float64Array(V*V);
+  for(let i=0;i<V*V;i++) D[i] = 1 - tau[i];
+  const vOrder = V > 1 ? seriate(D, V) : [0];
+  let agreeSum = 0, agreeN = 0;
+  for(let i=0;i<V;i++) for(let j=i+1;j<V;j++){ agreeSum += tau[i*V+j]; agreeN++; }
+  const agreement = agreeN ? agreeSum/agreeN : 1;
+
+  const influence = [];
+  const Sx = new Float64Array(n);
+  for(let j=0;j<V;j++){
+    const others = allV.filter(x => x !== j);
+    if(!others.length){ influence.push(0); continue; }
+    const Cx = consensus(votes, V, n, others, M.agg, sc2);
+    composite(Eb, Cx, M.alpha, n, Sx);
+    influence.push((1 - kendall(S, Sx, n)) / 2);
+  }
+  const disp = Array.from({length:n}, (_,i) => {
+    const row = Array.from({length:V}, (_,j) => votes[i*V+j]);
+    const hist = [0,0,0,0,0];
+    row.forEach(v => hist[clamp(Math.round(v),1,5)-1]++);
+    return {i, sd: sd(row), mean: mean(row), hist};
+  }).sort((x,y) => y.sd - x.sd);
+
+  /* how much does the answer depend on the aggregation choice? */
+  const Cother = consensus(votes, V, n, allV, M.agg === 'mean' ? 'borda' : 'mean', sc2);
+  const Sother = composite(Eb, Float64Array.from(Cother), M.alpha, n, new Float64Array(n));
+  const aggTau = kendall(S, Sother, n);
+  const otherOrder = rankOf(Sother, n, new Array(n));
+
+  return {n, V, items, voters, scores, votes, eff, wn, E:Eb, C:Cb, S, order, rank,
+          knap, gRank, gDens, funded, usedWeeks, totalEffort, totalValue, dominated,
+          pRank, pFund, pTop3, expRank, bandRank, top1Hold:top1Hold/T, top3Hold:top3Hold/T,
+          regimes, flips, tau, vOrder, agreement, influence, disp, aggTau, otherOrder,
+          ms: performance.now()-t0};
+}
+
+/* ------------------------------------------------------------------
+   5. RENDERING
+   ------------------------------------------------------------------ */
+const CAT = ['#12908A','#C08424','#2E6FA8','#3C9463','#BE4A44','#7C5FB0','#9C7A2E','#4A8FB0'];
+const tierChip = t => '<span class="chip ' + t.toLowerCase() + '">' + TIER[t].n + '</span>';
+
+function bandSVG(lo, hi, cur, n){
+  const W = 92, H = 15, pad = 3, span = W - pad*2;
+  const x = r => pad + (n <= 1 ? span/2 : (r-1)/(n-1)*span);
+  const x0 = x(lo), x1 = x(hi);
+  return '<svg width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="rank '+lo+' to '+hi+'">'
+    + '<line x1="'+pad+'" y1="'+(H/2)+'" x2="'+(W-pad)+'" y2="'+(H/2)+'" stroke="var(--rule2)" stroke-width="1"/>'
+    + '<rect x="'+x0+'" y="'+(H/2-3.5)+'" width="'+Math.max(2,x1-x0)+'" height="7" rx="3.5" fill="var(--evidence)" opacity=".30"/>'
+    + '<circle cx="'+x(cur)+'" cy="'+(H/2)+'" r="3.1" fill="var(--evidence)"/></svg>';
+}
+
+function renderRank(){
+  const r = R, n = r.n;
+  const maxS = Math.max(...r.S);
+  const v = $('#rankVerdict');
+  const t1 = r.top1Hold, t3 = r.top3Hold;
+  const cls = t3 >= 0.7 ? 'ok' : t3 >= 0.4 ? 'warn' : 'bad';
+  const word = t3 >= 0.7 ? 'Stable' : t3 >= 0.4 ? 'Soft' : 'Fragile';
+  v.className = 'verdict ' + cls;
+  const runnerUp = n > 1 ? r.items[r.order[1]].name : '';
+  v.innerHTML = '<span class="badge">' + word + '</span><p><b>' + esc(r.items[r.order[0]].name) + '</b> ranks first, and holds that position in <b>'
+    + pct(t1) + '</b> of ' + M.trials.toLocaleString() + ' simulated redraws of the evidence and the voter panel. The same top three come back <b>' + pct(t3)
+    + '</b> of the time' + (t3 < 0.7 ? ' — treat the order below as a shortlist, not a sequence.' : '.')
+    + (n > 1 ? ' Nearest challenger: ' + esc(runnerUp) + '.' : '') + '</p>';
+
+  let h = '<table><thead><tr><th class="r" style="width:34px">#</th><th>Item</th>'
+    + '<th style="width:150px">Score mix</th><th class="r" style="width:60px">Score</th>'
+    + '<th style="width:100px">Likely rank</th><th class="r" style="width:56px">Weeks</th>'
+    + '<th class="c" style="width:78px">Funded</th></tr></thead><tbody>';
+  r.order.forEach((i, rk) => {
+    const it = r.items[i];
+    const ev = M.alpha*r.E[i], co = (1-M.alpha)*r.C[i];
+    const scale = maxS > 0 ? 100/maxS : 0;
+    const b = r.bandRank[i];
+    const isF = r.funded.has(i);
+    h += '<tr class="clk' + (sel === it.id ? ' sel' : '') + '" data-id="' + it.id + '">'
+      + '<td class="r num" style="color:var(--ink3)">' + (rk+1) + '</td>'
+      + '<td><span style="font-weight:' + (rk<3?500:400) + '">' + esc(it.name) + '</span></td>'
+      + '<td><span class="bar" title="evidence ' + fmt(ev,3) + ' · consensus ' + fmt(co,3) + '">'
+        + '<i style="width:' + (ev*scale) + '%;background:var(--evidence)"></i>'
+        + '<i style="width:' + (co*scale) + '%;background:var(--consensus)"></i></span></td>'
+      + '<td class="r num">' + fmt(r.S[i],3) + '</td>'
+      + '<td>' + bandSVG(b[0], b[1], rk+1, n) + '</td>'
+      + '<td class="r num">' + Math.round(r.eff[i]) + '</td>'
+      + '<td class="c">' + (isF
+          ? '<span class="chip fund">' + pct(r.pFund[i]) + '</span>'
+          : '<span class="chip out">' + pct(r.pFund[i]) + '</span>') + '</td></tr>';
+    if(sel === it.id) h += '<tr class="detail"><td colspan="7" style="padding:0;background:var(--card2)">' + detailHTML(i) + '</td></tr>';
+  });
+  h += '</tbody></table>';
+  $('#rankTable').innerHTML = h;
+  $('#rankTable').querySelectorAll('tr.clk').forEach(tr => tr.onclick = () => {
+    sel = (sel === tr.dataset.id) ? null : tr.dataset.id; renderRank();
+  });
+}
+
+function detailHTML(i){
+  const r = R, it = r.items[i], n = r.n, V = r.V;
+  let h = '<div style="padding:14px 16px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px">';
+
+  h += '<div><div style="font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin-bottom:8px">Evidence</div><table style="width:100%">';
+  for(let k=0;k<3;k++){
+    const rawv = r.scores[i*3+k];
+    const contrib = M.alpha * r.wn[k] * (function(){
+      const col = new Float64Array(n), out = new Float64Array(n);
+      for(let q=0;q<n;q++) col[q] = r.scores[q*3+k];
+      normCol(col, M.norm, out); return out[i];
+    })();
+    h += '<tr><td style="padding:4px 0;border:none;font-size:11.5px">' + CRIT[k] + '</td>'
+      + '<td class="r num" style="padding:4px 6px;border:none">' + rawv.toFixed(1) + '</td>'
+      + '<td style="padding:4px 0;border:none">' + tierChip(it.t[k]) + '</td>'
+      + '<td class="r num" style="padding:4px 0;border:none;color:var(--evidence)">+' + fmt(contrib,3) + '</td></tr>';
+  }
+  h += '<tr><td colspan="3" style="padding:6px 0 0;border:none;border-top:1px solid var(--rule);font-size:11.5px">Evidence half</td>'
+     + '<td class="r num" style="padding:6px 0 0;border:none;border-top:1px solid var(--rule);color:var(--evidence)">' + fmt(M.alpha*r.E[i],3) + '</td></tr>';
+  h += '<tr><td colspan="3" style="padding:4px 0;border:none;font-size:11.5px">Consensus half</td>'
+     + '<td class="r num" style="padding:4px 0;border:none;color:var(--consensus)">' + fmt((1-M.alpha)*r.C[i],3) + '</td></tr>';
+  h += '</table></div>';
+
+  const votes = Array.from({length:V},(_,j)=> r.votes[i*V+j]);
+  const hist = [0,0,0,0,0]; votes.forEach(x => hist[clamp(Math.round(x),1,5)-1]++);
+  const mx = Math.max(...hist, 1);
+  h += '<div><div style="font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin-bottom:8px">Votes · mean '
+     + fmt(mean(votes),2) + ' · sd ' + fmt(sd(votes),2) + '</div>'
+     + '<div style="display:flex;align-items:flex-end;gap:6px;height:56px">';
+  for(let b=0;b<5;b++){
+    h += '<div style="flex:1;text-align:center">'
+      + '<div style="height:' + (hist[b]/mx*40) + 'px;background:var(--consensus);opacity:' + (0.32+0.14*b).toFixed(2) + ';border-radius:2px 2px 0 0"></div>'
+      + '<div class="num" style="font-size:10px;color:var(--ink3);margin-top:3px">' + (b+1) + '</div></div>';
+  }
+  h += '</div><div style="font-size:10.5px;color:var(--ink3);margin-top:6px">'
+     + 'highest: ' + esc(r.voters[votes.indexOf(Math.max(...votes))].name)
+     + ' · lowest: ' + esc(r.voters[votes.indexOf(Math.min(...votes))].name) + '</div></div>';
+
+  const pr = Array.from({length:n},(_,q)=> r.pRank[i*n+q]);
+  const pmx = Math.max(...pr, 0.0001);
+  h += '<div><div style="font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin-bottom:8px">Rank distribution · expected '
+     + fmt(r.expRank[i],1) + '</div><div style="display:flex;align-items:flex-end;gap:2px;height:56px">';
+  for(let q=0;q<n;q++){
+    h += '<div style="flex:1;text-align:center" title="rank ' + (q+1) + ': ' + pct(pr[q]) + '">'
+      + '<div style="height:' + (pr[q]/pmx*40) + 'px;background:var(--evidence);opacity:.72;border-radius:2px 2px 0 0"></div>'
+      + '<div class="num" style="font-size:8.5px;color:var(--ink3);margin-top:3px">' + (q+1) + '</div></div>';
+  }
+  h += '</div><div style="font-size:10.5px;color:var(--ink3);margin-top:6px">in the funded set in ' + pct(r.pFund[i])
+     + ' of runs · in the top three ' + pct(r.pTop3[i]) + '</div></div>';
+
+  return h + '</div>';
+}
+
+function renderRobust(){
+  const r = R, n = r.n;
+  /* ---- rank ribbon ---- */
+  let h = '<div style="display:grid;grid-template-columns:230px repeat(' + n + ',1fr);gap:2px;align-items:center">';
+  h += '<div></div>';
+  for(let q=0;q<n;q++) h += '<div class="num" style="font-size:9.5px;color:var(--ink3);text-align:center">' + (q+1) + '</div>';
+  r.order.forEach(i => {
+    h += '<div style="font-size:11.5px;padding-right:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + esc(r.items[i].name) + '</div>';
+    for(let q=0;q<n;q++){
+      const p = r.pRank[i*n+q];
+      h += '<div style="height:19px;border-radius:2px;background:var(--sunk);position:relative" title="rank ' + (q+1) + ' · ' + pct(p) + '">'
+        + (p > 0.01 ? '<div style="position:absolute;inset:0;border-radius:2px;background:var(--evidence);opacity:' + Math.min(1, 0.08 + p*1.45).toFixed(3) + '"></div>' : '')
+        + '</div>';
+    }
+  });
+  h += '</div><div class="legend"><span>columns are final rank · darker means the item lands there more often</span></div>';
+  $('#ribbon').innerHTML = h;
+
+  /* ---- regime maps ---- */
+  const colorOf = {}; let ci = 0;
+  const allWinners = new Set();
+  ['alpha','c0','c1','c2'].forEach(k => r.regimes[k].forEach(x => allWinners.add(x)));
+  r.order.forEach(i => { if(allWinners.has(i)) colorOf[i] = CAT[ci++ % CAT.length]; });
+  const sweeps = [
+    {k:'alpha', label:'Evidence share of the score', cur:M.alpha, lo:'0% evidence', hi:'100% evidence'},
+    {k:'c0', label:'Weight on ' + CRIT[0], cur:r.wn[0], lo:'0%', hi:'100%'},
+    {k:'c1', label:'Weight on ' + CRIT[1], cur:r.wn[1], lo:'0%', hi:'100%'},
+    {k:'c2', label:'Weight on ' + CRIT[2], cur:r.wn[2], lo:'0%', hi:'100%'},
+  ];
+  let g = '';
+  sweeps.forEach(sw => {
+    const arr = r.regimes[sw.k];
+    const runs = [];
+    for(let s=0;s<=100;s++){
+      if(!runs.length || runs[runs.length-1].v !== arr[s]) runs.push({v:arr[s], a:s, b:s});
+      else runs[runs.length-1].b = s;
+    }
+    const here = runs.find(x => sw.cur*100 >= x.a - 0.5 && sw.cur*100 <= x.b + 0.5) || runs[0];
+    const width = (here.b - here.a + 1);
+    g += '<div style="margin-bottom:15px">'
+      + '<div style="display:flex;align-items:baseline;gap:8px;margin-bottom:5px">'
+      + '<span style="font-size:11.5px">' + esc(sw.label) + '</span>'
+      + '<span class="num" style="margin-left:auto;font-size:10.5px;color:var(--ink3)">now ' + pct(sw.cur)
+      + ' · unchanged from ' + here.a + '% to ' + here.b + '%</span></div>'
+      + '<div style="position:relative;height:26px;display:flex;gap:1px;border-radius:4px;overflow:hidden">';
+    runs.forEach(run => {
+      const w = (run.b - run.a + 1);
+      const nm = r.items[run.v].name;
+      g += '<div title="' + esc(nm) + ' leads from ' + run.a + '% to ' + run.b + '%" style="flex:' + w
+        + ' 0 0;background:' + colorOf[run.v] + ';opacity:.85;display:flex;align-items:center;justify-content:center;overflow:hidden">'
+        + (w >= 16 ? '<span style="font-size:10px;color:#fff;white-space:nowrap;padding:0 4px;overflow:hidden;text-overflow:ellipsis">' + esc(nm) + '</span>' : '')
+        + '</div>';
+    });
+    g += '</div><div style="position:relative;height:12px">'
+      + '<div style="position:absolute;left:' + (sw.cur*100) + '%;top:0;transform:translateX(-50%)">'
+      + '<svg width="11" height="9" viewBox="0 0 11 9"><path d="M5.5 0L11 9H0z" fill="var(--ink)"/></svg></div></div>'
+      + '<div style="display:flex;justify-content:space-between;font-size:10px;color:var(--ink3);margin-top:-2px"><span>' + sw.lo + '</span><span>' + sw.hi + '</span></div>'
+      + '</div>';
+  });
+  g += '<div class="legend">';
+  Object.keys(colorOf).forEach(i => { g += '<span><i style="background:' + colorOf[i] + '"></i>' + esc(r.items[i].name) + '</span>'; });
+  g += '</div>';
+  $('#regimes').innerHTML = g;
+
+  /* ---- flips ---- */
+  let f = '<table><thead><tr><th>Pair</th><th class="r" style="width:70px">Gap</th><th>Smallest change that swaps them</th></tr></thead><tbody>';
+  if(!r.flips.length) f += '<tr><td colspan="3" style="color:var(--ink3)">Add a second item to compare.</td></tr>';
+  r.flips.forEach(fl => {
+    const a = r.items[fl.a].name, b = r.items[fl.b].name;
+    const lines = [];
+    const scoreOpts = fl.opts.filter(o => o.kind === 'score').sort((x,y) => x.need - y.need);
+    if(scoreOpts.length){
+      const o = scoreOpts[0];
+      lines.push('raise <b>' + esc(b) + '</b> on ' + CRIT_SHORT[o.k].toLowerCase() + ' from <span class="num">'
+        + o.cur.toFixed(1) + '</span> to <span class="num">' + o.target.toFixed(1) + '</span> (+' + o.need.toFixed(1) + ')');
+    }
+    const vOpt = fl.opts.find(o => o.kind === 'vote');
+    if(vOpt) lines.push('<b>' + vOpt.voters + '</b> more bottler' + (vOpt.voters === 1 ? '' : 's') + ' rating it one point higher');
+    const bOpt = fl.opts.find(o => o.kind === 'borda');
+    if(bOpt) lines.push('<b>' + bOpt.moves + '</b> single-place move' + (bOpt.moves === 1 ? '' : 's') + ' up bottlers’ own orderings');
+    if(fl.aStar !== null) lines.push('set the evidence share to <span class="num">' + pct(fl.aStar) + '</span> instead of ' + pct(M.alpha));
+    f += '<tr><td style="font-size:12px">' + esc(a) + ' <span style="color:var(--ink3)">over</span> ' + esc(b) + '</td>'
+      + '<td class="r num">' + fmt(fl.gap,3) + '</td>'
+      + '<td style="font-size:12px;color:var(--ink2)">' + (lines.length ? lines.join(' &nbsp;·&nbsp; ') : 'nothing within range') + '</td></tr>';
+  });
+  f += '</tbody></table>';
+  $('#flips').innerHTML = f;
+}
+
+function renderPortfolio(){
+  const r = R, n = r.n;
+  /* ---- value vs effort ---- */
+  const W = 800, H = 360, ml = 52, mr = 208, mt = 14, mb = 40;
+  const maxE = Math.max(...r.eff) * 1.08, maxS = Math.max(...r.S) * 1.12 || 1;
+  const px = e => ml + e/maxE * (W-ml-mr);
+  const py = s => H-mb - s/maxS * (H-mt-mb);
+  let s = '<svg viewBox="0 0 ' + W + ' ' + H + '" style="width:100%;max-width:980px;height:auto" role="img" aria-label="score against effort">';
+  for(let g=0; g<=4; g++){
+    const y = py(maxS*g/4);
+    s += '<line class="gridline" x1="' + ml + '" y1="' + y + '" x2="' + (W-mr) + '" y2="' + y + '"/>'
+      + '<text class="axis" x="' + (ml-8) + '" y="' + (y+3) + '" text-anchor="end">' + (maxS*g/4).toFixed(2) + '</text>';
+  }
+  const eStep = maxE > 80 ? 20 : maxE > 40 ? 10 : 5;
+  for(let e=0; e<=maxE; e+=eStep){
+    s += '<line class="gridline" x1="' + px(e) + '" y1="' + py(0) + '" x2="' + px(e) + '" y2="' + (py(0)+4) + '"/>'
+      + '<text class="axis" x="' + px(e) + '" y="' + (py(0)+16) + '" text-anchor="middle">' + e + '</text>';
+  }
+  s += '<text class="axis" x="' + ((ml+W-mr)/2) + '" y="' + (H-4) + '" text-anchor="middle">engineer-weeks</text>';
+
+  const front = Array.from({length:n},(_,i)=>i).filter(i => !r.dominated[i]).sort((a,b) => r.eff[a]-r.eff[b]);
+  if(front.length > 1){
+    let d = '';
+    front.forEach((i,q) => { d += (q ? 'L' : 'M') + px(r.eff[i]) + ' ' + py(r.S[i]) + ' '; });
+    s += '<path d="' + d + '" fill="none" stroke="var(--evidence)" stroke-width="1.4" stroke-dasharray="4 3" opacity=".65"/>';
+  }
+  const pts = Array.from({length:n},(_,i)=>({i, x:px(r.eff[i]), y:py(r.S[i])})).sort((a,b)=>a.y-b.y);
+  const used = [];
+  pts.forEach(p => {
+    const f = r.funded.has(p.i), dom = r.dominated[p.i];
+    s += '<circle cx="' + p.x.toFixed(1) + '" cy="' + p.y.toFixed(1) + '" r="' + (f ? 6 : 5) + '" '
+      + (f ? 'fill="var(--fund)" stroke="var(--card)" stroke-width="1.5"'
+           : 'fill="var(--card)" stroke="' + (dom ? 'var(--ink3)' : 'var(--evidence)') + '" stroke-width="1.6"'
+             + (dom ? ' stroke-dasharray="2 2"' : '')) + '>'
+      + '<title>' + esc(r.items[p.i].name) + ' — score ' + fmt(r.S[p.i],3) + ', ' + Math.round(r.eff[p.i]) + ' weeks'
+      + (dom ? ' (dominated)' : '') + '</title></circle>';
+    let ly = p.y + 3.5;
+    while(used.some(u => Math.abs(u - ly) < 10.5)) ly += 10.5;
+    used.push(ly);
+    const nm = r.items[p.i].name;
+    s += '<text class="axis" x="' + (W-mr+10) + '" y="' + ly.toFixed(1) + '" fill="' + (f ? 'var(--ink)' : 'var(--ink3)') + '" style="font-size:9.5px">'
+      + esc(nm.length > 31 ? nm.slice(0,30) + '…' : nm) + '</text>'
+      + '<line x1="' + (p.x+7) + '" y1="' + p.y.toFixed(1) + '" x2="' + (W-mr+6) + '" y2="' + ly.toFixed(1)
+      + '" stroke="var(--rule2)" stroke-width=".8"/>';
+  });
+  s += '</svg><div class="legend">'
+    + '<span><i style="background:var(--fund)"></i>funded by the optimiser</span>'
+    + '<span><i style="background:transparent;border:1.5px solid var(--evidence)"></i>on the frontier, unfunded</span>'
+    + '<span><i style="background:transparent;border:1.5px dashed var(--ink3)"></i>dominated</span></div>';
+  $('#scatter').innerHTML = s;
+
+  /* ---- selection methods ---- */
+  const rows = [
+    {n:'Exact optimisation', d:'best possible set inside the budget', v:r.knap.value, k:r.knap.set},
+    {n:'Work down the ranking', d:'take items in order, skip what will not fit', v:r.gRank.value, k:r.gRank.set},
+    {n:'Best score per week', d:'sort by score ÷ effort', v:r.gDens.value, k:r.gDens.set},
+  ];
+  const best = Math.max(...rows.map(x => x.v)) || 1;
+  let m = '<p class="why">All three obey the same budget. The gap between the first row and the second is the price of planning straight down a ranked list: an item that scores slightly lower but fits the leftover capacity is worth more than the empty weeks it replaces.</p><table><tbody>';
+  rows.forEach((row, q) => {
+    const weeks = sum(row.k.map(i => Math.max(1, Math.round(r.eff[i]))));
+    m += '<tr><td style="width:44%"><div style="font-size:12.5px' + (q===0?';font-weight:500':'') + '">' + row.n + '</div>'
+      + '<div style="font-size:10.5px;color:var(--ink3)">' + row.d + '</div></td>'
+      + '<td><span class="bar" style="min-width:100px"><i style="width:' + (row.v/best*100) + '%;background:' + (q===0?'var(--fund)':'var(--ink3)') + '"></i></span></td>'
+      + '<td class="r num" style="width:66px">' + fmt(row.v,3) + '</td>'
+      + '<td class="r num" style="width:86px;color:var(--ink3)">' + row.k.length + ' items</td>'
+      + '<td class="r num" style="width:82px;color:var(--ink3)">' + weeks + ' wks</td></tr>';
+  });
+  m += '</tbody></table>';
+  $('#methods').innerHTML = m;
+
+  /* ---- funded list ---- */
+  let fl = '<table><thead><tr><th>Funded</th><th class="r" style="width:52px">Score</th><th class="r" style="width:52px">Wks</th><th style="width:110px">Survives resampling</th></tr></thead><tbody>';
+  const fundedOrdered = r.order.filter(i => r.funded.has(i));
+  fundedOrdered.forEach(i => {
+    fl += '<tr><td style="font-size:12px">' + esc(r.items[i].name) + '</td>'
+      + '<td class="r num">' + fmt(r.S[i],3) + '</td><td class="r num">' + Math.round(r.eff[i]) + '</td>'
+      + '<td><span class="bar" style="min-width:70px"><i style="width:' + (r.pFund[i]*100) + '%;background:var(--fund)"></i></span>'
+      + '<span class="num" style="font-size:10px;color:var(--ink3);margin-left:6px">' + pct(r.pFund[i]) + '</span></td></tr>';
+  });
+  const nearMiss = r.order.filter(i => !r.funded.has(i) && r.pFund[i] > 0.25);
+  nearMiss.forEach(i => {
+    fl += '<tr><td style="font-size:12px;color:var(--ink3)">' + esc(r.items[i].name) + ' <span style="font-size:10px">(out, but often in)</span></td>'
+      + '<td class="r num" style="color:var(--ink3)">' + fmt(r.S[i],3) + '</td><td class="r num" style="color:var(--ink3)">' + Math.round(r.eff[i]) + '</td>'
+      + '<td><span class="bar" style="min-width:70px"><i style="width:' + (r.pFund[i]*100) + '%;background:var(--ink3)"></i></span>'
+      + '<span class="num" style="font-size:10px;color:var(--ink3);margin-left:6px">' + pct(r.pFund[i]) + '</span></td></tr>';
+  });
+  fl += '</tbody></table>';
+  $('#fundList').innerHTML = fl;
+}
+
+function renderAlign(){
+  const r = R, V = r.V, ord = r.vOrder;
+  /* ---- tau matrix ---- */
+  const cs = 30, lw = 122, top = 100;
+  const W = lw + V*cs + 16, H = top + V*cs + 16;
+  let s = '<svg viewBox="0 0 ' + W + ' ' + H + '" style="width:100%;max-width:' + (W*1.05) + 'px;height:auto" role="img" aria-label="rank agreement between bottlers">';
+  ord.forEach((j, q) => {
+    const x = lw + q*cs + cs/2;
+    s += '<text class="axis" transform="translate(' + x + ',' + (top-8) + ') rotate(-52)" text-anchor="start">' + esc(r.voters[j].name) + '</text>';
+    s += '<text class="axis" x="' + (lw-8) + '" y="' + (top + q*cs + cs/2 + 3.5) + '" text-anchor="end">' + esc(r.voters[j].name) + '</text>';
+  });
+  ord.forEach((a, qa) => ord.forEach((b, qb) => {
+    const t = r.tau[a*V+b];
+    const col = t >= 0 ? 'var(--evidence)' : 'var(--bad)';
+    const op = Math.min(1, Math.abs(t)*0.95 + 0.05);
+    s += '<rect x="' + (lw+qb*cs) + '" y="' + (top+qa*cs) + '" width="' + (cs-2) + '" height="' + (cs-2) + '" rx="2" fill="var(--sunk)"/>'
+      + '<rect x="' + (lw+qb*cs) + '" y="' + (top+qa*cs) + '" width="' + (cs-2) + '" height="' + (cs-2) + '" rx="2" fill="' + col + '" opacity="' + (Math.abs(t) >= 0.72 ? Math.max(op,0.82) : op).toFixed(3) + '">'
+      + '<title>' + esc(r.voters[a].name) + ' vs ' + esc(r.voters[b].name) + ' — τ ' + fmt(t,2) + '</title></rect>';
+    if(a !== b && Math.abs(t) >= 0.72)
+      s += '<text x="' + (lw+qb*cs+(cs-2)/2) + '" y="' + (top+qa*cs+(cs-2)/2+3) + '" text-anchor="middle" style="font-size:8.5px;font-family:var(--mono)" fill="#fff">' + (t>0?'':'−') + Math.abs(t).toFixed(1).replace('0.','.') + '</text>';
+  }));
+  s += '</svg><div class="legend"><span>τ = +1 identical ordering · 0 unrelated · −1 exactly opposed</span>'
+    + '<span>network average <b class="num">' + fmt(r.agreement,2) + '</b></span></div>';
+  $('#tau').innerHTML = s;
+
+  /* ---- influence ---- */
+  const inf = r.influence.map((v,j)=>({j,v})).sort((a,b)=>b.v-a.v);
+  const imx = Math.max(...r.influence, 0.001);
+  let h = '<p class="why">Drop one bottler from the vote and re-rank. The bar is the share of item pairs that change order — the <b>Kendall distance</b> between the roadmap with them and the roadmap without. A tall bar is not a problem; it is a name you should know before the readout.</p><table><tbody>';
+  inf.forEach(x => {
+    h += '<tr><td style="width:40%;font-size:12px">' + esc(r.voters[x.j].name) + '</td>'
+      + '<td><span class="bar" style="min-width:110px"><i style="width:' + (x.v/imx*100) + '%;background:var(--consensus)"></i></span></td>'
+      + '<td class="r num" style="width:56px">' + pct(x.v) + '</td></tr>';
+  });
+  h += '</tbody></table>';
+  $('#influence').innerHTML = h;
+
+  /* ---- contested items ---- */
+  let d = '<p class="why">Standard deviation of the eleven ratings. A wide spread on a high-ranking item means the ranking is carrying a disagreement it has not resolved — that is the conversation worth booking.</p>';
+  r.disp.slice(0, 8).forEach(x => {
+    const mx = Math.max(...x.hist, 1);
+    d += '<div style="display:flex;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid var(--rule)">'
+      + '<div style="flex:1;min-width:0;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + esc(r.items[x.i].name) + '</div>'
+      + '<div style="display:flex;align-items:flex-end;gap:2px;height:24px;width:78px">';
+    for(let b=0;b<5;b++)
+      d += '<div title="' + x.hist[b] + ' rated ' + (b+1) + '" style="flex:1;height:' + Math.max(2, x.hist[b]/mx*22) + 'px;background:var(--consensus);opacity:'
+        + (0.28+0.15*b).toFixed(2) + ';border-radius:1.5px 1.5px 0 0"></div>';
+    d += '</div><div class="num" style="width:74px;text-align:right;font-size:11px;color:var(--ink3)">sd ' + fmt(x.sd,2) + '</div>'
+      + '<div class="num" style="width:44px;text-align:right;font-size:11px">#' + (r.rank[x.i]+1) + '</div></div>';
+  });
+  const aggWord = r.aggTau > 0.9 ? 'barely moves' : r.aggTau > 0.7 ? 'shifts a little' : 'changes materially';
+  d += '<p class="why" style="margin-top:14px;border-color:var(--consensus)">Switching the aggregation from <b>'
+    + (M.agg === 'mean' ? 'mean rating to Borda ranks' : 'Borda ranks to mean rating') + '</b> ' + aggWord
+    + ' — τ <span class="num">' + fmt(r.aggTau,2) + '</span> between the two orderings'
+    + (r.aggTau < 0.9 ? ', so some of your ranking is describing how bottlers use a 1–5 scale rather than what they want.' : '.') + '</p>';
+  $('#dispersion').innerHTML = d;
+}
+
+function renderData(){
+  const items = ST.items, voters = ST.voters;
+  let h = '<table><thead><tr><th style="min-width:230px">Item</th>';
+  CRIT.forEach(c => h += '<th class="r" style="width:58px">' + c.split(' ')[0] + '</th><th style="width:104px">tier</th>');
+  h += '<th class="r" style="width:58px">Weeks</th><th style="width:104px">tier</th><th style="width:30px"></th></tr></thead><tbody>';
+  items.forEach((it, i) => {
+    h += '<tr><td><input class="cellin txt" data-f="name" data-i="' + i + '" value="' + esc(it.name) + '"></td>';
+    for(let k=0;k<3;k++){
+      h += '<td><input class="cellin" type="number" min="0" max="10" step="0.5" data-f="s" data-k="' + k + '" data-i="' + i + '" value="' + it.s[k] + '"></td>'
+        + '<td><select class="cellin" data-f="t" data-k="' + k + '" data-i="' + i + '">'
+        + ['M','E','A'].map(t => '<option value="' + t + '"' + (it.t[k]===t?' selected':'') + '>' + TIER[t].n + '</option>').join('')
+        + '</select></td>';
+    }
+    h += '<td><input class="cellin" type="number" min="1" max="200" step="1" data-f="e" data-i="' + i + '" value="' + it.e + '"></td>'
+      + '<td><select class="cellin" data-f="et" data-i="' + i + '">'
+      + ['M','E','A'].map(t => '<option value="' + t + '"' + (it.et===t?' selected':'') + '>' + TIER[t].n + '</option>').join('')
+      + '</select></td>'
+      + '<td><button class="btn sm danger" data-f="del" data-i="' + i + '" title="Remove item" aria-label="Remove item">✕</button></td></tr>';
+  });
+  h += '</tbody></table>';
+  $('#itemGrid').innerHTML = h;
+
+  let v = '<table><thead><tr><th style="min-width:210px;position:sticky;left:0;background:var(--card)">Item</th>';
+  voters.forEach((vt, j) => v += '<th style="width:88px"><input class="cellin txt" style="font-size:10px;padding:2px 3px" data-f="vname" data-j="' + j + '" value="' + esc(vt.name) + '"></th>');
+  v += '<th style="width:30px"></th></tr><tr><th style="position:sticky;left:0;background:var(--card)"></th>';
+  voters.forEach((vt, j) => v += '<th class="c"><button class="btn sm danger" data-f="delv" data-j="' + j + '" title="Remove bottler" aria-label="Remove bottler">✕</button></th>');
+  v += '<th></th></tr></thead><tbody>';
+  ST.items.forEach((it, i) => {
+    v += '<tr><td style="position:sticky;left:0;background:var(--card);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:210px">' + esc(it.name) + '</td>';
+    voters.forEach((vt, j) => v += '<td><input class="cellin" type="number" min="1" max="5" step="1" data-f="v" data-i="' + i + '" data-j="' + j + '" value="' + it.v[j] + '"></td>');
+    v += '<td></td></tr>';
+  });
+  v += '</tbody></table>';
+  $('#voteGrid').innerHTML = v;
+}
+
+function renderFooter(){
+  const r = R;
+  $('#fFund').textContent = r.knap.set.length + ' of ' + r.n;
+  $('#fCap').textContent  = r.usedWeeks + ' / ' + M.cap + ' wks';
+  $('#fVal').textContent  = fmt(r.knap.value,2) + ' of ' + fmt(r.totalValue,2);
+  const gap = r.knap.value - r.gRank.value;
+  $('#fGap').textContent  = (gap <= 1e-9 ? 'none' : '−' + fmt(gap,3) + ' (' + pct(gap/Math.max(r.knap.value,1e-9)) + ')');
+  $('#fGap').style.color  = gap > 0.02 ? 'var(--warn)' : 'var(--ink)';
+  $('#fStab').textContent = pct(r.top3Hold);
+  $('#fStab').style.color = r.top3Hold >= 0.7 ? 'var(--good)' : r.top3Hold >= 0.4 ? 'var(--warn)' : 'var(--bad)';
+  $('#fAgree').textContent = 'τ ' + fmt(r.agreement,2);
+  $('#fTime').textContent = r.n + ' items · ' + r.V + ' bottlers · solved in ' + Math.round(r.ms) + ' ms';
+  $('#capSub').textContent = 'backlog totals ' + r.totalEffort + ' weeks';
+}
+
+function renderRail(){
+  $('#blendEv').textContent = Math.round(M.alpha*100) + '%';
+  $('#blendCo').textContent = Math.round((1-M.alpha)*100) + '%';
+  $('#blendEv').style.flex = M.alpha + ' 0 0';
+  $('#blendCo').style.flex = (1-M.alpha) + ' 0 0';
+  const wn = wNorm();
+  $('#wRevV').textContent = pct(wn[0]);
+  $('#wUxV').textContent  = pct(wn[1]);
+  $('#wCapV').textContent = pct(wn[2]);
+  $('#capV').textContent = M.cap;
+  $('#trialsV').textContent = M.trials.toLocaleString();
+  $('#uncV').textContent = M.unc.toFixed(2) + '×';
+  $('#alphaNote').innerHTML = M.alpha === 0
+    ? 'Pure consensus. The backlog is whatever the network voted for.'
+    : M.alpha === 1 ? 'Pure evidence. The votes are ignored entirely.'
+    : '<b>' + pct(M.alpha) + '</b> of every score comes from measured evidence, <b>' + pct(1-M.alpha) + '</b> from the eleven votes. Your framework sits near 30%.';
+  $('#aggNote').innerHTML = M.agg === 'mean'
+    ? 'Mean rating counts a bottler who marks everything 5 more heavily than one who uses the whole scale.'
+    : 'Borda uses only each bottler’s ordering, so different rating habits cancel — the common denominator under eleven scales.';
+  $('#mcNote').innerHTML = 'Seeded, so the same inputs always give the same answer.';
+}
+
+/* ------------------------------------------------------------------
+   6. REFRESH
+   ------------------------------------------------------------------ */
+let pending = 0;
+function refresh(quick){
+  TRIALS_OVERRIDE = quick ? Math.min(M.trials, 700) : null;
+  const res = compute();
+  TRIALS_OVERRIDE = null;
+  if(!res){
+    $('#rankTable').innerHTML = '<p style="padding:20px;color:var(--ink3)">Add at least one item and one bottler in the Data tab.</p>';
+    return;
+  }
+  R = res;
+  renderRail();
+  renderRank();
+  renderRobust();
+  renderPortfolio();
+  renderAlign();
+  renderFooter();
+  if(!quick) save();
+}
+function refreshSoon(quick){
+  cancelAnimationFrame(pending);
+  pending = requestAnimationFrame(() => refresh(quick));
+}
+
+/* ------------------------------------------------------------------
+   7. CSV
+   ------------------------------------------------------------------ */
+function toCSV(){
+  const q = s => /[",\n]/.test(s) ? '"' + String(s).replace(/"/g,'""') + '"' : String(s);
+  const head = ['item','revenue','revenue_tier','ux','ux_tier','capability','capability_tier','effort','effort_tier']
+    .concat(ST.voters.map(v => v.name));
+  const rows = ST.items.map(it => [it.name, it.s[0], TIER[it.t[0]].n, it.s[1], TIER[it.t[1]].n, it.s[2], TIER[it.t[2]].n, it.e, TIER[it.et].n]
+    .concat(it.v));
+  return [head, ...rows].map(r => r.map(q).join(',')).join('\n');
+}
+function parseDelimited(text){
+  const lines = text.replace(/\r/g,'').split('\n').filter(l => l.trim().length);
+  if(lines.length < 2) throw new Error('Need a header row and at least one item.');
+  const delim = (lines[0].split('\t').length > lines[0].split(',').length) ? '\t' : ',';
+  const split = line => {
+    const out = []; let cur = '', inQ = false;
+    for(let i=0;i<line.length;i++){
+      const c = line[i];
+      if(inQ){
+        if(c === '"' && line[i+1] === '"'){ cur += '"'; i++; }
+        else if(c === '"') inQ = false;
+        else cur += c;
+      } else if(c === '"') inQ = true;
+      else if(c === delim){ out.push(cur); cur = ''; }
+      else cur += c;
+    }
+    out.push(cur); return out.map(s => s.trim());
+  };
+  const head = split(lines[0]).map(h => h.toLowerCase());
+  const need = ['item','revenue','ux','capability','effort'];
+  need.forEach(k => { if(!head.includes(k)) throw new Error('Missing a column named "' + k + '".'); });
+  const col = k => head.indexOf(k);
+  const tierOf = s => {
+    const t = String(s||'').trim().toLowerCase();
+    if(t.startsWith('m')) return 'M';
+    if(t.startsWith('a')) return 'A';
+    return 'E';
+  };
+  const known = new Set(['item','revenue','revenue_tier','ux','ux_tier','capability','capability_tier','effort','effort_tier']);
+  const vCols = head.map((h,i)=>({h,i})).filter(x => !known.has(x.h));
+  if(!vCols.length) throw new Error('No voter columns found — add one column per bottler after the effort columns.');
+  const voters = vCols.map((x,j) => ({id:'b'+j, name: split(lines[0])[x.i] || ('Voter ' + (j+1))}));
+  const items = lines.slice(1).map((line, i) => {
+    const c = split(line);
+    const num = (idx, dflt) => { const v = parseFloat(c[idx]); return isFinite(v) ? v : dflt; };
+    return {
+      id:'i'+i, name: c[col('item')] || ('Item ' + (i+1)),
+      s: [clamp(num(col('revenue'),5),0,10), clamp(num(col('ux'),5),0,10), clamp(num(col('capability'),5),0,10)],
+      t: [tierOf(c[col('revenue_tier')]), tierOf(c[col('ux_tier')]), tierOf(c[col('capability_tier')])],
+      e: clamp(num(col('effort'),8),1,400), et: tierOf(c[col('effort_tier')]),
+      v: vCols.map(x => clamp(Math.round(num(x.i,3)),1,5)),
+    };
+  });
+  if(!items.length) throw new Error('No item rows found.');
+  return {name: ST.name, items, voters};
+}
+function download(name, text, mime){
+  const b = new Blob([text], {type: mime});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(b); a.download = name; a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+}
+
+/* ------------------------------------------------------------------
+   8. MODALS
+   ------------------------------------------------------------------ */
+const METHODS_HTML = `
+<p>Everything on screen is recomputed from the Data tab each time you move a control. There is no hidden model and no fitted parameter. This page is the whole method.</p>
+
+<h4>1 · The composite score</h4>
+<p>Each item carries three evidence scores on a 0–10 scale and one rating from every bottler. Both halves are mapped into <b>[0, 1]</b> before they are combined, so a weight of 30% actually means 30%.</p>
+<div class="eqn">S<sub>i</sub> = α · Σ<sub>k</sub> w<sub>k</sub> · n(x<sub>ik</sub>) &nbsp; + &nbsp; (1 − α) · C<sub>i</sub></div>
+<p>α is the evidence share — the slider at the top of the rail. The weights w<sub>k</sub> are normalised to sum to one, so only their ratios matter.</p>
+
+<h4>2 · Normalising the evidence</h4>
+<p><b>Min–max</b> maps each criterion to [0, 1] against the best and worst item <i>in this backlog</i>. It is intuitive and it is fragile: add one outsized item and everything else compresses toward zero. <b>Z-score</b> centres on the mean and divides by the standard deviation, then maps ±2.5 σ onto [0, 1], so an outlier saturates instead of rescaling the field. Switch between them; if the ranking moves, your ranking was partly an artefact of who else is on the list.</p>
+
+<h4>3 · Turning votes into a number</h4>
+<p><b>Mean rating</b> averages the 1–5 ratings. It is what most frameworks do, and it silently rewards generous raters: a bottler who marks everything 4 or 5 pushes their whole slate up, and one who uses the full scale gives away influence.</p>
+<p><b>Borda</b> throws the numbers away and keeps only each bottler's ordering. An item placed r-th out of n by a voter earns (n − 1 − r)/(n − 1) points, with tied ratings sharing the average rank. Because it uses order alone, differences in scale habits cancel out entirely — the common denominator underneath eleven inconsistent rating cultures. The Alignment tab reports Kendall's τ between the two orderings so you can see how much of your ranking is really about scale use.</p>
+
+<h4>4 · Uncertainty, and why the ranking has a band</h4>
+<p>Every score carries a tier, and the tier is the honest part of the framework:</p>
+<ul>
+  <li><b>Measured</b> — instrumented, queryable, defensible. σ = 0.5</li>
+  <li><b>Estimated</b> — modelled, benchmarked, or triangulated. σ = 1.2</li>
+  <li><b>Asserted</b> — someone's confident opinion. σ = 2.2</li>
+</ul>
+<p>Each simulated trial redraws every score from a normal distribution around its stated value, truncated to [0, 10]; redraws effort from a lognormal with σ of 0.10, 0.22 or 0.40 by tier; and <b>resamples the bottlers with replacement</b>, which is a bootstrap over who happened to be in the room. The whole pipeline — normalisation included — is recomputed from scratch on each trial, so the fragility of min–max shows up in the bands rather than hiding behind them.</p>
+<p>The generator is seeded. Identical inputs give identical output, every time, on every machine. A governance tool that produces a different answer on refresh is not a governance tool.</p>
+
+<h4>5 · Selecting under capacity</h4>
+<p>Given a budget of engineer-weeks, choosing the highest-scoring set is an exact <b>0/1 knapsack</b>, solved by dynamic programming over integer weeks — not an approximation. It is compared against the two heuristics people actually use: working down the ranked list, and sorting by score per week. The gap between the optimum and the ranked list is real money, and it comes from the same place every time: a cheap item that fits the leftover capacity outranks an expensive one that does not.</p>
+<p>An item is <b>dominated</b> when another item scores at least as high for no more effort. No choice of weights can rescue it, so it is not a prioritisation question — it is a scoping question.</p>
+
+<h4>6 · Sensitivity, honestly</h4>
+<p>The regime map sweeps one parameter across its full range and re-ranks at every step, then reports the interval over which the leader does not change. This is the number that ends arguments: if the answer is the same for any evidence share between 18% and 61%, the debate about whether it should be 30% or 40% is not a debate about the roadmap.</p>
+<p>Because the score is linear in every input, the flip analysis is exact rather than searched. To swap two adjacent items you need to close a gap g:</p>
+<div class="eqn">raw score change  = g ÷ (α · w<sub>k</sub> / range<sub>k</sub>)
+votes needed      = ⌈ 4 · g · V / (1 − α) ⌉ single-point upgrades
+crossover α*      = ΔC / (ΔC − ΔE)</div>
+
+<h4>7 · Who agrees with whom</h4>
+<p><b>Kendall's τ-b</b> counts pairs of items: of all the pairs two bottlers both distinguished, the share they ordered the same way, mapped onto −1…+1 with a correction for ties. Voters are reordered by average-linkage clustering on 1 − τ, so blocs appear as blocks on the diagonal.</p>
+<p><b>Influence</b> removes one bottler, re-ranks, and reports the Kendall distance (1 − τ)/2 — literally the share of item pairs whose order that one bottler is responsible for.</p>
+
+<h4>What this does not do</h4>
+<ul>
+  <li>It takes your scores at face value. If the 0–10 numbers are inconsistent across bottlers, this tool will faithfully rank inconsistent numbers.</li>
+  <li>Uncertainty is treated as independent across items. Correlated optimism — a whole quarter scored generously — will not show up in the bands.</li>
+  <li>Effort is a point estimate with a spread, not a schedule. Dependencies between items are not modelled.</li>
+  <li>The knapsack maximises score, which assumes score is proportional to value. It is a ranking, so treat the optimum as a strong default, not an instruction.</li>
+</ul>`;
+
+const IMPORT_HTML = `
+<p>Paste a CSV, or copy a block of cells straight out of Excel or Google Sheets (tabs work too). The first row is the header. Required columns: <code>item</code>, <code>revenue</code>, <code>ux</code>, <code>capability</code>, <code>effort</code>. Optional: <code>revenue_tier</code>, <code>ux_tier</code>, <code>capability_tier</code>, <code>effort_tier</code> (Measured / Estimated / Asserted — anything starting with m, e or a).</p>
+<p><b>Every remaining column is treated as one bottler</b>, with their 1–5 rating in each row. Export first to see the exact shape.</p>
+<textarea id="importText" placeholder="item,revenue,revenue_tier,ux,ux_tier,capability,capability_tier,effort,effort_tier,Great Lakes,Southeast&#10;Route-level margin dashboard,9,Measured,6,Measured,5,Estimated,10,Measured,5,4"></textarea>
+<div id="importErr" style="color:var(--bad);font-size:12px;min-height:18px;margin-top:6px"></div>
+<div style="display:flex;gap:8px;margin-top:10px">
+  <button class="btn primary" id="doImport">Load this data</button>
+  <button class="btn" id="cancelImport">Cancel</button>
+</div>`;
+
+function openModal(title, html){
+  $('#modalT').textContent = title;
+  $('#modalB').innerHTML = html;
+  $('#modal').hidden = false;
+}
+function closeModal(){ $('#modal').hidden = true; }
+
+/* ------------------------------------------------------------------
+   9. WIRING
+   ------------------------------------------------------------------ */
+function bindSlider(id, apply){
+  const el = $(id);
+  el.addEventListener('input', () => { apply(parseFloat(el.value)); refreshSoon(true); });
+  el.addEventListener('change', () => { apply(parseFloat(el.value)); refresh(false); });
+}
+bindSlider('#alpha',  v => M.alpha = v);
+bindSlider('#wRev',   v => M.w[0] = v);
+bindSlider('#wUx',    v => M.w[1] = v);
+bindSlider('#wCap',   v => M.w[2] = v);
+bindSlider('#cap',    v => M.cap = Math.round(v));
+bindSlider('#trials', v => M.trials = Math.round(v));
+bindSlider('#unc',    v => M.unc = v);
+$('#bRun').onclick = () => refresh(false);
+
+function bindSeg(id, apply){
+  $(id).querySelectorAll('button').forEach(b => b.onclick = () => {
+    $(id).querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+    apply(b.dataset.v); refresh(false);
+  });
+}
+bindSeg('#segAgg',  v => M.agg = v);
+bindSeg('#segNorm', v => M.norm = v);
+
+const tabs = Array.from(document.querySelectorAll('#tabs button'));
+function showTab(v){
+  tabs.forEach(b => b.setAttribute('aria-selected', String(b.dataset.v === v)));
+  document.querySelectorAll('.view').forEach(s => s.classList.toggle('on', s.id === 'v-' + v));
+  $('#views').scrollTop = 0;
+}
+tabs.forEach(b => b.onclick = () => showTab(b.dataset.v));
+
+$('#bMethods').onclick = () => openModal('Methods', METHODS_HTML);
+$('#bData').onclick    = () => showTab('data');
+$('#bExport').onclick  = () => download('quorum-' + (ST.name || 'scenario').replace(/[^a-z0-9]+/gi,'-').toLowerCase().slice(0,40) + '.csv', toCSV(), 'text/csv');
+$('#modalX').onclick   = closeModal;
+$('#modal').onclick    = e => { if(e.target.id === 'modal') closeModal(); };
+$('#scenName').oninput = e => { ST.name = e.target.value; save(); };
+$('#railToggle').onclick = () => document.body.classList.toggle('railOpen');
+
+$('#bImport').onclick = () => {
+  openModal('Import a backlog', IMPORT_HTML);
+  $('#cancelImport').onclick = closeModal;
+  $('#doImport').onclick = () => {
+    try{
+      const next = parseDelimited($('#importText').value);
+      ST = next; sel = null;
+      closeModal(); renderData(); refresh(false);
+      showTab('rank');
+    }catch(err){
+      $('#importErr').textContent = err.message;
+    }
+  };
+};
+$('#bReset').onclick = () => {
+  if(!confirm('Replace the current backlog with the sample scenario? This cannot be undone.')) return;
+  ST = buildSample(); sel = null;
+  $('#scenName').value = ST.name;
+  renderData(); refresh(false);
+};
+$('#bAddItem').onclick = () => {
+  ST.items.push({id:'i' + Date.now(), name:'New item', s:[5,5,5], t:['A','A','A'], e:8, et:'A',
+                 v: ST.voters.map(()=>3)});
+  renderData(); refresh(false);
+};
+$('#bAddVoter').onclick = () => {
+  ST.voters.push({id:'b' + Date.now(), name:'New bottler'});
+  ST.items.forEach(it => it.v.push(3));
+  renderData(); refresh(false);
+};
+
+function gridInput(e){
+  const el = e.target, f = el.dataset.f;
+  if(!f) return;
+  const i = +el.dataset.i, j = +el.dataset.j, k = +el.dataset.k;
+  if(f === 'name')       ST.items[i].name = el.value;
+  else if(f === 's')     ST.items[i].s[k] = clamp(parseFloat(el.value) || 0, 0, 10);
+  else if(f === 't')     ST.items[i].t[k] = el.value;
+  else if(f === 'e')     ST.items[i].e = clamp(parseFloat(el.value) || 1, 1, 400);
+  else if(f === 'et')    ST.items[i].et = el.value;
+  else if(f === 'v')     ST.items[i].v[j] = clamp(Math.round(parseFloat(el.value) || 3), 1, 5);
+  else if(f === 'vname') ST.voters[j].name = el.value;
+  else return;
+  refreshSoon(true);
+}
+function gridChange(e){
+  if(!e.target.dataset.f) return;
+  refresh(false);
+  if(e.target.dataset.f === 'name') renderData();
+}
+function gridClick(e){
+  const b = e.target.closest('button[data-f]');
+  if(!b) return;
+  if(b.dataset.f === 'del'){
+    if(ST.items.length <= 1) return alert('Keep at least one item.');
+    ST.items.splice(+b.dataset.i, 1);
+  }else if(b.dataset.f === 'delv'){
+    if(ST.voters.length <= 1) return alert('Keep at least one bottler.');
+    const j = +b.dataset.j;
+    ST.voters.splice(j, 1);
+    ST.items.forEach(it => it.v.splice(j, 1));
+  }else return;
+  sel = null; renderData(); refresh(false);
+}
+['#itemGrid','#voteGrid'].forEach(id => {
+  $(id).addEventListener('input',  gridInput);
+  $(id).addEventListener('change', gridChange);
+  $(id).addEventListener('click',  gridClick);
+});
+
+addEventListener('keydown', e => {
+  if(e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') return;
+  if(e.key === 'Escape') closeModal();
+  if(e.key >= '1' && e.key <= '5') showTab(['rank','robust','port','align','data'][+e.key - 1]);
+  if(e.key === '?') openModal('Methods', METHODS_HTML);
+});
+
+/* ------------------------------------------------------------------
+   10. START
+   ------------------------------------------------------------------ */
+load();
+$('#scenName').value = ST.name || '';
+$('#alpha').value  = M.alpha;
+$('#wRev').value   = M.w[0];
+$('#wUx').value    = M.w[1];
+$('#wCap').value   = M.w[2];
+$('#cap').value    = M.cap;
+$('#trials').value = M.trials;
+$('#unc').value    = M.unc;
+$('#segAgg').querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === M.agg)));
+$('#segNorm').querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === M.norm)));
+renderData();
+refresh(false);
+
+})();
+</script>
+</body>
+</html>
