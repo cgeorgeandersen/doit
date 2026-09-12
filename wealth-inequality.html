@@ -1,0 +1,1676 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Shape of American Wealth</title>
+<style>
+/* ============================================================
+   TOKENS — light is the base; dark redefines only the values.
+   Palette: validated with the dataviz six-checks validator.
+   ============================================================ */
+:root {
+  color-scheme: light;
+  --page:        #f9f9f7;
+  --surface-1:   #fcfcfb;
+  --surface-2:   #f2f1ec;
+  --ink:         #0b0b0b;
+  --ink-2:       #52514e;
+  --muted:       #898781;
+  --grid:        #e1e0d9;
+  --axis:        #c3c2b7;
+  --border:      rgba(11,11,11,0.10);
+  --border-2:    rgba(11,11,11,0.18);
+
+  /* categorical slots */
+  --s1: #2a78d6;   /* blue   */
+  --s2: #eb6834;   /* orange */
+  --s3: #1baf7a;   /* aqua   */
+
+  /* ordinal ramp for the four wealth groups (ordered categories) */
+  --w-top1:   #104281;
+  --w-next9:  #256abf;
+  --w-mid:    #5598e7;
+  --w-bot50:  #86b6ef;
+
+  /* neutral party lane — deliberately NOT partisan red/blue, so it
+     never competes with or impersonates a data series */
+  --party-d:  #b3b2a9;
+  --party-r:  #e6e5df;
+  --party-ink:#52514e;
+
+  --shadow: 0 1px 2px rgba(11,11,11,.04), 0 8px 24px rgba(11,11,11,.05);
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --page:      #0d0d0d;
+    --surface-1: #1a1a19;
+    --surface-2: #232321;
+    --ink:       #ffffff;
+    --ink-2:     #c3c2b7;
+    --muted:     #898781;
+    --grid:      #2c2c2a;
+    --axis:      #383835;
+    --border:    rgba(255,255,255,0.10);
+    --border-2:  rgba(255,255,255,0.18);
+    --s1: #3987e5;
+    --s2: #d95926;
+    --s3: #199e70;
+    --w-top1:  #b7d3f6;
+    --w-next9: #6da7ec;
+    --w-mid:   #2a78d6;
+    --w-bot50: #184f95;
+    --party-d: #5c5c55;
+    --party-r: #33332f;
+    --party-ink:#e1e0d9;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page:      #0d0d0d;
+  --surface-1: #1a1a19;
+  --surface-2: #232321;
+  --ink:       #ffffff;
+  --ink-2:     #c3c2b7;
+  --muted:     #898781;
+  --grid:      #2c2c2a;
+  --axis:      #383835;
+  --border:    rgba(255,255,255,0.10);
+  --border-2:  rgba(255,255,255,0.18);
+  --s1: #3987e5;
+  --s2: #d95926;
+  --s3: #199e70;
+  --w-top1:  #b7d3f6;
+  --w-next9: #6da7ec;
+  --w-mid:   #2a78d6;
+  --w-bot50: #184f95;
+  --party-d: #5c5c55;
+  --party-r: #33332f;
+  --party-ink:#e1e0d9;
+  --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+}
+
+/* ============================================================ LAYOUT */
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0; background: var(--page); color: var(--ink);
+  font-family: var(--font); font-size: 16px; line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 1040px; margin: 0 auto; padding-inline: 20px; }
+section { padding-block: 56px; scroll-margin-top: 64px; }
+section + section { border-top: 1px solid var(--border); }
+
+h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -0.015em; margin: 0; }
+h1 { font-size: clamp(2.1rem, 6vw, 3.5rem); font-weight: 650; }
+h2 { font-size: clamp(1.5rem, 3.6vw, 2.1rem); font-weight: 640; }
+h3 { font-size: 1.15rem; font-weight: 640; }
+p  { margin: 0 0 1em; color: var(--ink-2); max-width: 68ch; }
+a  { color: inherit; }
+strong { color: var(--ink); font-weight: 620; }
+
+.eyebrow {
+  font-size: .75rem; font-weight: 680; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 14px;
+}
+.lede { font-size: 1.12rem; max-width: 64ch; }
+.note { font-size: .85rem; color: var(--muted); max-width: 72ch; }
+
+/* ============================================================ HEADER */
+.topbar {
+  position: sticky; top: 0; z-index: 40;
+  background: color-mix(in srgb, var(--page) 88%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+}
+.topbar .wrap { display: flex; align-items: center; gap: 16px; height: 52px; }
+.brand { font-weight: 640; font-size: .9rem; letter-spacing: -.01em; margin-right: auto; }
+.navlinks { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; }
+.navlinks::-webkit-scrollbar { display: none; }
+.navlinks a {
+  font-size: .8rem; color: var(--muted); text-decoration: none;
+  padding: 5px 9px; border-radius: 7px; white-space: nowrap;
+}
+.navlinks a:hover { color: var(--ink); background: var(--surface-2); }
+
+.btn {
+  font: inherit; font-size: .8rem; font-weight: 560;
+  color: var(--ink-2); background: var(--surface-1);
+  border: 1px solid var(--border-2); border-radius: 8px;
+  padding: 5px 11px; cursor: pointer; white-space: nowrap;
+}
+.btn:hover { color: var(--ink); border-color: var(--muted); }
+.btn[aria-pressed="true"] { background: var(--ink); color: var(--page); border-color: var(--ink); }
+.btn:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--s1); outline-offset: 2px; }
+
+/* ============================================================ HERO */
+.hero { padding-block: 72px 56px; }
+.hero h1 { max-width: 18ch; }
+.hero .lede { margin-top: 20px; }
+.herofig {
+  margin: 40px 0 8px; display: flex; flex-wrap: wrap;
+  align-items: baseline; gap: 0 18px;
+}
+.herofig .num {
+  font-size: clamp(3.4rem, 13vw, 7rem); font-weight: 680;
+  letter-spacing: -0.035em; line-height: .95; color: var(--ink);
+}
+.herofig .cap { font-size: 1rem; color: var(--ink-2); max-width: 30ch; }
+
+/* ============================================================ CARDS */
+.card {
+  background: var(--surface-1); border: 1px solid var(--border);
+  border-radius: 14px; padding: 22px; box-shadow: var(--shadow);
+}
+.chart-card { padding: 22px 20px 18px; }
+.chart-head { margin-bottom: 4px; }
+.chart-head h3 { margin-bottom: 4px; }
+.chart-head .sub { font-size: .85rem; color: var(--muted); margin: 0; max-width: 70ch; }
+.chart-tools { display: flex; gap: 8px; align-items: center; margin: 14px 0 6px; flex-wrap: wrap; }
+.src { font-size: .75rem; color: var(--muted); margin-top: 12px; }
+.src a { color: var(--muted); }
+
+.tiles { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+.tile { background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 18px; }
+.tile .label { font-size: .78rem; color: var(--muted); font-weight: 560; }
+.tile .value { font-size: 1.85rem; font-weight: 660; letter-spacing: -.025em; margin: 6px 0 2px; }
+.tile .foot { font-size: .8rem; color: var(--ink-2); }
+
+/* ============================================================ LEGEND */
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; margin: 12px 0 2px; }
+.legend .item { display: inline-flex; align-items: center; gap: 7px; font-size: .8rem; color: var(--ink-2); }
+.legend .swatch { width: 12px; height: 12px; border-radius: 3px; flex: none; }
+.legend .line-key { width: 16px; height: 2px; border-radius: 2px; flex: none; }
+
+/* ============================================================ SVG CHROME */
+.chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+/* labels and decorative strokes must never steal the pointer from the marks
+   or the hover overlay underneath them */
+.chart svg text, .chart svg path, .chart svg line { pointer-events: none; }
+.chart svg rect, .chart svg circle { pointer-events: auto; }
+.chart { position: relative; }
+.gridline { stroke: var(--grid); stroke-width: 1; shape-rendering: crispEdges; }
+.axisline { stroke: var(--axis); stroke-width: 1; shape-rendering: crispEdges; }
+.tick { fill: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums; }
+.axis-title { fill: var(--muted); font-size: 11px; font-weight: 560; }
+.dlabel { fill: var(--ink); font-size: 12px; font-weight: 600; }
+.dlabel-2 { fill: var(--ink-2); font-size: 11px; }
+.seg-label { font-size: 11.5px; font-weight: 600; }
+.annot { fill: var(--muted); font-size: 11px; }
+
+/* ============================================================ TOOLTIP */
+.tip {
+  position: absolute; z-index: 30; pointer-events: none; opacity: 0;
+  transition: opacity .1s ease; transform: translate(-50%, -100%);
+  background: var(--surface-1); color: var(--ink);
+  border: 1px solid var(--border-2); border-radius: 10px;
+  padding: 9px 11px; font-size: .8rem; line-height: 1.45;
+  box-shadow: var(--shadow); min-width: 150px; max-width: 260px;
+}
+.tip.on { opacity: 1; }
+.tip .t-title { font-weight: 640; margin-bottom: 5px; font-size: .82rem; }
+.tip .t-row { display: flex; align-items: center; gap: 7px; justify-content: space-between; }
+.tip .t-row .k { display: inline-flex; align-items: center; gap: 6px; color: var(--ink-2); }
+.tip .t-row .v { font-variant-numeric: tabular-nums; font-weight: 600; }
+.tip .t-dot { width: 9px; height: 9px; border-radius: 2px; flex: none; }
+.tip .t-note { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border); color: var(--ink-2); font-size: .76rem; }
+
+/* ============================================================ TABLE VIEW */
+.tableview { display: none; margin-top: 14px; max-height: 340px; overflow: auto; border: 1px solid var(--border); border-radius: 10px; }
+.tableview.on { display: block; }
+table { border-collapse: collapse; width: 100%; font-size: .8rem; }
+th, td { padding: 6px 10px; text-align: right; border-bottom: 1px solid var(--border); font-variant-numeric: tabular-nums; white-space: nowrap; }
+th { position: sticky; top: 0; background: var(--surface-2); color: var(--ink-2); font-weight: 600; z-index: 1; }
+td:first-child, th:first-child { text-align: left; }
+tbody tr:last-child td { border-bottom: 0; }
+
+/* ============================================================ SCALE STRIP */
+.strip-shell { margin-top: 8px; position: relative; }
+.strip-readout {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px;
+  padding: 12px 14px; border: 1px solid var(--border); border-radius: 10px;
+  background: var(--surface-2); margin-bottom: 10px;
+}
+.strip-readout .big { font-size: 1.6rem; font-weight: 660; letter-spacing: -.02em; }
+.strip-readout .who { font-size: .85rem; color: var(--ink-2); }
+.strip-scroll {
+  overflow-x: auto; overflow-y: hidden; border: 1px solid var(--border);
+  border-radius: 10px; background: var(--surface-1);
+  padding: 0; overscroll-behavior-x: contain;
+}
+.strip-track { position: relative; height: 258px; }
+.strip-bar {
+  position: absolute; left: 0; top: 230px; height: 18px; border-radius: 0 4px 4px 0;
+  background: linear-gradient(90deg, var(--w-bot50), var(--w-mid) 22%, var(--w-next9) 60%, var(--w-top1));
+}
+.strip-mark { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--axis); }
+.strip-mark .flag {
+  position: absolute; left: 0; white-space: nowrap; line-height: 1.35;
+  font-size: 11px; color: var(--ink-2);
+  background: var(--surface-1); border-left: 2px solid var(--s2);
+  padding: 4px 9px 5px; border-radius: 0 7px 7px 0;
+  box-shadow: 0 1px 6px rgba(0,0,0,.18);
+}
+.strip-mark .flag b { display: block; color: var(--ink); font-weight: 640; font-size: 12px; }
+.strip-tick { position: absolute; top: 212px; width: 1px; height: 16px; background: var(--axis); }
+.strip-tick span {
+  position: absolute; bottom: 18px; left: 5px; font-size: 10px; color: var(--muted);
+  font-variant-numeric: tabular-nums; white-space: nowrap;
+}
+.strip-tick.major { background: var(--muted); height: 22px; top: 206px; }
+.strip-play {
+  position: absolute; left: 0; top: 0; bottom: 0; width: 2px;
+  background: var(--s2); z-index: 5; pointer-events: none; border-radius: 1px;
+}
+.strip-scroll::-webkit-scrollbar { height: 12px; }
+.strip-scroll::-webkit-scrollbar-track { background: var(--surface-2); border-radius: 0 0 10px 10px; }
+.strip-scroll::-webkit-scrollbar-thumb { background: var(--axis); border-radius: 6px; border: 3px solid var(--surface-2); }
+.strip-scroll::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+.strip-hint { font-size: .78rem; color: var(--muted); margin-top: 8px; }
+
+/* ============================================================ TIMELINE */
+.tl { position: relative; margin-top: 8px; padding-left: 26px; }
+.tl::before { content: ""; position: absolute; left: 7px; top: 6px; bottom: 6px; width: 1px; background: var(--border-2); }
+.tl-item { position: relative; padding: 0 0 22px; }
+.tl-item::before {
+  content: ""; position: absolute; left: -23px; top: 7px;
+  width: 9px; height: 9px; border-radius: 50%;
+  background: var(--s1); box-shadow: 0 0 0 3px var(--page);
+}
+.tl-item.money::before { background: var(--s2); }
+.tl-item .yr { font-size: .78rem; font-weight: 680; color: var(--muted); letter-spacing: .04em; }
+.tl-item .hd { font-weight: 620; font-size: .98rem; margin: 1px 0 3px; }
+.tl-item .bd { font-size: .88rem; color: var(--ink-2); margin: 0; max-width: 66ch; }
+.tl-legend { display: flex; gap: 18px; margin-bottom: 18px; }
+
+/* ============================================================ FACT GRID */
+.facts { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(268px, 1fr)); }
+.fact { background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 18px; }
+.fact .fnum { font-size: 1.6rem; font-weight: 660; letter-spacing: -.02em; line-height: 1.15; }
+.fact .fbody { font-size: .88rem; color: var(--ink-2); margin: 6px 0 0; }
+.fact .fsrc { font-size: .72rem; color: var(--muted); margin-top: 10px; }
+
+/* ============================================================ CALLOUT */
+.callout {
+  border-left: 3px solid var(--s2); background: var(--surface-1);
+  border-radius: 0 12px 12px 0; padding: 16px 18px; margin: 26px 0;
+}
+.callout h4 { font-size: .95rem; margin-bottom: 6px; }
+.callout p { font-size: .9rem; margin: 0; }
+
+/* ============================================================ SOURCES */
+.srclist { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+.srclist li { font-size: .86rem; color: var(--ink-2); padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+.srclist li:last-child { border-bottom: 0; }
+.srclist a { color: var(--s1); text-decoration: none; overflow-wrap: anywhere; }
+.srclist a:hover { text-decoration: underline; }
+footer { padding-block: 40px 60px; color: var(--muted); font-size: .82rem; }
+
+@media (max-width: 640px) {
+  section { padding-block: 40px; }
+  .card, .chart-card { padding: 16px 14px; }
+  .tile { padding: 14px; }
+}
+@media print { .topbar, .chart-tools { display: none; } .tableview { display: block; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <span class="brand">The Shape of American Wealth</span>
+    <nav class="navlinks">
+      <a href="#scale">Scale</a>
+      <a href="#arc">The long arc</a>
+      <a href="#surge">The surge</a>
+      <a href="#power">Money &amp; power</a>
+      <a href="#sources">Sources</a>
+    </nav>
+    <button class="btn" id="themeBtn" type="button" aria-label="Switch color theme">Theme</button>
+  </div>
+</div>
+
+<!-- ======================================================== HERO -->
+<header class="wrap hero">
+  <div class="eyebrow">U.S. household wealth &middot; 1913&ndash;2026</div>
+  <h1>A country of two economies</h1>
+  <p class="lede">
+    American wealth is not merely unequal &mdash; it is unequal on a scale most charts
+    cannot physically render, and it has been pulling apart for roughly fifty years.
+    This page uses primary data from the Federal Reserve, the World Inequality Database,
+    the IRS and federal campaign-finance filings to show how far apart the two economies
+    have drifted, how fast, and how the rules that govern that gap have been rewritten.
+  </p>
+
+  <div class="herofig">
+    <div class="num" id="heroNum">2,900&times;</div>
+    <p class="cap">
+      The average household in the <strong>top 0.1%</strong> holds about
+      <span id="heroRatio">2,900</span> times the net worth of the average household
+      in the <strong>bottom half</strong> of the country.
+    </p>
+  </div>
+  <p class="note" id="heroNote">
+    Federal Reserve Distributional Financial Accounts, latest quarter. Group averages,
+    not medians. Figures in constant dollars.
+  </p>
+</header>
+
+<!-- ======================================================== 1. SCALE -->
+<section id="scale" class="wrap">
+  <div class="eyebrow">Part one</div>
+  <h2>The scale</h2>
+  <p class="lede">
+    Start with a single moment in time. Split every American household into four groups by
+    net worth, then ask two questions: how many people are in each group, and how much of the
+    country's wealth do they hold?
+  </p>
+
+  <div class="card chart-card" style="margin-top:26px">
+    <div class="chart-head">
+      <h3>Share of households vs. share of wealth</h3>
+      <p class="sub" id="popwSub">U.S. households by net-worth percentile group.</p>
+    </div>
+    <div class="legend" id="popwLegend"></div>
+    <div class="chart" id="popwChart"></div>
+    <div class="chart-tools">
+      <button class="btn" type="button" data-table="popwTable" aria-pressed="false">Show data table</button>
+    </div>
+    <div class="tableview" id="popwTable"></div>
+    <p class="src">Source: Federal Reserve Board, Distributional Financial Accounts (wealth shares);
+      U.S. Census Bureau via FRED, total U.S. households (group sizes).</p>
+  </div>
+
+  <div class="tiles" style="margin-top:16px" id="scaleTiles"></div>
+
+  <div class="callout">
+    <h4>Why an average, and why it matters here</h4>
+    <p>
+      These are group <em>averages</em> &mdash; total wealth divided by the number of households in the
+      group. For the bottom half that average is generous: it silently nets out the roughly
+      one in ten American households with <em>negative</em> net worth against those with a little
+      equity, so the typical household near the bottom holds less than the number shown.
+      For the top 0.1% the average is conservative in a different way: within that sliver the
+      distribution is itself extremely skewed, so most of its members hold far less than the
+      average and a few hold vastly more. Averages flatten both tails. The gap below is the
+      floor, not the ceiling.
+    </p>
+  </div>
+
+  <div class="card" style="margin-top:26px">
+    <div class="chart-head">
+      <h3>Scroll the distance</h3>
+      <p class="sub">
+        Same data, drawn to scale. The bar below is one continuous ruler: its full length is the
+        average net worth of a top-0.1% household. Every other group sits where it actually falls
+        on that ruler. Drag or scroll sideways &mdash; the distance you travel is the inequality.
+      </p>
+    </div>
+    <div class="strip-shell">
+      <div class="strip-readout">
+        <span class="big" id="stripVal">$0</span>
+        <span class="who" id="stripWho">at the orange marker &mdash; scroll or drag right &rarr;</span>
+      </div>
+      <div class="strip-play" id="stripPlay" aria-hidden="true"></div>
+      <div class="strip-scroll" id="stripScroll" tabindex="0" role="region"
+           aria-label="Horizontally scrollable wealth scale. Use arrow keys to move along it.">
+        <div class="strip-track" id="stripTrack">
+          <div class="strip-bar" id="stripBar"></div>
+        </div>
+      </div>
+      <p class="strip-hint">
+        All four lower groups are compressed into the first fraction of the ruler. That compression
+        is the point: on a scale that can show the top, everyone else disappears.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================== 2. LONG ARC -->
+<section id="arc" class="wrap">
+  <div class="eyebrow">Part two</div>
+  <h2>The long arc, 1913&ndash;2024</h2>
+  <p class="lede">
+    Concentration of wealth is not a one-way ratchet. Over the last century it traced a deep
+    U: a Gilded-Age peak, a half-century collapse, and a climb back that began around 1978 and
+    has not stopped. The shape of that U tracks the rules &mdash; tax rates, labor law, financial
+    regulation, campaign-finance law &mdash; more closely than it tracks which party held the White House.
+  </p>
+
+  <div class="card chart-card" style="margin-top:26px">
+    <div class="chart-head">
+      <h3>Share of all U.S. wealth held by the richest 1%</h3>
+      <p class="sub">Annual, 1913&ndash;2024. Hover or use arrow keys for a year; click a marked
+        year to read what happened. The lane under the axis shows the party of the sitting president.</p>
+    </div>
+    <div class="chart" id="arcChart"></div>
+    <div class="chart-tools">
+      <button class="btn" type="button" id="arcTaxBtn" aria-pressed="true">Hide top tax rate</button>
+      <button class="btn" type="button" data-table="arcTable" aria-pressed="false">Show data table</button>
+    </div>
+    <div id="arcEvent" class="callout" style="display:none;margin:18px 0 0">
+      <h4 id="arcEventTitle"></h4>
+      <p id="arcEventBody"></p>
+    </div>
+    <div class="tableview" id="arcTable"></div>
+    <p class="src">Sources: World Inequality Database (Saez&ndash;Zucman capitalized-income series), via Our World in Data
+      &mdash; wealth share of the richest 1% of adults. Top marginal federal income tax rate: IRS / Tax Policy Center
+      via FRED, extended 2019&ndash;2025 at 37%.</p>
+  </div>
+
+  <div class="callout">
+    <h4>Read this as correlation, not proof</h4>
+    <p>
+      Nothing on this chart demonstrates that a tax cut <em>caused</em> a rise in wealth concentration.
+      Wealth shares move with asset prices, demographics, technology and global capital as well as
+      with policy, and the two series shown move on different clocks &mdash; a tax change lands in a
+      year, a wealth share responds over a decade. What the chart does establish is the association,
+      and it is strong and sustained: the half-century when top rates sat above 70% is the same
+      half-century when the top 1% share fell by more than half, and the turn upward begins within a
+      few years of the turn downward in rates. The honest claim is that policy is one major input
+      among several, and that it is the one input voters actually choose.
+    </p>
+  </div>
+</section>
+
+<!-- ======================================================== 3. THE SURGE -->
+<section id="surge" class="wrap">
+  <div class="eyebrow">Part three</div>
+  <h2>The modern surge, 1989&ndash;2026</h2>
+  <p class="lede">
+    Since 1989 the Federal Reserve has published a quarterly estimate of who owns America.
+    It is the highest-resolution picture available, and it shows the gap widening through
+    booms, busts, recoveries and both parties' administrations &mdash; interrupted only briefly,
+    and never reversed.
+  </p>
+
+  <div class="card chart-card" style="margin-top:26px">
+    <div class="chart-head">
+      <h3>Who owns American wealth</h3>
+      <p class="sub" id="stackSub">Share of total household net worth, by wealth percentile group, quarterly.</p>
+    </div>
+    <div class="legend" id="stackLegend"></div>
+    <div class="chart" id="stackChart"></div>
+    <div class="chart-tools">
+      <button class="btn" type="button" data-table="stackTable" aria-pressed="false">Show data table</button>
+    </div>
+    <div class="tableview" id="stackTable"></div>
+    <p class="src">Source: Federal Reserve Board, Distributional Financial Accounts.</p>
+  </div>
+
+  <div class="card chart-card" style="margin-top:16px">
+    <div class="chart-head">
+      <h3>Real net worth per household, indexed to 1989 = 100</h3>
+      <p class="sub">
+        Inflation-adjusted average wealth per household within each group, rebased so every line
+        starts at 100. Indexing is what lets wildly different dollar amounts share one honest axis:
+        the lines compare <em>growth rates</em>, not sizes. Actual dollar values are labeled at both ends.
+      </p>
+    </div>
+    <div class="legend" id="idxLegend"></div>
+    <div class="chart" id="idxChart"></div>
+    <div class="chart-tools">
+      <button class="btn" type="button" data-table="idxTable" aria-pressed="false">Show data table</button>
+    </div>
+    <div class="tableview" id="idxTable"></div>
+    <p class="src">Source: Federal Reserve Board, Distributional Financial Accounts; deflated by CPI-U
+      (BLS via FRED); household counts from U.S. Census Bureau via FRED.</p>
+  </div>
+
+  <div class="callout">
+    <h4>That cliff in the green line is real</h4>
+    <p>
+      Between 2007 and 2011 the total net worth of the bottom half of American households fell from
+      about <strong>$1.37 trillion to $253 billion</strong> &mdash; an 82% wipeout &mdash; and their share of
+      national wealth fell to <strong>0.4%</strong>. The reason is composition, not bad luck. Wealth at the
+      bottom is almost entirely home equity, held with leverage: a 25% fall in house prices against an
+      80% mortgage erases most of the owner's stake. Wealth at the top is held in equities and business
+      interests, unleveraged, and those assets were bought back up by a decade of cheap money. Both
+      groups lost in 2008. Only one owned the assets that the recovery was designed to lift. It took the
+      bottom half until <strong>2019</strong> &mdash; twelve years &mdash; merely to return to where it started, and
+      even now its share of national wealth is lower than it was in 1989.
+    </p>
+  </div>
+
+  <div class="tiles" style="margin-top:16px" id="surgeTiles"></div>
+</section>
+
+<!-- ======================================================== 4. MONEY & POWER -->
+<section id="power" class="wrap">
+  <div class="eyebrow">Part four</div>
+  <h2>Money and power</h2>
+  <p class="lede">
+    Wealth concentration and political influence are not separate stories. Over the same decades
+    that the top share climbed, the legal ceiling on political spending was dismantled piece by
+    piece, the cost of running for federal office multiplied, and the share of that cost supplied
+    by a few hundred households rose to something no previous era would recognize.
+  </p>
+
+  <div class="card chart-card" style="margin-top:26px">
+    <div class="chart-head">
+      <h3>Cost of a U.S. presidential election cycle</h3>
+      <p class="sub">Total federal election spending &mdash; candidates, parties and outside groups &mdash;
+        in constant 2024 dollars, so the bars are directly comparable.</p>
+    </div>
+    <div class="chart" id="elecChart"></div>
+    <div class="chart-tools">
+      <button class="btn" type="button" data-table="elecTable" aria-pressed="false">Show data table</button>
+    </div>
+    <div class="tableview" id="elecTable"></div>
+    <p class="src">Source: OpenSecrets, Cost of Election, inflation-adjusted to 2024 dollars
+      (compilation via America's Plan). Presidential cycles only; midterm cycles omitted for comparability.</p>
+  </div>
+
+  <h3 style="margin-top:40px">How the rules changed</h3>
+  <div class="tl-legend">
+    <span class="legend"><span class="item"><span class="swatch" style="background:var(--s1)"></span>Tax &amp; labor policy</span></span>
+    <span class="legend"><span class="item"><span class="swatch" style="background:var(--s2)"></span>Campaign-finance law</span></span>
+  </div>
+  <div class="tl" id="timeline"></div>
+
+  <h3 style="margin-top:36px">Who pays for politics now</h3>
+  <div class="facts" style="margin-top:16px">
+    <div class="fact">
+      <div class="fnum">$2.6 billion</div>
+      <p class="fbody">Given to federal campaigns in the 2024 cycle by just <strong>100 billionaire
+        families</strong> &mdash; roughly <strong>one of every six dollars</strong> spent by all candidates,
+        parties and committees combined, and about two and a half times what billionaire donors gave in 2020.</p>
+      <p class="fsrc">Americans for Tax Fairness, analysis of FEC filings, 2025.</p>
+    </div>
+    <div class="fact">
+      <div class="fnum">$1.9 billion</div>
+      <p class="fbody">Untraceable &ldquo;dark money&rdquo; in the 2024 federal races &mdash; a record, and a
+        conservative estimate. In 2006, before the rules changed, the comparable figure was
+        <strong>under $5 million</strong>. At least $4.3 billion has flowed through such groups since 2010.</p>
+      <p class="fsrc">Brennan Center for Justice, 2025.</p>
+    </div>
+    <div class="fact">
+      <div class="fnum">$2.7 billion</div>
+      <p class="fbody">Spent by super PACs in 2024 alone &mdash; a category of committee that did not legally
+        exist before 2010. Super PACs spent about <strong>$6.4 billion</strong> in total across 2010&ndash;2022.</p>
+      <p class="fsrc">Brennan Center for Justice; OpenSecrets.</p>
+    </div>
+    <div class="fact">
+      <div class="fnum">$4.4 billion</div>
+      <p class="fbody">Spent on federal lobbying in 2024 &mdash; an all-time record, and more than double the
+        annual figure at the turn of the century. That is roughly <strong>$8.2 million per member of
+        Congress</strong>, every year.</p>
+      <p class="fsrc">OpenSecrets analysis of Senate lobbying disclosures, 2025.</p>
+    </div>
+    <div class="fact">
+      <div class="fnum">23% vs. 24.2%</div>
+      <p class="fbody">Total effective tax rate paid by the <strong>400 richest families</strong> versus the
+        <strong>bottom half of households</strong> in 2018 &mdash; the first year on record that the very top paid
+        a lower rate than the working class. In 1980 the top 400 paid 47%; in 1960, 56%.</p>
+      <p class="fsrc">Saez &amp; Zucman, <em>The Triumph of Injustice</em> (2019). Methodology contested by some economists.</p>
+    </div>
+    <div class="fact">
+      <div class="fnum">Near zero</div>
+      <p class="fbody">The measured independent influence of average citizens' preferences on federal policy,
+        across 1,779 policy questions from 1981&ndash;2002, once the preferences of economic elites and
+        organized business groups are accounted for. Those groups showed <strong>substantial</strong> independent influence.</p>
+      <p class="fsrc">Gilens &amp; Page, &ldquo;Testing Theories of American Politics,&rdquo; <em>Perspectives on Politics</em> (2014).</p>
+    </div>
+    <div class="fact">
+      <div class="fnum">13 billionaires</div>
+      <p class="fbody">Appointed to senior roles in the administration that took office in 2025 &mdash; the wealthiest
+        in U.S. history by a wide margin. Sixteen of its 25 richest appointees sit in the
+        <strong>top 0.0001%</strong> of Americans by wealth.</p>
+      <p class="fsrc">Public Citizen; Forbes; ABC News, 2025.</p>
+    </div>
+    <div class="fact">
+      <div class="fnum">281 to 1</div>
+      <p class="fbody">CEO pay at large U.S. firms relative to that of a typical worker in 2024. In 1965 the
+        ratio was about <strong>21 to 1</strong>. Since 1978, realized CEO compensation has risen
+        <strong>1,094%</strong>; typical worker pay has risen 26%.</p>
+      <p class="fsrc">Economic Policy Institute, CEO Pay series, 2025.</p>
+    </div>
+    <div class="fact">
+      <div class="fnum">50.2%</div>
+      <p class="fbody">Share of <strong>all U.S. corporate equities and mutual fund shares</strong> owned by the
+        top 1% of households. The bottom 50% of households own <strong>1.1%</strong>. When the stock market
+        rises, this is who it rises for.</p>
+      <p class="fsrc">Federal Reserve Distributional Financial Accounts, latest quarter.</p>
+    </div>
+  </div>
+
+  <div class="callout">
+    <h4>The mechanism, stated plainly</h4>
+    <p>
+      There is no need to allege a conspiracy, and the data above does not show one. The mechanism is
+      structural and entirely legal: political campaigns cost money; the Supreme Court has held since
+      <em>Buckley</em> (1976) that spending money on political speech is itself protected speech;
+      after <em>Citizens United</em> and <em>SpeechNow</em> (both 2010) that spending became effectively
+      unlimited for independent groups; the households able to supply money at that scale are, by
+      definition, the households at the top of the distribution shown in Part One; and the policies most
+      valuable to them &mdash; marginal rate cuts, capital-gains preferences, the carried-interest rule,
+      estate-tax exemptions, weaker antitrust and labor enforcement &mdash; are precisely the policies that
+      compound wealth at the top. Each turn of that loop makes the next turn easier to finance. That is
+      what the two halves of this page have in common.
+    </p>
+  </div>
+</section>
+
+<!-- ======================================================== 5. SOURCES -->
+<section id="sources" class="wrap">
+  <div class="eyebrow">Part five</div>
+  <h2>Sources and method</h2>
+  <p class="lede">
+    Every number on this page comes from a primary statistical source or a named published analysis.
+    Nothing is modeled, smoothed or estimated by this page beyond the three arithmetic steps described below.
+  </p>
+
+  <div class="card" style="margin-top:24px">
+    <h3>What was computed here, and how</h3>
+    <p style="margin-top:10px">
+      <strong>1. Group averages.</strong> The Fed publishes each group's total net worth in dollars, not
+      per-household figures. Average net worth per household = (group's total net worth) &divide;
+      (total U.S. households &times; the group's fixed population share: 0.1%, 1%, 9%, 40%, 50%).
+      Household counts come from the Census Bureau, interpolated from annual to quarterly and, for the
+      most recent quarter, extended one year at the prior year's growth rate.
+    </p>
+    <p>
+      <strong>2. Inflation adjustment.</strong> Dollar figures are deflated by CPI-U (all urban consumers,
+      not seasonally adjusted for quarterly averaging) and expressed in the dollars of the most recent
+      quarter shown.
+    </p>
+    <p>
+      <strong>3. Indexing.</strong> The 1989 = 100 chart divides each group's real average net worth by its
+      own 1989 Q3 value. That removes level differences so growth rates can share one axis &mdash; which is
+      the correct alternative to plotting two wildly different dollar scales against two y-axes, a
+      construction that manufactures apparent correlation out of arbitrary scale choices.
+    </p>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <h3>Two different measures of &ldquo;the top 1%&rdquo;</h3>
+    <p style="margin-top:10px">
+      Part Two and Part Three use different sources and therefore report different numbers for the same
+      concept &mdash; roughly 35% versus roughly 32% in recent years. This is not an error, and the two are
+      not mixed in any single chart. The World Inequality Database series (Part Two) distributes wealth
+      across <em>adult individuals</em>, splitting couples' assets, and is built by capitalizing income
+      reported on tax returns back into the assets that produced it. The Fed's Distributional Financial
+      Accounts (Part Three) distribute wealth across <em>households</em>, and are built by fitting
+      Survey of Consumer Finances microdata to the aggregate national balance sheet. Different unit,
+      different method, different number. Both show the same direction and roughly the same slope, which
+      is the substantive point; a gap of a few percentage points between two honest methods is the normal
+      state of distributional statistics, and any presentation that hides it is the one to distrust.
+    </p>
+  </div>
+
+  <h3 style="margin-top:32px">Primary sources</h3>
+  <ul class="srclist" style="margin-top:14px">
+    <li><strong>Federal Reserve Board &mdash; Distributional Financial Accounts</strong> (quarterly wealth
+      shares and levels by percentile group, 1989 Q3 onward). Series WFRBSTP1300, WFRBST01134, WFRBSN09161,
+      WFRBSN40188, WFRBSB50215, WFRBLTP1246, WFRBLT01026, WFRBLN09053, WFRBLN40080, WFRBLB50107,
+      WFRBST01122, WFRBSB50203.
+      <br><a href="https://www.federalreserve.gov/releases/efa/efa-distributional-financial-accounts.htm">federalreserve.gov/releases/efa/efa-distributional-financial-accounts.htm</a></li>
+    <li><strong>World Inequality Database</strong> &mdash; wealth share of the richest 1%, United States,
+      1913&ndash;2024 (Saez&ndash;Zucman capitalized-income estimates), retrieved via Our World in Data.
+      <br><a href="https://ourworldindata.org/grapher/wealth-share-richest-1-percent">ourworldindata.org/grapher/wealth-share-richest-1-percent</a></li>
+    <li><strong>IRS / Tax Policy Center</strong> &mdash; highest marginal federal individual income tax rate,
+      1913&ndash;2018 (FRED series IITTRHB); 2019&ndash;2025 held at 37% per the Tax Cuts and Jobs Act, made
+      permanent by the One Big Beautiful Bill Act (July 2025).
+      <br><a href="https://taxpolicycenter.org/statistics/historical-highest-marginal-income-tax-rates">taxpolicycenter.org/statistics/historical-highest-marginal-income-tax-rates</a></li>
+    <li><strong>U.S. Census Bureau</strong> &mdash; total U.S. households (FRED series TTLHH);
+      <strong>Bureau of Labor Statistics</strong> &mdash; CPI-U (FRED series CPIAUCSL).</li>
+    <li><strong>OpenSecrets</strong> &mdash; cost of election by cycle; federal lobbying totals; outside spending.
+      <br><a href="https://www.opensecrets.org/elections-overview/cost-of-election">opensecrets.org/elections-overview/cost-of-election</a></li>
+    <li><strong>Brennan Center for Justice</strong> &mdash; dark money and super PAC totals; <em>Citizens United</em> explainer.
+      <br><a href="https://www.brennancenter.org/our-work/research-reports/dark-money-hit-record-high-19-billion-2024-federal-races">brennancenter.org &mdash; Dark Money Hit a Record High of $1.9 Billion in 2024 Federal Races</a></li>
+    <li><strong>Americans for Tax Fairness</strong> &mdash; billionaire political giving, 2024 cycle.
+      <br><a href="https://americansfortaxfairness.org/billionaires-buying-elections-theyve-come-to-collect/">americansfortaxfairness.org &mdash; Billionaires Buying Elections</a></li>
+    <li><strong>Saez, E. &amp; Zucman, G.</strong>, <em>The Triumph of Injustice</em> (W. W. Norton, 2019) &mdash;
+      effective tax rates by income group, including the top 400 families.</li>
+    <li><strong>Gilens, M. &amp; Page, B.</strong>, &ldquo;Testing Theories of American Politics: Elites, Interest
+      Groups, and Average Citizens,&rdquo; <em>Perspectives on Politics</em> 12(3), 2014.</li>
+    <li><strong>Economic Policy Institute</strong> &mdash; CEO-to-worker compensation ratio, 1965&ndash;2024.
+      <br><a href="https://www.epi.org/publication/ceo-pay/">epi.org/publication/ceo-pay</a></li>
+    <li><strong>Public Citizen / Forbes / ABC News</strong> (2025) &mdash; net worth of senior federal appointees.</li>
+  </ul>
+
+  <div class="callout" style="border-left-color:var(--muted)">
+    <h4>Caveats worth holding onto</h4>
+    <p>
+      Distributional wealth statistics are estimates, not counts. The Fed's accounts interpolate between
+      triennial surveys; the capitalized-income method assumes a stable relationship between reported
+      income and underlying assets, an assumption Kopczuk, Smith&ndash;Zidar&ndash;Zwick and others have
+      challenged &mdash; their alternative estimates put the top 1% share somewhat lower, though still rising.
+      The Saez&ndash;Zucman effective-tax-rate figures are contested by economists at AEI and elsewhere over
+      the treatment of corporate tax incidence and transfer income. Dark-money totals are lower bounds by
+      construction, since the money is undisclosed. None of these disputes changes the direction or the
+      rough magnitude of the trends on this page; several change the decimal places.
+    </p>
+  </div>
+</section>
+
+<footer class="wrap">
+  <p style="max-width:70ch">
+    Built as a static page &mdash; all data embedded, no network calls, no tracking. Every chart has a
+    data-table view; hover values are never the only way to read a number.
+    Figures reflect data published as of the dates shown on each chart.
+  </p>
+  <p id="buildStamp"></p>
+</footer>
+
+<script>
+/* ==========================================================
+   DATA — embedded verbatim from the primary sources listed
+   in Part Five. Nothing is fetched at runtime.
+   ========================================================== */
+const D = {"dfa":{"q":["1989Q3","1989Q4","1990Q1","1990Q2","1990Q3","1990Q4","1991Q1","1991Q2","1991Q3","1991Q4","1992Q1","1992Q2","1992Q3","1992Q4","1993Q1","1993Q2","1993Q3","1993Q4","1994Q1","1994Q2","1994Q3","1994Q4","1995Q1","1995Q2","1995Q3","1995Q4","1996Q1","1996Q2","1996Q3","1996Q4","1997Q1","1997Q2","1997Q3","1997Q4","1998Q1","1998Q2","1998Q3","1998Q4","1999Q1","1999Q2","1999Q3","1999Q4","2000Q1","2000Q2","2000Q3","2000Q4","2001Q1","2001Q2","2001Q3","2001Q4","2002Q1","2002Q2","2002Q3","2002Q4","2003Q1","2003Q2","2003Q3","2003Q4","2004Q1","2004Q2","2004Q3","2004Q4","2005Q1","2005Q2","2005Q3","2005Q4","2006Q1","2006Q2","2006Q3","2006Q4","2007Q1","2007Q2","2007Q3","2007Q4","2008Q1","2008Q2","2008Q3","2008Q4","2009Q1","2009Q2","2009Q3","2009Q4","2010Q1","2010Q2","2010Q3","2010Q4","2011Q1","2011Q2","2011Q3","2011Q4","2012Q1","2012Q2","2012Q3","2012Q4","2013Q1","2013Q2","2013Q3","2013Q4","2014Q1","2014Q2","2014Q3","2014Q4","2015Q1","2015Q2","2015Q3","2015Q4","2016Q1","2016Q2","2016Q3","2016Q4","2017Q1","2017Q2","2017Q3","2017Q4","2018Q1","2018Q2","2018Q3","2018Q4","2019Q1","2019Q2","2019Q3","2019Q4","2020Q1","2020Q2","2020Q3","2020Q4","2021Q1","2021Q2","2021Q3","2021Q4","2022Q1","2022Q2","2022Q3","2022Q4","2023Q1","2023Q2","2023Q3","2023Q4","2024Q1","2024Q2","2024Q3","2024Q4","2025Q1","2025Q2","2025Q3","2025Q4","2026Q1"],"t01":[8.6,8.7,8.6,8.7,8.5,8.7,8.9,8.8,8.8,9.1,9.0,8.9,8.9,9.2,9.5,9.6,9.8,10.1,10.2,10.3,10.5,10.8,10.9,11.1,11.4,11.5,11.5,11.4,11.3,11.4,11.2,11.4,11.4,11.5,11.7,11.7,11.2,11.5,11.2,11.3,11.0,11.3,11.2,10.9,10.7,10.4,9.9,9.9,9.6,9.7,9.6,9.4,9.0,9.0,8.8,9.2,9.2,9.5,9.9,9.9,10.0,10.2,10.2,10.4,10.5,10.6,11.0,11.0,11.1,11.3,11.6,11.7,11.9,11.8,11.6,11.4,11.1,10.6,10.3,10.3,10.6,10.5,10.6,10.5,10.7,11.0,11.2,11.3,11.0,11.2,11.5,11.6,11.8,11.8,12.0,12.0,12.1,12.2,12.3,12.5,12.5,12.6,12.6,12.7,12.5,12.5,12.5,12.6,12.6,12.5,12.5,12.5,12.5,12.5,12.4,12.3,12.4,11.9,12.3,12.3,12.1,12.4,11.7,12.3,12.5,13.0,13.2,13.4,13.5,13.7,13.6,13.1,13.2,13.4,13.5,13.5,13.4,13.6,13.8,13.7,14.0,14.0,13.9,14.1,14.4,14.5,14.4],"t1":[22.8,23.0,22.7,22.9,22.5,22.8,23.2,23.1,23.1,23.5,23.4,23.2,23.0,23.5,24.0,24.1,24.4,24.9,25.1,25.3,25.6,26.0,26.2,26.6,27.3,27.4,27.3,27.3,27.1,27.2,26.9,27.3,27.3,27.5,27.8,27.8,27.1,27.7,27.4,27.7,27.3,27.9,27.9,27.5,27.3,26.8,26.1,26.2,25.6,25.9,25.8,25.6,25.0,25.1,24.8,25.4,25.5,26.0,26.6,26.6,26.8,27.0,26.9,27.2,27.3,27.3,27.9,27.8,28.0,28.2,28.6,28.7,29.0,28.8,28.5,28.4,28.1,27.7,27.4,27.6,28.1,28.1,28.3,28.1,28.4,28.8,29.1,29.2,28.7,29.0,29.4,29.4,29.6,29.6,29.8,29.6,29.7,29.8,30.0,30.4,30.4,30.6,30.6,30.8,30.5,30.6,30.6,30.8,30.8,30.7,30.7,30.7,30.7,30.8,30.6,30.5,30.7,30.0,30.6,30.6,30.4,30.6,29.2,29.9,30.0,30.6,30.7,30.8,30.8,30.9,30.5,29.4,29.5,29.9,30.1,30.1,29.9,30.3,30.6,30.5,30.9,31.0,30.9,31.2,31.6,31.8,31.6],"n9":[38.0,37.9,37.7,37.6,37.4,37.2,37.1,36.9,36.6,36.5,36.3,36.3,36.2,36.1,36.2,36.0,35.8,35.6,35.5,35.3,35.1,34.8,34.7,34.3,33.9,34.1,34.2,34.2,34.3,34.5,34.6,34.8,34.8,35.0,35.1,35.2,35.1,35.4,35.5,35.6,35.6,35.9,35.9,35.8,35.8,35.8,35.7,35.8,35.7,35.9,36.0,36.0,36.0,36.0,36.2,36.5,36.5,36.6,36.5,36.5,36.5,36.6,36.7,36.9,36.9,36.9,37.1,37.2,37.3,37.4,37.6,37.8,38.0,38.3,38.5,38.6,38.9,38.8,38.9,39.2,39.4,39.6,39.7,39.9,40.0,40.1,40.0,39.9,39.8,39.7,39.7,39.6,39.5,39.4,39.4,39.4,39.3,39.3,39.3,39.3,39.3,39.3,39.3,39.4,39.4,39.3,39.3,39.3,39.2,39.2,39.3,39.3,39.3,39.3,39.3,39.4,39.4,39.6,39.7,39.6,39.7,39.4,39.3,38.9,38.6,38.2,37.9,37.6,37.3,37.2,36.8,36.5,36.4,36.5,36.6,36.4,36.5,36.5,36.5,36.4,36.5,36.4,36.4,36.4,36.4,36.4,36.3],"n40":[35.7,35.7,36.0,36.1,36.7,36.4,36.2,36.5,36.5,36.3,36.5,36.7,36.7,36.3,36.1,36.1,36.0,35.8,35.9,35.9,35.9,35.7,35.5,35.5,35.1,34.9,35.0,35.1,35.2,35.0,35.0,34.6,34.4,34.2,33.8,33.8,34.3,33.6,33.7,33.5,33.8,32.9,33.1,33.4,33.6,34.2,35.0,34.9,35.6,35.3,35.3,35.5,36.1,36.0,36.1,35.6,35.3,34.8,34.4,34.3,34.2,33.9,33.9,33.6,33.3,33.3,32.6,32.6,32.4,32.0,31.6,31.3,31.0,31.2,31.5,31.5,31.9,32.5,32.9,32.5,31.9,31.8,31.6,31.5,31.0,30.8,30.5,30.5,31.0,30.8,30.5,30.5,30.3,30.4,30.2,30.2,30.2,30.0,29.7,29.3,29.3,29.1,28.9,28.8,29.0,28.9,28.9,28.7,28.7,28.8,28.7,28.6,28.6,28.4,28.6,28.5,28.4,28.8,28.2,28.2,28.2,28.2,29.6,29.3,29.4,29.0,29.1,29.2,29.5,29.5,30.2,31.3,31.4,31.1,30.8,30.9,31.1,30.6,30.5,30.6,30.2,30.1,30.2,30.0,29.5,29.3,29.6],"b50":[3.5,3.4,3.5,3.4,3.5,3.6,3.5,3.5,3.7,3.7,3.8,3.8,4.1,4.0,3.8,3.8,3.8,3.7,3.5,3.4,3.5,3.5,3.5,3.6,3.7,3.6,3.5,3.4,3.5,3.4,3.4,3.4,3.4,3.3,3.3,3.2,3.5,3.3,3.4,3.2,3.3,3.2,3.2,3.2,3.2,3.2,3.2,3.1,3.1,3.0,3.0,2.9,3.0,2.9,2.8,2.6,2.6,2.6,2.5,2.6,2.5,2.5,2.5,2.4,2.5,2.5,2.4,2.4,2.4,2.3,2.2,2.1,2.0,1.7,1.5,1.5,1.2,1.0,0.7,0.7,0.7,0.6,0.5,0.5,0.5,0.4,0.4,0.4,0.4,0.4,0.4,0.6,0.6,0.7,0.7,0.8,0.9,0.9,0.9,1.0,1.0,1.0,1.0,1.1,1.1,1.2,1.2,1.2,1.3,1.3,1.3,1.4,1.4,1.4,1.5,1.6,1.5,1.6,1.6,1.6,1.7,1.7,1.8,2.0,2.1,2.2,2.3,2.3,2.4,2.4,2.5,2.7,2.7,2.6,2.6,2.6,2.5,2.5,2.5,2.5,2.4,2.5,2.5,2.5,2.5,2.5,2.5],"real":{"t01":[49707684,50685909,49306765,49872599,47253877,48673947,50432761,49787429,50001311,52219392,51173073,50364958,50506985,53099135,55154082,55912145,57489441,59506195,60246055,60904275,61692623,63118091,64673646,66390633,68968290,70757093,70758126,70809851,70008133,71275770,70028689,73718343,75685914,76732336,81116192,82118820,77035389,82632752,80832613,82571294,79850625,86664427,86601216,82843227,81376605,76390062,71583839,73261468,68445619,71510428,71410256,68334563,63321280,63639946,62060409,66994951,68160599,72212590,78430800,78577859,80524923,84661888,85128639,88232738,90116929,91531039,97517966,96349244,97829141,101973233,104153225,105172069,107326686,103697103,97582807,93433160,86345378,79867994,75733399,75823278,79709714,78715968,80914277,78965452,82788384,85901749,87610104,87625702,82503793,85186906,89162273,89062259,92543769,93249389,98032697,99344482,102790857,105830233,108451670,111894529,111943331,114946434,118074298,118425430,114704992,116581896,117962235,120004037,121703176,120359619,122492280,124925514,125518581,127864389,126403749,126542382,128560119,117822677,127454823,129680117,128531990,133986767,119185896,134719769,141352736,155712472,163651309,172220004,174168049,177217082,171646344,155232989,149841120,151658167,155585297,160750813,156661151,162871003,168696506,169472041,175583850,174762979,171278805,178062736,184736857,185831093,182457841],"t1":[13186527,13366601,13033576,13134844,12557641,12773229,13122000,13008890,13067141,13496823,13311657,13098387,13088691,13583490,13912184,14033114,14351442,14721867,14813765,14902333,15034294,15240789,15543516,15934569,16464358,16829085,16863076,16904573,16789701,17020672,16829771,17646948,18105083,18307635,19272975,19550522,18575057,19921482,19776265,20295398,19829185,21377936,21591670,20959862,20745299,19755680,18862004,19313150,18266221,19107786,19223824,18607559,17538663,17758625,17444290,18526677,18870067,19831116,21119199,21181563,21631234,22406863,22494178,23062956,23385859,23642626,24767808,24404841,24626220,25444582,25759699,25801010,26115285,25312731,24017205,23244691,21790042,20852141,20167901,20375780,21210280,21076633,21571885,21106279,21911873,22480492,22743340,22621832,21452215,21975802,22754989,22628930,23272367,23356810,24299569,24508650,25179945,25873526,26459105,27199974,27243954,27936567,28663190,28741984,28027407,28499129,28841169,29273565,29692867,29535465,30076544,30645868,30885707,31463814,31248922,31360027,31878390,29729531,31793325,32346249,32204176,33052757,29723643,32800818,33915952,36630997,38027149,39531777,39617022,39899604,38475342,34856994,33486940,33832187,34662325,35775905,34927100,36208883,37453655,37636059,38814859,38663142,37940350,39369712,40640305,40797006,40049017],"n9":[2440942,2451949,2399557,2396804,2320396,2314874,2333812,2309569,2301281,2326041,2291853,2283748,2292945,2319817,2331750,2325756,2335205,2340360,2330439,2310048,2294124,2272147,2280771,2276838,2271950,2320709,2346579,2355582,2362578,2398789,2405501,2502804,2561153,2589662,2706694,2747455,2671882,2829048,2836239,2903667,2869260,3044734,3087623,3035784,3020276,2936487,2859853,2927217,2839626,2952313,2982522,2911713,2808562,2839156,2821354,2961804,2997340,3104709,3217674,3233143,3276303,3372432,3406344,3479021,3520011,3558290,3656985,3631355,3651040,3745092,3760225,3771717,3798485,3732308,3603354,3504557,3344896,3246292,3179175,3218637,3302105,3301724,3365197,3326325,3424485,3474813,3470740,3443713,3304451,3345547,3414832,3392523,3448593,3451850,3566789,3619084,3699746,3792259,3847480,3912922,3923084,3993424,4081736,4084290,4013272,4069135,4119227,4159034,4197696,4198107,4276516,4351616,4397716,4461680,4458585,4488850,4557799,4357413,4575023,4657102,4664627,4729439,4435615,4749473,4844948,5094306,5211202,5346791,5336709,5326331,5169878,4804609,4603972,4598354,4680465,4815170,4731516,4843167,4967653,4993851,5093321,5041097,4964453,5108369,5199132,5187242,5112316],"n40":[515900,519928,516204,517806,512248,509542,513247,513301,516671,519891,517825,518430,522765,525091,523288,524735,529223,530144,530159,529099,528483,524490,525299,530463,528835,535434,540800,543342,545235,547409,547232,561066,569383,570133,586704,593600,587693,603012,606149,613760,611694,628880,640270,637215,637771,631124,632224,642707,636618,652529,658742,645731,633276,637979,633901,649830,651413,664646,681359,684075,689295,702201,707111,712318,714755,721422,721865,715038,712699,721036,712168,702713,698959,685742,662740,642369,616946,612624,603817,600244,601087,596739,602454,592394,597373,600202,596306,591188,578988,583929,589439,587718,596481,598917,615016,624933,639506,650135,653309,657374,658117,664162,675820,672459,665703,674152,680322,682557,690304,693474,703794,711728,718816,725727,728889,730478,737938,712784,730651,745447,746303,760934,753445,805238,830076,870735,902302,935839,947502,949837,952376,926958,893608,879887,886543,919051,908614,914325,933404,945374,948112,936495,928329,949126,948659,940237,936674],"b50":[40614,39725,40252,38589,39489,40008,40100,39890,42136,42671,43127,43469,46258,46433,43790,44158,44365,43714,41637,40461,40959,40588,41216,42945,44265,43683,42935,42702,42790,42154,42371,43640,44457,43637,45913,45408,47340,46891,48241,47114,47172,48896,49835,49208,49337,46837,46163,45666,44797,43983,44203,42576,41802,41616,39550,38424,39121,39491,39885,40827,40003,40613,40950,41033,42436,43806,42647,42221,41526,40944,39040,37353,35871,29574,24516,24095,17959,14825,10631,10907,9955,8536,8248,7607,8340,6164,6229,6670,6648,6287,6809,8520,9256,11057,10640,12825,15198,15048,15884,17947,18502,18479,19605,20075,19975,21884,22461,22361,24927,24595,25876,27416,28233,29053,30468,31813,32227,30942,32511,33556,35823,36959,37403,43931,47266,52610,57042,59819,61531,62953,64139,63682,60769,58218,59741,60821,59421,59498,61094,60853,60814,61584,60670,62359,62985,62920,62095]},"eq":{"t1":[42.8,42.8,42.0,42.0,40.1,40.8,41.9,41.5,41.8,43.0,42.5,42.4,42.5,44.0,44.9,45.5,46.4,47.1,47.4,47.8,48.3,48.8,49.5,50.2,50.7,50.3,49.8,49.4,48.9,48.6,48.2,48.3,48.2,48.0,48.1,47.9,47.0,47.0,46.4,46.1,45.2,45.6,45.4,44.5,44.0,42.6,41.4,41.4,39.6,40.9,41.2,41.0,39.9,40.9,41.0,42.6,43.4,44.6,45.4,45.9,46.4,46.9,47.0,47.3,47.6,47.8,48.4,48.4,48.7,49.0,49.3,49.5,49.7,49.4,49.1,48.9,48.3,47.2,46.5,47.3,47.8,47.9,48.0,47.5,47.9,48.1,48.3,48.2,47.5,47.6,48.0,47.8,48.0,47.9,48.3,48.3,48.4,48.9,49.3,49.7,49.9,50.2,50.5,50.7,50.8,51.0,51.2,51.4,51.7,51.8,51.8,51.9,52.0,52.0,52.0,52.2,52.2,52.2,52.3,52.4,52.4,52.0,51.4,51.3,51.0,50.9,50.7,50.6,50.4,50.3,50.0,49.3,48.9,49.0,49.2,49.3,49.2,49.5,49.7,49.7,49.9,49.9,49.8,50.0,50.2,50.2,50.2],"b50":[1.1,1.2,1.2,1.2,1.3,1.3,1.3,1.4,1.4,1.4,1.4,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.6,1.6,1.5,1.5,1.6,1.6,1.6,1.6,1.6,1.7,1.6,1.6,1.7,1.6,1.6,1.7,1.6,1.6,1.6,1.6,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.4,1.4,1.4,1.3,1.3,1.2,1.1,1.1,1.0,1.0,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,1.0,1.0,1.0,1.0,1.0,1.0,0.9,0.9,0.9,0.8,0.7,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.7,0.7,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.7,0.7,0.7,0.7,0.7,0.7,0.7,0.7,0.7,0.7,0.7,0.6,0.6,0.6,0.5,0.6,0.6,0.6,0.6,0.5,0.7,0.7,0.8,0.9,0.9,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.1,1.1,1.1,1.1]}},"wid":[[1913,46.63],[1914,46.11],[1915,46.14],[1916,44.46],[1917,42.0],[1918,38.43],[1919,41.27],[1920,36.96],[1921,38.13],[1922,41.12],[1923,36.56],[1924,38.61],[1925,41.89],[1926,43.5],[1927,45.87],[1928,48.55],[1929,48.67],[1930,44.17],[1931,39.61],[1932,39.38],[1933,41.5],[1934,42.13],[1935,41.54],[1936,43.96],[1937,44.73],[1938,40.85],[1939,41.9],[1940,38.98],[1941,35.88],[1942,35.38],[1943,35.54],[1944,32.85],[1945,33.01],[1946,30.89],[1947,29.75],[1948,29.2],[1949,28.36],[1950,29.6],[1951,29.14],[1952,28.82],[1953,27.63],[1954,28.23],[1955,28.48],[1956,28.79],[1957,28.42],[1958,27.97],[1959,28.55],[1960,28.54],[1961,28.7],[1962,28.66],[1963,28.34],[1964,28.03],[1965,27.9],[1966,27.77],[1967,27.66],[1968,29.21],[1969,27.38],[1970,26.67],[1971,26.62],[1972,26.44],[1973,25.31],[1974,24.06],[1975,23.7],[1976,22.6],[1977,22.68],[1978,21.79],[1979,23.23],[1980,23.23],[1981,23.89],[1982,24.5],[1983,23.96],[1984,24.16],[1985,24.19],[1986,24.92],[1987,26.57],[1988,28.44],[1989,28.85],[1990,29.05],[1991,28.57],[1992,29.51],[1993,29.06],[1994,29.28],[1995,29.3],[1996,29.65],[1997,30.47],[1998,31.48],[1999,31.81],[2000,32.34],[2001,32.14],[2002,31.47],[2003,31.1],[2004,31.69],[2005,32.32],[2006,32.71],[2007,33.4],[2008,33.99],[2009,33.12],[2010,34.62],[2011,35.28],[2012,36.62],[2013,35.64],[2014,35.83],[2015,35.81],[2016,35.5],[2017,35.48],[2018,35.2],[2019,34.85],[2020,35.13],[2021,36.26],[2022,34.89],[2023,34.78],[2024,34.78]],"tax":[[1913,7.0],[1914,7.0],[1915,7.0],[1916,15.0],[1917,67.0],[1918,77.0],[1919,73.0],[1920,73.0],[1921,73.0],[1922,58.0],[1923,43.5],[1924,46.0],[1925,25.0],[1926,25.0],[1927,25.0],[1928,25.0],[1929,24.0],[1930,25.0],[1931,25.0],[1932,63.0],[1933,63.0],[1934,63.0],[1935,63.0],[1936,79.0],[1937,79.0],[1938,79.0],[1939,79.0],[1940,81.1],[1941,81.0],[1942,88.0],[1943,88.0],[1944,94.0],[1945,94.0],[1946,86.5],[1947,86.5],[1948,82.1],[1949,82.1],[1950,84.4],[1951,91.0],[1952,92.0],[1953,92.0],[1954,91.0],[1955,91.0],[1956,91.0],[1957,91.0],[1958,91.0],[1959,91.0],[1960,91.0],[1961,91.0],[1962,91.0],[1963,91.0],[1964,77.0],[1965,70.0],[1966,70.0],[1967,70.0],[1968,75.2],[1969,77.0],[1970,71.8],[1971,70.0],[1972,70.0],[1973,70.0],[1974,70.0],[1975,70.0],[1976,70.0],[1977,70.0],[1978,70.0],[1979,70.0],[1980,70.0],[1981,69.1],[1982,50.0],[1983,50.0],[1984,50.0],[1985,50.0],[1986,50.0],[1987,38.5],[1988,28.0],[1989,28.0],[1990,28.0],[1991,31.0],[1992,31.0],[1993,39.6],[1994,39.6],[1995,39.6],[1996,39.6],[1997,39.6],[1998,39.6],[1999,39.6],[2000,39.6],[2001,39.1],[2002,38.6],[2003,35.0],[2004,35.0],[2005,35.0],[2006,35.0],[2007,35.0],[2008,35.0],[2009,35.0],[2010,35.0],[2011,35.0],[2012,35.0],[2013,39.6],[2014,39.6],[2015,39.6],[2016,39.6],[2017,39.6],[2018,37.0],[2019,37.0],[2020,37.0],[2021,37.0],[2022,37.0],[2023,37.0],[2024,37.0],[2025,37.0]],"meta":{"lastQ":"2026Q1","cpiBase":"2026Q1","households":137414111}};
+
+/* ---------- Annotated years on the long-arc chart ---------- */
+const EVENTS = [
+  {y:1913, t:"The income tax arrives",
+   b:"The 16th Amendment is ratified and the modern federal income tax begins at a top rate of 7%. The richest 1% hold 46.6% of national wealth — the Gilded Age at full height."},
+  {y:1929, t:"Peak concentration, then the Crash",
+   b:"The top 1% share reaches 48.7%, its highest recorded level, in the same year the stock market collapses. Wealth at the very top was disproportionately held in equities, so the Crash cut the top share faster than it cut anyone else's wealth."},
+  {y:1935, t:"The New Deal rewires the rules",
+   b:"In a single year: the Wagner Act guarantees collective bargaining, Social Security creates a universal old-age floor, and the Revenue Act of 1935 — the 'Wealth Tax Act' — raises the top marginal rate to 79% from 1936. The long decline in wealth concentration begins here in earnest."},
+  {y:1944, t:"A 94% top rate",
+   b:"Wartime finance pushes the top marginal rate to 94% on income above $200,000. It stays above 90% through 1963. Economists call the decades that follow the Great Compression."},
+  {y:1964, t:"Rates come down, but not far",
+   b:"The Revenue Act of 1964 cuts the top rate from 91% to 77% in 1964 and 70% in 1965. Wealth concentration keeps falling: union density is near its peak and the postwar wage structure is at its most compressed."},
+  {y:1976, t:"Buckley v. Valeo: money becomes speech",
+   b:"The Supreme Court holds that limits on independent political expenditures violate the First Amendment, while upholding limits on direct contributions. The constitutional architecture that every later ruling builds on is set in place."},
+  {y:1978, t:"The floor — and the turn",
+   b:"The top 1% share bottoms out at 21.8%, the lowest in the recorded series. Within a year it begins to climb, and it has climbed for nearly five decades since. Union membership peaks around a quarter of the workforce and starts its long slide the same year."},
+  {y:1981, t:"ERTA: 70% to 50%",
+   b:"The Economic Recovery Tax Act cuts the top marginal rate from 70% to 50% and indexes brackets to inflation. The federal air traffic controllers' strike is broken the same year, a widely cited turning point for organized labor's bargaining power."},
+  {y:1986, t:"Tax Reform Act: 50% to 28%",
+   b:"The top marginal rate is cut to 28% by 1988 — the lowest since 1931 — in exchange for broadening the base. Capital gains are briefly taxed at the same rate as wages; the parity does not last."},
+  {y:1997, t:"The capital-gains preference widens",
+   b:"The Taxpayer Relief Act cuts the top long-term capital gains rate from 28% to 20%. Because wealth at the top is held as appreciating assets rather than wages, the gap between the tax on owning and the tax on working is where much of the divergence compounds."},
+  {y:2003, t:"Bush cuts: dividends and gains to 15%",
+   b:"The 2001 and 2003 Acts cut the top income rate to 35% and both capital gains and qualified dividends to 15% — less than half the top rate on wages. The top 1% share resumes a steep climb."},
+  {y:2008, t:"The crash that didn't level anything",
+   b:"The financial crisis briefly dents the top share as asset prices fall. Unlike 1929, the recovery is asset-led: quantitative easing and a decade-long bull market restore and exceed the pre-crisis concentration within four years, while housing losses at the bottom prove permanent."},
+  {y:2010, t:"Citizens United and SpeechNow",
+   b:"In January the Supreme Court holds that independent political spending by corporations and unions cannot be limited. Two months later a federal appeals court applies the same logic to contributions to independent-expenditure groups, creating the super PAC. Unlimited political money becomes legal in a single quarter."},
+  {y:2014, t:"McCutcheon removes the aggregate cap",
+   b:"The Supreme Court strikes down the overall limit on how much one person may give to federal candidates, parties and committees combined in a cycle. The per-recipient limits survive; the ceiling on total giving does not."},
+  {y:2017, t:"The Tax Cuts and Jobs Act",
+   b:"The corporate rate is cut from 35% to 21% — permanently — the top individual rate from 39.6% to 37%, and the estate-tax exemption is doubled. The Congressional Budget Office and Joint Committee on Taxation estimate the largest proportional gains flow to the top of the distribution."},
+  {y:2024, t:"Where the series ends",
+   b:"The richest 1% of American adults hold 34.8% of the country's wealth by this measure — close to the 1929 peak, and roughly 60% higher than the 1978 floor. Billionaire families supply about one of every six dollars spent on the federal elections held this year."}
+];
+
+/* ---------- Party of the sitting president (neutral lane) ---------- */
+const PRES = [
+  [1913,1921,"D","Wilson"],[1921,1923,"R","Harding"],[1923,1929,"R","Coolidge"],
+  [1929,1933,"R","Hoover"],[1933,1945,"D","F. Roosevelt"],[1945,1953,"D","Truman"],
+  [1953,1961,"R","Eisenhower"],[1961,1963,"D","Kennedy"],[1963,1969,"D","Johnson"],
+  [1969,1974,"R","Nixon"],[1974,1977,"R","Ford"],[1977,1981,"D","Carter"],
+  [1981,1989,"R","Reagan"],[1989,1993,"R","G.H.W. Bush"],[1993,2001,"D","Clinton"],
+  [2001,2009,"R","G.W. Bush"],[2009,2017,"D","Obama"],[2017,2021,"R","Trump"],
+  [2021,2025,"D","Biden"],[2025,2027,"R","Trump"]
+];
+
+/* ---------- Cost of presidential election cycles, billions of 2024 dollars ---------- */
+const ELECTIONS = [
+  {y:2000, v:5.6}, {y:2004, v:6.9}, {y:2008, v:7.6}, {y:2012, v:8.6},
+  {y:2016, v:8.5}, {y:2020, v:18.3}, {y:2024, v:15.9}
+];
+
+/* ---------- Rule changes timeline ---------- */
+const TIMELINE = [
+  {y:"1935", k:"tax", h:"Wagner Act, Social Security, and a 79% top rate",
+   b:"Collective bargaining becomes a protected right, a universal retirement floor is created, and the top marginal rate is raised to 79% effective 1936. Wealth concentration falls for the next forty-three years."},
+  {y:"1971", k:"money", h:"Federal Election Campaign Act",
+   b:"The first comprehensive federal disclosure and limit regime for campaign money. Amended in 1974, after Watergate, to add contribution and expenditure ceilings and create the Federal Election Commission."},
+  {y:"1976", k:"money", h:"Buckley v. Valeo",
+   b:"The Supreme Court upholds contribution limits but strikes down limits on independent expenditures, holding that spending money to amplify political speech is protected by the First Amendment. Every later decision reasons from this one."},
+  {y:"1981", k:"tax", h:"Economic Recovery Tax Act",
+   b:"Top marginal rate cut from 70% to 50%; capital gains top rate cut to 20%. In the same year the PATCO strike is broken, and union density — already falling — accelerates downward."},
+  {y:"1986", k:"tax", h:"Tax Reform Act",
+   b:"Top marginal rate cut to 28% by 1988, the lowest since 1931. Wage and capital-gains income are briefly taxed alike; the parity is reversed within five years."},
+  {y:"1997", k:"tax", h:"Taxpayer Relief Act",
+   b:"Top capital gains rate cut from 28% to 20%, reopening and widening the gap between the tax on owning assets and the tax on earning wages."},
+  {y:"2003", k:"tax", h:"Jobs and Growth Tax Relief Reconciliation Act",
+   b:"Capital gains and qualified dividends taxed at 15%, below half the top rate on wages. The preference for income that flows to existing wealth is now structural."},
+  {y:"2010", k:"money", h:"Citizens United v. FEC and SpeechNow.org v. FEC",
+   b:"Independent political spending by corporations and unions cannot be limited; contributions to groups that only spend independently cannot be limited either. The super PAC is born, and so is the modern dark-money vehicle."},
+  {y:"2014", k:"money", h:"McCutcheon v. FEC",
+   b:"The aggregate two-year ceiling on one donor's total federal giving is struck down. A single donor may now give the legal maximum to every candidate and committee in the country at once."},
+  {y:"2017", k:"tax", h:"Tax Cuts and Jobs Act",
+   b:"Corporate rate permanently cut from 35% to 21%; top individual rate to 37%; estate-tax exemption doubled; a 20% deduction created for pass-through business income."},
+  {y:"2025", k:"tax", h:"One Big Beautiful Bill Act",
+   b:"The 2017 individual rate structure is made permanent. CBO and JCT estimates cited by analysts put the average annual tax cut above $50,000 per household for the richest 1%, and above $14,700 per household for the richest 10%."}
+];
+
+/* ==========================================================
+   SMALL HELPERS
+   ========================================================== */
+const NS = "http://www.w3.org/2000/svg";
+const $  = s => document.querySelector(s);
+const root = document.documentElement;
+
+function S(tag, a) {
+  const e = document.createElementNS(NS, tag);
+  for (const k in a) if (a[k] !== null && a[k] !== undefined) e.setAttribute(k, a[k]);
+  return e;
+}
+function Stext(a, str) { const t = S("text", a); t.textContent = str; return t; }
+function C(varName) { return getComputedStyle(root).getPropertyValue(varName).trim(); }
+
+function relLum(hex) {
+  const m = hex.replace("#", "");
+  const v = [0, 2, 4].map(i => {
+    let c = parseInt(m.slice(i, i + 2), 16) / 255;
+    return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+  });
+  return 0.2126 * v[0] + 0.7152 * v[1] + 0.0722 * v[2];
+}
+const inkOn = hex => relLum(hex) > 0.42 ? "#0b0b0b" : "#ffffff";
+
+const nf = n => Math.round(n).toLocaleString("en-US");
+function usd(n) {
+  const a = Math.abs(n);
+  if (a >= 1e12) return "$" + (n / 1e12).toFixed(a >= 1e13 ? 0 : 1) + "T";
+  if (a >= 1e9)  return "$" + (n / 1e9 ).toFixed(a >= 1e10 ? 0 : 1) + "B";
+  if (a >= 1e6)  return "$" + (n / 1e6 ).toFixed(a >= 1e8  ? 0 : 1) + "M";
+  if (a >= 1e3)  return "$" + Math.round(n / 1e3) + "K";
+  return "$" + Math.round(n);
+}
+function niceTicks(min, max, want) {
+  const span = max - min, raw = span / want, mag = Math.pow(10, Math.floor(Math.log10(raw)));
+  const norm = raw / mag;
+  const step = (norm >= 5 ? 10 : norm >= 2 ? 5 : norm >= 1 ? 2 : 1) * mag;
+  const out = [];
+  for (let v = Math.ceil(min / step) * step; v <= max + 1e-9; v += step) out.push(+v.toFixed(10));
+  return out;
+}
+function qLabel(q) { return q.replace("Q", " Q"); }
+function qYear(q) { return +q.slice(0, 4); }
+
+/* shared tooltip factory — one per chart container */
+function makeTip(host) {
+  const tip = document.createElement("div");
+  tip.className = "tip";
+  host.appendChild(tip);
+  return {
+    show(html, x, y) {
+      tip.innerHTML = html;
+      tip.classList.add("on");
+      const w = tip.offsetWidth, hostW = host.clientWidth;
+      tip.style.left = Math.max(w / 2 + 4, Math.min(hostW - w / 2 - 4, x)) + "px";
+      tip.style.top = Math.max(tip.offsetHeight + 4, y - 10) + "px";
+    },
+    hide() { tip.classList.remove("on"); }
+  };
+}
+function tipRow(color, label, value) {
+  return `<div class="t-row"><span class="k">${color ? `<span class="t-dot" style="background:${color}"></span>` : ""}${label}</span><span class="v">${value}</span></div>`;
+}
+
+/* generic table-view builder */
+function buildTable(hostId, cols, rows) {
+  const host = document.getElementById(hostId);
+  if (!host) return;
+  host.innerHTML =
+    "<table><thead><tr>" + cols.map(c => `<th scope="col">${c}</th>`).join("") + "</tr></thead><tbody>" +
+    rows.map(r => "<tr>" + r.map((c, i) => i === 0 ? `<th scope="row" style="text-align:left">${c}</th>` : `<td>${c}</td>`).join("") + "</tr>").join("") +
+    "</tbody></table>";
+}
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-table]");
+  if (!b) return;
+  const t = document.getElementById(b.dataset.table);
+  const on = t.classList.toggle("on");
+  b.setAttribute("aria-pressed", String(on));
+  b.textContent = on ? "Hide data table" : "Show data table";
+});
+
+/* ==========================================================
+   DERIVED FIGURES
+   ========================================================== */
+const last = D.dfa.q.length - 1;
+const GROUPS = [
+  { key: "t1",  name: "Top 1%",                 pop: 1,  css: "--w-top1"  },
+  { key: "n9",  name: "Next 9% (90th–99th)",    pop: 9,  css: "--w-next9" },
+  { key: "n40", name: "Middle 40% (50th–90th)", pop: 40, css: "--w-mid"   },
+  { key: "b50", name: "Bottom 50%",             pop: 50, css: "--w-bot50" }
+];
+const HH = D.meta.households;
+const avgNow = k => D.dfa.real[k][last];
+const ratio  = avgNow("t01") / avgNow("b50");
+const LASTQ  = qLabel(D.meta.lastQ);
+
+/* ==========================================================
+   HERO + STAT TILES
+   ========================================================== */
+function renderStatics() {
+  $("#heroNum").textContent = nf(Math.round(ratio / 50) * 50) + "×";
+  $("#heroRatio").textContent = nf(Math.round(ratio / 50) * 50);
+  $("#heroNote").textContent =
+    `Federal Reserve Distributional Financial Accounts, ${LASTQ}. Average net worth per household: ` +
+    `${usd(avgNow("t01"))} for the top 0.1% against ${usd(avgNow("b50"))} for the bottom 50%. ` +
+    `Group averages, not medians; all dollar figures in constant ${LASTQ} dollars.`;
+
+  $("#popwSub").textContent =
+    `U.S. households by net-worth percentile group, ${LASTQ}. Both bars total 100%. ` +
+    `The ribbons connect each group across the two bars — their flare is the distortion.`;
+  $("#stackSub").textContent =
+    `Share of total household net worth, quarterly, 1989 Q3 – ${LASTQ}.`;
+
+  const tiles = [
+    { label: "Top 0.1% of households", value: usd(D.dfa.real.t01[last] * HH * 0.001),
+      foot: `${nf(HH * 0.001)} households · ${usd(avgNow("t01"))} each on average` },
+    { label: "Bottom 50% of households", value: usd(D.dfa.real.b50[last] * HH * 0.5),
+      foot: `${nf(HH * 0.5)} households · ${usd(avgNow("b50"))} each on average` },
+    { label: "Wealth of the top 0.1% ÷ wealth of the bottom 50%",
+      value: (D.dfa.real.t01[last] * 0.001 / (D.dfa.real.b50[last] * 0.5)).toFixed(1) + "×",
+      foot: `${nf(HH * 0.001)} households outweigh ${nf(HH * 0.5)} households by this much in total` },
+    { label: "Bottom 50% share of all wealth", value: D.dfa.b50[last].toFixed(1) + "%",
+      foot: `Down from ${D.dfa.b50[0].toFixed(1)}% in 1989 Q3` }
+  ];
+  $("#scaleTiles").innerHTML = tiles.map(t =>
+    `<div class="tile"><div class="label">${t.label}</div><div class="value">${t.value}</div><div class="foot">${t.foot}</div></div>`).join("");
+
+  const g = k => (D.dfa.real[k][last] / D.dfa.real[k][0]);
+  $("#surgeTiles").innerHTML = [
+    { label: "Top 1% share of all corporate equities and mutual funds",
+      value: D.dfa.eq.t1[last].toFixed(1) + "%", foot: `The bottom 50% own ${D.dfa.eq.b50[last].toFixed(1)}%` },
+    { label: "Real wealth growth per household since 1989, top 0.1%",
+      value: g("t01").toFixed(1) + "×", foot: `${usd(D.dfa.real.t01[0])} → ${usd(avgNow("t01"))}` },
+    { label: "Real wealth growth per household since 1989, bottom 50%",
+      value: g("b50").toFixed(1) + "×", foot: `${usd(D.dfa.real.b50[0])} → ${usd(avgNow("b50"))}` },
+    { label: "Top 1% share of wealth, 1989 Q3 → " + LASTQ,
+      value: D.dfa.t1[0].toFixed(1) + "% → " + D.dfa.t1[last].toFixed(1) + "%",
+      foot: `The bottom half went ${D.dfa.b50[0].toFixed(1)}% → ${D.dfa.b50[last].toFixed(1)}% over the same period` }
+  ].map(t => `<div class="tile"><div class="label">${t.label}</div><div class="value">${t.value}</div><div class="foot">${t.foot}</div></div>`).join("");
+
+  $("#timeline").innerHTML = TIMELINE.map(e =>
+    `<div class="tl-item ${e.k === "money" ? "money" : ""}"><div class="yr">${e.y}</div>
+     <div class="hd">${e.h}</div><p class="bd">${e.b}</p></div>`).join("");
+
+  $("#buildStamp").textContent =
+    `Wealth data through ${LASTQ}; long-run series through ${D.wid[D.wid.length - 1][0]}; ` +
+    `campaign-finance figures through the 2024 cycle.`;
+}
+
+/* ==========================================================
+   CHART 1 — population vs wealth, two 100% stacked bars
+   ========================================================== */
+let popwTip;
+function renderPopW() {
+  const host = $("#popwChart");
+  host.innerHTML = "";
+  popwTip = makeTip(host);
+
+  const W = host.clientWidth || 900;
+  const BAR = 24, GAP = 2, LBL = 16, RIB_TOP = 30 + BAR, RIB_BOT = 150;
+  const H = RIB_BOT + LBL + BAR + 26;
+
+  const cols = GROUPS.map(g => C(g.css));
+  const rows = [
+    { label: "Share of U.S. households", y: 30, vals: GROUPS.map(g => g.pop) },
+    { label: "Share of all household wealth", y: RIB_BOT + LBL, vals: GROUPS.map(g => D.dfa[g.key][last]) }
+  ];
+
+  const svg = S("svg", { viewBox: `0 0 ${W} ${H}`, width: W, height: H, role: "img",
+    "aria-label": "Two stacked bars comparing each wealth group's share of households with its share of total wealth." });
+
+  const xs = vals => {
+    const tot = vals.reduce((a, b) => a + b, 0);
+    let acc = 0;
+    return vals.map(v => { const x0 = acc / tot * W; acc += v; return [x0, acc / tot * W]; });
+  };
+  const posA = xs(rows[0].vals), posB = xs(rows[1].vals);
+
+  /* connecting ribbons — drawn first, low opacity, so bars sit on top */
+  GROUPS.forEach((g, i) => {
+    const [a0, a1] = posA[i], [b0, b1] = posB[i];
+    svg.appendChild(S("path", {
+      d: `M${a0 + 1} ${RIB_TOP} L${a1 - 1} ${RIB_TOP} L${b1 - 1} ${RIB_BOT + LBL} L${b0 + 1} ${RIB_BOT + LBL} Z`,
+      fill: cols[i], "fill-opacity": 0.22
+    }));
+  });
+
+  rows.forEach((row, r) => {
+    svg.appendChild(Stext({ x: 0, y: row.y - 9, class: "axis-title" }, row.label.toUpperCase()));
+    const pos = r === 0 ? posA : posB;
+    GROUPS.forEach((g, i) => {
+      const [x0, x1] = pos[i];
+      const left = i === 0 ? x0 : x0 + GAP / 2;
+      const right = i === GROUPS.length - 1 ? x1 : x1 - GAP / 2;
+      const w = Math.max(1, right - left);
+      const rect = S("rect", { x: left, y: row.y, width: w, height: BAR, fill: cols[i], rx: 2 });
+      rect.style.cursor = "crosshair";
+      svg.appendChild(rect);
+
+      const pct = row.vals[i];
+      const txt = pct >= 1 ? pct.toFixed(pct >= 10 ? 0 : 1) + "%" : pct.toFixed(1) + "%";
+      /* label inside only when the text genuinely fits; otherwise move it
+         outside the bar end rather than clip it */
+      if (w > txt.length * 8 + 14) {
+        svg.appendChild(Stext({ x: left + w / 2, y: row.y + BAR / 2 + 4, class: "seg-label",
+          "text-anchor": "middle", fill: inkOn(cols[i]) }, txt));
+      } else if (r === 1) {
+        const cxs = Math.min(W - 4, left + w / 2);
+        svg.appendChild(S("line", { x1: cxs, x2: cxs, y1: row.y + BAR, y2: row.y + BAR + 6, stroke: C("--axis"), "stroke-width": 1 }));
+        svg.appendChild(Stext({ x: cxs, y: row.y + BAR + 18, class: "dlabel",
+          "text-anchor": "end" }, txt));
+      }
+      const html = `<div class="t-title">${g.name}</div>` +
+        tipRow(cols[i], "Share of households", GROUPS[i].pop + "%") +
+        tipRow(cols[i], "Share of wealth", D.dfa[g.key][last].toFixed(1) + "%") +
+        `<div class="t-note">${nf(HH * g.pop / 100)} households · ${usd(D.dfa.real[g.key][last])} each on average</div>`;
+      rect.addEventListener("pointermove", ev => {
+        const b = host.getBoundingClientRect();
+        popwTip.show(html, ev.clientX - b.left, row.y);
+      });
+      rect.addEventListener("pointerleave", () => popwTip.hide());
+    });
+  });
+
+  /* the one number worth shouting, set inside the flare it describes */
+  const midY = (RIB_TOP + RIB_BOT + LBL) / 2;
+  svg.appendChild(Stext({ x: 4, y: midY - 4, class: "dlabel" },
+    `1% of households`));
+  svg.appendChild(Stext({ x: 4, y: midY + 13, class: "dlabel-2" },
+    `hold ${D.dfa.t1[last].toFixed(1)}% of all household wealth`));
+
+  host.appendChild(svg);
+
+  $("#popwLegend").innerHTML = GROUPS.map((g, i) =>
+    `<span class="item"><span class="swatch" style="background:${cols[i]}"></span>${g.name}</span>`).join("");
+
+  buildTable("popwTable",
+    ["Wealth group", "Share of households", "Share of wealth", "Households", "Average net worth"],
+    GROUPS.map(g => [g.name, g.pop + "%", D.dfa[g.key][last].toFixed(1) + "%",
+      nf(HH * g.pop / 100), "$" + nf(D.dfa.real[g.key][last])]));
+}
+
+/* ==========================================================
+   CHART 2 — the scale strip (HTML, not SVG)
+   ========================================================== */
+const hhCount = frac => {
+  const v = HH * frac;
+  return v >= 1e6 ? (v / 1e6).toFixed(1) + "M households"
+       : nf(Math.round(v / 1000) * 1000) + " households";
+};
+const STRIP = [
+  { key: "b50", name: "Bottom 50%", frac: 0.50  },
+  { key: "n40", name: "Middle 40%", frac: 0.40  },
+  { key: "n9",  name: "Next 9%",    frac: 0.09  },
+  { key: "t1",  name: "Top 1%",     frac: 0.01  },
+  { key: "t01", name: "Top 0.1%",   frac: 0.001 }
+].map(s => ({ ...s, note: hhCount(s.frac) }));
+function renderStrip() {
+  const scroll = $("#stripScroll"), track = $("#stripTrack"), bar = $("#stripBar");
+  const play = $("#stripPlay");
+  const maxV = D.dfa.real.t01[last];
+  const trackW = Math.max(3600, Math.min(9000, (scroll.clientWidth || 800) * 11));
+  /* pad the track by one viewport so the playhead can actually reach the far end */
+  track.style.width = (trackW + (scroll.clientWidth || 800)) + "px";
+  bar.style.width = trackW + "px";
+
+  [...track.querySelectorAll(".strip-mark, .strip-tick")].forEach(n => n.remove());
+
+  /* a dollar ruler along the track: without it the long empty stretch between
+     the top 1% and the top 0.1% reads as a broken chart rather than as distance */
+  const tickStep = 5e6;
+  for (let v = tickStep; v <= maxV; v += tickStep) {
+    const t = document.createElement("div");
+    const major = Math.round(v / 1e7) * 1e7 === v;
+    t.className = "strip-tick" + (major ? " major" : "");
+    t.style.left = (v / maxV * trackW) + "px";
+    if (major) t.innerHTML = `<span>$${Math.round(v / 1e6)}M</span>`;
+    track.appendChild(t);
+  }
+  STRIP.forEach((s, i) => {
+    const v = D.dfa.real[s.key][last];
+    const x = v / maxV * trackW;
+    const m = document.createElement("div");
+    m.className = "strip-mark";
+    m.style.left = x + "px";
+    m.innerHTML = `<div class="flag" style="top:${8 + i * 44}px"><b>${s.name}</b>${usd(v)} average <span style="color:var(--muted)">· ${s.note}</span></div>`;
+    track.appendChild(m);
+  });
+  /* the playhead marks exactly where the running total is read from */
+  play.style.top = scroll.offsetTop + "px";
+  play.style.height = scroll.offsetHeight + "px";
+
+  const valEl = $("#stripVal"), whoEl = $("#stripWho");
+  function update() {
+    const v = Math.min(maxV, scroll.scrollLeft / trackW * maxV);
+    valEl.textContent = "$" + nf(v);
+    let who = "at the orange marker — scroll or drag right →";
+    for (let i = STRIP.length - 1; i >= 0; i--) {
+      if (v >= D.dfa.real[STRIP[i].key][last]) {
+        who = `— past the average ${STRIP[i].name} household`;
+        break;
+      }
+    }
+    whoEl.textContent = who;
+  }
+  scroll.addEventListener("scroll", update, { passive: true });
+  scroll.addEventListener("keydown", e => {
+    const step = e.shiftKey ? 400 : 80;
+    if (e.key === "ArrowRight") { scroll.scrollLeft += step; e.preventDefault(); }
+    if (e.key === "ArrowLeft")  { scroll.scrollLeft -= step; e.preventDefault(); }
+    if (e.key === "End")   { scroll.scrollLeft = trackW; e.preventDefault(); }
+    if (e.key === "Home")  { scroll.scrollLeft = 0; e.preventDefault(); }
+  });
+  update();
+}
+
+/* ==========================================================
+   CHART 3 — the long arc: top 1% wealth share, 1913–2024
+   with an aligned top-tax-rate panel below (never a second y-axis)
+   ========================================================== */
+let showTax = true;
+function renderArc() {
+  const host = $("#arcChart");
+  host.innerHTML = "";
+  const tip = makeTip(host);
+
+  const W = host.clientWidth || 900;
+  const narrow = W < 560;
+  const P = { l: narrow ? 34 : 42, r: narrow ? 12 : 96, t: 14 };
+  const HL = narrow ? 210 : 280;          // wealth-share panel
+  const LANE = 16, LANEGAP = 20;
+  const HT = showTax ? (narrow ? 90 : 110) : 0;
+  const AX = 22;
+  const laneY = P.t + HL + LANEGAP;
+  const taxY = laneY + LANE + (showTax ? 26 : 0);
+  const H = taxY + HT + AX;
+
+  const x0 = P.l, x1 = W - P.r;
+  const Y0 = D.wid[0][0], Y1 = D.wid[D.wid.length - 1][0];
+  const X = y => x0 + (y - Y0) / (Y1 - Y0) * (x1 - x0);
+  const SY0 = 15, SY1 = 50;
+  const Ys = v => P.t + HL - (v - SY0) / (SY1 - SY0) * HL;
+  const Yt = v => taxY + HT - (v / 100) * HT;
+
+  const svg = S("svg", { viewBox: `0 0 ${W} ${H}`, width: W, height: H, role: "img",
+    "aria-label": "Line chart of the share of United States wealth held by the richest one percent from 1913 to 2024, with the top marginal income tax rate plotted below on the same time axis." });
+
+  const cGrid = C("--grid"), cAxis = C("--axis"), cS1 = C("--s1"), cSurf = C("--surface-1");
+
+  /* --- wealth panel grid --- */
+  niceTicks(SY0, SY1, 5).forEach(v => {
+    svg.appendChild(S("line", { x1: x0, x2: x1, y1: Ys(v), y2: Ys(v), class: "gridline" }));
+    svg.appendChild(Stext({ x: x0 - 7, y: Ys(v) + 4, class: "tick", "text-anchor": "end" }, v + "%"));
+  });
+
+  /* --- area wash + line --- */
+  const pts = D.wid.map(([y, v]) => [X(y), Ys(v)]);
+  svg.appendChild(S("path", {
+    d: `M${pts[0][0]} ${Ys(SY0)} ` + pts.map(p => `L${p[0]} ${p[1]}`).join(" ") + ` L${pts[pts.length - 1][0]} ${Ys(SY0)} Z`,
+    fill: cS1, "fill-opacity": 0.10
+  }));
+  svg.appendChild(S("path", {
+    d: "M" + pts.map(p => `${p[0]} ${p[1]}`).join(" L"),
+    fill: "none", stroke: cS1, "stroke-width": 2, "stroke-linejoin": "round", "stroke-linecap": "round"
+  }));
+
+  /* --- peak / trough / latest, direct-labelled --- */
+  const idxOf = yr => D.wid.findIndex(d => d[0] === yr);
+  const marks = [
+    { y: 1929, dx: 6,  dy: -12, anchor: "start", txt: `1929 peak · ${D.wid[idxOf(1929)][1].toFixed(1)}%` },
+    { y: 1978, dx: 0,  dy: 22,  anchor: "middle", txt: `1978 floor · ${D.wid[idxOf(1978)][1].toFixed(1)}%` },
+    { y: Y1,   dx: narrow ? -4 : 8, dy: -10, anchor: narrow ? "end" : "start", txt: `${Y1} · ${D.wid[idxOf(Y1)][1].toFixed(1)}%` }
+  ];
+  marks.forEach(m => {
+    const v = D.wid[idxOf(m.y)][1];
+    svg.appendChild(S("circle", { cx: X(m.y), cy: Ys(v), r: 4.5, fill: cS1, stroke: cSurf, "stroke-width": 2 }));
+    svg.appendChild(Stext({ x: X(m.y) + m.dx, y: Ys(v) + m.dy, class: "dlabel", "text-anchor": m.anchor }, m.txt));
+  });
+
+  /* --- event markers --- */
+  const evByYear = {};
+  EVENTS.forEach(e => evByYear[e.y] = e);
+  EVENTS.forEach(e => {
+    const i = idxOf(e.y); if (i < 0) return;
+    const c = S("circle", { cx: X(e.y), cy: Ys(D.wid[i][1]), r: 3.2, fill: cSurf, stroke: cS1, "stroke-width": 2 });
+    c.style.cursor = "pointer";
+    c.addEventListener("click", () => showEvent(e));
+    svg.appendChild(c);
+  });
+
+  /* --- party lane (neutral tones + letter glyph; never partisan colors,
+         so it cannot be mistaken for a data series) --- */
+  const cD = C("--party-d"), cR = C("--party-r"), cPI = C("--party-ink");
+  svg.appendChild(Stext({ x: x0, y: laneY - 4, class: "axis-title" }, "PARTY OF THE PRESIDENT"));
+  PRES.forEach(([s, e, p, name]) => {
+    const a = X(Math.max(s, Y0)), b = X(Math.min(e, Y1));
+    if (b - a < 0.5) return;
+    const r = S("rect", { x: a + 0.5, y: laneY, width: Math.max(1, b - a - 1), height: LANE, fill: p === "D" ? cD : cR, rx: 2 });
+    svg.appendChild(r);
+    if (b - a > 13) svg.appendChild(Stext({ x: (a + b) / 2, y: laneY + 12, class: "tick",
+      "text-anchor": "middle", fill: cPI, style: "font-weight:640" }, p));
+  });
+
+  /* --- tax panel: a marginal rate is a step function, so draw steps --- */
+  if (showTax) {
+    svg.appendChild(Stext({ x: x0, y: taxY - 8, class: "axis-title" }, "TOP MARGINAL FEDERAL INCOME TAX RATE"));
+    [0, 50, 100].forEach(v => {
+      svg.appendChild(S("line", { x1: x0, x2: x1, y1: Yt(v), y2: Yt(v), class: "gridline" }));
+      svg.appendChild(Stext({ x: x0 - 7, y: Yt(v) + 4, class: "tick", "text-anchor": "end" }, v + "%"));
+    });
+    let d = "";
+    D.tax.forEach(([y, v], i) => {
+      const px = X(y), py = Yt(v);
+      if (i === 0) d = `M${px} ${py}`;
+      else { d += ` L${px} ${Yt(D.tax[i - 1][1])} L${px} ${py}`; }
+    });
+    d += ` L${X(D.tax[D.tax.length - 1][0])} ${Yt(D.tax[D.tax.length - 1][1])}`;
+    svg.appendChild(S("path", { d, fill: "none", stroke: cS1, "stroke-width": 2, "stroke-linejoin": "round" }));
+    if (!narrow) svg.appendChild(Stext({ x: X(1953), y: Yt(66), class: "dlabel-2", "text-anchor": "middle" }, "above 90% from 1944 to 1963"));
+    svg.appendChild(Stext({ x: X(2018), y: Yt(37) - 9, class: "dlabel-2", "text-anchor": "middle" }, "37%"));
+  }
+
+  /* --- shared x-axis --- */
+  const axY = H - AX + 4;
+  svg.appendChild(S("line", { x1: x0, x2: x1, y1: axY - 6, y2: axY - 6, class: "axisline" }));
+  const step = narrow ? 30 : 20;
+  for (let y = 1920; y <= Y1; y += step) {
+    svg.appendChild(Stext({ x: X(y), y: axY + 8, class: "tick", "text-anchor": "middle" }, y));
+  }
+
+  /* --- crosshair + tooltip --- */
+  const cross = S("line", { x1: 0, x2: 0, y1: P.t, y2: laneY + LANE, stroke: cAxis, "stroke-width": 1, opacity: 0 });
+  const dot = S("circle", { r: 5, fill: cS1, stroke: cSurf, "stroke-width": 2, opacity: 0 });
+  svg.appendChild(cross); svg.appendChild(dot);
+
+  const presAt = y => PRES.find(p => y >= p[0] && y < p[1]);
+  const taxAt = y => { let r = null; D.tax.forEach(([yy, v]) => { if (yy <= y) r = v; }); return r; };
+
+  function moveTo(i) {
+    const [yr, v] = D.wid[i];
+    cross.setAttribute("x1", X(yr)); cross.setAttribute("x2", X(yr)); cross.setAttribute("opacity", 1);
+    dot.setAttribute("cx", X(yr)); dot.setAttribute("cy", Ys(v)); dot.setAttribute("opacity", 1);
+    const p = presAt(yr), t = taxAt(yr), ev = evByYear[yr];
+    tip.show(
+      `<div class="t-title">${yr}</div>` +
+      tipRow(cS1, "Top 1% wealth share", v.toFixed(1) + "%") +
+      (t != null ? tipRow(null, "Top tax rate", t + "%") : "") +
+      (p ? tipRow(null, "President", `${p[3]} (${p[2]})`) : "") +
+      (ev ? `<div class="t-note"><strong>${ev.t}</strong> — click to read</div>` : ""),
+      X(yr), Ys(v));
+    host.dataset.i = i;
+  }
+  const overlay = S("rect", { x: x0, y: P.t, width: x1 - x0, height: laneY + LANE - P.t, fill: "transparent" });
+  overlay.style.cursor = "crosshair";
+  svg.appendChild(overlay);
+  overlay.addEventListener("pointermove", ev => {
+    const r = svg.getBoundingClientRect();
+    const px = (ev.clientX - r.left) * (W / r.width);
+    const yr = Math.round(Y0 + (px - x0) / (x1 - x0) * (Y1 - Y0));
+    moveTo(Math.max(0, Math.min(D.wid.length - 1, yr - Y0)));
+  });
+  overlay.addEventListener("pointerleave", () => {
+    tip.hide(); cross.setAttribute("opacity", 0); dot.setAttribute("opacity", 0);
+  });
+  overlay.addEventListener("click", () => {
+    const yr = D.wid[+host.dataset.i || 0][0];
+    let best = null, bd = 99;
+    EVENTS.forEach(e => { const d = Math.abs(e.y - yr); if (d < bd) { bd = d; best = e; } });
+    if (best && bd <= 3) showEvent(best);
+  });
+
+  host.tabIndex = 0;
+  host.setAttribute("role", "application");
+  host.setAttribute("aria-label", "Use left and right arrow keys to step through years.");
+  host.onkeydown = e => {
+    let i = +host.dataset.i || D.wid.length - 1;
+    if (e.key === "ArrowRight") { i = Math.min(D.wid.length - 1, i + 1); e.preventDefault(); }
+    else if (e.key === "ArrowLeft") { i = Math.max(0, i - 1); e.preventDefault(); }
+    else return;
+    moveTo(i);
+  };
+
+  host.appendChild(svg);
+
+  buildTable("arcTable", ["Year", "Top 1% wealth share", "Top marginal tax rate", "President"],
+    D.wid.slice().reverse().map(([y, v]) => {
+      const p = presAt(y), t = taxAt(y);
+      return [y, v.toFixed(2) + "%", t != null ? t + "%" : "—", p ? `${p[3]} (${p[2]})` : "—"];
+    }));
+}
+
+function showEvent(e) {
+  $("#arcEventTitle").textContent = `${e.y} — ${e.t}`;
+  $("#arcEventBody").textContent = e.b;
+  $("#arcEvent").style.display = "";
+}
+
+/* ==========================================================
+   CHART 4 — stacked area: who owns American wealth, 1989–now
+   ========================================================== */
+function renderStack() {
+  const host = $("#stackChart");
+  host.innerHTML = "";
+  const tip = makeTip(host);
+
+  const W = host.clientWidth || 900;
+  const narrow = W < 640;
+  const P = { l: 38, r: narrow ? 12 : 150, t: 12, b: 26 };
+  const H = (narrow ? 260 : 330);
+  const x0 = P.l, x1 = W - P.r, y0 = P.t, y1 = H - P.b;
+  const n = D.dfa.q.length;
+  const X = i => x0 + i / (n - 1) * (x1 - x0);
+  const Y = v => y1 - v / 100 * (y1 - y0);
+
+  const cols = GROUPS.map(g => C(g.css));
+  const cSurf = C("--surface-1"), cAxis = C("--axis");
+  const svg = S("svg", { viewBox: `0 0 ${W} ${H}`, width: W, height: H, role: "img",
+    "aria-label": "Stacked area chart of the share of total United States household wealth held by each wealth percentile group, quarterly since 1989." });
+
+  [0, 25, 50, 75, 100].forEach(v => {
+    svg.appendChild(S("line", { x1: x0, x2: x1, y1: Y(v), y2: Y(v), class: "gridline" }));
+    svg.appendChild(Stext({ x: x0 - 7, y: Y(v) + 4, class: "tick", "text-anchor": "end" }, v + "%"));
+  });
+
+  /* stack order runs top-1% at the baseline up to bottom-50% at the ceiling,
+     so the sliver at the top is the half of the country holding almost nothing */
+  const cum = [];
+  for (let i = 0; i < n; i++) {
+    let acc = 0;
+    cum.push(GROUPS.map(g => { const lo = acc; acc += D.dfa[g.key][i]; return [lo, acc]; }));
+  }
+  GROUPS.forEach((g, gi) => {
+    const top = [], bot = [];
+    for (let i = 0; i < n; i++) {
+      const [lo, hi] = cum[i][gi];
+      /* a 1px inset on each side of every boundary gives the 2px surface gap */
+      bot.push([X(i), Y(lo) - (gi === 0 ? 0 : 1)]);
+      top.push([X(i), Y(hi) + (gi === GROUPS.length - 1 ? 0 : 1)]);
+    }
+    const d = "M" + top.map(p => `${p[0]} ${p[1]}`).join(" L") + " L" +
+              bot.reverse().map(p => `${p[0]} ${p[1]}`).join(" L") + " Z";
+    svg.appendChild(S("path", { d, fill: cols[gi] }));
+  });
+
+  /* direct labels at the right edge — every band, so hue is never the only channel */
+  if (!narrow) {
+    GROUPS.forEach((g, gi) => {
+      const [lo, hi] = cum[n - 1][gi];
+      const my = Y((lo + hi) / 2);
+      svg.appendChild(S("line", { x1: x1 + 2, x2: x1 + 10, y1: my, y2: my, stroke: cAxis, "stroke-width": 1 }));
+      svg.appendChild(Stext({ x: x1 + 14, y: my - 2, class: "dlabel" }, D.dfa[g.key][n - 1].toFixed(1) + "%"));
+      svg.appendChild(Stext({ x: x1 + 14, y: my + 11, class: "dlabel-2" }, g.name));
+    });
+  }
+
+  for (let y = 1990; y <= qYear(D.dfa.q[n - 1]); y += (narrow ? 10 : 5)) {
+    const i = D.dfa.q.findIndex(q => qYear(q) === y);
+    if (i < 0) continue;
+    svg.appendChild(Stext({ x: X(i), y: y1 + 16, class: "tick", "text-anchor": "middle" }, y));
+  }
+  svg.appendChild(S("line", { x1: x0, x2: x1, y1: y1, y2: y1, class: "axisline" }));
+
+  const cross = S("line", { y1: y0, y2: y1, stroke: cAxis, "stroke-width": 1, opacity: 0 });
+  svg.appendChild(cross);
+  const overlay = S("rect", { x: x0, y: y0, width: x1 - x0, height: y1 - y0, fill: "transparent" });
+  overlay.style.cursor = "crosshair";
+  svg.appendChild(overlay);
+
+  function moveTo(i) {
+    cross.setAttribute("x1", X(i)); cross.setAttribute("x2", X(i)); cross.setAttribute("opacity", 1);
+    tip.show(`<div class="t-title">${qLabel(D.dfa.q[i])}</div>` +
+      GROUPS.map((g, gi) => tipRow(cols[gi], g.name, D.dfa[g.key][i].toFixed(1) + "%")).join(""),
+      X(i), y0 + 8);
+    host.dataset.i = i;
+  }
+  overlay.addEventListener("pointermove", ev => {
+    const r = svg.getBoundingClientRect();
+    const px = (ev.clientX - r.left) * (W / r.width);
+    moveTo(Math.max(0, Math.min(n - 1, Math.round((px - x0) / (x1 - x0) * (n - 1)))));
+  });
+  overlay.addEventListener("pointerleave", () => { tip.hide(); cross.setAttribute("opacity", 0); });
+
+  host.tabIndex = 0;
+  host.onkeydown = e => {
+    let i = +host.dataset.i || n - 1;
+    if (e.key === "ArrowRight") { i = Math.min(n - 1, i + 1); e.preventDefault(); }
+    else if (e.key === "ArrowLeft") { i = Math.max(0, i - 1); e.preventDefault(); }
+    else return;
+    moveTo(i);
+  };
+
+  host.appendChild(svg);
+  $("#stackLegend").innerHTML = GROUPS.map((g, i) =>
+    `<span class="item"><span class="swatch" style="background:${cols[i]}"></span>${g.name}</span>`).join("");
+
+  buildTable("stackTable", ["Quarter", ...GROUPS.map(g => g.name)],
+    D.dfa.q.map((q, i) => [qLabel(q), ...GROUPS.map(g => D.dfa[g.key][i].toFixed(1) + "%")]).reverse());
+}
+
+/* ==========================================================
+   CHART 5 — real wealth per household, indexed to 1989 = 100
+   ========================================================== */
+const IDX = [
+  { key: "t1",  name: "Top 1%",                 css: "--s1" },
+  { key: "n40", name: "Middle 40% (50th–90th)", css: "--s2" },
+  { key: "b50", name: "Bottom 50%",             css: "--s3" }
+];
+function renderIdx() {
+  const host = $("#idxChart");
+  host.innerHTML = "";
+  const tip = makeTip(host);
+
+  const W = host.clientWidth || 900;
+  const narrow = W < 640;
+  const P = { l: 40, r: narrow ? 12 : 120, t: 14, b: 26 };
+  const H = narrow ? 260 : 330;
+  const x0 = P.l, x1 = W - P.r, y0 = P.t, y1 = H - P.b;
+  const n = D.dfa.q.length;
+  const X = i => x0 + i / (n - 1) * (x1 - x0);
+
+  const series = IDX.map(s => ({
+    ...s, color: C(s.css),
+    v: D.dfa.real[s.key].map(x => x / D.dfa.real[s.key][0] * 100)
+  }));
+  const maxV = Math.max(...series.flatMap(s => s.v));
+  const minV = Math.min(...series.flatMap(s => s.v));
+  const floor = Math.floor((minV - 6) / 25) * 25;          // always below the deepest dip
+  const yTicks = niceTicks(floor, maxV, 4);
+  const top = yTicks[yTicks.length - 1];
+  const Y = v => y1 - (v - floor) / (top - floor) * (y1 - y0);
+
+  const cSurf = C("--surface-1"), cAxis = C("--axis");
+  const svg = S("svg", { viewBox: `0 0 ${W} ${H}`, width: W, height: H, role: "img",
+    "aria-label": "Line chart of inflation-adjusted average net worth per household for three wealth groups, each indexed to 100 in 1989." });
+
+  [100, ...yTicks].filter((v, i, a) => a.indexOf(v) === i && v >= floor && v <= top).forEach(v => {
+    svg.appendChild(S("line", { x1: x0, x2: x1, y1: Y(v), y2: Y(v), class: "gridline" }));
+    svg.appendChild(Stext({ x: x0 - 7, y: Y(v) + 4, class: "tick", "text-anchor": "end" }, v));
+  });
+
+  /* the bottom half's 2008–2012 collapse reads like a plotting error. It is not,
+     so label it directly rather than leave the reader to doubt the chart. */
+  const bs = series.find(s => s.key === "b50");
+  const bi = bs.v.indexOf(Math.min(...bs.v));
+  svg.appendChild(S("circle", { cx: X(bi), cy: Y(bs.v[bi]), r: 4.5, fill: bs.color, stroke: cSurf, "stroke-width": 2 }));
+  svg.appendChild(Stext(narrow
+    ? { x: X(bi) - 9, y: Y(bs.v[bi]) + 4, class: "dlabel-2", "text-anchor": "end" }
+    : { x: X(bi) + 9, y: Y(bs.v[bi]) + 4, class: "dlabel-2" },
+    narrow ? `${qLabel(D.dfa.q[bi])} · ${usd(D.dfa.real.b50[bi])}`
+           : `${qLabel(D.dfa.q[bi])} — bottom half down to ${usd(D.dfa.real.b50[bi])} per household`));
+
+  series.forEach(s => {
+    svg.appendChild(S("path", {
+      d: "M" + s.v.map((v, i) => `${X(i)} ${Y(v)}`).join(" L"),
+      fill: "none", stroke: s.color, "stroke-width": 2, "stroke-linejoin": "round", "stroke-linecap": "round"
+    }));
+    svg.appendChild(S("circle", { cx: X(n - 1), cy: Y(s.v[n - 1]), r: 4.5, fill: s.color, stroke: cSurf, "stroke-width": 2 }));
+    if (!narrow) {
+      svg.appendChild(Stext({ x: x1 + 10, y: Y(s.v[n - 1]) - 1, class: "dlabel" }, Math.round(s.v[n - 1])));
+      svg.appendChild(Stext({ x: x1 + 10, y: Y(s.v[n - 1]) + 12, class: "dlabel-2" }, usd(D.dfa.real[s.key][n - 1])));
+    }
+  });
+  for (let y = 1990; y <= qYear(D.dfa.q[n - 1]); y += (narrow ? 10 : 5)) {
+    const i = D.dfa.q.findIndex(q => qYear(q) === y);
+    if (i < 0) continue;
+    svg.appendChild(Stext({ x: X(i), y: y1 + 16, class: "tick", "text-anchor": "middle" }, y));
+  }
+  svg.appendChild(S("line", { x1: x0, x2: x1, y1: y1, y2: y1, class: "axisline" }));
+
+  const cross = S("line", { y1: y0, y2: y1, stroke: cAxis, "stroke-width": 1, opacity: 0 });
+  svg.appendChild(cross);
+  const dots = series.map(s => {
+    const d = S("circle", { r: 5, fill: s.color, stroke: cSurf, "stroke-width": 2, opacity: 0 });
+    svg.appendChild(d); return d;
+  });
+  const overlay = S("rect", { x: x0, y: y0, width: x1 - x0, height: y1 - y0, fill: "transparent" });
+  overlay.style.cursor = "crosshair";
+  svg.appendChild(overlay);
+
+  function moveTo(i) {
+    cross.setAttribute("x1", X(i)); cross.setAttribute("x2", X(i)); cross.setAttribute("opacity", 1);
+    series.forEach((s, si) => {
+      dots[si].setAttribute("cx", X(i)); dots[si].setAttribute("cy", Y(s.v[i])); dots[si].setAttribute("opacity", 1);
+    });
+    tip.show(`<div class="t-title">${qLabel(D.dfa.q[i])}</div>` +
+      series.map(s => tipRow(s.color, s.name,
+        Math.round(s.v[i]) + " · " + usd(D.dfa.real[s.key][i]))).join("") +
+      `<div class="t-note">Index 1989 Q3 = 100 · constant ${LASTQ} dollars</div>`,
+      X(i), y0 + 8);
+    host.dataset.i = i;
+  }
+  overlay.addEventListener("pointermove", ev => {
+    const r = svg.getBoundingClientRect();
+    const px = (ev.clientX - r.left) * (W / r.width);
+    moveTo(Math.max(0, Math.min(n - 1, Math.round((px - x0) / (x1 - x0) * (n - 1)))));
+  });
+  overlay.addEventListener("pointerleave", () => {
+    tip.hide(); cross.setAttribute("opacity", 0); dots.forEach(d => d.setAttribute("opacity", 0));
+  });
+  host.tabIndex = 0;
+  host.onkeydown = e => {
+    let i = +host.dataset.i || n - 1;
+    if (e.key === "ArrowRight") { i = Math.min(n - 1, i + 1); e.preventDefault(); }
+    else if (e.key === "ArrowLeft") { i = Math.max(0, i - 1); e.preventDefault(); }
+    else return;
+    moveTo(i);
+  };
+
+  host.appendChild(svg);
+  $("#idxLegend").innerHTML = series.map(s =>
+    `<span class="item"><span class="line-key" style="background:${s.color}"></span>${s.name}
+       <span style="color:var(--muted)">&nbsp;${usd(D.dfa.real[s.key][0])} → ${usd(D.dfa.real[s.key][n - 1])}</span></span>`).join("");
+
+  buildTable("idxTable", ["Quarter", ...IDX.flatMap(s => [s.name + " (index)", s.name + " (constant $)"])],
+    D.dfa.q.map((q, i) => [qLabel(q), ...series.flatMap(s => [Math.round(s.v[i]), "$" + nf(D.dfa.real[s.key][i])])]).reverse());
+}
+
+/* ==========================================================
+   CHART 6 — cost of a presidential election cycle
+   ========================================================== */
+function renderElec() {
+  const host = $("#elecChart");
+  host.innerHTML = "";
+  const tip = makeTip(host);
+
+  const W = host.clientWidth || 900;
+  const P = { l: 42, r: 14, t: 34, b: 42 };
+  const H = 300;
+  const x0 = P.l, x1 = W - P.r, y0 = P.t, y1 = H - P.b;
+  const band = (x1 - x0) / ELECTIONS.length;
+  const bw = Math.min(24, band * 0.5);
+  const maxV = 20;
+  const Y = v => y1 - v / maxV * (y1 - y0);
+  const cS1 = C("--s1"), cAxis = C("--axis"), cMuted = C("--muted");
+
+  const svg = S("svg", { viewBox: `0 0 ${W} ${H}`, width: W, height: H, role: "img",
+    "aria-label": "Column chart of total federal election spending per presidential cycle from 2000 to 2024 in constant 2024 dollars." });
+
+  [0, 5, 10, 15, 20].forEach(v => {
+    svg.appendChild(S("line", { x1: x0, x2: x1, y1: Y(v), y2: Y(v), class: "gridline" }));
+    svg.appendChild(Stext({ x: x0 - 7, y: Y(v) + 4, class: "tick", "text-anchor": "end" }, "$" + v + "B"));
+  });
+
+  /* Citizens United annotation — a solid hairline rule, never a dashed one */
+  const cuX = x0 + 3.5 * band;
+  svg.appendChild(S("line", { x1: cuX, x2: cuX, y1: y0 - 18, y2: y1, stroke: cAxis, "stroke-width": 1 }));
+  svg.appendChild(Stext({ x: cuX + 6, y: y0 - 22, class: "annot" }, "2010 — Citizens United and SpeechNow"));
+  svg.appendChild(Stext({ x: cuX + 6, y: y0 - 9, class: "annot" }, "unlimited independent spending becomes legal"));
+
+  ELECTIONS.forEach((e, i) => {
+    const cx = x0 + band * (i + 0.5);
+    const h = y1 - Y(e.v);
+    const g = S("g");
+    /* 4px rounded cap, square at the baseline */
+    g.appendChild(S("path", {
+      d: `M${cx - bw / 2} ${y1} L${cx - bw / 2} ${Y(e.v) + 4} Q${cx - bw / 2} ${Y(e.v)} ${cx - bw / 2 + 4} ${Y(e.v)} L${cx + bw / 2 - 4} ${Y(e.v)} Q${cx + bw / 2} ${Y(e.v)} ${cx + bw / 2} ${Y(e.v) + 4} L${cx + bw / 2} ${y1} Z`,
+      fill: cS1
+    }));
+    g.appendChild(Stext({ x: cx, y: Y(e.v) - 8, class: "dlabel", "text-anchor": "middle" }, "$" + e.v.toFixed(1) + "B"));
+    g.appendChild(Stext({ x: cx, y: y1 + 17, class: "tick", "text-anchor": "middle" }, e.y));
+    /* hit target comfortably larger than the 24px mark */
+    const hit = S("rect", { x: cx - band / 2, y: y0, width: band, height: y1 - y0, fill: "transparent" });
+    hit.style.cursor = "crosshair";
+    hit.addEventListener("pointermove", () => tip.show(
+      `<div class="t-title">${e.y} cycle</div>` +
+      tipRow(cS1, "Total spending", "$" + e.v.toFixed(1) + "B") +
+      `<div class="t-note">Constant 2024 dollars, all federal races${e.y >= 2012 ? " · post-Citizens United" : ""}</div>`,
+      cx, Y(e.v)));
+    hit.addEventListener("pointerleave", () => tip.hide());
+    g.appendChild(hit);
+    svg.appendChild(g);
+  });
+
+  svg.appendChild(S("line", { x1: x0, x2: x1, y1: y1, y2: y1, class: "axisline" }));
+  svg.appendChild(Stext({ x: x0, y: H - 8, class: "annot" },
+    "Billions of constant 2024 dollars · presidential cycles only"));
+
+  host.appendChild(svg);
+  buildTable("elecTable", ["Cycle", "Total spending (2024 $)", "Change vs. previous cycle"],
+    ELECTIONS.map((e, i) => [e.y, "$" + e.v.toFixed(1) + "B",
+      i === 0 ? "—" : ((e.v / ELECTIONS[i - 1].v - 1) * 100).toFixed(0) + "%"]));
+}
+
+/* ==========================================================
+   THEME + LIFECYCLE
+   ========================================================== */
+const THEMES = ["system", "light", "dark"];
+let themeIdx = 0;
+function applyTheme() {
+  const t = THEMES[themeIdx];
+  if (t === "system") root.removeAttribute("data-theme");
+  else root.setAttribute("data-theme", t);
+  $("#themeBtn").textContent = t === "system" ? "Theme: auto" : t === "light" ? "Theme: light" : "Theme: dark";
+  renderCharts();
+}
+$("#themeBtn").addEventListener("click", () => {
+  themeIdx = (themeIdx + 1) % THEMES.length;
+  applyTheme();
+});
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
+  if (THEMES[themeIdx] === "system") renderCharts();
+});
+
+$("#arcTaxBtn").addEventListener("click", e => {
+  showTax = !showTax;
+  e.currentTarget.setAttribute("aria-pressed", String(showTax));
+  e.currentTarget.textContent = showTax ? "Hide top tax rate" : "Show top tax rate below";
+  renderArc();
+});
+
+function renderCharts() {
+  renderPopW();
+  renderArc();
+  renderStack();
+  renderIdx();
+  renderElec();
+  renderStrip();
+}
+
+let rt;
+addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(renderCharts, 150); });
+
+renderStatics();
+renderCharts();
+$("#themeBtn").textContent = "Theme: auto";
+</script>
+</body>
+</html>
