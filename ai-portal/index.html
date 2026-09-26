@@ -259,108 +259,165 @@ nav.menu button[aria-current="page"]{color:var(--black);border-bottom-color:var(
   nav.menu button{padding:12px 9px 11px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* ===== v3 additions ===== */
+.banner{background:var(--soft);border-left:4px solid var(--black);padding:10px 14px;font-size:14px;border-radius:0 4px 4px 0}
+.banner.red{border-left-color:var(--red);background:var(--red-tint)}
+.welcome{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:24px;align-items:start}
+.stack{display:flex;flex-direction:column;gap:16px;min-width:0}
+.level{background:var(--black);color:var(--white);border-radius:6px;padding:20px;display:flex;flex-direction:column;gap:12px}
+.level h3,.level b{color:var(--white)}
+.level .lv{display:flex;gap:6px}
+.level .lv i{flex:1;height:8px;border-radius:4px;background:#3a3a3a}
+.level .lv i.on{background:var(--red)}
+.level .name{font-size:26px;font-weight:700;line-height:1.1}
+.level ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px;font-size:14px;color:#d6d6d6}
+.level li{display:grid;grid-template-columns:18px 1fr;gap:8px}
+.level li::before{content:"○";color:#8a8a8a}
+.level li.ok::before{content:"✓";color:var(--white)}
+.level li.ok{color:#8a8a8a;text-decoration:line-through}
+.challenge{border:2px solid var(--black);border-radius:6px;padding:18px;display:flex;flex-direction:column;gap:10px}
+.challenge .wk{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--red)}
+.challenge h3{font-size:20px}
+.pulse{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.pulse div{padding:14px 16px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:2px;min-width:0}
+.pulse div:last-child{border-right:0}
+.pulse span{font-size:12.5px;color:var(--grey)}
+.pulse b{font-size:26px;font-variant-numeric:tabular-nums;color:var(--black);line-height:1.15}
+.pulse small{font-size:12.5px;color:var(--grey)}
+.winform{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;align-items:end}
+.winform .wide{grid-column:1/-1}
+.feed{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.feed li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 16px;padding:12px 0;border-bottom:1px solid var(--line)}
+.feed li:last-child{border-bottom:0}
+.feed .t{font-weight:700;color:var(--black)}
+.feed .m{font-size:13px;color:var(--grey);grid-column:1}
+.feed .h{grid-row:1/3;grid-column:2;text-align:right;font-variant-numeric:tabular-nums;font-weight:700;align-self:center}
+.feed .h small{display:block;font-weight:400;color:var(--grey);font-size:12px}
+.feed .n{font-size:14px;color:var(--ink-2);grid-column:1/-1}
+.tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;border-radius:3px;padding:2px 7px;white-space:nowrap}
+.tag.ex{border:1px dashed var(--line-2);color:var(--grey)}
+.tag.t1{background:var(--soft);color:var(--ink-2)}
+.tag.t2{background:#3d3d3d;color:var(--white)}
+.tag.t3{background:var(--red);color:var(--white)}
+.tag.st{border:1px solid var(--black);color:var(--black)}
+.tag.warn{background:var(--red-tint);color:var(--red-dark)}
+.tabs2{display:flex;gap:6px;flex-wrap:wrap}
+/* register */
+.reg{width:100%;border-collapse:collapse;min-width:760px}
+.reg th{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--grey);text-align:left;padding:8px 10px;border-bottom:2px solid var(--black);white-space:nowrap}
+.reg td{padding:12px 10px;border-bottom:1px solid var(--line);vertical-align:top;font-size:14.5px}
+.reg td.r,.reg th.r{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.reg tr.click{cursor:pointer}
+.reg tr.click:hover td{background:var(--soft)}
+.reg .pt{font-weight:700;color:var(--black)}
+.scroll{overflow-x:auto}
+/* project detail */
+.proj{display:grid;grid-template-columns:250px minmax(0,1fr);gap:28px;align-items:start}
+.pnav{position:sticky;top:calc(env(safe-area-inset-top,0px) + 84px);display:flex;flex-direction:column;gap:2px}
+.pnav a{display:grid;grid-template-columns:22px 1fr;gap:8px;align-items:center;padding:8px 10px;border-radius:4px;color:var(--ink-2);text-decoration:none;font-size:14.5px}
+.pnav a:hover{background:var(--soft);color:var(--black)}
+.pnav a .c{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--line-2);font-size:11px;display:grid;place-items:center;font-weight:700}
+.pnav a.ok .c{background:var(--black);border-color:var(--black);color:var(--white)}
+.pnav a.req .c{border-color:var(--red)}
+.pnav a.na{opacity:.45}
+.pnav .lbl{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--grey);padding:0 10px 6px}
+.stepper{display:flex;gap:4px;flex-wrap:wrap}
+.stepper span{flex:1 1 90px;font-size:12.5px;font-weight:700;padding:8px 10px;background:var(--soft);color:var(--grey);border-top:4px solid var(--line-2)}
+.stepper span.done{color:var(--black);border-top-color:var(--black)}
+.stepper span.now{color:var(--black);border-top-color:var(--red);background:var(--red-tint)}
+.art{border:1px solid var(--line);border-radius:6px;padding:20px;display:flex;flex-direction:column;gap:14px;scroll-margin-top:90px}
+.art>header{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:baseline;border-bottom:2px solid var(--black);padding-bottom:8px}
+.art>header h3{font-size:19px}
+.art>header p{flex:1 1 100%;font-size:14px;color:var(--grey)}
+.yn{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.yn:last-child{border-bottom:0}
+.yn p{font-size:14.5px}
+.yn p small{display:block;color:var(--grey);font-size:13px}
+.seg2{display:inline-flex;border:1.5px solid var(--black);border-radius:4px;overflow:hidden}
+.seg2 button{border:0;background:var(--white);padding:6px 14px;font-weight:700;font-size:13px}
+.seg2 button[aria-pressed="true"]{background:var(--black);color:var(--white)}
+.tierbox{border-radius:6px;padding:16px;display:flex;flex-direction:column;gap:8px;background:var(--soft)}
+.tierbox.t3{background:var(--red);color:var(--white)}
+.tierbox.t3 h3{color:var(--white)}
+.tierbox.t2{background:#3d3d3d;color:var(--white)}
+.tierbox.t2 h3{color:var(--white)}
+.tierbox ul{margin:0;padding-left:18px;font-size:14px}
+.ledger{width:100%;border-collapse:collapse;min-width:620px}
+.ledger th{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--grey);text-align:left;padding:6px;border-bottom:1px solid var(--line-2)}
+.ledger td{padding:4px 6px;border-bottom:1px solid var(--line)}
+.ledger input,.ledger select{width:100%;border:1px solid transparent;border-radius:3px;padding:6px;font-size:14px;min-width:0;background:transparent}
+.ledger input:hover{border-color:var(--line)}
+.ledger input:focus{outline:none;border-color:var(--black);background:var(--white)}
+.ledger .r{text-align:right;font-variant-numeric:tabular-nums}
+.ledger tfoot td{font-weight:700;border-top:2px solid var(--black);padding:8px 6px}
+.hist{list-style:none;margin:0;padding:0;font-size:13.5px;display:flex;flex-direction:column;gap:6px}
+.hist li{display:grid;grid-template-columns:130px 1fr;gap:12px;color:var(--ink-2)}
+.hist time{color:var(--grey);font-variant-numeric:tabular-nums}
+.gate{display:flex;flex-direction:column;gap:8px;background:var(--soft);border-radius:6px;padding:14px 16px}
+.gate ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:4px;font-size:14px}
+.gate li::before{content:"✗ ";color:var(--red);font-weight:700}
+.gate li.ok::before{content:"✓ ";color:var(--black)}
+.approval{border:2px solid var(--black);border-radius:6px;padding:16px;display:flex;flex-direction:column;gap:8px}
+.approval.no{border-color:var(--line-2);border-style:dashed}
+.approval .dec{font-size:20px;font-weight:700;color:var(--black)}
+.briefgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;align-items:start}
+/* charts */
+.charts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.chart{border:1px solid var(--line);border-radius:6px;padding:16px;display:flex;flex-direction:column;gap:8px;position:relative}
+.chart h3{font-size:16px}
+.chart .sub{font-size:13px;color:var(--grey);margin-top:-4px}
+.chart svg{width:100%;height:auto;display:block}
+.chart .ax{fill:var(--grey);font-size:13px;font-weight:400;font-family:var(--font)}
+.chart .lb{fill:var(--black);font-size:14px;font-weight:700;font-family:var(--font)}
+.chart .cat{fill:var(--ink-2);font-size:14px;font-family:var(--font)}
+.chart .gl{stroke:var(--line);stroke-width:1}
+.chart .bl{stroke:var(--line-2);stroke-width:1}
+.chart .hit{fill:transparent}
+.chart .hit:hover{fill:rgba(17,17,17,.05)}
+.legend{display:flex;gap:14px;font-size:12.5px;color:var(--ink-2);flex-wrap:wrap}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.ctip{position:absolute;pointer-events:none;background:var(--white);border:1px solid var(--line-2);box-shadow:0 4px 14px rgba(0,0,0,.12);border-radius:4px;padding:7px 10px;font-size:12.5px;opacity:0;transition:opacity .12s;z-index:5;white-space:nowrap}
+.ctip.on{opacity:1}
+.method{font-size:13px;color:var(--grey);max-width:90ch}
+details.more{border:1px solid var(--line);border-radius:6px;padding:12px 16px}
+details.more summary{cursor:pointer;font-weight:700}
+details.more>div{margin-top:12px;display:flex;flex-direction:column;gap:12px}
+@media (max-width:1000px){
+  .welcome,.proj,.briefgrid{grid-template-columns:1fr}
+  .pnav{position:static;flex-direction:row;flex-wrap:wrap}
+  .pulse{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .pulse div:nth-child(2){border-right:0}
+  .pulse div:nth-child(-n+2){border-bottom:1px solid var(--line)}
+}
+@media (max-width:640px){
+  .charts{grid-template-columns:1fr}
+  .hist li{grid-template-columns:1fr;gap:0}
+  .charts{grid-template-columns:1fr}
+}
 </style>
 
 <header class="top">
   <div class="top-in">
-    <button class="logo" type="button" data-go="home" aria-label="Home"><span class="dot">AI</span><span><b>CONA AI Portal</b><span>Practical AI for everyday work</span></span></button>
+    <button class="logo" type="button" data-go="home" aria-label="Home"><span class="dot">AI</span><span><b>CONA AI Portal</b><span>Learn it. Use it. Prove it.</span></span></button>
     <nav class="menu" aria-label="Sections">
       <button type="button" data-go="home">Home</button>
       <button type="button" data-go="learn">Learn</button>
-      <button type="button" data-go="prompts">Prompt library</button>
-      <button type="button" data-go="check">Idea check</button>
-      <button type="button" data-go="brief">Exec brief</button>
+      <button type="button" data-go="prompts">Prompts</button>
+      <button type="button" data-go="projects">Projects</button>
+      <button type="button" data-go="value">Value</button>
     </nav>
   </div>
 </header>
-
 <main class="page">
-
-<!-- HOME -->
-<section class="view" id="v-home">
-  <div class="hero">
-    <div>
-      <p class="eyebrow">For everyone at CONA</p>
-      <h1>Get real work done with AI, and know when not to use it.</h1>
-      <p class="lead">Short lessons, prompts you can copy, a quick way to test a project idea, and a tool that turns a project into a one-page brief for leadership. Nothing you type here leaves your browser.</p>
-    </div>
-    <div class="progress-card" id="homeProgress"></div>
-  </div>
-
-  <div class="cards4">
-    <button class="door" type="button" data-go="learn"><span class="when">New to this, or want to get better</span><h3>Learn the basics</h3><p>Six lessons, five minutes each. Each one ends with something to try on your own work.</p><span class="go">Start learning →</span></button>
-    <button class="door" type="button" data-go="prompts"><span class="when">You have a task in front of you</span><h3>Find a prompt</h3><p><span id="promptCount">35</span> prompts for real jobs here: close commentary, supplier emails, SAP errors, meeting notes.</p><span class="go">Browse prompts →</span></button>
-    <button class="door" type="button" data-go="check"><span class="when">Someone said “can AI do this?”</span><h3>Check an idea</h3><p>Nine questions. You find out whether it's worth a pilot, better done another way, or not worth doing yet.</p><span class="go">Check an idea →</span></button>
-    <button class="door" type="button" data-go="brief"><span class="when">You need a decision from leadership</span><h3>Write an exec brief</h3><p>Fill in the blanks and get a one-page brief with the numbers worked out. It also flags jargon and gaps before an exec does.</p><span class="go">Start a brief →</span></button>
-  </div>
-
-  <div class="leaders">
-    <p><b>Leading a team?</b> There's a 30-minute session plan you can run at your next team meeting. No slides needed. Everyone leaves having used AI on their own work.</p>
-    <button class="btn dark" type="button" data-go="learn" data-lesson="session">Get the session plan</button>
-  </div>
-
-  <div class="rules">
-    <div><h4>Use the approved tools</h4><p>Company data only goes into AI tools the company has approved. If you're not sure a tool is approved, ask before you paste anything.</p></div>
-    <div><h4>You own what you send</h4><p>AI writes fluently even when it's wrong. Check facts, numbers and names before anything leaves your hands.</p></div>
-    <div><h4>Start small</h4><p>Pick one task you do every week and get good at that. It beats trying everything once.</p></div>
-  </div>
-  <p class="foot">Your progress, answers and briefs are saved in this browser only. To share a brief, download it as a PDF or save it as a file.</p>
-</section>
-
-<!-- LEARN -->
+<div id="modeBanner"></div>
+<section class="view" id="v-home"></section>
 <section class="view" id="v-learn" hidden>
-  <div class="learn">
-    <nav class="toc" id="toc" aria-label="Lessons"></nav>
-    <article class="lesson" id="lesson"></article>
-  </div>
+  <div class="learn"><nav class="toc" id="toc" aria-label="Lessons"></nav><article class="lesson" id="lesson"></article></div>
 </section>
-
-<!-- PROMPTS -->
-<section class="view" id="v-prompts" hidden>
-  <div class="head">
-    <p class="eyebrow">Prompt library</p>
-    <h2>Copy a prompt, fill in the red parts, paste it into an approved tool.</h2>
-    <p>Each one says roughly how much time it saves and what to check before you trust the answer.</p>
-  </div>
-  <div class="filterbar">
-    <input class="search" id="pSearch" type="search" placeholder="Search: contract, variance, email, SAP…" aria-label="Search prompts">
-    <div class="chips" id="pRoles"></div>
-    <p class="small muted" id="pCount"></p>
-  </div>
-  <div class="plist" id="plist"></div>
-</section>
-
-<!-- IDEA CHECK -->
-<section class="view" id="v-check" hidden>
-  <div class="head">
-    <p class="eyebrow">Idea check</p>
-    <h2>Is this a job for AI?</h2>
-    <p>Answer for how things are today, not how they'll be once the project is done. The answer on the right updates as you go.</p>
-  </div>
-  <div class="check-wrap">
-    <div class="qs" id="qs"></div>
-    <aside class="check-side" id="checkSide" aria-live="polite"></aside>
-  </div>
-</section>
-
-<!-- EXEC BRIEF -->
-<section class="view" id="v-brief" hidden>
-  <div class="head">
-    <p class="eyebrow">Exec brief</p>
-    <h2>One page. One decision. Numbers they can trust.</h2>
-    <p>Executives read the first three lines and the numbers. Fill in the left side, and the right side becomes the brief. The check under it points out anything an exec is likely to question.</p>
-  </div>
-  <div class="briefs-top" id="briefsTop"></div>
-  <div class="builder">
-    <div class="form" id="bform"></div>
-    <div class="preview-col">
-      <div class="paper" id="paper"></div>
-      <div class="box" id="review"></div>
-      <div class="row" id="briefActions"></div>
-    </div>
-  </div>
-</section>
-
+<section class="view" id="v-prompts" hidden></section>
+<section class="view" id="v-projects" hidden></section>
+<section class="view" id="v-value" hidden></section>
 </main>
 <div class="toast" id="toast" role="status"></div>
 <script>
@@ -448,7 +505,7 @@ const LESSONS=[
   "<b>Treat the first answer as a first draft.</b> Follow up: “shorter”, “more direct”, “what did you leave out?”, “give me two other options.” The second or third answer is usually the good one.",
   "<b>Save prompts that work.</b> Keep a note of your best prompts, with the blanks marked. Next week it takes seconds.",
   "<b>Share what works.</b> Send your best prompt to one colleague. Teams improve fastest when people swap what works.",
-  "<b>When a task needs more than a prompt, say so.</b> If the same job could be automated for the whole team, run it through the Idea check."],
+  "<b>When a task needs more than a prompt, say so.</b> If the same job could be improved for the whole team, start a project on the Projects page."],
  compare:{weak:{tag:"One-off",text:"Tried AI once on a hard problem, got a vague answer, gave up.",note:"Hard, unusual problems are the worst place to start."},
           strong:{tag:"Habit",text:"Every Friday: paste the week's notes, use my saved status-report prompt, check it, send it. Saves about an hour.",note:"Small, repeated and easy to check."}},
  tryit:"Choose your one weekly task now. Find a matching prompt in the prompt library, save it somewhere you'll see it, and use it the next time the task comes round.",
@@ -524,33 +581,74 @@ const DECISIONS=["Approve funding","Approve a pilot","Agree the direction","For 
 const CONF_LEVELS={High:[1,"We've measured it"],Medium:[0.75,"Based on a trial or a good estimate"],Low:[0.5,"An educated guess"]};
 const JARGON=["leverage","synergy","synergies","robust","seamless","seamlessly","cutting-edge","cutting edge","best-in-class","world-class","game-changer","game changing","transformational","transformative","revolutionary","revolutionise","revolutionize","paradigm","holistic","utilize","utilise","utilization","going forward","low-hanging fruit","move the needle","deep dive","bandwidth","circle back","unlock value","unlock","empower","ecosystem","end-to-end","state-of-the-art","next-generation","ai-powered","ai-driven","innovative","disruptive","optimize","optimise","streamline","actionable","value-add","scalable","agile","north star","harness","journey"];
 
-const EXAMPLE_BRIEF={
- id:"ex1",example:true,
- title:"AI drafts for customer care email replies",
- author:"Customer Care Operations",sponsor:"VP Customer Service",date:"",
- decision:"Approve a pilot",decideBy:"",
- ask:"Approve a 12-week pilot with 15 agents, costing $85,000, to test AI-drafted replies to retailer emails.",
- problem:"Agents spend about 40% of their day writing email replies, and retailers wait 9 hours on average for a first response. Slow replies are the top complaint in our quarterly retailer survey.",
- plan:"Use the drafting feature in the Salesforce licence we already pay for. The AI drafts each reply from the case history and our approved knowledge articles. An agent reads, edits and sends every one. Nothing goes out without a person.",
- ifnot:"Response times keep slipping as email volume grows about 8% a year. We'd need four more agents by next summer to hold today's service level.",
- once:85000,running:40000,benefit:360000,
- basis:"4-week trial with 6 agents: handle time on email fell 22%. Scaled to 62 agents at current cost.",
- conf:"Medium",timeSaved:true,
- timeGoes:"Four agent hires planned for next summer are no longer needed; the rest goes to proactive calls to at-risk accounts.",
- startMonth:4,
- milestones:[["Configure and train 15 agents","Month 1"],["Pilot live with 15 agents","Month 2"],["Go/no-go on full rollout","Month 4"]],
- risks:[["Draft quotes an out-of-date policy","Drafts use approved knowledge articles only; article owners named"],["Agents send drafts without reading","Sending needs an edit or a confirm click; weekly quality sampling"]],
- success:"First-response time under 4 hours for pilot agents, with quality scores the same or better."
+
+/* ============================================================
+   PORTAL-WIDE CONTENT (v3)
+   ============================================================ */
+const DEFAULT_TEAMS=["Engineering","Product","Design","Data & Analytics","IT & Security","Customer Success","Sales","Marketing","Finance","People","Operations","Legal","Leadership"];
+const DEFAULT_CONFIG={headcount:200,rate:75,countPct:50,teams:DEFAULT_TEAMS};
+
+/* How often a win repeats. mult = times a year. */
+const FREQ={once:["Just this once",1],monthly:["Every month",12],weekly:["Every week",46],daily:["Most days",220]};
+
+/* Levels. Each check is evaluated by the app (see levelOf). */
+const LEVELS=[
+ {n:1,name:"Starter",blurb:"You've signed in and picked your team."},
+ {n:2,name:"Practitioner",blurb:"You've done all six lessons."},
+ {n:3,name:"Regular",blurb:"You're using AI on real work, often enough to log it."},
+ {n:4,name:"Champion",blurb:"You're helping others get there too."}
+];
+
+/* Weekly challenge rotates by ISO week. p = prompt id in the library. */
+const CHALLENGES=[
+ {t:"Turn your last meeting's notes into decisions, owners and dates",p:"notes",mins:20},
+ {t:"Get the three points that matter from a long email thread",p:"longdoc",mins:15},
+ {t:"Ask AI to explain a formula, query or code snippet you inherited",p:"formula",mins:30},
+ {t:"Cut something you wrote by a third without losing any facts",p:"shorten",mins:15},
+ {t:"Run a pre-mortem on a plan you're working on",p:"premortem",mins:45},
+ {t:"Draft this week's status update from your raw notes",p:"status",mins:45},
+ {t:"Pull the five key terms out of a contract or SOW",p:"contract5",mins:60},
+ {t:"Turn a solved ticket or question into a how-to article",p:"kb",mins:20},
+ {t:"Prepare for a customer or stakeholder meeting in five minutes",p:"meetprep",mins:30},
+ {t:"Clean up a messy column of free text into a lookup table",p:"exceltable",mins:60},
+ {t:"Ask what question you should have asked about a decision",p:"askbetter",mins:20},
+ {t:"Write down a process only you know, as a draft SOP",p:"sop",mins:90}
+];
+
+/* Governance */
+const STAGES=["Idea","Assessed","Awaiting approval","Approved","Pilot","Live","Closed"];
+const RISK_QS=[
+ {id:"personal",q:"Does it use personal data about customers or employees?",tier:2,control:"Privacy review before build; only the fields that are needed."},
+ {id:"restricted",q:"Does it use confidential, regulated or NDA-covered data?",tier:2,control:"Written confirmation that the tool is approved for this data."},
+ {id:"external",q:"Will its output reach customers or the public without a person checking it first?",tier:3,control:"A person reviews output before it goes out, or a sampled quality check with a named owner."},
+ {id:"people",q:"Will it make or shape decisions about people, such as hiring, pay, performance or access?",tier:3,control:"Legal and People sign-off; a person makes every final decision."},
+ {id:"finance",q:"Does it feed financial reporting, billing or a regulated process?",tier:2,control:"A documented human control step before any number is used."},
+ {id:"autonomous",q:"Will it take actions in other systems (send, update, delete) without a person approving each one?",tier:2,control:"Limits on what it can do, logging, and a way to switch it off fast."},
+ {id:"vendor",q:"Does it need a new vendor or AI tool that isn't already approved?",tier:2,control:"Security and procurement review of the vendor."}
+];
+const TIERS={
+ 1:{name:"Tier 1: Low risk",who:"Team lead and the AI governance lead",blurb:"Internal use, general data, a person checks the output. Light-touch approval."},
+ 2:{name:"Tier 2: Medium risk",who:"The AI review board",blurb:"Sensitive data or automated actions. Needs a pilot with a pass mark set in advance, plus human oversight and monitoring."},
+ 3:{name:"Tier 3: High risk",who:"The AI review board, with Legal and Security",blurb:"Affects customers, the public or decisions about people. Needs everything in Tier 2, plus privacy and legal sign-off before going live."}
 };
-const BLANK_BRIEF=()=>({id:uid(),title:"",author:"",sponsor:"",date:"",decision:DECISIONS[0],decideBy:"",ask:"",problem:"",plan:"",ifnot:"",
- once:0,running:0,benefit:0,basis:"",conf:"Medium",timeSaved:false,timeGoes:"",startMonth:3,
- milestones:[["",""],["",""]],risks:[["",""]],success:""});
+/* Which artifacts each tier needs. key -> [label, minimum tier] */
+const ARTIFACTS=[
+ ["intake","Intake and idea check",1],
+ ["risk","Risk tier",1],
+ ["brief","Exec brief",1],
+ ["approval","Approval record",1],
+ ["pilot","Pilot plan and result",2],
+ ["controls","Oversight and monitoring",2],
+ ["signoff","Privacy and legal sign-off",3],
+ ["benefits","Benefits tracking",1],
+ ["review","Post-launch review",1]
+];
+const DECISION_TYPES={approved:"Approved",conditions:"Approved with conditions",deferred:"Deferred",rejected:"Not approved"};
+const RECS={scale:"Scale it further",keep:"Keep as is",change:"Keep, with changes",stop:"Stop it"};
 </script>
 <script>
 "use strict";
 const ROLES=["Finance","Procurement","Supply chain & ops","Sales & customer","Customer care","HR","IT","Legal & compliance","Comms","Projects","Everyone"];
-const SINKS=["Email","Meetings","Spreadsheets","Reports & decks","Contracts & documents","Data cleanup","Research","Policy questions","Tickets & queues","Writing","Planning","SAP & systems"];
-const LEVELS=[["any","Use it most weeks"],["some","Tried it a few times"],["new","Never really used it"]];
 const LVL_NAME={start:"Start here",build:"Worth setting up",stretch:"For the curious"};
 
 const PROMPTS=[
@@ -703,7 +801,8 @@ const PROMPTS=[
    ============================================================ */
 const $=id=>document.getElementById(id);
 const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const uid=()=>Math.random().toString(36).slice(2,10);
+const uid=p=>(p||"")+Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const clone=o=>JSON.parse(JSON.stringify(o||{}));
 const store={
   get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v);}catch(e){return d;}},
   set(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
@@ -715,7 +814,9 @@ const money=n=>(n<0?"-$":"$")+Math.abs(Math.round(n)).toLocaleString("en-US");
 function short$(n){const a=Math.abs(n),s=n<0?"-":"";
   if(a>=1e6)return s+"$"+(a/1e6).toFixed(a>=1e7?1:2).replace(/\.?0+$/,"")+"M";
   if(a>=1e3)return s+"$"+Math.round(a/1e3)+"k";return s+"$"+Math.round(a);}
-let tT;function toast(m){const t=$("toast");t.textContent=m;t.classList.add("on");clearTimeout(tT);tT=setTimeout(()=>t.classList.remove("on"),2600);}
+const fmtN=n=>Math.round(n).toLocaleString("en-US");
+const fmtDate=iso=>iso?new Date(iso).toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}):"";
+let tT;function toast(m){const t=$("toast");t.textContent=m;t.classList.add("on");clearTimeout(tT);tT=setTimeout(()=>t.classList.remove("on"),2800);}
 function copyText(text,done){
   const fb=()=>{const a=document.createElement("textarea");a.value=text;a.style.position="fixed";a.style.opacity="0";document.body.appendChild(a);a.select();
     let ok=false;try{ok=document.execCommand("copy");}catch(e){}a.remove();ok?done():toast("Couldn't copy. Select the text and press Ctrl+C.");};
@@ -729,56 +830,248 @@ async function saveFile(name,data){
   const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();
   setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},500);toast("Saved "+name);
 }
-const slug=s=>(s||"brief").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,50)||"brief";
+const slug=s=>(s||"file").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,50)||"file";
 const hl=s=>esc(s).replace(/\[([^\]]+)\]/g,"<mark>[$1]</mark>");
+const csvRow=r=>r.map(v=>{const s=String(v==null?"":v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}).join(",");
+function isoWeek(d){d=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));const day=d.getUTCDay()||7;d.setUTCDate(d.getUTCDate()+4-day);
+  const y=new Date(Date.UTC(d.getUTCFullYear(),0,1));return [d.getUTCFullYear(),Math.ceil(((d-y)/864e5+1)/7)];}
+function loadJsPDF(){
+  if(window.jspdf&&window.jspdf.jsPDF)return Promise.resolve(window.jspdf.jsPDF);
+  return new Promise((res,rej)=>{const s=document.createElement("script");s.src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";
+    s.onload=()=>window.jspdf?res(window.jspdf.jsPDF):rej();s.onerror=rej;document.head.appendChild(s);});
+}
+
+/* ============================================================
+   Data layer. Shared (claude.ai db) when available, otherwise
+   this browser only. Every view reads from D and writes via put/del.
+   ============================================================ */
+const COLLS=["people","wins","projects","approvals","prompts"];
+const D={mode:"loading",db:null,user:null,me:"me",admin:true,canWrite:true,config:clone(DEFAULT_CONFIG)};
+COLLS.forEach(c=>D[c]=[]);
+const LKEY="cp3-data";
+function localLoad(){const o=store.get(LKEY,{});COLLS.forEach(c=>{D[c]=Object.entries(o[c]||{}).map(([id,v])=>Object.assign({id},v));});
+  D.config=Object.assign(clone(DEFAULT_CONFIG),o.config||{});}
+function localSave(){const o={config:D.config};COLLS.forEach(c=>{o[c]={};D[c].forEach(r=>{const x=Object.assign({},r);delete x.id;o[c][r.id]=x;});});store.set(LKEY,o);}
+function writeError(e){
+  const c=e&&e.code;
+  if(c==="invalid_argument"){toast("You don't have permission to change that. Ask a portal admin for Contributor access.");}
+  else if(c==="quota_exceeded")toast("The portal's storage is full. An admin needs to remove old entries.");
+  else toast("Couldn't save just now. Try again in a moment.");
+  throw e;
+}
+async function put(coll,id,obj){
+  obj=clone(obj);delete obj.id;
+  if(D.mode==="shared"){try{await D.db.doc(coll+"/"+id).set(obj);}catch(e){writeError(e);}return;}
+  if(coll==="config"){D.config=Object.assign(clone(DEFAULT_CONFIG),obj);}
+  else{const i=D[coll].findIndex(r=>r.id===id),row=Object.assign({id},obj);if(i>=0)D[coll][i]=row;else D[coll].push(row);}
+  localSave();onData();
+}
+async function del(coll,id){
+  if(D.mode==="shared"){try{await D.db.doc(coll+"/"+id).delete();}catch(e){writeError(e);}return;}
+  D[coll]=D[coll].filter(r=>r.id!==id);localSave();onData();
+}
+async function connect(){
+  let db=null,user=null;
+  try{if(window.claude&&window.claude.use)[db,user]=await Promise.all([window.claude.use("db"),window.claude.use("user")]);}catch(e){}
+  if(!db){D.mode="local";localLoad();onData(true);return;}
+  D.mode="shared";D.db=db;D.user=user;
+  if(user){D.me=(await user.id())||null;D.admin=await user.canEdit();const cw=await user.can("data.write");D.canWrite=cw!==false;}
+  else{D.me=null;D.admin=false;}
+  COLLS.forEach(c=>db.collection(c).onSnapshot(s=>{D[c]=s.docs.map(d=>Object.assign({id:d.id},clone(d.data())));onData();},e=>console.warn("db",c,e&&e.code)));
+  db.doc("config/settings").onSnapshot(s=>{D.config=Object.assign(clone(DEFAULT_CONFIG),s.exists?clone(s.data()):{});onData();},()=>{});
+  onData(true);
+}
+/* Names are resolved at render time from ids; never stored. */
+async function fillNames(root){
+  const els=[...(root||document).querySelectorAll("[data-uid]")];if(!els.length)return;
+  if(D.mode!=="shared"||!D.user){els.forEach(e=>{e.textContent=e.dataset.uid===D.me?"You":"A colleague";});return;}
+  const ids=[...new Set(els.map(e=>e.dataset.uid).filter(Boolean))];
+  const ps=await D.user.profiles(ids);
+  els.forEach(e=>{const p=ps[e.dataset.uid];e.textContent=p?(p.isMe?"You":(p.name||"A colleague")):"A colleague";});
+}
+const who=id=>id?`<span data-uid="${esc(id)}">…</span>`:"A colleague";
+
+/* Re-render the open view when data arrives, but never while someone is typing. */
+let pendingRender=false,current="home";
+const typing=()=>{const a=document.activeElement;return !!(a&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName)&&a.closest("main"));};
+function onData(force){if(!force&&typing()){pendingRender=true;return;}pendingRender=false;renderCurrent();}
+document.addEventListener("focusout",()=>setTimeout(()=>{if(pendingRender&&!typing())onData();},60));
+
+/* ============================================================
+   Derived numbers used across the portal
+   ============================================================ */
+const cfg=()=>D.config;
+const winHours=w=>num(w.mins)/60*(FREQ[w.freq]?FREQ[w.freq][1]:1);
+const countFactor=()=>Math.max(0,Math.min(100,num(cfg().countPct)))/100;
+const myPerson=()=>D.people.find(p=>p.id===D.me)||{id:D.me,team:"",done:[]};
+function levelOf(id){
+  const p=D.people.find(x=>x.id===id)||{},wins=D.wins.filter(w=>w.by===id).length,shared=D.prompts.some(x=>x.by===id);
+  const checks=[[1,"Pick your team",!!p.team],[2,`Finish all ${LESSONS.length} lessons`,(p.done||[]).length>=LESSONS.length],
+    [3,"Log 3 wins",wins>=3],[4,"Share a prompt with colleagues",shared],[4,"Run a team session, or log 10 wins",!!p.ranSession||wins>=10]];
+  let lvl=0;for(let n=1;n<=4;n++){if(checks.filter(c=>c[0]===n).every(c=>c[2]))lvl=n;else break;}
+  return {lvl,checks,wins};
+}
+function stats(){
+  const c=cfg(),now=Date.now(),d30=now-30*864e5;
+  const real=D.people.filter(p=>p.team);
+  const trained=real.filter(p=>(p.done||[]).length>=LESSONS.length).length;
+  const active=new Set([...D.wins.filter(w=>new Date(w.created).getTime()>d30).map(w=>w.by),...D.people.filter(p=>p.updated&&new Date(p.updated).getTime()>d30).map(p=>p.id)]).size;
+  const reported=D.wins.reduce((a,w)=>a+winHours(w),0),counted=reported*countFactor();
+  const live=D.projects.filter(p=>p.stage==="Live").length;
+  const approvedStages=["Approved","Pilot","Live"];
+  const planned=D.projects.filter(p=>approvedStages.includes(p.stage)).reduce((a,p)=>a+calc(p.brief||{}).counted,0);
+  const realized=D.projects.reduce((a,p)=>a+(p.benefits||[]).reduce((s,r)=>s+num(r.actual),0),0);
+  const champions=real.filter(p=>levelOf(p.id).lvl>=4).length;
+  return {headcount:num(c.headcount)||1,signedIn:real.length,trained,active,reported,counted,value:counted*num(c.rate),live,planned,realized,champions,
+    hasExamples:COLLS.some(k=>D[k].some(r=>r.example))};
+}
 
 /* ============================================================
    Navigation
    ============================================================ */
-const VIEWS=["home","learn","prompts","check","brief"];
+const VIEWS=["home","learn","prompts","projects","value"];
 function go(v,noScroll){
-  if(!VIEWS.includes(v))v="home";
+  if(!VIEWS.includes(v))v="home";current=v;
   VIEWS.forEach(x=>{$("v-"+x).hidden=x!==v;});
   document.querySelectorAll("nav.menu button").forEach(b=>b.setAttribute("aria-current",b.dataset.go===v?"page":"false"));
-  if(v==="home")renderHome();
   try{history.replaceState(null,"","#"+v);}catch(e){}
-  store.set("cp-view",v);
+  store.set("cp3-view",v);renderCurrent();
   if(!noScroll)window.scrollTo(0,0);
 }
+function renderCurrent(){
+  renderBanner();
+  ({home:renderHome,learn:renderLearn,prompts:renderPrompts,projects:renderProjects,value:renderValue})[current]();
+  fillNames($("v-"+current));
+}
 document.addEventListener("click",e=>{const b=e.target.closest("[data-go]");if(!b)return;
-  if(b.dataset.lesson){L.current=b.dataset.lesson;saveL();renderLearn();}go(b.dataset.go);});
-window.addEventListener("hashchange",()=>{const v=location.hash.slice(1);if(VIEWS.includes(v))go(v);});
-
-/* ============================================================
-   Home
-   ============================================================ */
-function renderHome(){
-  const done=LESSONS.filter(l=>L.done[l.id]).length,next=LESSONS.find(l=>!L.done[l.id]);
-  $("homeProgress").innerHTML=`<h3>Your progress</h3>
-    <div><span class="big num">${done}</span><span> of ${LESSONS.length} lessons</span></div>
-    <div class="bar"><i style="width:${done/LESSONS.length*100}%"></i></div>
-    <p>${done===LESSONS.length?"All done. Pick a weekly task and keep it going, or run the team session.":next?`Next up: ${esc(next.title)}.`:""}</p>
-    <div><button class="btn red" type="button" id="homeGo">${done?"Keep going":"Start lesson 1"}</button></div>`;
-  $("homeGo").onclick=()=>{L.current=next?next.id:LESSONS[0].id;saveL();renderLearn();go("learn");};
+  if(b.dataset.lesson){L.current=b.dataset.lesson;saveL();}
+  if(b.dataset.open){PJ.open=b.dataset.open;}
+  go(b.dataset.go);});
+window.addEventListener("hashchange",()=>{const v=location.hash.slice(1);if(VIEWS.includes(v)&&v!==current)go(v);});
+function renderBanner(){
+  let h="";
+  if(D.mode==="local")h=`<div class="banner" style="margin-bottom:20px">You're using a copy of the portal outside claude.ai, so everything you enter stays in this browser. Open the shared link to see and add to the company's data.</div>`;
+  else if(D.mode==="shared"&&!D.canWrite)h=`<div class="banner" style="margin-bottom:20px">You can view the portal but not add to it. Ask a portal admin for Contributor access to log wins and track your progress.</div>`;
+  $("modeBanner").innerHTML=h;
 }
 
 /* ============================================================
-   Learn
+   HOME
    ============================================================ */
-let L=Object.assign({current:LESSONS[0].id,done:{},quiz:{}},store.get("cp-learn",{}));
-const saveL=()=>store.set("cp-learn",L);
+function thisWeek(){const [y,w]=isoWeek(new Date());return {key:y+"-W"+w,c:CHALLENGES[w%CHALLENGES.length]};}
+function renderHome(){
+  const me=myPerson(),lv=levelOf(D.me),s=stats(),wk=thisWeek(),teams=cfg().teams||DEFAULT_TEAMS;
+  const doneWeek=D.wins.some(w=>w.by===D.me&&w.challenge===wk.key);
+  const cp=PROMPTS.find(p=>p.id===wk.c.p);
+  const next=LEVELS[lv.lvl]||null;
+  $("v-home").innerHTML=`
+  ${!me.team&&D.canWrite?`<div class="box" style="border:2px solid var(--red)"><h3>First, which team are you on?</h3>
+    <p class="muted">It lets us show progress by team. Nobody sees individual scores on the dashboard.</p>
+    <div class="row"><select id="teamPick" class="search" style="max-width:320px" aria-label="Your team"><option value="">Choose your team</option>${teams.map(t=>`<option>${esc(t)}</option>`).join("")}</select>
+    <button class="btn red" type="button" id="teamSave">Save</button></div></div>`:""}
+  <div class="welcome">
+    <div class="stack">
+      <div><p class="eyebrow">CONA AI Portal</p><h1 style="margin-top:8px">Get real work done with AI. Show what it's worth.</h1></div>
+      <div class="challenge">
+        <span class="wk">This week's challenge</span>
+        <h3>${esc(wk.c.t)}</h3>
+        <p class="muted">Takes about ${wk.c.mins} minutes on your own work. ${cp?`Use the prompt “${esc(cp.t)}”.`:""}</p>
+        <div class="row">${cp?`<button class="btn dark" type="button" id="chPrompt">Open the prompt</button>`:""}
+          ${doneWeek?`<span class="tag st">Done this week ✓</span>`:D.canWrite?`<button class="btn red" type="button" id="chDone">I did it: log the win</button>`:""}</div>
+      </div>
+      ${D.canWrite?`<div class="box" id="winBox"><h3>Log a win</h3><p class="muted small">Used AI and it saved you time? Log it. Takes 20 seconds, and it's how we show leadership this is worth it.</p>${winFormHTML()}</div>`:""}
+    </div>
+    <div class="stack">
+      <div class="level">
+        <span class="eyebrow" style="color:#ff8a9b">Your level</span>
+        <div class="name">${lv.lvl?`Level ${lv.lvl}: ${LEVELS[lv.lvl-1].name}`:"Not started"}</div>
+        <div class="lv">${LEVELS.map(l=>`<i class="${l.n<=lv.lvl?"on":""}"></i>`).join("")}</div>
+        <p style="color:#cfcfcf;font-size:14px">${lv.lvl?esc(LEVELS[lv.lvl-1].blurb):"Pick your team to get started."}</p>
+        ${next?`<b style="font-size:14px">To reach ${esc(next.name)}:</b><ul>${lv.checks.filter(c=>c[0]===next.n).map(c=>`<li class="${c[2]?"ok":""}">${esc(c[1])}</li>`).join("")}</ul>`
+          :`<p style="font-size:14px">You're a Champion. Thank you. Keep sharing what works.</p>`}
+        <div class="row"><button class="btn red" type="button" data-go="learn">${(me.done||[]).length?"Continue learning":"Start the lessons"}</button></div>
+      </div>
+      <div class="box grey"><h3>Your numbers</h3>
+        <div class="stat"><span>Lessons done</span><b>${(me.done||[]).length} of ${LESSONS.length}</b></div>
+        <div class="stat"><span>Wins logged</span><b>${lv.wins}</b></div>
+        <div class="stat"><span>Time you've got back, per year</span><b>${fmtN(D.wins.filter(w=>w.by===D.me).reduce((a,w)=>a+winHours(w),0))} hrs</b></div>
+      </div>
+    </div>
+  </div>
+  <div class="stack">
+    <div class="row"><h3>Across the company</h3><button class="btn plain push" type="button" data-go="value">See the full picture →</button></div>
+    <div class="pulse">
+      <div><span>People trained</span><b>${fmtN(s.trained)}</b><small>of ${fmtN(s.headcount)} (${Math.round(s.trained/s.headcount*100)}%)</small></div>
+      <div><span>Active in the last 30 days</span><b>${fmtN(s.active)}</b><small>logged a win or a lesson</small></div>
+      <div><span>Hours back a year</span><b>${fmtN(s.counted)}</b><small>from logged wins, counted at ${Math.round(countFactor()*100)}%</small></div>
+      <div><span>AI projects live</span><b>${s.live}</b><small>${D.projects.length} in the register</small></div>
+    </div>
+  </div>
+  <div class="cards4">
+    <button class="door" type="button" data-go="learn"><span class="when">Everyone</span><h3>Learn the basics</h3><p>Six five-minute lessons, a team session plan and a cheat sheet.</p><span class="go">Start learning →</span></button>
+    <button class="door" type="button" data-go="prompts"><span class="when">You have a task in front of you</span><h3>Find a prompt</h3><p>${PROMPTS.length} tested prompts, plus ones your colleagues have shared.</p><span class="go">Browse prompts →</span></button>
+    <button class="door" type="button" data-go="projects"><span class="when">An idea bigger than one person</span><h3>Start a project</h3><p>Check the idea, set the risk tier, write the brief and get it approved, all in one place.</p><span class="go">Go to projects →</span></button>
+    <button class="door" type="button" data-go="value"><span class="when">Leadership</span><h3>See the value</h3><p>Adoption by team, hours returned, project value planned against delivered, and a quarterly report.</p><span class="go">See the value →</span></button>
+  </div>
+  <div class="rules">
+    <div><h4>Use the approved tools</h4><p>Company data only goes into AI tools the company has approved. Not sure? Ask before you paste.</p></div>
+    <div><h4>You own what you send</h4><p>AI writes fluently even when it's wrong. Check facts, numbers and names first.</p></div>
+    <div><h4>Anything customer-facing or about people is a project</h4><p>If AI would touch customers, decisions about people or sensitive data, log it as a project so it gets the right review.</p></div>
+  </div>`;
+  const ts=$("teamSave");if(ts)ts.onclick=async()=>{const t=$("teamPick").value;if(!t){toast("Pick a team first");return;}
+    await put("people",D.me,Object.assign(myPerson(),{team:t,done:myPerson().done||[],updated:new Date().toISOString()}));toast("Thanks. You're at Level 1.");};
+  const chp=$("chPrompt");if(chp)chp.onclick=()=>{PF.open=wk.c.p;PF.text="";PF.role="";go("prompts");setTimeout(()=>{const el=$("p-"+wk.c.p);if(el)el.scrollIntoView({block:"start"});},60);};
+  const chd=$("chDone");if(chd)chd.onclick=()=>{$("w_task").value=wk.c.t;$("w_prompt").value=wk.c.p;$("w_challenge").value=wk.key;$("w_mins").focus();$("winBox").scrollIntoView({block:"center",behavior:"smooth"});};
+  wireWinForm();
+}
+function winFormHTML(){
+  return `<form class="winform" id="winForm" autocomplete="off">
+    <div class="field wide"><label for="w_task">What did you use it for?</label><input id="w_task" required placeholder="e.g. Turned sprint review notes into actions"></div>
+    <div class="field"><label for="w_mins">Minutes saved each time</label><input id="w_mins" inputmode="numeric" required placeholder="e.g. 30"></div>
+    <div class="field"><label for="w_freq">How often?</label><select id="w_freq">${Object.entries(FREQ).map(([k,[l]])=>`<option value="${k}"${k==="weekly"?" selected":""}>${l}</option>`).join("")}</select></div>
+    <div class="field"><label for="w_prompt">Prompt used</label><select id="w_prompt"><option value="">My own / something else</option>${PROMPTS.map(p=>`<option value="${p.id}">${esc(p.t)}</option>`).join("")}</select></div>
+    <div class="field wide"><label for="w_note">Tip for a colleague (optional)</label><input id="w_note" placeholder="What made it work, or what to watch out for"></div>
+    <input type="hidden" id="w_challenge" value="">
+    <div class="wide row"><button class="btn red" type="submit">Log it</button><span class="small muted" id="w_preview"></span></div>
+  </form>`;
+}
+function wireWinForm(){
+  const f=$("winForm");if(!f)return;
+  const prev=()=>{const h=num($("w_mins").value)/60*FREQ[$("w_freq").value][1];$("w_preview").textContent=h?`That's about ${fmtN(h)} hours a year.`:"";};
+  $("w_mins").oninput=prev;$("w_freq").onchange=prev;
+  f.onsubmit=async e=>{e.preventDefault();
+    const task=$("w_task").value.trim(),mins=num($("w_mins").value);
+    if(!task||!mins){toast("Add what you did and the minutes saved");return;}
+    if(mins>600){toast("That's over 10 hours each time. Double-check the minutes.");return;}
+    const w={by:D.me,team:myPerson().team||"",task,mins,freq:$("w_freq").value,prompt:$("w_prompt").value,note:$("w_note").value.trim(),challenge:$("w_challenge").value,created:new Date().toISOString()};
+    try{await put("wins",uid("w"),w);}catch(err){return;}
+    if(!myPerson().updated)await put("people",D.me,Object.assign(myPerson(),{updated:new Date().toISOString()})).catch(()=>{});
+    toast(`Logged. About ${fmtN(winHours(w))} hours a year back.`);f.reset();$("w_preview").textContent="";
+  };
+}
+
+/* ============================================================
+   LEARN (progress is saved to the shared people record)
+   ============================================================ */
+let L=Object.assign({current:LESSONS[0].id,quiz:{}},store.get("cp3-learn",{}));
+const saveL=()=>store.set("cp3-learn",{current:L.current,quiz:L.quiz});
+async function markDone(id){
+  const p=myPerson(),done=new Set(p.done||[]);if(done.has(id))return;done.add(id);
+  try{await put("people",D.me,Object.assign(p,{done:[...done],updated:new Date().toISOString()}));}catch(e){}
+}
 function renderLearn(){
-  const toc=[...LESSONS.map((l,i)=>`<button type="button" data-l="${l.id}" class="${L.done[l.id]?"done":""}" aria-current="${L.current===l.id}"><span class="n">${L.done[l.id]?"✓":i+1}</span><span>${esc(l.title)}</span></button>`),
+  const done=new Set(myPerson().done||[]);
+  const toc=[...LESSONS.map((l,i)=>`<button type="button" data-l="${l.id}" class="${done.has(l.id)?"done":""}" aria-current="${L.current===l.id}"><span class="n">${done.has(l.id)?"✓":i+1}</span><span>${esc(l.title)}</span></button>`),
     `<hr>`,`<button type="button" data-l="session" aria-current="${L.current==="session"}"><span class="n">▶</span><span>Run a 30-minute team session</span></button>`,
     `<button type="button" data-l="cheat" aria-current="${L.current==="cheat"}"><span class="n">≡</span><span>One-page cheat sheet</span></button>`].join("");
-  $("toc").innerHTML=`<span class="lbl">Lessons · ${LESSONS.filter(l=>L.done[l.id]).length} of ${LESSONS.length} done</span>`+toc;
-  $("toc").querySelectorAll("[data-l]").forEach(b=>b.onclick=()=>{L.current=b.dataset.l;saveL();renderLearn();$("v-learn").scrollIntoView();});
+  $("toc").innerHTML=`<span class="lbl">Lessons · ${LESSONS.filter(l=>done.has(l.id)).length} of ${LESSONS.length} done</span>`+toc;
+  $("toc").querySelectorAll("[data-l]").forEach(b=>b.onclick=()=>{L.current=b.dataset.l;saveL();renderLearn();window.scrollTo(0,0);});
   const host=$("lesson");
   if(L.current==="session")return renderSession(host);
   if(L.current==="cheat")return renderCheat(host);
   const i=Math.max(0,LESSONS.findIndex(l=>l.id===L.current)),l=LESSONS[i],ans=L.quiz[l.id];
   host.innerHTML=`
-    <div><p class="eyebrow">Lesson ${i+1} of ${LESSONS.length}</p><h2 style="margin-top:6px">${esc(l.title)}</h2><p class="meta">About ${l.mins} minutes</p></div>
+    <div><p class="eyebrow">Lesson ${i+1} of ${LESSONS.length}</p><h2 style="margin-top:6px">${esc(l.title)}</h2><p class="meta">About ${l.mins} minutes${done.has(l.id)?" · Done ✓":""}</p></div>
     <p class="why">${esc(l.why)}</p>
     <ul class="points">${l.points.map(p=>`<li><span>${p}</span></li>`).join("")}</ul>
     <div class="compare">
@@ -792,26 +1085,32 @@ function renderLearn(){
     </div>
     <div class="lesson-nav">
       ${i>0?`<button class="btn" type="button" id="prevL">← ${esc(LESSONS[i-1].title)}</button>`:"<span></span>"}
-      ${i<LESSONS.length-1?`<button class="btn ${L.done[l.id]?"red":"dark"}" type="button" id="nextL">${L.done[l.id]?"Next lesson":"Skip to next"} →</button>`
+      ${i<LESSONS.length-1?`<button class="btn ${done.has(l.id)?"red":"dark"}" type="button" id="nextL">${done.has(l.id)?"Next lesson":"Skip to next"} →</button>`
         :`<button class="btn red" type="button" id="nextL">Run a session with your team →</button>`}
     </div>`;
-  host.querySelectorAll("[data-a]").forEach(b=>b.onclick=()=>{const a=+b.dataset.a;L.quiz[l.id]=a;
-    if(a===l.quiz.right&&!L.done[l.id]){L.done[l.id]=true;toast(LESSONS.every(x=>L.done[x.id])?"All six lessons done. Nice work.":"Lesson complete");}
-    saveL();renderLearn();});
+  host.querySelectorAll("[data-a]").forEach(b=>b.onclick=async()=>{const a=+b.dataset.a;L.quiz[l.id]=a;saveL();
+    if(a===l.quiz.right&&!done.has(l.id)){
+      if(D.canWrite&&D.me){await markDone(l.id);toast(LESSONS.every(x=>new Set(myPerson().done||[]).has(x.id))?"All six done. You're a Practitioner.":"Lesson complete");}
+      else toast("Correct");}
+    renderLearn();});
   const p=$("prevL");if(p)p.onclick=()=>{L.current=LESSONS[i-1].id;saveL();renderLearn();window.scrollTo(0,0);};
   $("nextL").onclick=()=>{L.current=i<LESSONS.length-1?LESSONS[i+1].id:"session";saveL();renderLearn();window.scrollTo(0,0);};
 }
 function renderSession(host){
-  host.innerHTML=`<div><p class="eyebrow">For team leads</p><h2 style="margin-top:6px">Run a 30-minute session with your team</h2><p class="meta">No slides. Works in person or on Teams.</p></div>
-    <p class="why">The goal is simple: by the end, everyone has used AI on a piece of their own work and picked one weekly task to keep using it on.</p>
+  const ran=!!myPerson().ranSession;
+  host.innerHTML=`<div><p class="eyebrow">For team leads and Champions</p><h2 style="margin-top:6px">Run a 30-minute session with your team</h2><p class="meta">No slides. Works in person or on a call.</p></div>
+    <p class="why">By the end, everyone has used AI on a piece of their own work and picked one weekly task to keep using it on.</p>
     <ol class="plan">${SESSION.map(([t,h,d])=>`<li><span class="t">${t}</span><span><b>${esc(h)}</b>${esc(d)}</span></li>`).join("")}</ol>
     <div class="box grey"><h3>Bring</h3><ul class="points">${SESSION_BRING.map(x=>`<li><span>${esc(x)}</span></li>`).join("")}</ul></div>
     <div class="box"><h3>If someone asks…</h3>
-      <p><b>“Is this going to replace my job?”</b> Be honest about what it's for: the reading and writing that eats everyone's week. It doesn't know our customers, our plants or our history. People do.</p>
+      <p><b>“Is this going to replace my job?”</b> Be honest about what it's for: the reading and writing that eats everyone's week. It doesn't know our customers, our products or our history. People do.</p>
       <p><b>“It got something wrong.”</b> Good, that's the point of practising. Show how to check it and how to tell it what to fix.</p>
-      <p><b>“Can I use it for X?”</b> If X involves personal or sensitive data, check the AI policy first. If it's a whole process, run it through the Idea check.</p></div>
-    <div class="row"><button class="btn dark" type="button" id="copySession">Copy the plan</button><button class="btn" type="button" id="toCheat">See the cheat sheet</button></div>`;
+      <p><b>“Can I use it for X?”</b> If X involves personal or sensitive data, check the AI policy first. If it's a whole process, start a project in the portal.</p></div>
+    <div class="row"><button class="btn dark" type="button" id="copySession">Copy the plan</button>
+      ${D.canWrite?(ran?`<span class="tag st">You've run a session ✓</span>`:`<button class="btn red" type="button" id="ranSession">I ran this with my team</button>`):""}
+      <button class="btn plain" type="button" id="toCheat">See the cheat sheet</button></div>`;
   $("copySession").onclick=()=>copyText("30-MINUTE AI SESSION\n\n"+SESSION.map(([t,h,d])=>`${t}  ${h}\n${d}`).join("\n\n")+"\n\nBRING\n"+SESSION_BRING.map(x=>"- "+x).join("\n"),()=>toast("Plan copied. Paste it into the meeting invite."));
+  const rs=$("ranSession");if(rs)rs.onclick=async()=>{await put("people",D.me,Object.assign(myPerson(),{ranSession:true,updated:new Date().toISOString()})).catch(()=>{});toast("Thanks for running it. That counts towards Champion.");};
   $("toCheat").onclick=()=>{L.current="cheat";saveL();renderLearn();window.scrollTo(0,0);};
 }
 function renderCheat(host){
@@ -822,317 +1121,620 @@ function renderCheat(host){
 }
 
 /* ============================================================
-   Prompt library
+   PROMPTS (library + shared by colleagues)
    ============================================================ */
-let PF={role:"",text:""},openP=null;
+const PF={role:"",text:"",open:null,tab:"library",sharing:false};
 function renderPrompts(){
-  $("pRoles").innerHTML=[["","All functions"],...ROLES.map(r=>[r,r])].map(([v,l])=>`<button class="chip" type="button" data-r="${esc(v)}" aria-pressed="${PF.role===v}">${esc(l)}</button>`).join("");
-  $("pRoles").querySelectorAll("[data-r]").forEach(b=>b.onclick=()=>{PF.role=b.dataset.r;renderPrompts();});
+  const shared=D.prompts.slice().sort((a,b)=>(b.created||"").localeCompare(a.created||""));
   const t=PF.text.toLowerCase();
-  const list=PROMPTS.filter(p=>(!PF.role||p.r.includes(PF.role)||(PF.role!=="Everyone"&&p.r.includes("Everyone")))&&
-    (!t||[p.t,p.what,p.p,p.r.join(" ")].join(" ").toLowerCase().includes(t)))
-    .sort((a,b)=>(b.first||0)-(a.first||0)||["start","build","stretch"].indexOf(a.lvl)-["start","build","stretch"].indexOf(b.lvl));
-  $("pCount").textContent=`Showing ${list.length} of ${PROMPTS.length}. The ones marked "good first try" are easy to check, so they're the best place to start.`;
-  $("plist").innerHTML=list.length?list.map(p=>`<div class="pitem${openP===p.id?" open":""}" id="p-${p.id}">
-    <button type="button" data-p="${p.id}" aria-expanded="${openP===p.id}"><h3>${esc(p.t)}</h3><span class="saves">Saves ${esc(p.save)}</span>
-      <span class="who">${esc(p.r.join(" · "))}${p.lvl==="start"?" · <b style='color:var(--red)'>good first try</b>":""}</span></button>
-    <div class="body"><p class="what">${esc(p.what)}</p>
-      <div class="prompt"><div class="ph"><span>The prompt</span><button class="btn sm dark" type="button" data-copy="${p.id}">Copy prompt</button></div><pre>${hl(p.p)}</pre></div>
-      <div class="checknote"><b>Check</b><span>${esc(p.c)}</span></div></div></div>`).join("")
-    :`<div class="empty">Nothing matches. Try a shorter search, or pick “All functions”.</div>`;
+  const fit=p=>(!PF.role||(p.r||[]).includes(PF.role)||(PF.role!=="Everyone"&&(p.r||[]).includes("Everyone")))&&(!t||[p.t,p.what,p.p,(p.r||[]).join(" ")].join(" ").toLowerCase().includes(t));
+  const lib=PROMPTS.filter(fit).sort((a,b)=>(b.first||0)-(a.first||0)||["start","build","stretch"].indexOf(a.lvl)-["start","build","stretch"].indexOf(b.lvl));
+  const col=shared.map(x=>({id:x.id,t:x.title,r:[x.role||"Everyone"],p:x.prompt,c:x.check,what:x.what||"",by:x.by,example:x.example,created:x.created,shared:true})).filter(fit);
+  const list=PF.tab==="library"?lib:col;
+  $("v-prompts").innerHTML=`
+  <div class="head"><p class="eyebrow">Prompts</p><h2>Copy a prompt, fill in the red parts, paste it into an approved tool.</h2>
+    <p>Each one says roughly how much time it saves and what to check before you trust the answer. Found one that works? Share it.</p></div>
+  <div class="filterbar">
+    <div class="row"><div class="tabs2"><button class="chip" type="button" data-tab="library" aria-pressed="${PF.tab==="library"}">Library (${PROMPTS.length})</button><button class="chip" type="button" data-tab="shared" aria-pressed="${PF.tab==="shared"}">From colleagues (${shared.length})</button></div>
+      ${D.canWrite?`<button class="btn red sm push" type="button" id="shareOpen">Share a prompt</button>`:""}</div>
+    <div id="shareBox"></div>
+    <input class="search" id="pSearch" type="search" placeholder="Search: contract, variance, email, SQL…" aria-label="Search prompts" value="${esc(PF.text)}">
+    <div class="chips">${[["","All functions"],...ROLES.map(r=>[r,r])].map(([v,l])=>`<button class="chip" type="button" data-r="${esc(v)}" aria-pressed="${PF.role===v}">${esc(l)}</button>`).join("")}</div>
+    <p class="small muted">Showing ${list.length}. ${PF.tab==="library"?"The ones marked “good first try” are easy to check, so start there.":"Shared by people here. Check them the same way you'd check any prompt."}</p>
+  </div>
+  <div class="plist">${list.length?list.map(p=>`<div class="pitem${PF.open===p.id?" open":""}" id="p-${esc(p.id)}">
+    <button type="button" data-p="${esc(p.id)}" aria-expanded="${PF.open===p.id}"><h3>${esc(p.t)}</h3><span class="saves">${p.shared?(p.example?'<span class="tag ex">Example</span>':fmtDate(p.created)):"Saves "+esc(p.save)}</span>
+      <span class="who">${esc((p.r||[]).join(" · "))}${p.lvl==="start"?" · <b style='color:var(--red)'>good first try</b>":""}${p.shared?` · shared by ${who(p.by)}`:""}</span></button>
+    <div class="body">${p.what?`<p class="what">${esc(p.what)}</p>`:""}
+      <div class="prompt"><div class="ph"><span>The prompt</span><button class="btn sm dark" type="button" data-copy="${esc(p.id)}">Copy prompt</button></div><pre>${hl(p.p)}</pre></div>
+      ${p.c?`<div class="checknote"><b>Check</b><span>${esc(p.c)}</span></div>`:""}
+      ${p.shared&&(p.by===D.me||D.admin)?`<div><button class="btn sm plain" type="button" data-delp="${esc(p.id)}">Remove this prompt</button></div>`:""}</div></div>`).join("")
+    :`<div class="empty">${PF.tab==="shared"&&!shared.length?"Nobody has shared a prompt yet. Be the first. It counts towards Champion.":"Nothing matches. Try a shorter search, or pick “All functions”."}</div>`}</div>`;
+  const v=$("v-prompts");
+  v.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>{PF.tab=b.dataset.tab;PF.open=null;renderPrompts();fillNames(v);});
+  v.querySelectorAll("[data-r]").forEach(b=>b.onclick=()=>{PF.role=b.dataset.r;renderPrompts();fillNames(v);});
+  $("pSearch").oninput=e=>{PF.text=e.target.value.trim();const pos=e.target.selectionStart;renderPrompts();fillNames(v);const s=$("pSearch");s.focus();s.setSelectionRange(pos,pos);};
+  const so=$("shareOpen");if(so)so.onclick=()=>{PF.sharing=!PF.sharing;renderShare();};
+  renderShare();
+  v.querySelector(".plist").onclick=async e=>{
+    const c=e.target.closest("[data-copy]");
+    if(c){const id=c.dataset.copy,p=PROMPTS.find(x=>x.id===id)||D.prompts.map(x=>({p:x.prompt,id:x.id})).find(x=>x.id===id);
+      copyText(p.p,()=>{c.textContent="Copied";setTimeout(()=>c.textContent="Copy prompt",1500);toast("Copied. Replace the red parts with your details.");});return;}
+    const d=e.target.closest("[data-delp]");if(d){await del("prompts",d.dataset.delp).catch(()=>{});toast("Prompt removed");return;}
+    const o=e.target.closest("[data-p]");if(o){PF.open=PF.open===o.dataset.p?null:o.dataset.p;renderPrompts();fillNames(v);}
+  };
 }
-$("plist").addEventListener("click",e=>{
-  const c=e.target.closest("[data-copy]");
-  if(c){const p=PROMPTS.find(x=>x.id===c.dataset.copy);copyText(p.p,()=>{c.textContent="Copied";setTimeout(()=>c.textContent="Copy prompt",1500);toast("Copied. Replace the red parts with your details.");});return;}
-  const o=e.target.closest("[data-p]");if(o){openP=openP===o.dataset.p?null:o.dataset.p;renderPrompts();}
-});
-$("pSearch").addEventListener("input",e=>{PF.text=e.target.value.trim();renderPrompts();});
-
+function renderShare(){
+  const box=$("shareBox");if(!box)return;
+  if(!PF.sharing){box.innerHTML="";return;}
+  box.innerHTML=`<form class="box" id="shareForm" autocomplete="off"><h3>Share a prompt that worked for you</h3>
+    <div class="grid2"><div class="field"><label for="s_t">What it's for</label><input id="s_t" required placeholder="e.g. Turn a Jira epic into release notes"></div>
+      <div class="field"><label for="s_r">Most useful for</label><select id="s_r">${ROLES.map(r=>`<option${r===(myPerson().team&&ROLES.includes(myPerson().team)?myPerson().team:"Everyone")?" selected":""}>${esc(r)}</option>`).join("")}</select></div></div>
+    <div class="field"><label for="s_p">The prompt</label><span class="hint">Put the parts people should change in [square brackets]. Remove anything confidential.</span><textarea id="s_p" rows="6" required></textarea></div>
+    <div class="field"><label for="s_c">What to check before trusting the answer</label><input id="s_c" placeholder="e.g. Check every ticket number against Jira"></div>
+    <div class="row"><button class="btn red" type="submit">Share it</button><button class="btn plain" type="button" id="s_cancel">Cancel</button></div></form>`;
+  $("s_cancel").onclick=()=>{PF.sharing=false;renderShare();};
+  $("shareForm").onsubmit=async e=>{e.preventDefault();
+    const x={by:D.me,title:$("s_t").value.trim(),role:$("s_r").value,prompt:$("s_p").value.trim(),check:$("s_c").value.trim(),created:new Date().toISOString()};
+    if(!x.title||!x.prompt){toast("Add a title and the prompt");return;}
+    try{await put("prompts",uid("p"),x);}catch(err){return;}
+    PF.sharing=false;PF.tab="shared";toast("Shared. Thank you.");renderPrompts();fillNames($("v-prompts"));};
+}
+</script>
+<script>
+"use strict";
 /* ============================================================
-   Idea check
+   PROJECTS: model
    ============================================================ */
-let IC=Object.assign({task:"",people:"",hours:"",a:{}},store.get("cp-check",{}));
-const saveIC=()=>store.set("cp-check",IC);
-function renderCheckForm(){
-  $("qs").innerHTML=`
-    <div class="grid2">
-      <div class="field" style="grid-column:1/-1"><label for="icTask">The task, in a few words</label><span class="hint">Be specific. “Answering retailer delivery queries” works. “AI in customer care” doesn't.</span>
-        <input id="icTask" value="${esc(IC.task)}" placeholder="e.g. Answering retailer delivery queries"></div>
-      <div class="field"><label for="icPeople">How many people do it?</label><input id="icPeople" inputmode="decimal" value="${esc(IC.people)}" placeholder="e.g. 6"></div>
-      <div class="field"><label for="icHours">Hours each, per week</label><input id="icHours" inputmode="decimal" value="${esc(IC.hours)}" placeholder="e.g. 5"></div>
-    </div>
-    ${IDEA_QS.map((q,i)=>`<div class="qq" role="radiogroup" aria-labelledby="t-${q.id}"><p class="t" id="t-${q.id}"><span>${i+1}</span>${esc(q.q)}</p>
-      <div class="choices">${q.o.map((o,k)=>`<label class="choice${IC.a[q.id]===k?" on":""}"><input type="radio" name="ic-${q.id}" id="ic-${q.id}-${k}" data-q="${q.id}" data-k="${k}"${IC.a[q.id]===k?" checked":""}><span>${esc(o[0])}</span></label>`).join("")}</div></div>`).join("")}
-    <div class="row"><button class="btn plain" type="button" id="icReset">Clear my answers</button><span id="icConfirm"></span></div>`;
-  $("icTask").oninput=e=>{IC.task=e.target.value;saveIC();renderCheckSide();};
-  $("icPeople").oninput=e=>{IC.people=e.target.value;saveIC();renderCheckSide();};
-  $("icHours").oninput=e=>{IC.hours=e.target.value;saveIC();renderCheckSide();};
-  $("qs").querySelectorAll("[data-q]").forEach(r=>r.onchange=()=>{IC.a[r.dataset.q]=+r.dataset.k;
-    r.closest(".choices").querySelectorAll(".choice").forEach(c=>c.classList.toggle("on",c.contains(r)));saveIC();renderCheckSide();});
-  $("icReset").onclick=()=>{$("icConfirm").innerHTML=`<span class="confirm">Clear everything? <button class="btn sm" type="button" id="icYes">Clear</button><button class="btn sm plain" type="button" id="icNo">Keep</button></span>`;
-    $("icYes").onclick=()=>{IC={task:"",people:"",hours:"",a:{}};saveIC();renderCheckForm();};$("icNo").onclick=()=>{$("icConfirm").innerHTML="";};};
-  renderCheckSide();
-}
-function ideaResult(){
-  const g=id=>{const q=IDEA_QS.find(x=>x.id===id),k=IC.a[id];return k==null?null:q.o[k][1];};
-  const picked=IDEA_QS.filter(q=>IC.a[q.id]!=null).map(q=>({q,o:q.o[IC.a[q.id]]}));
-  const hoursYr=num(IC.people)*num(IC.hours)*46;
-  const answered=picked.length,total=IDEA_QS.length;
-  let v;
-  if(picked.some(p=>p.o[3]))v="blocked";
-  else if(g("own")===0)v="own";
-  else if(g("rules")===0||g("words")===0)v="automate";
-  else if([g("input"),g("spot"),g("owner")].includes(0)||picked.filter(p=>p.o[1]===1).length>=4)v="notyet";
-  else if(g("often")===0||(hoursYr>0&&hoursYr<150))v="small";
-  else v="pilot";
-  const issues=picked.filter(p=>p.o[2]).sort((a,b)=>a.o[1]-b.o[1]).map(p=>p.o[2]);
-  if(hoursYr>0&&hoursYr<150)issues.push(`About ${Math.round(hoursYr)} hours a year across everyone. Building, testing and looking after a tool usually costs more than that.`);
-  return {v,issues,hoursYr,answered,total,complete:answered===total&&hoursYr>0};
-}
-function renderCheckSide(){
-  const r=ideaResult(),V=VERDICT_TEXT[r.v];
-  if(r.answered<3){$("checkSide").innerHTML=`<div class="verdict"><span class="lbl">Answer a few questions</span><h3>Your answer shows up here</h3><p>It updates as you go. Most people finish in about five minutes.</p></div>
-    <p class="small muted">${r.answered} of ${r.total} answered</p>`;return;}
-  $("checkSide").innerHTML=`<div class="verdict ${V.cls}"><span class="lbl">${r.complete?V.lbl:"Leaning towards"}</span><h3>${V.h}</h3><p>${V.p}</p></div>
-    ${r.issues.length?`<div class="box"><h3>What's holding it back</h3><ul class="reasons">${r.issues.map(x=>`<li><span>${esc(x)}</span></li>`).join("")}</ul></div>`:""}
-    <div class="stat"><span>Answered</span><b>${r.answered} of ${r.total}</b></div>
-    <div class="stat"><span>Time spent on it now</span><b>${r.hoursYr?Math.round(r.hoursYr).toLocaleString()+" hrs/yr":"add people and hours"}</b></div>
-    ${r.complete&&(r.v==="pilot"||r.v==="automate")?`<button class="btn red" type="button" id="toBrief">Turn this into an exec brief →</button>`:""}
-    ${r.complete?`<button class="btn" type="button" id="copyCheck">Copy the result</button>`:""}`;
-  const tb=$("toBrief");if(tb)tb.onclick=()=>{
-    const b=BLANK_BRIEF();b.title=IC.task;b.decision=r.v==="pilot"?"Approve a pilot":"Approve funding";
-    b.problem=`${IC.people} people spend about ${IC.hours} hours a week each on ${IC.task.toLowerCase()||"this task"}, around ${Math.round(r.hoursYr).toLocaleString()} hours a year.`;
-    b.timeSaved=true;B.list.unshift(b);B.active=b.id;saveB();renderBrief();go("brief");toast("Brief started. Fill in the rest on the left.");};
-  const cc=$("copyCheck");if(cc)cc.onclick=()=>copyText(`IDEA CHECK: ${IC.task||"Untitled task"}\nVerdict: ${V.h}\n${V.p}\n\nTime spent now: about ${Math.round(r.hoursYr).toLocaleString()} hours a year\n${r.issues.length?"\nWhat's holding it back:\n"+r.issues.map(x=>"- "+x).join("\n"):""}`,()=>toast("Result copied"));
-}
-
-/* ============================================================
-   Exec brief
-   ============================================================ */
-let B={list:store.get("cp-briefs",null),active:store.get("cp-brief-active",null),confirm:false};
-if(!Array.isArray(B.list)||!B.list.length)B.list=[JSON.parse(JSON.stringify(EXAMPLE_BRIEF))];
-if(!B.list.find(b=>b.id===B.active))B.active=B.list[0].id;
-const saveB=()=>{store.set("cp-briefs",B.list);store.set("cp-brief-active",B.active);};
-const cur=()=>B.list.find(b=>b.id===B.active);
+const BRIEF_BLANK=()=>({decision:"Approve a pilot",decideBy:"",ask:"",problem:"",plan:"",ifnot:"",once:0,running:0,benefit:0,basis:"",conf:"Medium",
+  timeSaved:false,timeGoes:"",startMonth:3,milestones:[["",""],["",""]],risks:[["",""]],success:""});
+const PROJECT_BLANK=()=>({title:"",team:"",sponsor:"",by:D.me,created:new Date().toISOString(),stage:"Idea",
+  intake:{people:"",hours:"",a:{}},risk:{},brief:BRIEF_BLANK(),
+  pilot:{passMark:"",start:"",end:"",result:"",actual:""},controls:{oversight:"",monitoring:"",switchoff:""},
+  signoff:{privacy:"",privacyDate:"",legal:"",legalDate:"",security:"",securityDate:""},
+  benefits:[],review:{worked:"",didnt:"",lessons:"",rec:"",date:""},history:[]});
+function deepFill(t,d){for(const k in d){if(t[k]==null)t[k]=clone(d[k]);else if(d[k]&&typeof d[k]==="object"&&!Array.isArray(d[k])&&typeof t[k]==="object")deepFill(t[k],d[k]);}return t;}
+const normProject=p=>deepFill(p,PROJECT_BLANK());
 
 function calc(b){
-  const factor=CONF_LEVELS[b.conf][0], counted=num(b.benefit)*factor, running=num(b.running), once=num(b.once);
-  const start=Math.min(36,Math.max(1,Math.round(num(b.startMonth))||1)), live=37-start;
-  const monthly=(counted-running)/12;
-  const net3=monthly*live-once;
+  b=b||{};const factor=(CONF_LEVELS[b.conf]||CONF_LEVELS.Medium)[0],counted=num(b.benefit)*factor,running=num(b.running),once=num(b.once);
+  const start=Math.min(36,Math.max(1,Math.round(num(b.startMonth))||1)),live=37-start,monthly=(counted-running)/12,net3=monthly*live-once;
   let payback=null;if(monthly>0){const m=start-1+Math.ceil(once/monthly);payback=m<=36?m:null;}
-  return {factor,counted,running,once,start,net3,payback,monthly};
+  return {factor,counted,running,once,start,net3,payback};
 }
 const sentences=t=>(t||"").split(/(?<=[.!?])\s+/).filter(s=>s.trim());
 const words=t=>((t||"").match(/\b[\w'’-]+\b/g)||[]).length;
 const hasNum=t=>/\d/.test(t||"");
+const briefObj=p=>Object.assign({},p.brief,{title:p.title,author:p.team,sponsor:p.sponsor});
 function review(b){
-  const all=[b.ask,b.problem,b.plan,b.ifnot,b.basis,b.success,...b.risks.flat(),...b.milestones.map(m=>m[0])].join(" ");
-  const wc=words(all), longS=[b.ask,b.problem,b.plan,b.ifnot].flatMap(sentences).filter(s=>words(s)>30);
-  const low=" "+all.toLowerCase().replace(/[^a-z\s-]/g," ")+" ";
-  const jargon=[...new Set(JARGON.filter(j=>low.includes(" "+j+" ")))];
-  const c=calc(b);
-  const items=[
-    [!!b.title.trim()&&!!b.ask.trim(),"The ask is written",b.ask.trim()?"":"Write the ask as one sentence: what you want them to approve, and for how much."],
-    [sentences(b.ask).length<=1&&hasNum(b.ask),"The ask is one sentence with a number in it","Execs decide faster on “approve $85k for a 12-week pilot” than on a paragraph. Put the amount or the scale in the ask."],
-    [hasNum(b.problem),"The problem has a number in it","Say how big the problem is: hours, dollars, days, complaints. Without a number it's an opinion."],
-    [!!b.ifnot.trim(),"You've said what happens if we don't","Execs always ask “what if we do nothing?” Answer it before they do."],
-    [num(b.benefit)===0||b.basis.trim().length>10,"The benefit says how you know","Add where the benefit number comes from: a trial, a measurement, a vendor figure. That's the first thing they'll ask."],
-    [!b.timeSaved||b.timeGoes.trim().length>5,"Freed-up time has somewhere to go","You've counted time saved as a benefit. Say what that time will be used for, or an exec will (rightly) treat it as zero."],
-    [b.risks.some(r=>r[0].trim()),"At least one risk is named","A brief with no risks reads as a sales pitch. Name the main one and what you'll do about it."],
-    [!!b.success.trim(),"You've said how you'll know it worked","Give one or two measures you'll report back on."],
-    [!!b.author.trim()&&!!b.sponsor.trim(),"Owner and sponsor are named","Say who's accountable and who's backing it."],
+  const all=[b.ask,b.problem,b.plan,b.ifnot,b.basis,b.success,...(b.risks||[]).flat(),...(b.milestones||[]).map(m=>m[0])].join(" ");
+  const wc=words(all),longS=[b.ask,b.problem,b.plan,b.ifnot].flatMap(sentences).filter(s=>words(s)>30);
+  const low=" "+all.toLowerCase().replace(/[^a-z\s-]/g," ")+" ",jargon=[...new Set(JARGON.filter(j=>low.includes(" "+j+" ")))];
+  return [
+    [!!(b.ask||"").trim(),"The ask is written","Write the ask as one sentence: what you want approved, and for how much."],
+    [sentences(b.ask).length<=1&&hasNum(b.ask),"The ask is one sentence with a number","Execs decide faster on “approve $85k for a 12-week pilot” than on a paragraph."],
+    [hasNum(b.problem),"The problem has a number in it","Say how big the problem is: hours, dollars, days, tickets. Without a number it's an opinion."],
+    [!!(b.ifnot||"").trim(),"You've said what happens if we don't","Execs always ask “what if we do nothing?” Answer it first."],
+    [num(b.benefit)===0?false:(b.basis||"").trim().length>10,"The benefit has a number and a source","Add the yearly benefit and where it comes from: a trial, a measurement, a quote."],
+    [!b.timeSaved||(b.timeGoes||"").trim().length>5,"Freed-up time has somewhere to go","You've counted time saved. Say what that time will be used for, or treat it as zero."],
+    [(b.risks||[]).some(r=>r[0].trim()),"At least one risk is named","A brief with no risks reads like a sales pitch."],
+    [!!(b.success||"").trim(),"You've said how you'll know it worked","Give one or two measures you'll report back on."],
+    [!!(b.author||"").trim()&&!!(b.sponsor||"").trim(),"Owner and sponsor are named","Set the team and the exec sponsor at the top of the project."],
     [jargon.length===0,"No buzzwords",`Swap these for plain words: ${jargon.join(", ")}.`],
-    [longS.length===0,"Sentences are short enough",`${longS.length} sentence${longS.length===1?" is":"s are"} over 30 words. Split ${longS.length===1?"it":"them"} in two.`],
-    [wc<=450,"Fits on one page",`About ${wc} words. Aim for under 450 so it fits on one page.`]
+    [longS.length===0,"Sentences are short enough",`${longS.length} sentence${longS.length===1?" is":"s are"} over 30 words. Split ${longS.length===1?"it":"them"}.`],
+    [wc<=450,"Fits on one page",`About ${wc} words. Aim for under 450.`]
   ];
-  return {items,wc,c};
+}
+function ideaResult(ic){
+  const a=ic.a||{},g=id=>{const q=IDEA_QS.find(x=>x.id===id),k=a[id];return k==null?null:q.o[k][1];};
+  const picked=IDEA_QS.filter(q=>a[q.id]!=null).map(q=>({q,o:q.o[a[q.id]]}));
+  const hoursYr=num(ic.people)*num(ic.hours)*46;let v;
+  if(picked.some(p=>p.o[3]))v="blocked";else if(g("own")===0)v="own";else if(g("rules")===0||g("words")===0)v="automate";
+  else if([g("input"),g("spot"),g("owner")].includes(0)||picked.filter(p=>p.o[1]===1).length>=4)v="notyet";
+  else if(g("often")===0||(hoursYr>0&&hoursYr<150))v="small";else v="pilot";
+  const issues=picked.filter(p=>p.o[2]).sort((x,y)=>x.o[1]-y.o[1]).map(p=>p.o[2]);
+  if(hoursYr>0&&hoursYr<150)issues.push(`About ${Math.round(hoursYr)} hours a year. Building and looking after a tool usually costs more than that.`);
+  return {v,issues,hoursYr,answered:picked.length,complete:picked.length===IDEA_QS.length&&hoursYr>0};
+}
+function tierOf(p){const yes=RISK_QS.filter(q=>p.risk[q.id]===true);
+  return {tier:Math.max(1,...yes.map(q=>q.tier)),yes,complete:RISK_QS.every(q=>p.risk[q.id]!=null)};}
+function pstatus(p){
+  const ap=D.approvals.find(a=>a.id===p.id),t=tierOf(p),ir=ideaResult(p.intake),rv=review(briefObj(p));
+  const done={intake:ir.complete,risk:t.complete,brief:[0,2,4,5,6,7,8].every(i=>rv[i][0]),
+    approval:!!ap&&(ap.decision==="approved"||ap.decision==="conditions"),
+    pilot:!!p.pilot.passMark.trim()&&!!p.pilot.result,controls:!!p.controls.oversight.trim()&&!!p.controls.monitoring.trim(),
+    signoff:!!(p.signoff.privacy.trim()&&p.signoff.privacyDate&&p.signoff.legal.trim()&&p.signoff.legalDate),
+    benefits:p.benefits.some(r=>num(r.actual)>0),review:!!p.review.rec&&!!p.review.worked.trim()};
+  const required=ARTIFACTS.filter(a=>a[2]<=t.tier).map(a=>a[0]);
+  return {ap,t,ir,rv,done,required};
+}
+function gate(p,st){
+  switch(p.stage){
+    case "Idea":return {to:"Assessed",needs:[["Intake and idea check complete",st.done.intake],["Risk questions answered",st.done.risk]]};
+    case "Assessed":return {to:"Awaiting approval",needs:[["Exec brief complete (see the brief check)",st.done.brief]]};
+    case "Awaiting approval":return {to:null,wait:`Waiting for ${TIERS[st.t.tier].who} to record a decision.`};
+    case "Approved":return st.t.tier>=2?{to:"Pilot",needs:[["Pilot pass mark written down before starting",!!p.pilot.passMark.trim()],["Pilot start date set",!!p.pilot.start],["Oversight and monitoring described",st.done.controls]]}
+      :{to:"Live",needs:[["Approval recorded",st.done.approval]]};
+    case "Pilot":{const n=[["Pilot result recorded as a pass",p.pilot.result==="pass"],["Oversight and monitoring described",st.done.controls]];
+      if(st.t.tier>=3)n.push(["Privacy and legal sign-off recorded",st.done.signoff]);return {to:"Live",needs:n};}
+    case "Live":return {to:"Closed",needs:[["Post-launch review done",st.done.review]]};
+    default:return {to:null,wait:"This project is closed."};
+  }
+}
+function nextStep(p,st){const g=gate(p,st);if(!g.to)return g.wait;const miss=g.needs.find(n=>!n[1]);return miss?miss[0].replace(/ complete.*| answered| done| set| recorded.*| described| written down before starting/,"")+(miss?" needed":""):`Ready to move to ${g.to}`;}
+const addHist=(p,what)=>{p.history=p.history||[];p.history.push({at:new Date().toISOString(),by:D.me,what});};
+
+/* ============================================================
+   PROJECTS: register
+   ============================================================ */
+const PJ={open:null,filter:"active",creating:false,draft:null,dirty:false,timer:null,saving:Promise.resolve(),confirmDel:false};
+function renderProjects(){if(PJ.open&&D.projects.find(p=>p.id===PJ.open))return renderProject();PJ.open=null;renderRegister();}
+function renderRegister(){
+  const F={active:p=>!["Live","Closed"].includes(p.stage),live:p=>p.stage==="Live",closed:p=>p.stage==="Closed",all:()=>true};
+  const rows=D.projects.map(p=>normProject(clone(p))).filter(F[PJ.filter]).sort((a,b)=>STAGES.indexOf(b.stage)-STAGES.indexOf(a.stage)||(a.title||"").localeCompare(b.title||""));
+  const count=k=>D.projects.filter(F[k]).length;
+  $("v-projects").innerHTML=`
+  <div class="head"><p class="eyebrow">Projects</p><h2>Every AI project, from idea to proven value.</h2>
+    <p>Each project carries its own paperwork: the idea check, a risk tier, the exec brief, the approval record, pilot results and benefits tracking. The risk tier decides how much of it you need.</p></div>
+  <div class="row">${D.canWrite?`<button class="btn red" type="button" id="newProj">Start a project</button>`:""}
+    <div class="tabs2">${[["active","In progress"],["live","Live"],["closed","Closed"],["all","All"]].map(([k,l])=>`<button class="chip" type="button" data-f="${k}" aria-pressed="${PJ.filter===k}">${l} (${count(k)})</button>`).join("")}</div></div>
+  ${PJ.creating?`<form class="box" id="newForm" autocomplete="off"><h3>Start a project</h3>
+    <div class="grid2"><div class="field"><label for="n_t">Project name</label><input id="n_t" required placeholder="e.g. AI first drafts for support replies"></div>
+    <div class="field"><label for="n_team">Owning team</label><select id="n_team">${(cfg().teams||DEFAULT_TEAMS).map(t=>`<option${t===myPerson().team?" selected":""}>${esc(t)}</option>`).join("")}</select></div></div>
+    <div class="row"><button class="btn red" type="submit">Create it</button><button class="btn plain" type="button" id="n_cancel">Cancel</button></div></form>`:""}
+  <div class="scroll"><table class="reg"><thead><tr><th>Project</th><th>Stage</th><th>Risk</th><th class="r">Benefit / yr</th><th class="r">Delivered</th><th>Next step</th></tr></thead><tbody>
+    ${rows.length?rows.map(p=>{const st=pstatus(p),c=calc(p.brief),real=p.benefits.reduce((a,r)=>a+num(r.actual),0);
+      return `<tr class="click" data-go="projects" data-open="${esc(p.id)}" tabindex="0"><td><span class="pt">${esc(p.title||"Untitled project")}</span>${p.example?' <span class="tag ex">Example</span>':""}<br><span class="small muted">${esc(p.team||"No team")}</span></td>
+      <td><span class="tag st">${esc(p.stage)}</span></td><td>${st.t.complete?`<span class="tag t${st.t.tier}">Tier ${st.t.tier}</span>`:'<span class="small muted">Not set</span>'}</td>
+      <td class="r">${c.counted?short$(c.counted):"–"}</td><td class="r">${real?short$(real):"–"}</td><td class="small">${esc(nextStep(p,st))}</td></tr>`;}).join("")
+    :`<tr><td colspan="6"><div class="empty" style="border:0">${PJ.filter==="active"?"No projects in progress. Start one when an idea is bigger than one person's prompt.":"Nothing here yet."}</div></td></tr>`}
+  </tbody></table></div>
+  <details class="more"><summary>How project governance works</summary><div>
+    <p>Every project moves through the same stages: ${STAGES.map(esc).join(" → ")}. You can't skip a stage until its paperwork is done, and only the AI review board can record an approval.</p>
+    <div class="cheat">${[1,2,3].map(n=>`<div class="box"><span class="tag t${n}" style="align-self:flex-start">${esc(TIERS[n].name)}</span><p class="small">${esc(TIERS[n].blurb)}</p><p class="small"><b>Approved by:</b> ${esc(TIERS[n].who)}</p>
+      <p class="small"><b>Needs:</b> ${ARTIFACTS.filter(a=>a[2]<=n).map(a=>esc(a[1])).join(", ")}</p></div>`).join("")}</div>
+    <p class="small muted">The tier comes from seven yes/no questions in each project. The highest “yes” sets it.</p></div></details>`;
+  const v=$("v-projects");
+  v.querySelectorAll("[data-f]").forEach(b=>b.onclick=()=>{PJ.filter=b.dataset.f;renderRegister();});
+  v.querySelectorAll("tr.click").forEach(r=>r.onkeydown=e=>{if(e.key==="Enter"){PJ.open=r.dataset.open;renderProjects();}});
+  const np=$("newProj");if(np)np.onclick=()=>{PJ.creating=true;renderRegister();$("n_t").focus();};
+  const nc=$("n_cancel");if(nc)nc.onclick=()=>{PJ.creating=false;renderRegister();};
+  const nf=$("newForm");if(nf)nf.onsubmit=async e=>{e.preventDefault();const t=$("n_t").value.trim();if(!t)return;
+    const p=PROJECT_BLANK();p.title=t;p.team=$("n_team").value;addHist(p,"Project created");const id=uid("pr");
+    try{await put("projects",id,p);}catch(err){return;}
+    PJ.creating=false;PJ.open=id;PJ.draft=null;PJ.dirty=false;renderProjects();fillNames(v);window.scrollTo(0,0);toast("Project created. Start with the intake.");};
 }
 
-function renderBriefTop(){
-  $("briefsTop").innerHTML=`<label class="small" for="bPick"><b>Your briefs</b></label>
-    <select id="bPick">${B.list.map(b=>`<option value="${esc(b.id)}"${b.id===B.active?" selected":""}>${esc(b.title||"Untitled brief")}${b.example?" (example)":""}</option>`).join("")}</select>
-    <button class="btn sm red" type="button" id="bNew">New brief</button>
-    <button class="btn sm" type="button" id="bDup">Duplicate</button>
-    <button class="btn sm" type="button" id="bOpen">Open a saved file</button><input type="file" id="bFile" accept=".json" hidden>
-    <button class="btn sm plain" type="button" id="bDel">Delete</button><span id="bConfirm"></span>`;
-  $("bPick").onchange=e=>{B.active=e.target.value;saveB();renderBrief();};
-  $("bNew").onclick=()=>{const b=BLANK_BRIEF();B.list.unshift(b);B.active=b.id;saveB();renderBrief();$("f_title").focus();};
-  $("bDup").onclick=()=>{const b=JSON.parse(JSON.stringify(cur()));b.id=uid();b.example=false;b.title=(b.title||"Untitled brief")+" (copy)";B.list.unshift(b);B.active=b.id;saveB();renderBrief();toast("Duplicated");};
-  $("bOpen").onclick=()=>$("bFile").click();
-  $("bFile").onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();
-    r.onload=()=>{try{const d=JSON.parse(r.result),b=Object.assign(BLANK_BRIEF(),d.brief||d);if(typeof b.ask!=="string")throw 0;
-      b.id=uid();b.example=false;B.list.unshift(b);B.active=b.id;saveB();renderBrief();toast("Brief opened");}catch(err){toast("That file isn't a brief saved from this portal");}};
-    r.readAsText(f);e.target.value="";};
-  $("bDel").onclick=()=>{$("bConfirm").innerHTML=`<span class="confirm">Delete this brief? <button class="btn sm" type="button" id="bYes">Delete</button><button class="btn sm plain" type="button" id="bNo">Keep</button></span>`;
-    $("bYes").onclick=()=>{B.list=B.list.filter(x=>x.id!==B.active);if(!B.list.length)B.list=[BLANK_BRIEF()];B.active=B.list[0].id;saveB();renderBrief();toast("Brief deleted");};
-    $("bNo").onclick=()=>{$("bConfirm").innerHTML="";};};
+/* ============================================================
+   PROJECTS: detail (one editable draft, saved after a pause)
+   ============================================================ */
+function draft(){
+  if(PJ.draft&&PJ.draft.id===PJ.open&&PJ.dirty)return PJ.draft;
+  const p=D.projects.find(x=>x.id===PJ.open);if(!p)return null;
+  PJ.draft=normProject(clone(p));return PJ.draft;
 }
-const F=(id,label,val,o)=>{o=o||{};const hint=o.hint?`<span class="hint">${o.hint}</span>`:"";
-  const inp=o.area?`<textarea id="f_${id}" data-b="${id}" rows="${o.rows||3}" placeholder="${esc(o.ph||"")}">${esc(val)}</textarea>`
-   :o.select?`<select id="f_${id}" data-b="${id}">${o.select.map(x=>`<option${x===val?" selected":""}>${esc(x)}</option>`).join("")}</select>`
-   :`<input id="f_${id}" data-b="${id}" value="${esc(o.money&&num(val)?money(val):val)}" placeholder="${esc(o.ph||"")}"${o.money?' inputmode="decimal" data-money="1"':""}${o.type?` type="${o.type}"`:""}>`;
-  return `<div class="field${o.wide?" wide":""}"${o.wide?' style="grid-column:1/-1"':""}><label for="f_${id}">${label}</label>${hint}${inp}</div>`;};
-function renderForm(){
-  const b=cur();
-  $("bform").innerHTML=`
-  <section><h3><span>1</span>The ask</h3>
-    ${F("title","Project name",b.title,{ph:"e.g. AI drafts for customer care email"})}
-    ${F("ask","What are you asking them to approve?",b.ask,{area:1,rows:2,hint:"One sentence. Include the amount or the scale.",ph:"Approve a 12-week pilot with 15 agents, costing $85,000, to…"})}
-    <div class="grid2">${F("decision","Type of decision",b.decision,{select:DECISIONS})}${F("decideBy","Decision needed by",b.decideBy,{type:"date"})}
-      ${F("author","Owner",b.author,{ph:"Team or person"})}${F("sponsor","Executive sponsor",b.sponsor,{ph:"e.g. VP Customer Service"})}</div>
-  </section>
-  <section><h3><span>2</span>The problem and the plan</h3>
-    ${F("problem","What's the problem today?",b.problem,{area:1,hint:"Who feels it, and how big it is. Use a number.",ph:"Agents spend about 40% of their day on email replies…"})}
-    ${F("plan","What will we do?",b.plan,{area:1,hint:"Two or three sentences. Say what changes for people, not how the technology works.",ph:"Use the drafting feature we already license…"})}
-    ${F("ifnot","What happens if we don't?",b.ifnot,{area:1,rows:2,ph:"Response times keep slipping as volume grows…"})}
-  </section>
-  <section><h3><span>3</span>The numbers</h3>
-    <div class="moneyrow">${F("once","One-time cost",b.once,{money:1,ph:"$0"})}${F("running","Running cost per year",b.running,{money:1,ph:"$0"})}${F("benefit","Benefit per year",b.benefit,{money:1,ph:"$0"})}</div>
-    ${F("basis","How do you know the benefit?",b.basis,{area:1,rows:2,hint:"A trial, a measurement, a quote, a benchmark. Be honest.",ph:"4-week trial with 6 agents: handle time fell 22%…"})}
-    <div class="grid2">
-      <div class="field"><label for="f_conf">How sure are you about the benefit?</label><select id="f_conf" data-b="conf">${Object.entries(CONF_LEVELS).map(([k,[f,t]])=>`<option value="${k}"${b.conf===k?" selected":""}>${k}: ${t}</option>`).join("")}</select>
-        <span class="hint">Medium counts 75% of the benefit, Low counts 50%. Being upfront about this builds trust.</span></div>
-      ${F("startMonth","Benefits start in month",b.startMonth,{hint:"Months from approval until it's live.",ph:"3"})}
-    </div>
-    <label class="choice${b.timeSaved?" on":""}" style="max-width:none"><input type="checkbox" id="f_timeSaved" data-b="timeSaved"${b.timeSaved?" checked":""}><span>Some of the benefit is <b>time saved</b> (people's hours freed up)</span></label>
-    ${b.timeSaved?F("timeGoes","Where will that time go?",b.timeGoes,{area:1,rows:2,hint:"Hires you won't need, overtime that stops, or named work people will move to. If the time just gets absorbed, it isn't a saving.",ph:"Four planned hires not needed; the rest goes to…"}):""}
-  </section>
-  <section><h3><span>4</span>Timeline</h3>
-    ${b.milestones.map((m,i)=>`<div class="minirow"><input data-ms="${i}" data-k="0" id="ms${i}a" value="${esc(m[0])}" placeholder="Milestone" aria-label="Milestone"><input data-ms="${i}" data-k="1" id="ms${i}b" value="${esc(m[1])}" placeholder="When" aria-label="When"><button class="x" type="button" data-rmms="${i}" aria-label="Remove milestone">×</button></div>`).join("")}
-    ${b.milestones.length<6?`<div><button class="btn sm" type="button" id="addMs">Add a milestone</button></div>`:""}
-  </section>
-  <section><h3><span>5</span>Risks</h3>
-    ${b.risks.map((r,i)=>`<div class="minirow r3"><input data-rk="${i}" data-k="0" id="rk${i}a" value="${esc(r[0])}" placeholder="What could go wrong" aria-label="Risk"><input data-rk="${i}" data-k="1" id="rk${i}b" value="${esc(r[1])}" placeholder="What we'll do about it" aria-label="Mitigation"><button class="x" type="button" data-rmrk="${i}" aria-label="Remove risk">×</button></div>`).join("")}
-    ${b.risks.length<5?`<div><button class="btn sm" type="button" id="addRk">Add a risk</button></div>`:""}
-  </section>
-  <section><h3><span>6</span>How we'll know it worked</h3>
-    ${F("success","One or two measures you'll report back on",b.success,{area:1,rows:2,ph:"First-response time under 4 hours, quality scores the same or better."})}
-  </section>`;
+function saveSoon(){PJ.dirty=true;clearTimeout(PJ.timer);PJ.timer=setTimeout(flush,900);}
+function flush(){
+  clearTimeout(PJ.timer);if(!PJ.dirty||!PJ.draft)return PJ.saving;
+  const snap=clone(PJ.draft);PJ.draft.example=false;snap.example=false;
+  PJ.saving=PJ.saving.then(()=>put("projects",snap.id,snap)).then(()=>{if(PJ.draft&&PJ.draft.id===snap.id&&JSON.stringify(PJ.draft)===JSON.stringify(snap))PJ.dirty=false;}).catch(()=>{});
+  return PJ.saving;
 }
-function renderPaper(){
-  const b=cur(),c=calc(b);
-  const T=(v,ph)=>v&&String(v).trim()?esc(v):`<span class="blank">${ph}</span>`;
-  const ms=b.milestones.filter(m=>m[0].trim()),rk=b.risks.filter(r=>r[0].trim());
+const getPath=(o,path)=>path.split(".").reduce((a,k)=>a==null?a:a[k],o);
+function setPath(o,path,v){const ks=path.split(".");let t=o;ks.slice(0,-1).forEach(k=>{if(t[k]==null||typeof t[k]!=="object")t[k]={};t=t[k];});t[ks[ks.length-1]]=v;}
+function inp(path,label,o){o=o||{};const p=PJ.draft,val=getPath(p,path)??"",dis=D.canWrite?"":" disabled";
+  const id="k_"+path.replace(/\./g,"_"),hint=o.hint?`<span class="hint">${o.hint}</span>`:"";
+  const el=o.area?`<textarea id="${id}" data-k="${path}" rows="${o.rows||3}" placeholder="${esc(o.ph||"")}"${dis}>${esc(val)}</textarea>`
+   :o.select?`<select id="${id}" data-k="${path}"${dis}>${o.select.map(([v,l])=>`<option value="${esc(v)}"${String(v)===String(val)?" selected":""}>${esc(l)}</option>`).join("")}</select>`
+   :`<input id="${id}" data-k="${path}" value="${esc(o.money&&num(val)?money(val):val)}" placeholder="${esc(o.ph||"")}"${o.money?' inputmode="decimal" data-money="1"':""}${o.type?` type="${o.type}"`:""}${dis}>`;
+  return `<div class="field"${o.wide?' style="grid-column:1/-1"':""}><label for="${id}">${label}</label>${hint}${el}</div>`;}
+
+function renderProject(){
+  const p=draft();if(!p){PJ.open=null;return renderRegister();}
+  const st=pstatus(p),t=st.t,g=gate(p,st),si=STAGES.indexOf(p.stage);
+  const need=k=>st.required.includes(k);
+  const secs=ARTIFACTS.map(([k,l,min])=>`<a href="#a-${k}" class="${st.done[k]?"ok":need(k)?"req":"na"}"><span class="c">${st.done[k]?"✓":""}</span><span>${esc(l)}${need(k)?"":" <small class='muted'>(optional)</small>"}</span></a>`).join("");
+  $("v-projects").innerHTML=`
+  <div class="row"><button class="btn plain" type="button" id="backReg">← All projects</button><span class="push"></span>
+    <button class="btn dark sm" type="button" id="packPdf">Download governance pack (PDF)</button></div>
+  ${p.example?`<div class="banner">This is an example project so you can see what a complete one looks like. Editing it turns it into a real one.</div>`:""}
+  <div class="stack">
+    ${D.canWrite?`<input class="search" style="font-size:24px;font-weight:700;max-width:none;border-width:0 0 2px 0;border-radius:0;padding:4px 0" data-k="title" id="k_title" value="${esc(p.title)}" placeholder="Project name" aria-label="Project name">`:`<h2>${esc(p.title)}</h2>`}
+    <div class="grid2">${inp("team","Owning team",{select:(cfg().teams||DEFAULT_TEAMS).map(x=>[x,x])})}${inp("sponsor","Executive sponsor",{ph:"e.g. VP Customer Success"})}
+      <div class="field"><span class="label" style="font-weight:700;font-size:14px">Risk tier</span><span id="tierTag">${t.complete?`<span class="tag t${t.tier}">${esc(TIERS[t.tier].name)}</span>`:'<span class="small muted">Answer the risk questions below</span>'}</span></div>
+      <div class="field"><span style="font-weight:700;font-size:14px">Started by</span><span class="small">${who(p.by)} · ${fmtDate(p.created)}</span></div></div>
+    <div class="stepper">${STAGES.map((s,i)=>`<span class="${i<si?"done":i===si?"now":""}">${esc(s)}</span>`).join("")}</div>
+    <div class="gate" id="pGate">${gateHTML(p,g)}</div>
+  </div>
+  <div class="proj">
+    <nav class="pnav" id="pnav"><span class="lbl">Paperwork for Tier ${t.tier}</span>${secs}<a href="#a-history"><span class="c">≡</span><span>Audit trail</span></a></nav>
+    <div class="stack" id="pbody">${sectionsHTML(p,st)}</div>
+  </div>`;
+  wireProject();
+}
+function gateHTML(p,g){
+  if(!g.to)return `<b>${esc(g.wait)}</b>${D.admin&&p.stage!=="Closed"?"":""}${adminStageHTML(p)}`;
+  const ok=g.needs.every(n=>n[1]);
+  return `<b>To move to ${esc(g.to)}:</b><ul>${g.needs.map(n=>`<li class="${n[1]?"ok":""}">${esc(n[0])}</li>`).join("")}</ul>
+    ${D.canWrite?`<div class="row"><button class="btn ${ok?"red":""}" type="button" id="advance"${ok?"":" disabled"}>Move to ${esc(g.to)}</button></div>`:""}${adminStageHTML(p)}`;
+}
+function adminStageHTML(p){return D.admin?`<details class="small" style="margin-top:4px"><summary class="muted">Admin: set stage directly</summary><div class="row" style="margin-top:6px"><select id="setStage">${STAGES.map(s=>`<option${s===p.stage?" selected":""}>${esc(s)}</option>`).join("")}</select><button class="btn sm" type="button" id="setStageGo">Set</button></div></details>`:"";}
+function art(k,title,sub,body,st){return `<section class="art" id="a-${k}"><header><h3>${title}</h3>${st&&st.done[k]?'<span class="tag st">Done ✓</span>':st&&!st.required.includes(k)?'<span class="tag t1">Optional for this tier</span>':'<span class="tag warn">To do</span>'}<p>${sub}</p></header>${body}</section>`;}
+function sectionsHTML(p,st){
+  const t=st.t,ir=st.ir,V=VERDICT_TEXT[ir.v],dis=D.canWrite?"":" disabled";
+  const intake=`<div class="grid2">${inp("intake.people","How many people do this task today?",{ph:"e.g. 6"})}${inp("intake.hours","Hours each, per week",{ph:"e.g. 5"})}</div>
+    ${IDEA_QS.map((q,i)=>`<div class="qq"><p class="t"><span>${i+1}</span>${esc(q.q)}</p><div class="choices">${q.o.map((o,k)=>`<label class="choice${p.intake.a[q.id]===k?" on":""}"><input type="radio" name="iq-${q.id}" data-k="intake.a.${q.id}" data-v="${k}"${p.intake.a[q.id]===k?" checked":""}${dis}><span>${esc(o[0])}</span></label>`).join("")}</div></div>`).join("")}
+    <div id="pIdea">${ideaHTML(ir)}</div>`;
+  const risk=RISK_QS.map(q=>`<div class="yn"><p>${esc(q.q)}${p.risk[q.id]===true?`<small>Needs: ${esc(q.control)}</small>`:""}</p><span class="seg2" role="group" aria-label="${esc(q.q)}"><button type="button" data-yn="${q.id}" data-v="1" aria-pressed="${p.risk[q.id]===true}"${dis}>Yes</button><button type="button" data-yn="${q.id}" data-v="0" aria-pressed="${p.risk[q.id]===false}"${dis}>No</button></span></div>`).join("")
+    +`<div class="tierbox t${t.tier}"><h3>${t.complete?esc(TIERS[t.tier].name):"Answer all seven to set the tier"}</h3>${t.complete?`<p>${esc(TIERS[t.tier].blurb)}</p><p><b>Approved by:</b> ${esc(TIERS[t.tier].who)}</p>${t.yes.length?`<ul>${t.yes.map(q=>`<li>${esc(q.control)}</li>`).join("")}</ul>`:""}`:""}</div>`;
+  const b=p.brief;
+  const brief=`<div class="briefgrid"><div class="stack">
+      ${inp("brief.ask","What are you asking them to approve?",{area:1,rows:2,hint:"One sentence, with the amount or scale.",ph:"Approve a 10-week pilot with 12 support agents, costing $60,000, to…"})}
+      <div class="grid2">${inp("brief.decision","Type of decision",{select:DECISIONS.map(x=>[x,x])})}${inp("brief.decideBy","Decision needed by",{type:"date"})}</div>
+      ${inp("brief.problem","What's the problem today?",{area:1,hint:"Who feels it, and how big it is. Use a number."})}
+      ${inp("brief.plan","What will we do?",{area:1,hint:"Say what changes for people, not how the technology works."})}
+      ${inp("brief.ifnot","What happens if we don't?",{area:1,rows:2})}
+      <div class="moneyrow">${inp("brief.once","One-time cost",{money:1,ph:"$0"})}${inp("brief.running","Running cost / yr",{money:1,ph:"$0"})}${inp("brief.benefit","Benefit / yr",{money:1,ph:"$0"})}</div>
+      ${inp("brief.basis","How do you know the benefit?",{area:1,rows:2,hint:"A trial, a measurement, a quote. Be honest."})}
+      <div class="grid2">${inp("brief.conf","How sure are you?",{select:Object.entries(CONF_LEVELS).map(([k,[f,x]])=>[k,`${k}: ${x}`])})}${inp("brief.startMonth","Benefits start in month",{ph:"3"})}</div>
+      <label class="choice${b.timeSaved?" on":""}"><input type="checkbox" data-k="brief.timeSaved" data-bool="1"${b.timeSaved?" checked":""}${dis}><span>Some of the benefit is <b>time saved</b></span></label>
+      ${b.timeSaved?inp("brief.timeGoes","Where will that time go?",{area:1,rows:2,hint:"Hires you won't need, overtime that stops, or named work people move to."}):""}
+      <div class="field"><span style="font-weight:700;font-size:14px">Milestones</span>${b.milestones.map((m,i)=>`<div class="minirow"><input data-ms="${i}" data-j="0" value="${esc(m[0])}" placeholder="Milestone" aria-label="Milestone"${dis}><input data-ms="${i}" data-j="1" value="${esc(m[1])}" placeholder="When" aria-label="When"${dis}><button class="x" type="button" data-rmms="${i}" aria-label="Remove">×</button></div>`).join("")}
+        ${b.milestones.length<6&&D.canWrite?`<div><button class="btn sm" type="button" data-add="ms">Add a milestone</button></div>`:""}</div>
+      <div class="field"><span style="font-weight:700;font-size:14px">Risks</span>${b.risks.map((r,i)=>`<div class="minirow r3"><input data-rk="${i}" data-j="0" value="${esc(r[0])}" placeholder="What could go wrong" aria-label="Risk"${dis}><input data-rk="${i}" data-j="1" value="${esc(r[1])}" placeholder="What we'll do about it" aria-label="Mitigation"${dis}><button class="x" type="button" data-rmrk="${i}" aria-label="Remove">×</button></div>`).join("")}
+        ${b.risks.length<5&&D.canWrite?`<div><button class="btn sm" type="button" data-add="rk">Add a risk</button></div>`:""}</div>
+      ${inp("brief.success","How will we know it worked?",{area:1,rows:2})}
+    </div><div class="stack"><div class="paper" id="paper">${paperHTML(p)}</div><div class="box" id="reviewBox">${reviewHTML(st.rv)}</div>
+      <div class="row"><button class="btn red" type="button" id="briefPdf">Download brief (PDF)</button><button class="btn dark" type="button" id="briefCopy">Copy for email</button></div></div></div>`;
+  const ap=st.ap;
+  const approval=`${ap?`<div class="approval"><span class="small muted">Decision recorded ${fmtDate(ap.recordedAt)} by ${who(ap.by)}</span><span class="dec">${esc(DECISION_TYPES[ap.decision]||ap.decision)}</span>
+      ${ap.date?`<span class="small">Decision date: ${esc(ap.date)}</span>`:""}${ap.conditions?`<p><b>Conditions:</b> ${esc(ap.conditions)}</p>`:""}<span class="small">Tier at decision: ${esc(TIERS[ap.tier]?TIERS[ap.tier].name:"–")}</span></div>`
+     :`<div class="approval no"><span class="dec" style="color:var(--grey)">No decision yet</span><p class="small">${p.stage==="Awaiting approval"?`This is with ${esc(TIERS[t.tier].who)}.`:"Complete the brief and move the project to Awaiting approval."}</p></div>`}
+    ${D.admin?`<form class="box grey" id="apForm"><h3>${ap?"Update the decision":"Record the decision"}</h3><p class="small muted">You're seeing this because you're on the AI review board (Editor access).</p>
+      <div class="grid2"><div class="field"><label for="ap_d">Decision</label><select id="ap_d">${Object.entries(DECISION_TYPES).map(([k,l])=>`<option value="${k}"${ap&&ap.decision===k?" selected":""}>${esc(l)}</option>`).join("")}</select></div>
+      <div class="field"><label for="ap_date">Decision date</label><input type="date" id="ap_date" value="${esc(ap?ap.date:new Date().toISOString().slice(0,10))}"></div></div>
+      <div class="field"><label for="ap_c">Conditions or reasons</label><textarea id="ap_c" rows="2">${esc(ap?ap.conditions:"")}</textarea></div>
+      <div class="row"><button class="btn red" type="submit">Record decision</button></div></form>`:`<p class="small muted">Only the AI review board can record a decision here, so every approval has a clear owner.</p>`}`;
+  const pilot=`<div class="grid2">${inp("pilot.passMark","Pass mark, written before the pilot starts",{area:1,rows:2,wide:1,hint:"The accuracy and time saving that would justify rolling it out. Setting it afterwards means it will pass by default.",ph:"e.g. 90% of drafts need only light edits; handle time down 15% or more"})}
+      ${inp("pilot.start","Start date",{type:"date"})}${inp("pilot.end","End date",{type:"date"})}
+      ${inp("pilot.result","Result",{select:[["","Not finished yet"],["pass","Passed"],["fail","Didn't pass"],["extend","Extended"]]})}
+      ${inp("pilot.actual","What actually happened",{area:1,rows:2,wide:1,ph:"The numbers against the pass mark."})}</div>`;
+  const controls=`<div class="grid2">${inp("controls.oversight","Human oversight: who checks what, and when",{area:1,rows:2,wide:1,ph:"e.g. Agents read every draft before sending; team lead samples 20 a week"})}
+      ${inp("controls.monitoring","Monitoring: what's measured, how often, by whom",{area:1,rows:2,wide:1,ph:"e.g. Weekly quality score and error log reviewed by the product owner"})}
+      ${inp("controls.switchoff","How to switch it off if it goes wrong",{area:1,rows:2,wide:1})}</div>`;
+  const signoff=`<div class="grid2">${inp("signoff.privacy","Privacy reviewer",{ph:"Name"})}${inp("signoff.privacyDate","Date",{type:"date"})}
+      ${inp("signoff.legal","Legal reviewer",{ph:"Name"})}${inp("signoff.legalDate","Date",{type:"date"})}
+      ${inp("signoff.security","Security reviewer (if new vendor)",{ph:"Name"})}${inp("signoff.securityDate","Date",{type:"date"})}</div>`;
+  const plannedQ=calc(p.brief).counted/4,tp=p.benefits.reduce((a,r)=>a+num(r.planned),0),ta=p.benefits.reduce((a,r)=>a+num(r.actual),0);
+  const benefits=`<p class="small muted">Once it's live, record the benefit each quarter against the plan. This is what turns a promise into proof. Planned per quarter from the brief: <b>${short$(plannedQ)}</b>.</p>
+    <div class="scroll"><table class="ledger"><thead><tr><th style="width:120px">Quarter</th><th class="r" style="width:130px">Planned</th><th class="r" style="width:130px">Actual</th><th>Evidence</th><th style="width:36px"></th></tr></thead><tbody>
+    ${p.benefits.length?p.benefits.map((r,i)=>`<tr><td><input data-bi="${i}" data-bf="period" value="${esc(r.period)}" aria-label="Quarter"${dis}></td><td><input class="r" data-bi="${i}" data-bf="planned" data-money="1" value="${num(r.planned)?money(r.planned):""}" aria-label="Planned"${dis}></td>
+      <td><input class="r" data-bi="${i}" data-bf="actual" data-money="1" value="${num(r.actual)?money(r.actual):""}" aria-label="Actual"${dis}></td><td><input data-bi="${i}" data-bf="evidence" value="${esc(r.evidence)}" placeholder="Where the number comes from" aria-label="Evidence"${dis}></td>
+      <td><button class="x" type="button" data-rmb="${i}" aria-label="Remove">×</button></td></tr>`).join("")
+      :`<tr><td colspan="5" class="small muted" style="padding:12px 6px">No quarters recorded yet.</td></tr>`}</tbody>
+    <tfoot><tr><td>Total</td><td class="r">${money(tp)}</td><td class="r">${money(ta)}</td><td class="small">${tp?`${Math.round(ta/tp*100)}% of plan delivered`:""}</td><td></td></tr></tfoot></table></div>
+    ${D.canWrite?`<div><button class="btn sm" type="button" data-add="bq">Add a quarter</button></div>`:""}`;
+  const rev=`<div class="grid2">${inp("review.worked","What worked",{area:1,rows:2,wide:1})}${inp("review.didnt","What didn't",{area:1,rows:2,wide:1})}
+      ${inp("review.lessons","What we'd tell the next team",{area:1,rows:2,wide:1})}
+      ${inp("review.rec","Recommendation",{select:[["","Choose one"],...Object.entries(RECS)]})}${inp("review.date","Review date",{type:"date"})}</div>`;
+  const hist=`<ul class="hist">${(p.history||[]).slice().reverse().map(h=>`<li><time>${fmtDate(h.at)}</time><span>${esc(h.what)} · ${who(h.by)}</span></li>`).join("")||"<li>No entries yet.</li>"}</ul>
+    ${D.canWrite&&(p.by===D.me||D.admin)?`<div class="row" id="delRow"><button class="btn sm plain" type="button" id="delProj">Delete this project</button></div>`:""}`;
+  return [
+    art("intake","Intake and idea check","Is this a job for AI at all? Answer for how things are today.",intake,st),
+    art("risk","Risk tier","Seven yes/no questions. The highest “yes” sets the tier, and the tier sets the paperwork.",risk,st),
+    art("brief","Exec brief","One page, one decision. The right side is what the approvers see.",brief,st),
+    art("approval","Approval record","Who approved it, when, and on what conditions.",approval,st),
+    art("pilot","Pilot plan and result","Decide what “good” looks like before you start, then record what happened.",pilot,st),
+    art("controls","Oversight and monitoring","How people stay in control once it's running.",controls,st),
+    art("signoff","Privacy and legal sign-off","Needed for Tier 3 before going live.",signoff,st),
+    art("benefits","Benefits tracking","Planned against actual, quarter by quarter.",benefits,st),
+    art("review","Post-launch review","About three months after going live. Short and honest.",rev,st),
+    `<section class="art" id="a-history"><header><h3>Audit trail</h3><p>Stage changes and decisions, with who made them.</p></header>${hist}</section>`
+  ].join("");
+}
+function ideaHTML(ir){const V=VERDICT_TEXT[ir.v];
+  if(ir.answered<3)return `<p class="small muted">The verdict appears once you've answered a few questions.</p>`;
+  return `<div class="verdict ${V.cls}"><span class="lbl">${ir.complete?"Idea check verdict":"Leaning towards"}</span><h3>${V.h}</h3><p>${V.p}</p></div>
+    ${ir.issues.length?`<ul class="reasons">${ir.issues.map(x=>`<li><span>${esc(x)}</span></li>`).join("")}</ul>`:""}
+    ${ir.hoursYr?`<p class="small muted">About ${fmtN(ir.hoursYr)} hours a year go into this task today.</p>`:""}`;}
+function paperHTML(p){
+  const b=p.brief,c=calc(b),T=(v,ph)=>v&&String(v).trim()?esc(v):`<span class="blank">${ph}</span>`;
+  const ms=b.milestones.filter(m=>m[0].trim()),rk=b.risks.filter(r=>r[0].trim()),t=tierOf(p);
   const date=b.decideBy?new Date(b.decideBy+"T12:00").toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}):"";
-  $("paper").innerHTML=`<div class="rule"></div>
-    <div><p class="kicker">Executive brief · ${esc(b.decision)}${date?" · decision needed by "+date:""}</p><h2 style="margin-top:4px">${T(b.title,"Project name")}</h2>
-      <p class="by">Owner: ${T(b.author,"not named")} · Sponsor: ${T(b.sponsor,"not named")}</p></div>
-    <div class="ask"><b>The ask</b><p>${T(b.ask,"What you want them to approve, in one sentence.")}</p></div>
+  return `<div class="rule"></div>
+    <div><p class="kicker">Executive brief · ${esc(b.decision)}${date?" · decision by "+date:""}${t.complete?" · Tier "+t.tier:""}</p><h2 style="margin-top:4px">${T(p.title,"Project name")}</h2>
+      <p class="by">Owner: ${T(p.team,"not set")} · Sponsor: ${T(p.sponsor,"not named")}</p></div>
+    <div class="ask"><b>The ask</b><p>${T(b.ask,"What you want approved, in one sentence.")}</p></div>
     <div><h4>The problem</h4><p>${T(b.problem,"What goes wrong today, and how big it is.")}</p></div>
     <div><h4>What we'll do</h4><p>${T(b.plan,"What changes, in two or three sentences.")}</p></div>
-    <div><h4>The numbers</h4>
-      <div class="nums">
-        <div><span>One-time cost</span><b>${short$(c.once)}</b></div>
-        <div><span>Running cost / yr</span><b>${short$(c.running)}</b></div>
-        <div><span>Benefit / yr${c.factor<1?` (counted at ${c.factor*100}%)`:""}</span><b>${short$(c.counted)}</b></div>
-        <div><span>Net over 3 years</span><b class="${c.net3<0?"neg":""}">${short$(c.net3)}</b></div>
-        <div><span>Pays back</span><b>${c.payback?`Month ${c.payback}`:"Not in 3 yrs"}</b></div>
-        <div><span>Confidence</span><b>${esc(b.conf)}</b></div>
-      </div>
-      <p class="small" style="margin-top:6px">${b.basis.trim()?"<b>Basis:</b> "+esc(b.basis):`<span class="blank">How you know the benefit.</span>`}</p>
-      ${b.timeSaved?`<p class="small" style="margin-top:4px">${b.timeGoes.trim()?"<b>Freed-up time goes to:</b> "+esc(b.timeGoes):`<span style="color:var(--red)"><b>Includes time saved with no plan for where the time goes.</b></span>`}</p>`:""}
-    </div>
+    <div><h4>The numbers</h4><div class="nums">
+      <div><span>One-time cost</span><b>${short$(c.once)}</b></div><div><span>Running / yr</span><b>${short$(c.running)}</b></div>
+      <div><span>Benefit / yr${c.factor<1?` (at ${c.factor*100}%)`:""}</span><b>${short$(c.counted)}</b></div>
+      <div><span>Net over 3 years</span><b class="${c.net3<0?"neg":""}">${short$(c.net3)}</b></div><div><span>Pays back</span><b>${c.payback?`Month ${c.payback}`:"Not in 3 yrs"}</b></div>
+      <div><span>Confidence</span><b>${esc(b.conf)}</b></div></div>
+      <p class="small" style="margin-top:6px">${(b.basis||"").trim()?"<b>Basis:</b> "+esc(b.basis):`<span class="blank">How you know the benefit.</span>`}</p>
+      ${b.timeSaved?`<p class="small">${(b.timeGoes||"").trim()?"<b>Freed-up time goes to:</b> "+esc(b.timeGoes):`<span style="color:var(--red)"><b>Counts time saved with no plan for where it goes.</b></span>`}</p>`:""}</div>
     ${ms.length?`<div><h4>Timeline</h4><div class="tl">${ms.map(m=>`<div><span>${esc(m[1]||"TBC")}</span><p>${esc(m[0])}</p></div>`).join("")}</div></div>`:""}
     <div><h4>Risks</h4>${rk.length?`<ul>${rk.map(r=>`<li><b>${esc(r[0])}.</b> ${esc(r[1])}</li>`).join("")}</ul>`:`<p class="blank">The main risk and what you'll do about it.</p>`}</div>
     <div><h4>How we'll know it worked</h4><p>${T(b.success,"One or two measures.")}</p></div>
     <div><h4>If we don't do this</h4><p>${T(b.ifnot,"What happens if we do nothing.")}</p></div>
-    <p class="foot-note">Benefits and running costs start in month ${c.start}. The three-year net counts ${c.factor===1?"the full benefit":`${c.factor*100}% of the stated benefit (${esc(b.conf.toLowerCase())} confidence)`}, minus all costs.</p>`;
-  const r=review(b),ok=r.items.filter(x=>x[0]).length;
-  $("review").innerHTML=`<div class="review"><h3>Brief check</h3>
-    <div class="score"><b>${ok} of ${r.items.length}</b><span class="muted">${ok===r.items.length?"Ready to send.":"Fix the red items before it goes to an exec."}</span></div>
-    <ul>${r.items.filter(x=>!x[0]).map(x=>`<li><span><b>${esc(x[1].replace("is written","").trim()?x[1]:x[1])}</b><br>${esc(x[2])}</span></li>`).join("")}
-      ${r.items.filter(x=>x[0]).map(x=>`<li class="ok"><span>${esc(x[1])}</span></li>`).join("")}</ul></div>`;
+    <p class="foot-note">Benefits and running costs start in month ${c.start}. The three-year net counts ${c.factor===1?"the full benefit":`${c.factor*100}% of the stated benefit`}, minus all costs.</p>`;
 }
-function renderBrief(){
-  renderBriefTop();renderForm();renderPaper();
-  $("briefActions").innerHTML=`<button class="btn red" type="button" id="bPdf">Download PDF</button><button class="btn dark" type="button" id="bCopy">Copy for email</button><button class="btn" type="button" id="bSave">Save as file</button>`;
-  $("bPdf").onclick=()=>briefPDF(cur());
-  $("bCopy").onclick=()=>copyText(briefText(cur()),()=>toast("Copied. Paste it into an email."));
-  $("bSave").onclick=()=>saveFile(slug(cur().title)+".json",JSON.stringify({format:"cona-ai-brief",version:1,brief:cur()},null,2));
+function reviewHTML(items){const ok=items.filter(x=>x[0]).length;
+  return `<div class="review"><h3>Brief check</h3><div class="score"><b>${ok} of ${items.length}</b><span class="muted">${ok===items.length?"Ready for the approvers.":"Fix the red items before it goes to an exec."}</span></div>
+    <ul>${items.filter(x=>!x[0]).map(x=>`<li><span><b>${esc(x[1])}</b><br>${esc(x[2])}</span></li>`).join("")}${items.filter(x=>x[0]).map(x=>`<li class="ok"><span>${esc(x[1])}</span></li>`).join("")}</ul></div>`;}
+
+/* Refresh the parts that depend on what's being typed, without touching the inputs. */
+function refreshDerived(){
+  const p=PJ.draft;if(!p)return;const st=pstatus(p);
+  const set=(id,h)=>{const e=$(id);if(e)e.innerHTML=h;};
+  set("pIdea",ideaHTML(st.ir));set("paper",paperHTML(p));set("reviewBox",reviewHTML(st.rv));
+  set("pGate",gateHTML(p,gate(p,st)));wireGate();
+  set("tierTag",st.t.complete?`<span class="tag t${st.t.tier}">${esc(TIERS[st.t.tier].name)}</span>`:'<span class="small muted">Answer the risk questions below</span>');
+  document.querySelectorAll("#pnav a[href^='#a-']").forEach(a=>{const k=a.getAttribute("href").slice(3);if(!(k in st.done))return;
+    a.className=st.done[k]?"ok":st.required.includes(k)?"req":"na";a.querySelector(".c").textContent=st.done[k]?"✓":"";});
+  document.querySelectorAll(".art").forEach(s=>{const k=s.id.slice(2);if(!(k in st.done))return;const tg=s.querySelector("header .tag");
+    if(tg){tg.className="tag "+(st.done[k]?"st":st.required.includes(k)?"warn":"t1");tg.textContent=st.done[k]?"Done ✓":st.required.includes(k)?"To do":"Optional for this tier";}});
 }
-/* form events (delegated so typing never loses focus) */
-function touchB(b){b.example=false;saveB();renderPaper();const o=$("bPick")&&$("bPick").querySelector(`option[value="${b.id}"]`);if(o)o.textContent=b.title||"Untitled brief";}
-$("bform").addEventListener("input",e=>{
-  const el=e.target,b=cur();
-  if(el.dataset.b&&el.type!=="checkbox"){b[el.dataset.b]=el.dataset.money?num(el.value):el.value;}
-  else if(el.dataset.ms!=null){b.milestones[+el.dataset.ms][+el.dataset.k]=el.value;}
-  else if(el.dataset.rk!=null){b.risks[+el.dataset.rk][+el.dataset.k]=el.value;}
-  else return;
-  touchB(b);
-});
-$("bform").addEventListener("change",e=>{
-  const el=e.target,b=cur();
-  if(el.dataset.b==="timeSaved"){b.timeSaved=el.checked;touchB(b);renderForm();$("f_timeSaved").focus();return;}
-  if(el.dataset.money){const v=num(el.value);el.value=v?money(v):"";}
-});
-$("bform").addEventListener("click",e=>{
-  const b=cur(),t=e.target;
-  if(t.id==="addMs"){b.milestones.push(["",""]);touchB(b);renderForm();$("ms"+(b.milestones.length-1)+"a").focus();}
-  else if(t.id==="addRk"){b.risks.push(["",""]);touchB(b);renderForm();$("rk"+(b.risks.length-1)+"a").focus();}
-  else if(t.dataset.rmms!=null){b.milestones.splice(+t.dataset.rmms,1);touchB(b);renderForm();}
-  else if(t.dataset.rmrk!=null){b.risks.splice(+t.dataset.rmrk,1);touchB(b);renderForm();}
-});
-function briefText(b){
-  const c=calc(b),ms=b.milestones.filter(m=>m[0].trim()),rk=b.risks.filter(r=>r[0].trim());
-  return [b.title||"Untitled brief",`${b.decision}${b.decideBy?" · decision needed by "+b.decideBy:""}`,`Owner: ${b.author||"-"} · Sponsor: ${b.sponsor||"-"}`,"",
+function wireGate(){
+  const a=$("advance");if(a)a.onclick=()=>{const p=PJ.draft,g=gate(p,pstatus(p));if(!g.to)return;const from=p.stage;p.stage=g.to;addHist(p,`Moved from ${from} to ${g.to}`);saveSoon();flush();renderProject();fillNames($("v-projects"));toast(`Moved to ${g.to}`);};
+  const s=$("setStageGo");if(s)s.onclick=()=>{const p=PJ.draft,v=$("setStage").value;if(v===p.stage)return;addHist(p,`Stage set to ${v} by an admin (was ${p.stage})`);p.stage=v;saveSoon();flush();renderProject();fillNames($("v-projects"));};
+}
+function wireProject(){
+  const v=$("v-projects"),p=PJ.draft;
+  $("backReg").onclick=()=>{flush();PJ.open=null;PJ.confirmDel=false;renderProjects();fillNames(v);window.scrollTo(0,0);};
+  $("packPdf").onclick=()=>{flush();governancePDF(PJ.draft);};
+  wireGate();
+  v.querySelectorAll("#pnav a").forEach(a=>a.onclick=e=>{e.preventDefault();const el=document.querySelector(a.getAttribute("href"));if(el)el.scrollIntoView({behavior:"smooth",block:"start"});});
+  v.oninput=e=>{const el=e.target,p=PJ.draft;if(!p||!D.canWrite)return;
+    if(el.dataset.k&&el.type!=="radio"&&el.type!=="checkbox"){setPath(p,el.dataset.k,el.dataset.money?num(el.value):el.value);}
+    else if(el.dataset.ms!=null){p.brief.milestones[+el.dataset.ms][+el.dataset.j]=el.value;}
+    else if(el.dataset.rk!=null){p.brief.risks[+el.dataset.rk][+el.dataset.j]=el.value;}
+    else if(el.dataset.bi!=null){p.benefits[+el.dataset.bi][el.dataset.bf]=el.dataset.money?num(el.value):el.value;}
+    else return;
+    saveSoon();refreshDerived();};
+  v.onchange=e=>{const el=e.target,p=PJ.draft;if(!p||!D.canWrite)return;
+    if(el.type==="radio"&&el.dataset.k){setPath(p,el.dataset.k,+el.dataset.v);el.closest(".choices").querySelectorAll(".choice").forEach(c=>c.classList.toggle("on",c.contains(el)));saveSoon();refreshDerived();return;}
+    if(el.dataset.bool){setPath(p,el.dataset.k,el.checked);saveSoon();renderProject();fillNames(v);return;}
+    if(el.tagName==="SELECT"&&el.dataset.k){setPath(p,el.dataset.k,el.value);saveSoon();refreshDerived();}
+    if(el.dataset.money){const n=num(el.value);el.value=n?money(n):"";}};
+  v.onclick=e=>{const t=e.target.closest("button");if(!t||!D.canWrite)return;const p=PJ.draft;
+    if(t.dataset.yn){p.risk[t.dataset.yn]=t.dataset.v==="1";const before=p._tier;saveSoon();renderProject();fillNames(v);
+      const nt=tierOf(p);if(nt.complete)addHistOnce(p,`Risk tier set to ${nt.tier}`);return;}
+    if(t.dataset.add==="ms"){p.brief.milestones.push(["",""]);}
+    else if(t.dataset.add==="rk"){p.brief.risks.push(["",""]);}
+    else if(t.dataset.add==="bq"){const q=nextQuarter(p.benefits);p.benefits.push({period:q,planned:Math.round(calc(p.brief).counted/4),actual:0,evidence:""});}
+    else if(t.dataset.rmms!=null){p.brief.milestones.splice(+t.dataset.rmms,1);}
+    else if(t.dataset.rmrk!=null){p.brief.risks.splice(+t.dataset.rmrk,1);}
+    else if(t.dataset.rmb!=null){p.benefits.splice(+t.dataset.rmb,1);}
+    else if(t.id==="briefPdf"){briefPDF(p);return;}
+    else if(t.id==="briefCopy"){copyText(briefText(p),()=>toast("Copied. Paste it into an email."));return;}
+    else if(t.id==="delProj"){$("delRow").innerHTML=`<span class="confirm">Delete “${esc(p.title||"this project")}” and its paperwork for everyone? <button class="btn sm" type="button" id="delYes">Delete</button><button class="btn sm plain" type="button" id="delNo">Keep it</button></span>`;return;}
+    else if(t.id==="delYes"){const id=p.id;clearTimeout(PJ.timer);PJ.dirty=false;PJ.draft=null;PJ.open=null;
+      del("projects",id).then(()=>{if(D.admin&&D.approvals.some(a=>a.id===id))return del("approvals",id);}).catch(()=>{});toast("Project deleted");renderProjects();return;}
+    else if(t.id==="delNo"){renderProject();fillNames(v);return;}
+    else return;
+    saveSoon();renderProject();fillNames(v);};
+  const af=$("apForm");if(af)af.onsubmit=async e=>{e.preventDefault();const p=PJ.draft,d=$("ap_d").value,t=tierOf(p).tier;
+    const rec={decision:d,date:$("ap_date").value,conditions:$("ap_c").value.trim(),by:D.me,tier:t,recordedAt:new Date().toISOString(),project:p.title};
+    try{await put("approvals",p.id,rec);}catch(err){return;}
+    const to=d==="approved"||d==="conditions"?"Approved":d==="deferred"?"Assessed":"Closed";
+    addHist(p,`Decision recorded: ${DECISION_TYPES[d]}${rec.conditions?" ("+rec.conditions+")":""}`);if(p.stage!==to){addHist(p,`Moved from ${p.stage} to ${to}`);p.stage=to;}
+    saveSoon();await flush();renderProject();fillNames($("v-projects"));toast("Decision recorded");};
+}
+function addHistOnce(p,what){const h=p.history||[];if(h.length&&h[h.length-1].what===what)return;addHist(p,what);saveSoon();}
+function nextQuarter(rows){const d=new Date();let y=d.getFullYear(),q=Math.floor(d.getMonth()/3)+1;
+  const last=rows.length?rows[rows.length-1].period:"";const m=/(\d{4})\s*Q([1-4])/.exec(last);if(m){y=+m[1];q=+m[2]+1;if(q>4){q=1;y++;}}return `${y} Q${q}`;}
+
+/* ---------- text + PDF exports ---------- */
+function briefText(p){
+  const b=p.brief,c=calc(b),ms=b.milestones.filter(m=>m[0].trim()),rk=b.risks.filter(r=>r[0].trim());
+  return [p.title||"Untitled project",`${b.decision}${b.decideBy?" · decision needed by "+b.decideBy:""} · ${TIERS[tierOf(p).tier].name}`,`Owner: ${p.team||"-"} · Sponsor: ${p.sponsor||"-"}`,"",
     "THE ASK",b.ask,"","THE PROBLEM",b.problem,"","WHAT WE'LL DO",b.plan,"",
-    "THE NUMBERS",`One-time cost ${money(c.once)} · Running ${money(c.running)}/yr · Benefit ${money(c.counted)}/yr${c.factor<1?` (counted at ${c.factor*100}%)`:""}`,
-    `Net over 3 years ${money(c.net3)} · Pays back ${c.payback?"in month "+c.payback:"not within 3 years"}`,b.basis?"Basis: "+b.basis:"",b.timeSaved?(b.timeGoes?"Freed-up time goes to: "+b.timeGoes:"Note: includes time saved with no plan for where the time goes."):"","",
+    "THE NUMBERS",`One-time ${money(c.once)} · Running ${money(c.running)}/yr · Benefit ${money(c.counted)}/yr${c.factor<1?` (counted at ${c.factor*100}%)`:""}`,
+    `Net over 3 years ${money(c.net3)} · Pays back ${c.payback?"in month "+c.payback:"not within 3 years"}`,b.basis?"Basis: "+b.basis:"",
+    b.timeSaved?(b.timeGoes?"Freed-up time goes to: "+b.timeGoes:"Note: counts time saved with no plan for where it goes."):"","",
     ms.length?"TIMELINE\n"+ms.map(m=>`- ${m[1]||"TBC"}: ${m[0]}`).join("\n")+"\n":"",
-    "RISKS",...(rk.length?rk.map(r=>`- ${r[0]}. ${r[1]}`):["- None named"]),"","HOW WE'LL KNOW IT WORKED",b.success,"","IF WE DON'T DO THIS",b.ifnot].filter(x=>x!==undefined).join("\n").replace(/\n{3,}/g,"\n\n");
+    "RISKS",...(rk.length?rk.map(r=>`- ${r[0]}. ${r[1]}`):["- None named"]),"","HOW WE'LL KNOW IT WORKED",b.success,"","IF WE DON'T DO THIS",b.ifnot].join("\n").replace(/\n{3,}/g,"\n\n");
 }
-/* PDF */
-function loadJsPDF(){
-  if(window.jspdf&&window.jspdf.jsPDF)return Promise.resolve(window.jspdf.jsPDF);
-  return new Promise((res,rej)=>{const s=document.createElement("script");s.src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";
-    s.onload=()=>window.jspdf?res(window.jspdf.jsPDF):rej();s.onerror=rej;document.head.appendChild(s);});
+function pdfKit(J){
+  const doc=new J({unit:"mm",format:"letter"}),W=215.9,H=279.4,M=20,CW=W-2*M,K={doc,W,H,M,CW,y:0,page:1};
+  const RED=[228,0,43],BLK=[17,17,17],GRY=[107,107,107],LN=[226,226,226];Object.assign(K,{RED,BLK,GRY,LN});
+  K.color=a=>doc.setTextColor(a[0],a[1],a[2]);
+  K.foot=t=>{doc.setFont("helvetica","normal");doc.setFontSize(7.5);K.color(GRY);doc.text(`${t} · page ${K.page}`,M,H-9);};
+  K.need=(h,ft)=>{if(K.y+h>H-16){K.foot(ft||K.footer||"");doc.addPage();K.page++;K.y=M;}};
+  K.text=(t,size,col,bold,gap,x,w)=>{if(t==null||t==="")return;doc.setFont("helvetica",bold?"bold":"normal");doc.setFontSize(size);K.color(col||BLK);
+    doc.splitTextToSize(String(t),w||CW).forEach(l=>{K.need(size*.42);doc.text(l,x||M,K.y);K.y+=size*.42;});K.y+=gap==null?2:gap;};
+  K.head=t=>{K.need(14);K.y+=3;doc.setFont("helvetica","bold");doc.setFontSize(9);K.color(BLK);doc.text(t.toUpperCase(),M,K.y);K.y+=1.8;
+    doc.setDrawColor(LN[0],LN[1],LN[2]);doc.line(M,K.y,W-M,K.y);K.y+=5;};
+  K.kv=(k,v)=>{if(!v)return;K.need(5);doc.setFont("helvetica","bold");doc.setFontSize(9.5);K.color(GRY);doc.text(k,M,K.y);const y0=K.y;K.text(v,9.5,BLK,false,1.5,M+48,CW-48);if(K.y<y0+5)K.y=y0+5;};
+  K.table=(cols,rows,widths)=>{const x=[M];widths.forEach((w,i)=>x.push(x[i]+w*CW));K.need(8);doc.setFont("helvetica","bold");doc.setFontSize(8);K.color(GRY);
+    cols.forEach((c,i)=>doc.text(String(c),i>0&&typeof rows[0]?.[i]==="number"?x[i+1]-1:x[i],K.y,i>0&&typeof rows[0]?.[i]==="number"?{align:"right"}:{}));K.y+=4.5;
+    rows.forEach(r=>{K.need(6);doc.setFont("helvetica","normal");doc.setFontSize(9);K.color(BLK);let hmax=1;
+      r.forEach((v,i)=>{const isN=typeof v==="number",s=isN?(cols[i].includes("$")||cols[i].includes("value")||cols[i].includes("Benefit")||cols[i].includes("Delivered")?short$(v):fmtN(v)):String(v??"");
+        if(isN)doc.text(s,x[i+1]-1,K.y,{align:"right"});else{const ls=doc.splitTextToSize(s,widths[i]*CW-2);doc.text(ls,x[i],K.y);hmax=Math.max(hmax,ls.length);}});
+      K.y+=hmax*4+1.5;doc.setDrawColor(LN[0],LN[1],LN[2]);doc.line(M,K.y-3,W-M,K.y-3);});K.y+=2;};
+  K.top=(kicker,title,sub)=>{doc.setFillColor(RED[0],RED[1],RED[2]);doc.rect(0,0,W,4,"F");K.y=16;K.text(kicker,8,GRY,true,2);K.text(title,19,BLK,true,1);K.text(sub,9,GRY,false,5);};
+  return K;
 }
-async function briefPDF(b){
+async function briefPDF(p){
   let J;try{J=await loadJsPDF();}catch(e){toast("Couldn't load the PDF maker. Use Copy for email instead.");return;}
-  const doc=new J({unit:"mm",format:"letter"}),W=215.9,H=279.4,M=20,CW=W-2*M,c=calc(b);let y=0;
-  const RED=[228,0,43],BLK=[17,17,17],GRY=[107,107,107],LN=[226,226,226],SOFT=[245,245,245];
-  const color=a=>doc.setTextColor(a[0],a[1],a[2]);
-  const need=h=>{if(y+h>H-16){doc.addPage();y=M;}};
-  const text=(t,size,col,bold,gap,x,w)=>{doc.setFont("helvetica",bold?"bold":"normal");doc.setFontSize(size);color(col);
-    doc.splitTextToSize(String(t||""),w||CW).forEach(l=>{need(size*.42);doc.text(l,x||M,y);y+=size*.42;});y+=gap==null?2:gap;};
-  const head=t=>{need(12);y+=2;doc.setFont("helvetica","bold");doc.setFontSize(8.5);color(BLK);doc.text(t.toUpperCase(),M,y);y+=1.8;
-    doc.setDrawColor(LN[0],LN[1],LN[2]);doc.line(M,y,W-M,y);y+=5;};
-  doc.setFillColor(RED[0],RED[1],RED[2]);doc.rect(0,0,W,4,"F");y=16;
-  const date=b.decideBy?new Date(b.decideBy+"T12:00").toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}):"";
-  text(`EXECUTIVE BRIEF · ${b.decision.toUpperCase()}${date?" · DECISION NEEDED BY "+date.toUpperCase():""}`,8,GRY,true,2);
-  text(b.title||"Untitled brief",20,BLK,true,1);
-  text(`Owner: ${b.author||"not named"} · Sponsor: ${b.sponsor||"not named"}`,9,GRY,false,5);
-  /* ask box */
-  doc.setFont("helvetica","bold");doc.setFontSize(12);const al=doc.splitTextToSize(b.ask||"",CW-12),ah=al.length*5.2+11;
-  need(ah);doc.setFillColor(SOFT[0],SOFT[1],SOFT[2]);doc.rect(M,y-4,CW,ah,"F");doc.setFillColor(RED[0],RED[1],RED[2]);doc.rect(M,y-4,1.5,ah,"F");
-  doc.setFontSize(7.5);color(RED);doc.text("THE ASK",M+6,y+1);doc.setFontSize(12);color(BLK);al.forEach((l,i)=>doc.text(l,M+6,y+7+i*5.2));y+=ah+3;
-  head("The problem");text(b.problem,10.5,BLK);
-  head("What we'll do");text(b.plan,10.5,BLK);
-  head("The numbers");need(24);
-  const cells=[["One-time cost",short$(c.once)],["Running cost / yr",short$(c.running)],[`Benefit / yr${c.factor<1?` (at ${c.factor*100}%)`:""}`,short$(c.counted)],
+  const K=pdfKit(J),b=p.brief,c=calc(b),doc=K.doc;K.footer=p.title;
+  K.top(`EXECUTIVE BRIEF · ${b.decision.toUpperCase()} · ${TIERS[tierOf(p).tier].name.toUpperCase()}`,p.title||"Untitled project",`Owner: ${p.team||"not set"} · Sponsor: ${p.sponsor||"not named"}${b.decideBy?" · Decision needed by "+b.decideBy:""}`);
+  doc.setFont("helvetica","bold");doc.setFontSize(12);const al=doc.splitTextToSize(b.ask||"",K.CW-12),ah=al.length*5.2+11;
+  doc.setFillColor(245,245,245);doc.rect(K.M,K.y-4,K.CW,ah,"F");doc.setFillColor(...K.RED);doc.rect(K.M,K.y-4,1.5,ah,"F");
+  doc.setFontSize(7.5);K.color(K.RED);doc.text("THE ASK",K.M+6,K.y+1);doc.setFontSize(12);K.color(K.BLK);al.forEach((l,i)=>doc.text(l,K.M+6,K.y+7+i*5.2));K.y+=ah+3;
+  K.head("The problem");K.text(b.problem,10.5);K.head("What we'll do");K.text(b.plan,10.5);
+  K.head("The numbers");K.need(26);const cells=[["One-time cost",short$(c.once)],["Running / yr",short$(c.running)],[`Benefit / yr${c.factor<1?` (at ${c.factor*100}%)`:""}`,short$(c.counted)],
     ["Net over 3 years",short$(c.net3)],["Pays back",c.payback?"Month "+c.payback:"Not in 3 yrs"],["Confidence",b.conf]];
-  const cw=CW/3;cells.forEach(([l,v],i)=>{const x=M+(i%3)*cw,yy=y+Math.floor(i/3)*12;doc.setFont("helvetica","normal");doc.setFontSize(7.5);color(GRY);doc.text(l,x,yy);
-    doc.setFont("helvetica","bold");doc.setFontSize(13);color(i===3&&c.net3<0?RED:BLK);doc.text(v,x,yy+5.5);});
-  y+=25;
-  if(b.basis)text("Basis: "+b.basis,9,GRY,false,1.5);
-  if(b.timeSaved)text(b.timeGoes?"Freed-up time goes to: "+b.timeGoes:"Includes time saved with no plan for where the time goes.",9,b.timeGoes?GRY:RED,!b.timeGoes,1.5);
-  const ms=b.milestones.filter(m=>m[0].trim());
-  if(ms.length){head("Timeline");ms.forEach(m=>{need(6);doc.setFont("helvetica","bold");doc.setFontSize(10);color(BLK);doc.text(m[1]||"TBC",M,y);
-    const yy=y;text(m[0],10,BLK,false,1,M+28,CW-28);if(y<yy+5)y=yy+5;});}
-  const rk=b.risks.filter(r=>r[0].trim());
-  head("Risks");if(rk.length)rk.forEach(r=>text(`${r[0]}. ${r[1]}`,10,BLK,false,1.5));else text("None named.",10,GRY);
-  head("How we'll know it worked");text(b.success,10.5,BLK);
-  head("If we don't do this");text(b.ifnot,10.5,BLK);
-  y+=2;text(`Benefits and running costs start in month ${c.start}. The three-year net counts ${c.factor===1?"the full benefit":`${c.factor*100}% of the stated benefit`}, minus all costs.`,7.5,GRY,false,0);
-  saveFile(slug(b.title)+".pdf",doc.output("blob"));
+  cells.forEach(([l,v],i)=>{const x=K.M+(i%3)*K.CW/3,yy=K.y+Math.floor(i/3)*12;doc.setFont("helvetica","normal");doc.setFontSize(7.5);K.color(K.GRY);doc.text(l,x,yy);
+    doc.setFont("helvetica","bold");doc.setFontSize(13);K.color(i===3&&c.net3<0?K.RED:K.BLK);doc.text(v,x,yy+5.5);});K.y+=25;
+  K.text(b.basis?"Basis: "+b.basis:"",9,K.GRY,false,1.5);
+  if(b.timeSaved)K.text(b.timeGoes?"Freed-up time goes to: "+b.timeGoes:"Counts time saved with no plan for where it goes.",9,b.timeGoes?K.GRY:K.RED,!b.timeGoes,1.5);
+  const ms=b.milestones.filter(m=>m[0].trim());if(ms.length){K.head("Timeline");ms.forEach(m=>K.kv(m[1]||"TBC",m[0]));}
+  const rk=b.risks.filter(r=>r[0].trim());K.head("Risks");rk.length?rk.forEach(r=>K.text(`${r[0]}. ${r[1]}`,10,K.BLK,false,1.5)):K.text("None named.",10,K.GRY);
+  K.head("How we'll know it worked");K.text(b.success,10.5);K.head("If we don't do this");K.text(b.ifnot,10.5);
+  K.text(`Benefits and running costs start in month ${c.start}. The three-year net counts ${c.factor===1?"the full benefit":`${c.factor*100}% of the stated benefit`}, minus all costs.`,7.5,K.GRY,false,0);
+  K.foot(p.title);saveFile(slug(p.title)+"-brief.pdf",doc.output("blob"));
+}
+async function governancePDF(p){
+  let J;try{J=await loadJsPDF();}catch(e){toast("Couldn't load the PDF maker. Try again in a moment.");return;}
+  const names={};if(D.mode==="shared"&&D.user){const ids=[...new Set([p.by,...(p.history||[]).map(h=>h.by),(D.approvals.find(a=>a.id===p.id)||{}).by].filter(Boolean))];
+    const ps=await D.user.profiles(ids);ids.forEach(i=>names[i]=ps[i].name||"A colleague");}
+  const nm=i=>names[i]||(i===D.me?"You":"A colleague");
+  const K=pdfKit(J),st=pstatus(p),c=calc(p.brief),ap=st.ap,ir=st.ir;K.footer=`Governance pack · ${p.title}`;
+  K.top(`AI GOVERNANCE PACK · ${TIERS[st.t.tier].name.toUpperCase()} · STAGE: ${p.stage.toUpperCase()}`,p.title||"Untitled project",`Owner: ${p.team||"not set"} · Sponsor: ${p.sponsor||"not named"} · Started ${fmtDate(p.created)} by ${nm(p.by)} · Generated ${fmtDate(new Date().toISOString())}`);
+  K.head("Paperwork checklist");ARTIFACTS.forEach(([k,l,min])=>{const req=st.required.includes(k);K.kv(l,`${st.done[k]?"Complete":req?"Missing":"Not required"}${req?"":" (optional for this tier)"}`);});
+  K.head("1. Intake and idea check");K.kv("Time spent today",`${p.intake.people||"?"} people × ${p.intake.hours||"?"} hrs/week ≈ ${fmtN(ir.hoursYr)} hrs/yr`);
+  IDEA_QS.forEach(q=>K.kv(q.q.replace("?",""),p.intake.a[q.id]!=null?q.o[p.intake.a[q.id]][0]:"Not answered"));K.kv("Verdict",VERDICT_TEXT[ir.v].h);
+  K.head("2. Risk tier");RISK_QS.forEach(q=>K.kv(q.q.replace("?",""),p.risk[q.id]===true?"Yes. Control: "+q.control:p.risk[q.id]===false?"No":"Not answered"));
+  K.kv("Result",`${TIERS[st.t.tier].name}. Approved by ${TIERS[st.t.tier].who}.`);
+  const b=p.brief;K.head("3. Exec brief");K.kv("The ask",b.ask);K.kv("Problem",b.problem);K.kv("Plan",b.plan);K.kv("If we don't",b.ifnot);
+  K.kv("Numbers",`One-time ${money(c.once)} · Running ${money(c.running)}/yr · Benefit ${money(c.counted)}/yr counted (${b.conf}) · 3-yr net ${money(c.net3)} · Payback ${c.payback?"month "+c.payback:"beyond 3 years"}`);
+  K.kv("Basis",b.basis);if(b.timeSaved)K.kv("Freed-up time",b.timeGoes||"No destination given");K.kv("Success measure",b.success);
+  b.risks.filter(r=>r[0].trim()).forEach(r=>K.kv("Risk",`${r[0]}. ${r[1]}`));
+  K.head("4. Approval record");if(ap){K.kv("Decision",DECISION_TYPES[ap.decision]);K.kv("Decided on",ap.date);K.kv("Recorded by",`${nm(ap.by)}, ${fmtDate(ap.recordedAt)}`);K.kv("Conditions",ap.conditions);K.kv("Tier at decision",TIERS[ap.tier]?TIERS[ap.tier].name:"");}else K.text("No decision recorded.",10,K.GRY);
+  K.head("5. Pilot plan and result");K.kv("Pass mark",p.pilot.passMark||"Not set");K.kv("Dates",[p.pilot.start,p.pilot.end].filter(Boolean).join(" to "));K.kv("Result",{pass:"Passed",fail:"Didn't pass",extend:"Extended"}[p.pilot.result]||"Not finished");K.kv("What happened",p.pilot.actual);
+  K.head("6. Oversight and monitoring");K.kv("Human oversight",p.controls.oversight||"Not described");K.kv("Monitoring",p.controls.monitoring||"Not described");K.kv("Switch-off plan",p.controls.switchoff);
+  K.head("7. Privacy and legal sign-off");K.kv("Privacy",[p.signoff.privacy,p.signoff.privacyDate].filter(Boolean).join(", ")||"Not recorded");K.kv("Legal",[p.signoff.legal,p.signoff.legalDate].filter(Boolean).join(", ")||"Not recorded");K.kv("Security",[p.signoff.security,p.signoff.securityDate].filter(Boolean).join(", "));
+  K.head("8. Benefits tracking");if(p.benefits.length){K.table(["Quarter","Planned $","Actual $","Evidence"],p.benefits.map(r=>[r.period,num(r.planned),num(r.actual),r.evidence||""]),[.18,.17,.17,.48]);}else K.text("No quarters recorded.",10,K.GRY);
+  K.head("9. Post-launch review");K.kv("What worked",p.review.worked);K.kv("What didn't",p.review.didnt);K.kv("Lessons",p.review.lessons);K.kv("Recommendation",RECS[p.review.rec]||"Not done yet");
+  K.head("Audit trail");(p.history||[]).forEach(h=>K.kv(fmtDate(h.at),`${h.what} · ${nm(h.by)}`));
+  K.foot(K.footer);saveFile(slug(p.title)+"-governance-pack.pdf",K.doc.output("blob"));
+}
+</script>
+<script>
+"use strict";
+/* ============================================================
+   VALUE (the exec view)
+   ============================================================ */
+const svgEsc=esc;
+function hbar(rows,o){
+  /* rows: [{label, a, b?, note}] ; o: {fmt, names:[aName,bName]} */
+  if(!rows.length)return `<p class="small muted">Nothing to show yet.</p>`;
+  const two=rows.some(r=>r.b!=null),rowH=two?40:30,L=150,R=110,W=560,H=rows.length*rowH+8;
+  const max=Math.max(1,...rows.map(r=>Math.max(r.a,r.b||0))),x=v=>L+(W-L-R)*v/max,bh=two?13:16;
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${svgEsc(o.aria||"bar chart")}"><line class="bl" x1="${L}" x2="${L}" y1="0" y2="${H-4}"/>`;
+  rows.forEach((r,i)=>{const y=4+i*rowH;
+    s+=`<text class="cat" x="${L-8}" y="${y+(two?15:13)}" text-anchor="end">${svgEsc(r.label.length>17?r.label.slice(0,16)+"…":r.label)}</text>`;
+    const bar=(v,yy,col,name)=>`<rect x="${L}" y="${yy}" width="${Math.max(v>0?2:0,x(v)-L)}" height="${bh}" rx="2" fill="${col}"><title>${svgEsc(r.label)}: ${svgEsc(name)} ${svgEsc(o.fmt(v))}</title></rect><text class="lb" x="${x(v)+6}" y="${yy+bh-2}">${svgEsc(o.fmt(v))}${!two&&r.note?`<tspan class="ax"> ${svgEsc(r.note)}</tspan>`:""}</text>`;
+    s+=bar(r.a,y+2,"#111111",o.names[0]);
+    if(two)s+=bar(r.b||0,y+2+bh+2,"#E4002B",o.names[1]);
+    });
+  return s+"</svg>";
+}
+function cols(rows,fmt){
+  const W=560,H=210,L=44,B=26,T=18,pw=W-L-8,ph=H-T-B,max=Math.max(1,...rows.map(r=>r.v));
+  const nice=v=>{const p=Math.pow(10,Math.floor(Math.log10(v))),f=v/p;return (f<=1?1:f<=2?2:f<=5?5:10)*p;},top=nice(max),y=v=>T+ph-(v/top)*ph,step=pw/rows.length,bw=Math.min(46,step*.55);
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Hours back a year, added each month">`;
+  [0,top/2,top].forEach(v=>{s+=`<line class="${v?"gl":"bl"}" x1="${L}" x2="${W-8}" y1="${y(v)}" y2="${y(v)}"/><text class="ax" x="${L-6}" y="${y(v)+4}" text-anchor="end">${fmtN(v)}</text>`;});
+  rows.forEach((r,i)=>{const cx=L+step*i+step/2;
+    if(r.v>0)s+=`<path d="M${cx-bw/2},${y(0)} V${y(r.v)+3} q0,-3 3,-3 H${cx+bw/2-3} q3,0 3,3 V${y(0)} Z" fill="#111111"><title>${svgEsc(r.label)}: ${fmtN(r.v)} hours a year</title></path>`;
+    s+=`<text class="lb" x="${cx}" y="${y(r.v)-6}" text-anchor="middle">${r.v?fmtN(r.v):""}</text><text class="ax" x="${cx}" y="${H-8}" text-anchor="middle">${svgEsc(r.label)}</text>`;});
+  return s+"</svg>";
+}
+function teamRows(){
+  const teams=[...new Set([...(cfg().teams||DEFAULT_TEAMS),...D.people.map(p=>p.team).filter(Boolean)])];
+  return teams.map(t=>{const ps=D.people.filter(p=>p.team===t),tr=ps.filter(p=>(p.done||[]).length>=LESSONS.length).length,
+    w=D.wins.filter(x=>x.team===t);return {team:t,signed:ps.length,trained:tr,champions:ps.filter(p=>levelOf(p.id).lvl>=4).length,wins:w.length,hours:w.reduce((a,x)=>a+winHours(x),0)*countFactor()};});
+}
+function monthRows(){const out=[],now=new Date();
+  for(let i=5;i>=0;i--){const d=new Date(now.getFullYear(),now.getMonth()-i,1),k=d.getFullYear()+"-"+d.getMonth();
+    out.push({label:d.toLocaleDateString("en-US",{month:"short"}),v:D.wins.filter(w=>{const c=new Date(w.created);return c.getFullYear()+"-"+c.getMonth()===k;}).reduce((a,w)=>a+winHours(w),0)*countFactor()});}
+  return out;}
+function projRows(){return D.projects.map(p=>normProject(clone(p))).filter(p=>p.benefits.length).map(p=>({label:p.title||"Untitled",a:p.benefits.reduce((s,r)=>s+num(r.planned),0),b:p.benefits.reduce((s,r)=>s+num(r.actual),0)}));}
+function renderValue(){
+  const s=stats(),c=cfg(),tr=teamRows().filter(t=>t.signed||t.wins),pr=projRows();
+  const byStage=STAGES.map(st=>[st,D.projects.filter(p=>p.stage===st).length]);
+  const wins=D.wins.slice().sort((a,b)=>(b.created||"").localeCompare(a.created||"")).slice(0,12);
+  $("v-value").innerHTML=`
+  <div class="head"><p class="eyebrow">Value</p><h2>Is AI paying off?</h2>
+    <p>Adoption, time returned and project results in one place. Every number here comes from what people have logged in the portal, and the method is at the bottom of the page.</p></div>
+  ${s.hasExamples?`<div class="banner red">Some of the entries here are examples, so the page isn't empty on day one. They're marked “Example”.${D.admin?` <button class="btn sm" type="button" id="clearEx" style="margin-left:8px">Remove example data</button>`:" A portal admin can remove them."}</div>`:""}
+  <div class="row"><button class="btn red" type="button" id="qReport">Download quarterly value report (PDF)</button><button class="btn" type="button" id="csvWins">Wins (CSV)</button><button class="btn" type="button" id="csvProj">Projects (CSV)</button></div>
+  <div class="stack"><h3>Adoption</h3><div class="pulse">
+    <div><span>Signed in</span><b>${fmtN(s.signedIn)}</b><small>${Math.round(s.signedIn/s.headcount*100)}% of ${fmtN(s.headcount)} people</small></div>
+    <div><span>Trained</span><b>${fmtN(s.trained)}</b><small>finished all ${LESSONS.length} lessons (${Math.round(s.trained/s.headcount*100)}%)</small></div>
+    <div><span>Active, last 30 days</span><b>${fmtN(s.active)}</b><small>logged a win or a lesson</small></div>
+    <div><span>Champions</span><b>${fmtN(s.champions)}</b><small>helping others learn</small></div></div></div>
+  <div class="stack"><h3>Value</h3><div class="pulse">
+    <div><span>Hours back a year</span><b>${fmtN(s.counted)}</b><small>${fmtN(s.reported)} reported, counted at ${Math.round(countFactor()*100)}%</small></div>
+    <div><span>Worth, in people's time</span><b>${short$(s.value)}</b><small>at $${fmtN(num(c.rate))} an hour, a year</small></div>
+    <div><span>Project benefit approved</span><b>${short$(s.planned)}</b><small>a year, confidence-adjusted</small></div>
+    <div><span>Project benefit delivered</span><b>${short$(s.realized)}</b><small>to date, from benefits tracking</small></div></div>
+    <p class="method">Hours back is time people have got back and reported. It's not a budget saving until it's put to other use, so the approved and delivered project numbers are the ones to hold teams to.</p></div>
+  <div class="charts">
+    <div class="chart"><h3>Trained, by team</h3><p class="sub">People who finished all ${LESSONS.length} lessons. The grey figure is how many have signed in.</p>
+      ${hbar(tr.map(t=>({label:t.team,a:t.trained,note:"of "+t.signed})),{fmt:fmtN,names:["trained"],aria:"People trained by team"})}</div>
+    <div class="chart"><h3>Hours back a year, added each month</h3><p class="sub">From wins logged that month, counted at ${Math.round(countFactor()*100)}%.</p>${cols(monthRows())}</div>
+    <div class="chart"><h3>Projects: planned against delivered</h3><p class="sub">Totals from each project's benefits tracking, same quarters only.</p>
+      <div class="legend"><span><i style="background:#111111"></i>Planned</span><span><i style="background:#E4002B"></i>Delivered</span></div>
+      ${hbar(pr,{fmt:short$,names:["planned","delivered"],aria:"Planned against delivered benefit by project"})}</div>
+    <div class="chart"><h3>Project pipeline</h3><p class="sub">Where every project in the register is now.</p>
+      <table class="reg" style="min-width:0"><tbody>${byStage.map(([st,n])=>`<tr><td>${esc(st)}</td><td class="r"><b>${n}</b></td></tr>`).join("")}</tbody></table>
+      <button class="btn sm" type="button" data-go="projects" style="align-self:flex-start">Open the register</button></div>
+  </div>
+  <div class="box"><div class="row"><h3>Latest wins</h3>${D.canWrite?`<button class="btn sm red push" type="button" data-go="home">Log a win</button>`:""}</div>
+    ${wins.length?`<ul class="feed">${wins.map(w=>`<li><span class="t">${esc(w.task)}${w.example?' <span class="tag ex">Example</span>':""}</span>
+      <span class="m">${who(w.by)} · ${esc(w.team||"No team")} · ${fmtDate(w.created)}${w.prompt&&PROMPTS.find(p=>p.id===w.prompt)?` · used “${esc(PROMPTS.find(p=>p.id===w.prompt).t)}”`:""}</span>
+      <span class="h">${fmtN(winHours(w))} hrs<small>a year, reported</small></span>${w.note?`<span class="n">“${esc(w.note)}”</span>`:""}</li>`).join("")}</ul>`
+      :`<p class="muted">No wins logged yet. They show up here as soon as people start logging them.</p>`}</div>
+  <details class="more"><summary>How these numbers are worked out</summary><div class="method">
+    <p><b>Hours back a year</b> = minutes saved each time ÷ 60 × times a year (once = 1, monthly = 12, weekly = 46, most days = 220). People tend to overestimate time saved, so only ${Math.round(countFactor()*100)}% of the reported figure is counted. A portal admin can change that.</p>
+    <p><b>Worth, in people's time</b> = counted hours × $${fmtN(num(c.rate))}, the loaded hourly cost. It shows the scale of the time returned, not cash saved.</p>
+    <p><b>Project benefit approved</b> = each approved, piloting or live project's yearly benefit from its brief, cut by its confidence (Medium counts 75%, Low 50%).</p>
+    <p><b>Project benefit delivered</b> = the actual figures project owners record each quarter, with evidence.</p>
+    <p><b>Trained</b> = finished all six lessons. <b>Active</b> = logged a win or completed a lesson in the last 30 days. <b>Champion</b> = Level 4.</p></div></details>
+  ${D.admin?settingsHTML():""}`;
+  const v=$("v-value");
+  $("qReport").onclick=valueReportPDF;
+  $("csvWins").onclick=()=>saveFile("ai-wins.csv",[csvRow(["Date","Team","Task","Minutes saved","How often","Hours a year (reported)","Prompt","Tip","Example"]),
+    ...D.wins.map(w=>csvRow([w.created&&w.created.slice(0,10),w.team,w.task,w.mins,FREQ[w.freq]?FREQ[w.freq][0]:w.freq,Math.round(winHours(w)),w.prompt,w.note,w.example?"yes":""]))].join("\n"));
+  $("csvProj").onclick=()=>saveFile("ai-projects.csv",[csvRow(["Project","Team","Sponsor","Stage","Risk tier","Benefit / yr (counted)","Planned to date","Delivered to date","Approval","Next step"]),
+    ...D.projects.map(p=>{p=normProject(clone(p));const st=pstatus(p);return csvRow([p.title,p.team,p.sponsor,p.stage,st.t.complete?st.t.tier:"",Math.round(calc(p.brief).counted),
+      p.benefits.reduce((a,r)=>a+num(r.planned),0),p.benefits.reduce((a,r)=>a+num(r.actual),0),st.ap?DECISION_TYPES[st.ap.decision]:"",nextStep(p,st)]);})].join("\n"));
+  const ce=$("clearEx");if(ce)ce.onclick=()=>{ce.outerHTML=`<span class="confirm">Remove every example entry for everyone? <button class="btn sm" type="button" id="clearYes">Remove</button></span>`;
+    $("clearYes").onclick=async()=>{for(const k of COLLS)for(const r of D[k].filter(x=>x.example)){try{await del(k,r.id);}catch(e){}}toast("Example data removed");};};
+  const sf=$("setForm");if(sf)sf.onsubmit=async e=>{e.preventDefault();
+    const teams=$("set_teams").value.split("\n").map(x=>x.trim()).filter(Boolean);
+    const o={headcount:num($("set_head").value)||200,rate:num($("set_rate").value)||75,countPct:Math.min(100,Math.max(0,num($("set_pct").value))),teams:teams.length?teams:DEFAULT_TEAMS};
+    try{await put("config","settings",o);toast("Settings saved");}catch(err){}};
+}
+function settingsHTML(){const c=cfg();
+  return `<form class="box grey" id="setForm"><h3>Portal settings</h3><p class="small muted">Only portal admins (Editors) see this.</p>
+    <div class="grid2"><div class="field"><label for="set_head">People in the company</label><input id="set_head" inputmode="numeric" value="${esc(c.headcount)}"></div>
+    <div class="field"><label for="set_rate">Loaded cost per hour ($)</label><input id="set_rate" inputmode="decimal" value="${esc(c.rate)}"></div>
+    <div class="field"><label for="set_pct">Count this % of reported time</label><input id="set_pct" inputmode="numeric" value="${esc(c.countPct)}"></div></div>
+    <div class="field"><label for="set_teams">Teams, one per line</label><textarea id="set_teams" rows="6">${esc((c.teams||DEFAULT_TEAMS).join("\n"))}</textarea></div>
+    <div class="row"><button class="btn dark" type="submit">Save settings</button></div></form>`;}
+async function valueReportPDF(){
+  let J;try{J=await loadJsPDF();}catch(e){toast("Couldn't load the PDF maker. Try again in a moment.");return;}
+  const s=stats(),K=pdfKit(J),now=new Date(),q=Math.floor(now.getMonth()/3)+1;K.footer=`AI value report · Q${q} ${now.getFullYear()}`;
+  K.top(`AI VALUE REPORT · Q${q} ${now.getFullYear()}`,"How AI is paying off",`Generated ${fmtDate(now.toISOString())} from the CONA AI Portal${s.hasExamples?" · includes example data":""}`);
+  K.head("Headlines");
+  K.text(`${fmtN(s.trained)} of ${fmtN(s.headcount)} people (${Math.round(s.trained/s.headcount*100)}%) have finished the AI basics, and ${fmtN(s.active)} were active in the last 30 days. People report getting back ${fmtN(s.reported)} hours a year; we count ${fmtN(s.counted)} of those (${Math.round(countFactor()*100)}%), worth about ${short$(s.value)} of people's time. Approved projects are expected to return ${short$(s.planned)} a year, and ${short$(s.realized)} has been delivered and evidenced so far.`,10.5,K.BLK,false,3);
+  K.head("Adoption by team");const tr=teamRows().filter(t=>t.signed||t.wins);
+  if(tr.length)K.table(["Team","Signed in","Trained","Champions","Wins","Hours/yr (counted)"],tr.map(t=>[t.team,t.signed,t.trained,t.champions,t.wins,t.hours]),[.34,.13,.13,.13,.1,.17]);else K.text("No sign-ins yet.",10,K.GRY);
+  K.head("Projects");const ps=D.projects.map(p=>normProject(clone(p)));
+  if(ps.length)K.table(["Project","Stage","Tier","Benefit/yr $","Delivered $"],ps.map(p=>{const st=pstatus(p);return [p.title||"Untitled",p.stage,st.t.complete?String(st.t.tier):"–",calc(p.brief).counted,p.benefits.reduce((a,r)=>a+num(r.actual),0)];}),[.4,.18,.08,.17,.17]);
+  else K.text("No projects yet.",10,K.GRY);
+  K.head("Pipeline");K.text(STAGES.map(st=>`${st}: ${D.projects.filter(p=>p.stage===st).length}`).join(" · "),10);
+  K.head("Recent wins");D.wins.slice().sort((a,b)=>(b.created||"").localeCompare(a.created||"")).slice(0,8).forEach(w=>K.text(`${w.task} (${w.team||"no team"}) · about ${fmtN(winHours(w))} hrs/yr reported${w.note?` · “${w.note}”`:""}`,9.5,K.BLK,false,1.5));
+  K.head("Method");K.text(`Hours back = minutes saved ÷ 60 × times a year, self-reported, counted at ${Math.round(countFactor()*100)}%. Value of time = counted hours × $${fmtN(num(cfg().rate))}/hr; this is capacity, not cash. Project benefit approved = yearly benefit from each approved, piloting or live project's brief, cut by confidence (Medium 75%, Low 50%). Delivered = actuals recorded quarterly by project owners with evidence.`,8.5,K.GRY,false,0);
+  K.foot(K.footer);saveFile(`ai-value-report-q${q}-${now.getFullYear()}.pdf`,K.doc.output("blob"));
 }
 
 /* ============================================================
    Start
    ============================================================ */
-$("promptCount").textContent=PROMPTS.length;
-renderLearn();renderPrompts();renderCheckForm();renderBrief();
-const start=location.hash.slice(1)||store.get("cp-view","home");
+const READY=connect();
+const _put=put,_del=del;
+put=async(...a)=>{await READY;return _put(...a);};
+del=async(...a)=>{await READY;return _del(...a);};
+READY.then(()=>{if(D.mode==="shared"&&!D.me)D.canWrite=false;renderCurrent();});
+document.addEventListener("click",e=>{if(PJ.dirty&&e.target.closest("[data-go],#backReg"))flush();},true);
+const _renderRegister=renderRegister;
+renderRegister=function(){const v=$("v-projects");v.oninput=v.onchange=v.onclick=null;_renderRegister();};
+const start=location.hash.slice(1)||store.get("cp3-view","home");
 go(VIEWS.includes(start)?start:"home",true);
 </script>
