@@ -788,7 +788,7 @@ button.lg:hover{background:rgba(255,255,255,.05)}
 "use strict";
 
 /* Where shared links point. Change this if you host the site somewhere else. */
-const SHARE_URL = "https://cgeorgeandersen.github.io/doit/";
+const SHARE_URL = "https://tinyurl.com/whatdoiactuallydo";
 
 const ICONS = {
   "wrench":"<path d=\"M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.106-3.105c.32-.322.863-.22.983.218a6 6 0 0 1-8.259 7.057l-7.91 7.91a1 1 0 0 1-2.999-3l7.91-7.91a6 6 0 0 1 7.057-8.259c.438.12.54.662.219.984z\"/>",
@@ -1483,8 +1483,8 @@ function teamSummary(T){
 /* ---------- sharing ---------- */
 function shareBase(){
   const h = location.hostname;
-  // Share whatever address this page is actually served from. Inside the claude.ai viewer, use SHARE_URL instead.
-  if (/^https?:$/.test(location.protocol) && !/claude/.test(h)) return location.origin + location.pathname;
+  // On GitHub Pages or a local copy, share the address the page is served from. Everywhere else, use the short link.
+  if (/^https?:$/.test(location.protocol) && (h.endsWith("github.io") || h === "localhost" || h === "127.0.0.1")) return location.origin + location.pathname;
   return SHARE_URL;
 }
 function postText(a, inComment){
