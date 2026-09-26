@@ -1,0 +1,1138 @@
+<title>CONA AI Portal</title>
+<style>
+:root{
+  color-scheme:light;
+  --red:#E4002B; --red-dark:#B3001F; --red-tint:#FDECEF;
+  --black:#111111; --ink:#1E1E1E; --ink-2:#3D3D3D; --grey:#6B6B6B;
+  --line:#E2E2E2; --line-2:#C9C9C9; --soft:#F5F5F5; --white:#FFFFFF;
+  --font:Arial,"Helvetica Neue",Helvetica,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{background:var(--white)}
+body{color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.55}
+h1,h2,h3,h4{font-family:var(--font);color:var(--black);margin:0;line-height:1.2;text-wrap:balance}
+h1{font-size:clamp(30px,4.4vw,44px);font-weight:700;letter-spacing:-.02em}
+h2{font-size:clamp(24px,3vw,30px);font-weight:700;letter-spacing:-.01em}
+h3{font-size:18px;font-weight:700}
+p{margin:0}
+input,select,textarea,button{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--black);outline-offset:2px}
+.num{font-variant-numeric:tabular-nums}
+.muted{color:var(--grey)}
+.small{font-size:13px}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--red)}
+
+/* header */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--white);border-bottom:1px solid var(--line)}
+.top::before{content:"";display:block;height:4px;background:var(--red)}
+.top-in{max-width:1160px;margin:0 auto;padding-inline:16px;display:flex;align-items:center;gap:6px 24px;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:10px;background:none;border:0;padding:12px 0;text-align:left}
+.logo .dot{width:30px;height:30px;border-radius:50%;background:var(--red);color:var(--white);font-weight:700;font-size:13px;display:grid;place-items:center;letter-spacing:.02em}
+.logo b{display:block;font-size:17px;color:var(--black)}
+.logo span{display:block;font-size:12px;color:var(--grey)}
+nav.menu{display:flex;gap:2px;margin-left:auto;overflow-x:auto;scrollbar-width:none;max-width:100%}
+nav.menu::-webkit-scrollbar{display:none}
+nav.menu button{background:none;border:0;border-bottom:3px solid transparent;padding:18px 12px 15px;font-weight:700;font-size:14px;color:var(--ink-2);white-space:nowrap}
+nav.menu button:hover{color:var(--black)}
+nav.menu button[aria-current="page"]{color:var(--black);border-bottom-color:var(--red)}
+
+.page{max-width:1160px;margin:0 auto;padding-inline:16px;padding-block:32px 80px}
+.view{display:flex;flex-direction:column;gap:28px}
+.view[hidden]{display:none!important}
+.head{display:flex;flex-direction:column;gap:10px;max-width:70ch}
+.head p:not(.eyebrow){font-size:17px;color:var(--ink-2)}
+
+/* buttons & fields */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border-radius:4px;border:1.5px solid var(--black);background:var(--white);color:var(--black);padding:9px 16px;font-weight:700;font-size:14px;line-height:1.2;text-decoration:none}
+.btn:hover{background:var(--soft)}
+.btn.red{background:var(--red);border-color:var(--red);color:var(--white)}
+.btn.red:hover{background:var(--red-dark);border-color:var(--red-dark)}
+.btn.dark{background:var(--black);color:var(--white)}
+.btn.dark:hover{background:#333}
+.btn.plain{border-color:transparent;background:none;color:var(--ink-2);padding-inline:8px}
+.btn.plain:hover{color:var(--black);text-decoration:underline}
+.btn.sm{padding:6px 11px;font-size:13px}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.row .push{margin-left:auto}
+.field{display:flex;flex-direction:column;gap:5px;min-width:0}
+.field label{font-weight:700;font-size:14px;color:var(--black)}
+.field .hint{font-size:13px;color:var(--grey);margin-top:-2px}
+.field input,.field select,.field textarea{border:1px solid var(--line-2);border-radius:4px;background:var(--white);padding:9px 11px;font-size:15px;width:100%;min-width:0}
+.field textarea{resize:vertical;min-height:76px;line-height:1.5}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--black);box-shadow:0 0 0 3px rgba(17,17,17,.12)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.box{border:1px solid var(--line);border-radius:6px;background:var(--white);padding:20px;display:flex;flex-direction:column;gap:12px}
+.box.grey{background:var(--soft);border-color:var(--soft)}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--black);color:var(--white);padding:10px 16px;border-radius:4px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:50;max-width:calc(100% - 32px)}
+.toast.on{opacity:1}
+
+/* home */
+.hero{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:32px;align-items:center;padding-bottom:8px}
+.hero p.lead{font-size:18px;color:var(--ink-2);max-width:56ch;margin-top:14px}
+.hero .progress-card{background:var(--black);color:var(--white);border-radius:6px;padding:22px;display:flex;flex-direction:column;gap:12px}
+.progress-card h3{color:var(--white);font-size:16px}
+.progress-card .big{font-size:40px;font-weight:700;line-height:1}
+.progress-card .bar{height:8px;background:#3a3a3a;border-radius:4px;overflow:hidden}
+.progress-card .bar i{display:block;height:100%;background:var(--red)}
+.progress-card p{color:#cfcfcf;font-size:14px}
+.cards4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.door{display:flex;flex-direction:column;gap:10px;text-align:left;background:var(--white);border:1px solid var(--line);border-top:4px solid var(--black);border-radius:6px;padding:18px}
+.door:hover{border-color:var(--line-2);border-top-color:var(--red)}
+.door .when{font-size:13px;color:var(--grey)}
+.door h3{font-size:19px}
+.door p{font-size:14.5px;color:var(--ink-2)}
+.door .go{margin-top:auto;font-weight:700;color:var(--red);font-size:14px}
+.rules{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;border-top:1px solid var(--line);padding-top:24px}
+.rules h4{font-size:16px;margin-bottom:6px}
+.rules p{font-size:14.5px;color:var(--ink-2)}
+.leaders{display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between;background:var(--red-tint);border-radius:6px;padding:18px 20px}
+.leaders p{max-width:62ch;color:var(--ink-2)}
+
+/* learn */
+.learn{display:grid;grid-template-columns:280px minmax(0,1fr);gap:28px;align-items:start}
+.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 84px);display:flex;flex-direction:column;gap:4px}
+.toc .lbl{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--grey);padding:0 10px 6px}
+.toc button{display:grid;grid-template-columns:26px 1fr;gap:10px;align-items:center;text-align:left;background:none;border:0;border-radius:4px;padding:9px 10px;font-size:14.5px;color:var(--ink-2)}
+.toc button:hover{background:var(--soft)}
+.toc button[aria-current="true"]{background:var(--soft);color:var(--black);font-weight:700}
+.toc .n{width:26px;height:26px;border-radius:50%;border:1.5px solid var(--line-2);display:grid;place-items:center;font-size:12px;font-weight:700;color:var(--grey)}
+.toc .done .n{background:var(--black);border-color:var(--black);color:var(--white)}
+.toc hr{border:0;border-top:1px solid var(--line);margin:8px 0}
+.lesson{display:flex;flex-direction:column;gap:22px;min-width:0}
+.lesson .meta{font-size:13px;color:var(--grey)}
+.lesson .why{font-size:18px;color:var(--ink-2);max-width:64ch}
+.points{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:12px;max-width:70ch}
+.points li{display:grid;grid-template-columns:18px 1fr;gap:10px}
+.points li::before{content:"";width:8px;height:8px;background:var(--red);margin-top:8px}
+.points b{color:var(--black)}
+.compare{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.compare .side{border-radius:6px;padding:16px;display:flex;flex-direction:column;gap:8px}
+.compare .weak{background:var(--soft)}
+.compare .strong{background:var(--white);border:2px solid var(--black)}
+.compare .tag{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.compare .weak .tag{color:var(--grey)}
+.compare .strong .tag{color:var(--red)}
+.compare pre,.prompt pre{margin:0;white-space:pre-wrap;word-break:break-word;font-family:var(--font);font-size:14px;line-height:1.55}
+.compare .note{font-size:13.5px;color:var(--ink-2);border-top:1px solid var(--line);padding-top:8px}
+.prompt{border:1px solid var(--line-2);border-radius:6px;overflow:hidden}
+.prompt .ph{display:flex;justify-content:space-between;align-items:center;gap:8px;background:var(--soft);padding:8px 12px;border-bottom:1px solid var(--line)}
+.prompt .ph span{font-size:13px;font-weight:700}
+.prompt pre{padding:14px;max-height:380px;overflow:auto}
+.prompt mark{background:var(--red-tint);color:var(--red-dark);padding:0 2px;border-radius:2px}
+.quiz{border-left:4px solid var(--black);padding:4px 0 4px 18px;display:flex;flex-direction:column;gap:10px}
+.quiz .q{font-weight:700;font-size:16px;color:var(--black)}
+.quiz .opts{display:flex;flex-direction:column;gap:8px}
+.quiz .opt{text-align:left;background:var(--white);border:1px solid var(--line-2);border-radius:4px;padding:10px 12px;font-size:14.5px}
+.quiz .opt:hover{border-color:var(--black)}
+.quiz .opt.right{border:2px solid var(--black);background:var(--soft);font-weight:700}
+.quiz .opt.wrong{border-color:var(--red);color:var(--red-dark);background:var(--red-tint)}
+.quiz .fb{font-size:14.5px;color:var(--ink-2)}
+.lesson-nav{display:flex;justify-content:space-between;gap:10px;border-top:1px solid var(--line);padding-top:18px;flex-wrap:wrap}
+.plan{margin:0;padding:0;list-style:none;display:flex;flex-direction:column}
+.plan li{display:grid;grid-template-columns:90px 1fr;gap:16px;padding:14px 0;border-bottom:1px solid var(--line)}
+.plan li:last-child{border-bottom:0}
+.plan .t{font-weight:700;color:var(--red);font-variant-numeric:tabular-nums}
+.plan b{display:block;color:var(--black);margin-bottom:2px}
+.cheat{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.cheat .box h3{font-size:16px}
+.cheat ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:5px;font-size:14.5px}
+
+/* prompts */
+.filterbar{display:flex;flex-direction:column;gap:12px}
+.search{width:100%;max-width:520px;border:1.5px solid var(--black);border-radius:4px;padding:11px 14px;font-size:16px}
+.search:focus{outline:none;box-shadow:0 0 0 3px rgba(17,17,17,.12)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{background:var(--white);border:1px solid var(--line-2);border-radius:999px;padding:5px 12px;font-size:13.5px}
+.chip:hover{border-color:var(--black)}
+.chip[aria-pressed="true"]{background:var(--black);border-color:var(--black);color:var(--white)}
+.plist{display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.pitem{border-bottom:1px solid var(--line)}
+.pitem>button{width:100%;background:none;border:0;text-align:left;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 16px;padding:16px 4px;align-items:baseline}
+.pitem>button:hover h3{color:var(--red)}
+.pitem h3{font-size:17px}
+.pitem .who{grid-column:1;font-size:13px;color:var(--grey)}
+.pitem .saves{grid-row:1;grid-column:2;font-size:13px;color:var(--ink-2);white-space:nowrap}
+.pitem .body{display:none;flex-direction:column;gap:14px;padding:0 4px 22px}
+.pitem.open .body{display:flex}
+.pitem.open>button h3{color:var(--red)}
+.pitem .what{max-width:72ch;color:var(--ink-2)}
+.checknote{display:grid;grid-template-columns:auto 1fr;gap:12px;background:var(--soft);border-radius:4px;padding:12px 14px;font-size:14.5px}
+.checknote b{color:var(--red);font-size:12px;letter-spacing:.06em;text-transform:uppercase;padding-top:2px}
+.empty{padding:40px 16px;text-align:center;color:var(--grey);border:1px dashed var(--line-2);border-radius:6px}
+
+/* idea check */
+.check-wrap{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:28px;align-items:start}
+.qs{display:flex;flex-direction:column;gap:22px;min-width:0}
+.qq{display:flex;flex-direction:column;gap:8px}
+.qq .t{font-weight:700;font-size:16px;color:var(--black)}
+.qq .t span{color:var(--red);margin-right:8px;font-variant-numeric:tabular-nums}
+.choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.choice{display:flex;align-items:flex-start;gap:9px;border:1px solid var(--line-2);border-radius:4px;padding:10px 12px;font-size:14.5px;cursor:pointer;background:var(--white)}
+.choice:hover{border-color:var(--black)}
+.choice input{accent-color:var(--black);margin-top:3px;flex:none}
+.choice.on{border:2px solid var(--black);padding:9px 11px;background:var(--soft)}
+.check-side{position:sticky;top:calc(env(safe-area-inset-top,0px) + 84px);display:flex;flex-direction:column;gap:12px}
+.verdict{border-radius:6px;padding:20px;background:var(--soft);display:flex;flex-direction:column;gap:10px}
+.verdict.go{background:var(--black);color:var(--white)}
+.verdict.go h3,.verdict.go .lbl{color:var(--white)}
+.verdict.stop{background:var(--red);color:var(--white)}
+.verdict.stop h3,.verdict.stop .lbl{color:var(--white)}
+.verdict .lbl{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--grey)}
+.verdict h3{font-size:22px}
+.verdict p{font-size:14.5px}
+.reasons{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px}
+.reasons li{display:grid;grid-template-columns:14px 1fr;gap:10px;font-size:14.5px}
+.reasons li::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--red);margin-top:7px}
+.reasons li.ok::before{background:var(--black)}
+.reasons b{display:block;color:var(--black)}
+.stat{display:flex;justify-content:space-between;border-top:1px solid var(--line);padding-top:10px;font-size:14px}
+.stat b{font-variant-numeric:tabular-nums}
+
+/* brief builder */
+.briefs-top{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.briefs-top select{border:1px solid var(--line-2);border-radius:4px;padding:8px 10px;font-size:14px;max-width:100%;min-width:0;flex:0 1 360px}
+.builder{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;align-items:start}
+.form{display:flex;flex-direction:column;gap:26px;min-width:0}
+.form section{display:flex;flex-direction:column;gap:14px}
+.form h3{display:flex;gap:10px;align-items:baseline;border-bottom:2px solid var(--black);padding-bottom:6px}
+.form h3 span{color:var(--red);font-size:14px}
+.minirow{display:grid;grid-template-columns:minmax(0,1fr) 120px 34px;gap:8px;align-items:center}
+.minirow.r3{grid-template-columns:minmax(0,1fr) minmax(0,1fr) 34px}
+.minirow input{border:1px solid var(--line-2);border-radius:4px;padding:8px 10px;font-size:14.5px;width:100%;min-width:0}
+.minirow input:focus{outline:none;border-color:var(--black)}
+.x{background:none;border:0;font-size:20px;line-height:1;color:var(--grey);border-radius:4px;padding:4px}
+.x:hover{color:var(--red);background:var(--red-tint)}
+.moneyrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.preview-col{position:sticky;top:calc(env(safe-area-inset-top,0px) + 84px);display:flex;flex-direction:column;gap:14px;max-height:calc(100vh - 100px);overflow:auto;padding-bottom:4px}
+.paper{background:var(--white);border:1px solid var(--line-2);box-shadow:0 2px 14px rgba(0,0,0,.08);padding:30px 32px;display:flex;flex-direction:column;gap:16px;font-size:14px;line-height:1.5}
+.paper .rule{height:4px;background:var(--red);margin:-30px -32px 6px}
+.paper .kicker{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--grey)}
+.paper h2{font-size:24px}
+.paper .by{font-size:12.5px;color:var(--grey)}
+.paper .ask{border-left:4px solid var(--red);background:var(--soft);padding:12px 14px}
+.paper .ask b{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--red);margin-bottom:3px}
+.paper .ask p{font-size:15px;color:var(--black);font-weight:700}
+.paper h4{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--black);border-bottom:1px solid var(--line);padding-bottom:4px;margin-bottom:6px}
+.paper .blank{color:#A0A0A0;font-style:italic}
+.nums{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--line)}
+.nums div{padding:9px 10px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:1px}
+.nums div:nth-child(3n){border-right:0}
+.nums div:nth-last-child(-n+3){border-bottom:0}
+.nums span{font-size:11px;color:var(--grey)}
+.nums b{font-size:17px;font-variant-numeric:tabular-nums;color:var(--black)}
+.nums b.neg{color:var(--red)}
+.paper ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:3px}
+.tl{display:flex;flex-direction:column;gap:4px}
+.tl div{display:grid;grid-template-columns:78px 1fr;gap:10px}
+.tl span{font-weight:700;color:var(--black);font-variant-numeric:tabular-nums}
+.foot-note{font-size:11px;color:var(--grey);border-top:1px solid var(--line);padding-top:8px}
+.review{display:flex;flex-direction:column;gap:8px}
+.review .score{display:flex;align-items:baseline;gap:10px}
+.review .score b{font-size:28px;font-variant-numeric:tabular-nums}
+.review ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+.review li{display:grid;grid-template-columns:14px 1fr;gap:10px;font-size:14px}
+.review li::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--red);margin-top:6px}
+.review li.ok::before{background:var(--black)}
+.confirm{display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:var(--red-tint);border-radius:4px;padding:10px 12px;font-size:14px}
+
+.foot{border-top:1px solid var(--line);padding-top:16px;font-size:13px;color:var(--grey)}
+
+@media (max-width:1000px){
+  .cards4{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .learn,.check-wrap,.builder{grid-template-columns:1fr}
+  .toc,.check-side,.preview-col{position:static;max-height:none}
+  .hero{grid-template-columns:1fr}
+}
+@media (max-width:640px){
+  .cards4,.rules{grid-template-columns:1fr}
+  .choices{grid-template-columns:1fr}
+  .plan li{grid-template-columns:1fr;gap:4px}
+  .paper{padding:22px 18px}
+  .paper .rule{margin:-22px -18px 6px}
+  .nums{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .nums div{border-right:1px solid var(--line)!important;border-bottom:1px solid var(--line)!important}
+  .minirow{grid-template-columns:minmax(0,1fr) 90px 34px}
+  .minirow.r3{grid-template-columns:1fr 34px}
+  .minirow.r3 input:nth-child(2){grid-column:1}
+  nav.menu button{padding:12px 9px 11px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<header class="top">
+  <div class="top-in">
+    <button class="logo" type="button" data-go="home" aria-label="Home"><span class="dot">AI</span><span><b>CONA AI Portal</b><span>Practical AI for everyday work</span></span></button>
+    <nav class="menu" aria-label="Sections">
+      <button type="button" data-go="home">Home</button>
+      <button type="button" data-go="learn">Learn</button>
+      <button type="button" data-go="prompts">Prompt library</button>
+      <button type="button" data-go="check">Idea check</button>
+      <button type="button" data-go="brief">Exec brief</button>
+    </nav>
+  </div>
+</header>
+
+<main class="page">
+
+<!-- HOME -->
+<section class="view" id="v-home">
+  <div class="hero">
+    <div>
+      <p class="eyebrow">For everyone at CONA</p>
+      <h1>Get real work done with AI, and know when not to use it.</h1>
+      <p class="lead">Short lessons, prompts you can copy, a quick way to test a project idea, and a tool that turns a project into a one-page brief for leadership. Nothing you type here leaves your browser.</p>
+    </div>
+    <div class="progress-card" id="homeProgress"></div>
+  </div>
+
+  <div class="cards4">
+    <button class="door" type="button" data-go="learn"><span class="when">New to this, or want to get better</span><h3>Learn the basics</h3><p>Six lessons, five minutes each. Each one ends with something to try on your own work.</p><span class="go">Start learning →</span></button>
+    <button class="door" type="button" data-go="prompts"><span class="when">You have a task in front of you</span><h3>Find a prompt</h3><p><span id="promptCount">35</span> prompts for real jobs here: close commentary, supplier emails, SAP errors, meeting notes.</p><span class="go">Browse prompts →</span></button>
+    <button class="door" type="button" data-go="check"><span class="when">Someone said “can AI do this?”</span><h3>Check an idea</h3><p>Nine questions. You find out whether it's worth a pilot, better done another way, or not worth doing yet.</p><span class="go">Check an idea →</span></button>
+    <button class="door" type="button" data-go="brief"><span class="when">You need a decision from leadership</span><h3>Write an exec brief</h3><p>Fill in the blanks and get a one-page brief with the numbers worked out. It also flags jargon and gaps before an exec does.</p><span class="go">Start a brief →</span></button>
+  </div>
+
+  <div class="leaders">
+    <p><b>Leading a team?</b> There's a 30-minute session plan you can run at your next team meeting. No slides needed. Everyone leaves having used AI on their own work.</p>
+    <button class="btn dark" type="button" data-go="learn" data-lesson="session">Get the session plan</button>
+  </div>
+
+  <div class="rules">
+    <div><h4>Use the approved tools</h4><p>Company data only goes into AI tools the company has approved. If you're not sure a tool is approved, ask before you paste anything.</p></div>
+    <div><h4>You own what you send</h4><p>AI writes fluently even when it's wrong. Check facts, numbers and names before anything leaves your hands.</p></div>
+    <div><h4>Start small</h4><p>Pick one task you do every week and get good at that. It beats trying everything once.</p></div>
+  </div>
+  <p class="foot">Your progress, answers and briefs are saved in this browser only. To share a brief, download it as a PDF or save it as a file.</p>
+</section>
+
+<!-- LEARN -->
+<section class="view" id="v-learn" hidden>
+  <div class="learn">
+    <nav class="toc" id="toc" aria-label="Lessons"></nav>
+    <article class="lesson" id="lesson"></article>
+  </div>
+</section>
+
+<!-- PROMPTS -->
+<section class="view" id="v-prompts" hidden>
+  <div class="head">
+    <p class="eyebrow">Prompt library</p>
+    <h2>Copy a prompt, fill in the red parts, paste it into an approved tool.</h2>
+    <p>Each one says roughly how much time it saves and what to check before you trust the answer.</p>
+  </div>
+  <div class="filterbar">
+    <input class="search" id="pSearch" type="search" placeholder="Search: contract, variance, email, SAP…" aria-label="Search prompts">
+    <div class="chips" id="pRoles"></div>
+    <p class="small muted" id="pCount"></p>
+  </div>
+  <div class="plist" id="plist"></div>
+</section>
+
+<!-- IDEA CHECK -->
+<section class="view" id="v-check" hidden>
+  <div class="head">
+    <p class="eyebrow">Idea check</p>
+    <h2>Is this a job for AI?</h2>
+    <p>Answer for how things are today, not how they'll be once the project is done. The answer on the right updates as you go.</p>
+  </div>
+  <div class="check-wrap">
+    <div class="qs" id="qs"></div>
+    <aside class="check-side" id="checkSide" aria-live="polite"></aside>
+  </div>
+</section>
+
+<!-- EXEC BRIEF -->
+<section class="view" id="v-brief" hidden>
+  <div class="head">
+    <p class="eyebrow">Exec brief</p>
+    <h2>One page. One decision. Numbers they can trust.</h2>
+    <p>Executives read the first three lines and the numbers. Fill in the left side, and the right side becomes the brief. The check under it points out anything an exec is likely to question.</p>
+  </div>
+  <div class="briefs-top" id="briefsTop"></div>
+  <div class="builder">
+    <div class="form" id="bform"></div>
+    <div class="preview-col">
+      <div class="paper" id="paper"></div>
+      <div class="box" id="review"></div>
+      <div class="row" id="briefActions"></div>
+    </div>
+  </div>
+</section>
+
+</main>
+<div class="toast" id="toast" role="status"></div>
+<script>
+"use strict";
+/* ============================================================
+   LESSONS
+   ============================================================ */
+const LESSONS=[
+{id:"good-at",title:"What it's good at, and what it isn't",mins:5,
+ why:"The quickest way to get value is to use AI for the jobs it's good at. The quickest way to get burned is to use it for the others.",
+ points:[
+  "<b>Think of it as a smart new hire who has never worked here.</b> Well read, fast, happy to draft anything. It doesn't know our customers, our systems or last week's decision unless you tell it.",
+  "<b>It's good with words.</b> Drafting, rewriting, summarising, explaining, pulling structure out of messy notes, comparing two documents, brainstorming options.",
+  "<b>It's bad at exact numbers and facts it wasn't given.</b> It can add up a column wrong and sound completely sure. It can invent a policy clause, a statistic or a quote.",
+  "<b>It won't give the same answer twice.</b> Ask again and you'll get a different version. That's fine for a draft. It's a problem for anything that has to be exactly repeatable."],
+ compare:{weak:{tag:"Poor use",text:"Here's our sales export for Q3. What's the total volume by region?",note:"It may get the sums wrong, and you won't know. Use a pivot table."},
+          strong:{tag:"Good use",text:"Here's our Q3 volume by region (totals from the pivot table). Write three sentences for the ops review explaining what changed from Q2. Use only these numbers.",note:"Excel does the maths. AI does the writing. You check both."}},
+ tryit:"Pick one thing you did this week that was mostly reading or writing: an email thread, a report, meeting notes. Paste it into an approved tool and ask: “What are the three most important points here, and what's missing?” Then judge the answer yourself.",
+ quiz:{q:"You need the total of a 400-row column for a report. What's the best move?",
+  opts:["Paste the column into the AI tool and ask for the total","Use SUM in Excel, and ask AI to explain the formula if you get stuck","Ask the AI tool twice and use the answer if both match"],
+  right:1,fb:["It can add up hundreds of numbers wrong and sound certain. Excel won't.","Right. Use the right tool for the maths, and AI for the bits around it.","Two wrong answers can match. For exact numbers, use a spreadsheet."]}},
+
+{id:"briefing",title:"Ask the way you'd brief a colleague",mins:5,
+ why:"Most bad answers come from short questions. If you'd give a colleague more context, give the AI more context too.",
+ points:[
+  "<b>Say who it's for.</b> “For the plant manager, who'll read it on her phone” gets a very different answer from no audience at all.",
+  "<b>Say what you want done.</b> Draft, shorten, compare, list, explain. One clear verb.",
+  "<b>Give it the material.</b> Paste the email, the notes, the table. Don't make it guess.",
+  "<b>Say what good looks like.</b> Length, format, tone. “Under 120 words, three bullets, no jargon.”",
+  "<b>If you have an example you like, paste it.</b> “Write it like this one” beats any description of a style."],
+ compare:{weak:{tag:"Short question",text:"Write an email about the delivery delay.",note:"You'll get a generic apology letter you have to rewrite."},
+          strong:{tag:"Proper brief",text:"Write an email to our contact at a regional grocery chain. Their Tuesday delivery to 14 stores will arrive Thursday because a line was down at the plant. We've added a Saturday run for the three busiest stores. Firm and factual, one apology, under 120 words. End by offering a call tomorrow.",note:"Everything it needs is there. You'll mostly just check it and send."}},
+ tryit:"Take an email you need to write today. Before asking for a draft, write two lines: who it's for and what they need to do after reading it. Put those at the top of your prompt.",
+ quiz:{q:"Which prompt will get the most useful first draft?",
+  opts:["“Summarise this.”","“Summarise this thread for my director in five bullets: the decision needed, the options, and who disagrees.”","“Please could you kindly summarise this long thread as best you can?”"],
+  right:1,fb:["It will summarise, but not for anyone in particular, so it'll be too long or miss what matters.","Right. Audience, length and what to focus on.","Politeness doesn't hurt, but it doesn't tell it what you need."]}},
+
+{id:"source",title:"Give it the facts. Don't ask it to remember them.",mins:5,
+ why:"When it doesn't have the facts, it fills the gap with something that sounds right. Paste the source, and tell it to stay inside it.",
+ points:[
+  "<b>Paste the actual document.</b> The policy, the contract, the spec. Don't ask “what's our travel policy?” It doesn't know ours.",
+  "<b>Tell it to use only what you gave it.</b> “Answer using only the text below.”",
+  "<b>Ask for quotes.</b> “Quote the sentence you're relying on” makes it easy to check, and it's less likely to make things up.",
+  "<b>Give it a way out.</b> “If the document doesn't say, tell me.” Otherwise it will try to be helpful and guess."],
+ compare:{weak:{tag:"Asking it to remember",text:"Can I expense a client dinner over $150?",note:"It will answer from generic company policies that aren't ours."},
+          strong:{tag:"Giving it the source",text:"Using only the expense policy below, can I expense a client dinner for four people at $190? Quote the clause you're relying on. If the policy doesn't cover it, say so.\n\n[paste policy]",note:"Now you can check the quote in ten seconds."}},
+ tryit:"Find a policy or long document you've had to search through recently. Paste it in with a real question, and add “quote the sentence you're relying on, and say if it isn't covered.” Check the quote.",
+ quiz:{q:"The AI gives you a confident answer about a policy, with a clause number. What do you do?",
+  opts:["Use it. It gave a clause number, so it's clearly checked","Open the policy and read that clause before relying on it","Ask the AI whether it's sure"],
+  right:1,fb:["Clause numbers can be invented too. They look official, which makes this worse.","Right. It takes a minute and it's the only real check.","It will almost always say yes. That's not a check."]}},
+
+{id:"checking",title:"Check it before it leaves your hands",mins:5,
+ why:"AI writes fluently even when it's wrong. Your name goes on what you send, so the check is your job.",
+ points:[
+  "<b>Check every number, name and date against the source.</b> These are the most common errors and the most embarrassing.",
+  "<b>Read for what's missing, not just what's wrong.</b> Summaries quietly drop the awkward bit. Ask it: “What did you leave out?”",
+  "<b>Check the tone.</b> It tends to over-apologise, over-promise and pad. Cut anything you wouldn't say out loud.",
+  "<b>Be most careful where you know least.</b> If you couldn't spot a wrong answer, get someone who can to look before it goes anywhere."],
+ compare:{weak:{tag:"Risky",text:"Draft is good. Sending it to the customer now.",note:"The draft promised a credit nobody approved."},
+          strong:{tag:"Safe",text:"Reading it once for facts (dates, volumes, names), once for promises (did it commit us to anything?), once for tone.",note:"Three quick passes. About two minutes."}},
+ tryit:"Next time you use AI for something that goes to another person, do the three passes: facts, promises, tone. Notice what you'd have missed.",
+ quiz:{q:"A draft customer email looks great. What's the most likely hidden problem?",
+  opts:["A spelling mistake","A promise or detail that isn't true, like a date or a credit nobody approved","It's too short"],
+  right:1,fb:["It rarely misspells. The bigger risk is elsewhere.","Right. Invented details and extra promises are the classic failure.","Length is easy to see. The risk is the thing you don't see."]}},
+
+{id:"data",title:"What's safe to paste",mins:5,
+ why:"Most people never have a problem here. The ones who do usually pasted something into a tool that wasn't approved for it.",
+ points:[
+  "<b>The company AI policy is the final word.</b> This lesson covers the common-sense basics. If they ever disagree, the policy wins.",
+  "<b>Use only approved tools for work.</b> A personal account on a public AI site is not the same as the company's approved tool, even if it looks the same.",
+  "<b>Be careful with anything personal or sensitive.</b> Customer details, employee information, passwords, unreleased financials, and anything under NDA. Don't paste it unless you know the tool is approved for that kind of data.",
+  "<b>When in doubt, strip it out.</b> Replace names and account numbers with placeholders like [Customer A]. The AI rarely needs the real ones to help you.",
+  "<b>Ask if you're unsure.</b> A quick question to your manager or the AI team is much cheaper than fixing a leak."],
+ compare:{weak:{tag:"Risky",text:"[Pastes a full employee spreadsheet with names, salaries and home addresses into a public chatbot] Which of these people are paid below band?",note:"Personal data in an unapproved tool. Don't."},
+          strong:{tag:"Safer",text:"Here's a list of salaries and pay bands with names replaced by Employee 1, 2, 3. Write the Excel formula that flags anyone below the minimum of their band.",note:"It gets what it needs to help. The personal data stays with you."}},
+ tryit:"Find out which AI tools are approved for your work, and bookmark them. If you don't know, ask your manager this week. It's the one lesson where the answer is specific to us.",
+ quiz:{q:"You want help with a customer complaint email that includes the customer's name and account number. What's the safest approach?",
+  opts:["Paste it into whichever AI site is quickest","Use an approved tool, and replace the name and account number with placeholders if they aren't needed","Don't use AI for anything customer-related, ever"],
+  right:1,fb:["Speed isn't worth it. Unapproved tools are the main way data leaks.","Right. Approved tool, and only the detail it actually needs.","That's more cautious than you need to be. Approved tools and placeholders make most of this fine."]}},
+
+{id:"habit",title:"Make it part of your week",mins:5,
+ why:"People who get real value from AI didn't try everything once. They picked one or two tasks and got good at them.",
+ points:[
+  "<b>Pick one task you do every week.</b> Status report, meeting notes, the Monday email. Use AI on it for a month.",
+  "<b>Treat the first answer as a first draft.</b> Follow up: “shorter”, “more direct”, “what did you leave out?”, “give me two other options.” The second or third answer is usually the good one.",
+  "<b>Save prompts that work.</b> Keep a note of your best prompts, with the blanks marked. Next week it takes seconds.",
+  "<b>Share what works.</b> Send your best prompt to one colleague. Teams improve fastest when people swap what works.",
+  "<b>When a task needs more than a prompt, say so.</b> If the same job could be automated for the whole team, run it through the Idea check."],
+ compare:{weak:{tag:"One-off",text:"Tried AI once on a hard problem, got a vague answer, gave up.",note:"Hard, unusual problems are the worst place to start."},
+          strong:{tag:"Habit",text:"Every Friday: paste the week's notes, use my saved status-report prompt, check it, send it. Saves about an hour.",note:"Small, repeated and easy to check."}},
+ tryit:"Choose your one weekly task now. Find a matching prompt in the prompt library, save it somewhere you'll see it, and use it the next time the task comes round.",
+ quiz:{q:"The first answer isn't quite right. What usually works best?",
+  opts:["Start a new chat and ask the same question again","Tell it what's wrong: “too formal, cut it by half, lead with the decision”","Give up and write it yourself"],
+  right:1,fb:["You'll get another random version. Telling it what to fix is faster.","Right. Specific feedback gets you there in one or two rounds.","Sometimes that's right, but one round of feedback usually fixes it."]}}
+];
+
+/* Team session plan */
+const SESSION=[
+ ["0–5 min","Why we're doing this","Say it plainly: we're not replacing anyone. We're saving time on the reading and writing that eats everyone's week. Share one example of your own, even a small one."],
+ ["5–12 min","Live demo","Share your screen. Open an approved tool. Paste real (non-sensitive) meeting notes and use the “messy notes to decisions, owners and dates” prompt from the library. Let people see it get something slightly wrong, then fix it with a follow-up."],
+ ["12–24 min","Everyone tries it","Each person picks a prompt from the library that matches something on their plate today and runs it on their own work. Walk around, or stay on the call, and help anyone who gets stuck."],
+ ["24–30 min","One win, one miss","Go round the room: one thing that worked, one thing that didn't. The misses are as useful as the wins. They teach the checking habit."],
+ ["After","One task each","Everyone names one weekly task they'll use AI on for the next month. Check in at your next one-to-ones."]
+];
+const SESSION_BRING=["An approved AI tool everyone can open","A real, non-sensitive document for the demo (meeting notes work well)","This portal's prompt library open in a browser tab"];
+
+/* Cheat sheet */
+const CHEAT=[
+ ["A good prompt has",["Who it's for","What you want done (one verb)","The material, pasted in","What good looks like: length, format, tone","An example, if you have one"]],
+ ["Useful follow-ups",["“Shorter. Lead with the decision.”","“What did you leave out?”","“Give me two other versions.”","“Quote where you got that.”","“Explain it for someone new to this.”"]],
+ ["Before you send",["Numbers, names and dates match the source","No promises you didn't agree to","Nothing important dropped","Sounds like you, not a press release"]],
+ ["Don't",["Use unapproved tools for work data","Paste personal data you don't need to","Trust its maths","Send anything you haven't read"]]
+];
+
+/* ============================================================
+   IDEA CHECK
+   g = 2 good, 1 caution, 0 problem. flag = what we tell them.
+   ============================================================ */
+const IDEA_QS=[
+ {id:"input",q:"Where does the information for this task live today?",o:[
+   ["In a system, or in emails and files",2],["In PDFs, scans or screenshots",1,"The information is locked in documents. Getting it out is a job in itself, and it comes first."],
+   ["On paper or in people's heads",0,"There's nothing digital for AI to work from yet. Capture the information first."]]},
+ {id:"words",q:"Is the work mostly reading, writing or interpreting?",o:[
+   ["Mostly, yes",2],["About half",1],
+   ["No, it's mostly numbers and data entry",0,"This is calculation and data movement. Normal automation or a spreadsheet will do it better and more reliably."]]},
+ {id:"spot",q:"If the AI got it wrong, would someone notice?",o:[
+   ["Yes, easily",2],["Only an expert would",1,"Only experts can spot mistakes, so checking will eat into the time saved."],
+   ["Probably not",0,"Mistakes would go unnoticed. That's the biggest reason not to use AI on a task."]]},
+ {id:"cost",q:"What would a mistake cost?",o:[
+   ["A bit of rework",2],["Money or a customer relationship",1,"Mistakes are costly, so a person has to review every output. Build that into the plan."],
+   ["Legal, safety or regulatory trouble",0,"The stakes are too high for AI to make or shape the decision.",true]]},
+ {id:"data",q:"What kind of data is involved?",o:[
+   ["General business information",2],["Personal data about customers or employees",1,"Personal data is involved. You'll need a privacy review and an approved tool."],
+   ["Regulated, or covered by an NDA",0,"Restricted data needs written approval before any AI tool touches it.",true]]},
+ {id:"rules",q:"Could a new starter do it from a written checklist?",o:[
+   ["No, it takes judgement",2],["Partly",1],
+   ["Yes, the rules are clear",0,"Clear rules mean normal automation (a workflow, a macro, a scheduled report) will do it better than AI."]]},
+ {id:"own",q:"Does a system we already have do this?",o:[
+   ["We checked, and no",2],["Don't know, nobody has looked",1,"Nobody has checked the systems we already pay for. It's an afternoon's work and could save the whole project."],
+   ["Yes, we just don't use it",0,"We already own something that does this. Switch it on before building anything."]]},
+ {id:"often",q:"How often does it happen?",o:[
+   ["Daily or weekly",2],["Monthly",1],
+   ["A few times a year",0,"It doesn't happen often enough to be worth building a tool for."]]},
+ {id:"owner",q:"Who would look after it once it's running?",o:[
+   ["A named person with time for it",2],["We'd work that out later",1,"Nobody owns it yet. Name someone before you build, or it will quietly stop being used."],
+   ["Nobody, really",0,"With no owner, a tool gets abandoned within months. Sort ownership first."]]}
+];
+const VERDICT_TEXT={
+ pilot:{cls:"go",lbl:"Verdict",h:"Worth a small pilot",p:"It's the kind of work AI handles well, mistakes can be caught, and there's enough time at stake. Keep the first version small and test it against real past examples before anyone relies on it."},
+ automate:{cls:"",lbl:"Verdict",h:"Automate it the normal way",p:"This sounds like rules and numbers, which a workflow, macro or scheduled report handles reliably and cheaply. AI would do the same job less consistently. It's still worth doing, just without AI."},
+ own:{cls:"",lbl:"Verdict",h:"Use what we already have",p:"A system we already pay for does this. Talk to the system owner about switching it on before building anything new."},
+ notyet:{cls:"",lbl:"Verdict",h:"Not yet",p:"There are gaps to close before a pilot would work. Fix the items listed below and run this check again. Meanwhile, people doing the task can still use AI for their own drafting and reading."},
+ small:{cls:"",lbl:"Verdict",h:"Not worth a project",p:"There isn't enough time at stake to justify building and maintaining something. The people who do it can still use prompts from the library on their own."},
+ blocked:{cls:"stop",lbl:"Verdict",h:"Talk to Risk first",p:"The data or the stakes mean you need approval before going further. That's not a no. Take the specific question to your risk, legal or security contact and come back with the answer."}
+};
+
+/* ============================================================
+   EXEC BRIEF
+   ============================================================ */
+const DECISIONS=["Approve funding","Approve a pilot","Agree the direction","For information only"];
+const CONF_LEVELS={High:[1,"We've measured it"],Medium:[0.75,"Based on a trial or a good estimate"],Low:[0.5,"An educated guess"]};
+const JARGON=["leverage","synergy","synergies","robust","seamless","seamlessly","cutting-edge","cutting edge","best-in-class","world-class","game-changer","game changing","transformational","transformative","revolutionary","revolutionise","revolutionize","paradigm","holistic","utilize","utilise","utilization","going forward","low-hanging fruit","move the needle","deep dive","bandwidth","circle back","unlock value","unlock","empower","ecosystem","end-to-end","state-of-the-art","next-generation","ai-powered","ai-driven","innovative","disruptive","optimize","optimise","streamline","actionable","value-add","scalable","agile","north star","harness","journey"];
+
+const EXAMPLE_BRIEF={
+ id:"ex1",example:true,
+ title:"AI drafts for customer care email replies",
+ author:"Customer Care Operations",sponsor:"VP Customer Service",date:"",
+ decision:"Approve a pilot",decideBy:"",
+ ask:"Approve a 12-week pilot with 15 agents, costing $85,000, to test AI-drafted replies to retailer emails.",
+ problem:"Agents spend about 40% of their day writing email replies, and retailers wait 9 hours on average for a first response. Slow replies are the top complaint in our quarterly retailer survey.",
+ plan:"Use the drafting feature in the Salesforce licence we already pay for. The AI drafts each reply from the case history and our approved knowledge articles. An agent reads, edits and sends every one. Nothing goes out without a person.",
+ ifnot:"Response times keep slipping as email volume grows about 8% a year. We'd need four more agents by next summer to hold today's service level.",
+ once:85000,running:40000,benefit:360000,
+ basis:"4-week trial with 6 agents: handle time on email fell 22%. Scaled to 62 agents at current cost.",
+ conf:"Medium",timeSaved:true,
+ timeGoes:"Four agent hires planned for next summer are no longer needed; the rest goes to proactive calls to at-risk accounts.",
+ startMonth:4,
+ milestones:[["Configure and train 15 agents","Month 1"],["Pilot live with 15 agents","Month 2"],["Go/no-go on full rollout","Month 4"]],
+ risks:[["Draft quotes an out-of-date policy","Drafts use approved knowledge articles only; article owners named"],["Agents send drafts without reading","Sending needs an edit or a confirm click; weekly quality sampling"]],
+ success:"First-response time under 4 hours for pilot agents, with quality scores the same or better."
+};
+const BLANK_BRIEF=()=>({id:uid(),title:"",author:"",sponsor:"",date:"",decision:DECISIONS[0],decideBy:"",ask:"",problem:"",plan:"",ifnot:"",
+ once:0,running:0,benefit:0,basis:"",conf:"Medium",timeSaved:false,timeGoes:"",startMonth:3,
+ milestones:[["",""],["",""]],risks:[["",""]],success:""});
+</script>
+<script>
+"use strict";
+const ROLES=["Finance","Procurement","Supply chain & ops","Sales & customer","Customer care","HR","IT","Legal & compliance","Comms","Projects","Everyone"];
+const SINKS=["Email","Meetings","Spreadsheets","Reports & decks","Contracts & documents","Data cleanup","Research","Policy questions","Tickets & queues","Writing","Planning","SAP & systems"];
+const LEVELS=[["any","Use it most weeks"],["some","Tried it a few times"],["new","Never really used it"]];
+const LVL_NAME={start:"Start here",build:"Worth setting up",stretch:"For the curious"};
+
+const PROMPTS=[
+{id:"formula",t:"Explain a spreadsheet formula you inherited",r:["Finance","Everyone"],s:["Spreadsheets"],lvl:"start",save:"30–90 min each time",first:1,
+ what:"A colleague left and their workbook has a formula nested seven levels deep. Paste it in and get a plain-English walkthrough. It's the best first try for anyone who works in spreadsheets, because you can check the answer against the cell straight away.",
+ p:"Explain this Excel formula in plain English. Work from the innermost function outward, one step per line. Then tell me:\n- what it returns in the normal case\n- what it returns when a lookup finds nothing\n- any assumption it makes that could silently give a wrong number\n\nFormula:\n[paste formula]\n\nWhat the columns hold:\n[e.g. A = material number, C = plant, F = price]",
+ c:"This one checks itself: compare the explanation with what the cell actually shows. If they differ, you've caught it within seconds."},
+{id:"notes",t:"Turn messy meeting notes into decisions, owners and dates",r:["Projects","Everyone"],s:["Meetings","Writing"],lvl:"start",save:"2–4 hrs/week",first:1,
+ what:"Paste your own rough notes and get back a clean list. You were in the meeting, so you'll know immediately whether it's right. That makes it the safest place to learn how these tools behave.",
+ p:"Below are my rough notes from a meeting about [topic]. Pull out three lists:\n\nDECISIONS: what was actually decided\nACTIONS: task, owner, due date\nOPEN: questions raised but not settled\n\nUse only what's in the notes. If no owner or date was stated, write \"unassigned\" rather than guessing. At the end, list anything that sounds like a decision but has no owner.\n\n[paste notes]",
+ c:"You were there, so read it against your memory. Watch for actions it assigned to whoever spoke loudest."},
+{id:"longdoc",t:"Get what matters to you out of a long document",r:["Everyone","Legal & compliance","Finance"],s:["Research","Policy questions","Contracts & documents"],lvl:"start",save:"1–3 hrs each",first:1,
+ what:"The 60-page report, the new regulation, the 40-message thread. Don't ask for a summary. Ask what it means for your job and what you can safely skip.",
+ p:"I'm a [your role] and I care about [your specific concern]. Read the document below and tell me:\n1. The three things in it that affect me, each with a direct quote\n2. Anything that would change a decision I'm making about [decision]\n3. What I can safely ignore\n\nIf nothing in it affects my area, say so plainly. Don't stretch to find something.\n\n[paste document]",
+ c:"Read the quoted passages before you act. The \"say so plainly\" line matters: without it you'll get relevance that isn't really there."},
+{id:"variance",t:"Draft month-end variance commentary",r:["Finance"],s:["Reports & decks","Spreadsheets","Writing"],lvl:"start",save:"3–5 hrs per close",
+ what:"Every close, someone writes the same kind of paragraph about the same kind of variance table. Give it the table and last month's commentary as a style guide, then edit rather than start from nothing.",
+ p:"Below is a budget-vs-actual variance table for [entity, period]. Write close commentary in the voice of the example underneath it.\n\nRules:\n- Only cover variances over [$ amount] or [%]\n- One short paragraph per line item: direction, amount, and the driver if the data shows it\n- If the data doesn't show the driver, write \"driver to be confirmed\". Don't guess.\n- Quote numbers exactly as they appear in the table. Don't calculate new ones.\n\n[paste table]\n\nLast month's commentary:\n[paste two or three paragraphs]",
+ c:"It can see that a number moved, but not why. Every stated cause is a guess until you confirm it, and every figure needs checking against the table."},
+{id:"buildformula",t:"Write the formula you can't remember",r:["Finance","Supply chain & ops","Everyone"],s:["Spreadsheets"],lvl:"start",save:"1–2 hrs/week",
+ what:"Describe the result you want in words and get the formula back with an explanation. It's quicker than a search engine, and you'll understand what you're pasting.",
+ p:"My Excel data starts in row 2. Column A is [x], column B is [y], column C is [z]. In column D I want [the result, in plain words].\n\nGive me the formula, explain each argument, and tell me what it returns when there's no match or a blank. If a newer function (XLOOKUP, FILTER, LET) makes it simpler, use it and say which Excel version it needs.",
+ c:"Before you fill it down 10,000 rows, test it on five rows where you already know the answer."},
+{id:"reconcile",t:"Match two lists that don't quite line up",r:["Finance","Procurement","Supply chain & ops"],s:["Data cleanup","Spreadsheets"],lvl:"build",save:"2–6 hrs per cycle",
+ what:"Vendor names spelled four ways, customer numbers with and without leading zeros, an export that almost matches the master. AI is good at proposing which rows refer to the same thing. It's poor at arithmetic, so let it propose matches and let Excel do the totals.",
+ p:"Below are two lists of [vendors / customers / SKUs]. List A is the master. List B is an export from [system].\n\nFor each entry in B, propose the most likely match in A and rate your confidence as high, medium or low. Put anything you're unsure about under a \"needs a person\" heading rather than forcing a match.\n\nOutput a table: B value | proposed A match | confidence | reason.\nDon't sum, count or total anything.\n\nList A:\n[paste]\n\nList B:\n[paste]",
+ c:"Accept only the high-confidence matches without review, and do every total in Excel, never in the chat."},
+{id:"sapmsg",t:"Decode an SAP error or system message",r:["Finance","Supply chain & ops","Procurement","IT"],s:["SAP & systems"],lvl:"start",save:"20–45 min each",
+ what:"A message number, a short text, and a transaction you were halfway through. Ask what it usually means, what to check first, and who normally owns the fix, before you raise a ticket that goes round in circles.",
+ p:"I got this message in SAP S/4HANA while doing [what you were doing, e.g. posting a goods receipt in MIGO].\n\nMessage: [message class and number, e.g. M7 021]\nText: [the exact text]\n\nExplain in plain language what it usually means, the three most likely causes in order, what I can check myself with display-only access, and which team normally fixes each cause (master data, config, security, or the business owner). Don't suggest configuration changes.",
+ c:"The general meaning is usually right. Our own configuration and custom messages aren't public, so treat the causes as a checklist to work through, not a diagnosis."},
+{id:"contract5",t:"Pull the five terms you need from a contract",r:["Procurement","Legal & compliance"],s:["Contracts & documents","Research"],lvl:"build",save:"1–3 hrs per contract",
+ what:"You don't need a legal opinion. You need the renewal date, the notice period, what happens if volumes fall, and whether the price moves. Ask for those with clause references, then read those clauses yourself.",
+ p:"From the agreement below, extract only the following. For each, give the clause number and a direct quote:\n1. Term, renewal mechanism, and the exact date notice must be given to stop auto-renewal\n2. Price, and anything that lets either party change it (indexation, surcharges, review clauses)\n3. Volume or minimum commitments, and the penalty for missing them\n4. Termination rights for each party\n5. Liability caps, and any unusual indemnity\n\nIf the document doesn't address one of these, write \"not addressed\". Don't fill in standard terms.\n\n[paste agreement]",
+ c:"This helps you read the contract. It isn't legal review. Read every clause it cites, and send anything that would change a decision to Legal."},
+{id:"rfpgrid",t:"Compare vendor proposals on the same criteria",r:["Procurement","IT"],s:["Contracts & documents","Reports & decks"],lvl:"build",save:"3–6 hrs per RFP",
+ what:"Three vendors answer the same RFP in three different layouts. Have it build the comparison grid first, with a \"didn't answer\" option, which often tells you the most.",
+ p:"Below are responses from [N] vendors to the same RFP. Build a table with one row per criterion and one column per vendor.\n\nCriteria:\n[list yours]\n\nIn each cell, quote or closely paraphrase what the vendor said. If a vendor didn't address a criterion, write NOT ANSWERED. Don't fill the gap with what vendors usually say. After the table, list the three differences most likely to change the decision.\n\n[paste responses, each labelled with the vendor name]",
+ c:"Check every NOT ANSWERED. The usual failure is an answer buried in an appendix."},
+{id:"redline",t:"See what really changed between two versions",r:["Procurement","Legal & compliance","Everyone"],s:["Contracts & documents"],lvl:"build",save:"1–2 hrs per redline",
+ what:"A redline shows every changed comma. Ask instead for the changes that shift risk, money or obligations, ranked and in plain language, then go and read those in the redline.",
+ p:"Here are two versions of the same document. Ignore formatting, numbering and wording changes that don't change meaning.\n\nList only substantive changes, ranked by how much they shift risk, cost or obligation. For each: quote old and new text, and say in one sentence who it now favours and why.\n\nVERSION 1:\n[paste]\n\nVERSION 2:\n[paste]",
+ c:"Still run the real comparison. Use this to know where to look, not as a replacement for looking."},
+{id:"supplierletter",t:"Draft a firm but fair supplier email",r:["Procurement","Supply chain & ops"],s:["Email","Writing"],lvl:"start",save:"20–40 min each",
+ what:"A late delivery, a quality issue, a price increase you're pushing back on. Getting the tone right takes longer than getting the facts right. Give it the facts and tell it the relationship matters.",
+ p:"Draft an email to [supplier contact] about [issue]. Facts:\n- [what happened, with dates and PO numbers]\n- [impact on us]\n- [what we need from them, and by when]\n\nTone: firm, specific, no threats, no apologising for raising it. We want to keep this supplier. Under 180 words. End with one clear request and a date.",
+ c:"Check that every date, PO number and quantity matches your source. Don't let it add commitments or remedies you haven't agreed internally."},
+{id:"exceptions",t:"Turn the daily exception report into the six lines people read",r:["Supply chain & ops"],s:["Reports & decks","Data cleanup"],lvl:"build",save:"45 min/day",
+ what:"An export arrives every morning with a few hundred exception rows, and someone turns it into the half-dozen lines people actually read. That step repeats every day and is mostly writing, which suits these tools well.",
+ p:"Below is today's exception export. Write a summary for the morning ops call in this format:\n- Headline: the single most important thing, one sentence\n- By category: count, plus the notable items only\n- Changed since yesterday: compare with the summary below\n- Needs a decision today: each with the specific decision needed\n\nUse only what's in the data. Don't guess at causes.\n\nToday's export:\n[paste]\n\nYesterday's summary:\n[paste]",
+ c:"The counts are the risk. Check totals against the source file, and never quote a number the model worked out."},
+{id:"sop",t:"Write an SOP from someone describing their job",r:["Supply chain & ops","IT","HR","Finance"],s:["Writing","Contracts & documents"],lvl:"start",save:"2–4 hrs per SOP",
+ what:"The person who does the work can explain it in ten minutes but will never write it down. Type up or transcribe their explanation, and they only have to correct the draft, which people are much happier to do.",
+ p:"Below is a transcript of someone explaining how they do [task]. Turn it into a written procedure with: purpose, what triggers it, what you need before starting, numbered steps in the order given, decision points with the criteria for each, and what to do when it goes wrong.\n\nWhere the transcript is unclear or a step seems to be missing, insert [GAP: confirm …] rather than filling it in.\n\n[paste transcript]",
+ c:"The [GAP] markers are the point. The person who explained it reviews the draft. Never publish a procedure nobody has checked."},
+{id:"incidentnote",t:"Turn an internal incident into a customer update",r:["Supply chain & ops","Customer care","Sales & customer","IT"],s:["Writing","Email"],lvl:"start",save:"30–45 min per incident",
+ what:"Internal incident notes are full of system names, blame and speculation. Rewriting them for a customer at 7pm is a chore. Give it the notes and tell it what must not be said.",
+ p:"Below are internal notes about an incident affecting [customer or customer group]. Draft a customer update.\n\nConstraints: no internal system names, no guessing at root cause, no blame. Say what the customer experienced, what we've done, what happens next, and when they'll next hear from us. Under 150 words. Direct, one apology at most.\n\n[paste notes]",
+ c:"It will happily promise a fix time nobody agreed. Someone with authority approves every commitment before it's sent."},
+{id:"meetprep",t:"Prepare for a customer meeting in five minutes",r:["Sales & customer"],s:["Meetings","Research"],lvl:"start",save:"45 min per meeting",
+ what:"Paste in last quarter's notes, the open issues and the account numbers, and get a one-page brief: where things stand, what's unresolved, what the customer is likely to raise, and three questions worth asking.",
+ p:"I'm meeting [account] on [date]. Below are notes from our last three conversations and their current numbers.\n\nGive me a one-page brief:\n- Where the relationship stands, in two sentences\n- What's still unresolved from last time\n- The two things they're most likely to raise\n- Three questions I should ask that I might not think of\n\nFlag anything in the notes that contradicts something else in the notes.\n\n[paste notes and numbers]",
+ c:"The contradictions it flags are the most useful part. Treat \"likely to raise\" as a prompt for your own thinking, not as intelligence about the customer."},
+{id:"followup",t:"Turn a call transcript into a follow-up email and commitments",r:["Sales & customer","Projects","Customer care"],s:["Meetings","Email","Writing"],lvl:"start",save:"30 min per call",
+ what:"The follow-up email you keep meaning to send. Paste the transcript and get the recap email, plus a separate internal list of what was promised, by whom and by when.",
+ p:"Below is a transcript of a call with [customer]. Produce two things:\n\n1. A follow-up email to the customer confirming what was agreed and the next steps, with owners and dates. No filler opening.\n2. A separate internal list of every commitment made on our side, who made it and the date attached. Include vague ones and mark them VAGUE.\n\nOnly include commitments actually said in the transcript.\n\n[paste transcript]",
+ c:"Check the commitments against your memory of the call before sending anything. The vague ones are where you'll find promises you didn't realise you'd made."},
+{id:"qbr",t:"Draft the business review story from the numbers",r:["Sales & customer","Finance"],s:["Reports & decks","Writing"],lvl:"build",save:"4–6 hrs per review",
+ what:"You have the numbers. You need the story and slide titles that actually say something. Give it the data and last quarter's version, and forbid it from inventing figures.",
+ p:"Here is this quarter's performance data for [account] and last quarter's review narrative for tone.\n\nDraft this quarter's narrative: what happened, why it matters to them, what we propose next. Also give me a title for each slide that states the point, not the topic.\n\nUse only the figures I've given. Don't calculate, estimate or round. Wherever a claim needs a number I haven't provided, write [NEED FIGURE].\n\n[paste data]\n\n[paste last quarter's narrative]",
+ c:"Check every number in the draft against your source. Invented figures do the most damage in this use."},
+{id:"careemail",t:"Reply to a difficult customer email",r:["Customer care","Sales & customer"],s:["Email","Writing"],lvl:"start",save:"10–20 min each",
+ what:"The customer is angry and partly right. Paste their email and the facts you've confirmed, and get a reply that acknowledges the problem, states what you'll do, and avoids promising what you can't deliver.",
+ p:"Draft a reply to the customer email below. Confirmed facts:\n- [what actually happened]\n- [what we can offer: credit, redelivery, callback]\n- [what we cannot offer]\n\nAcknowledge the specific problem in their words. State exactly what we'll do and when. Don't over-apologise, don't blame anyone, and don't offer anything not listed above. Under 130 words.\n\n[paste customer email]",
+ c:"Check that the offer matches what you're authorised to give. Models tend to add goodwill gestures nobody approved."},
+{id:"kb",t:"Turn a solved case into a knowledge article",r:["Customer care","IT"],s:["Tickets & queues","Writing"],lvl:"start",save:"20 min per article",
+ what:"The knowledge base is thin because nobody enjoys writing articles. Resolved case in, draft article out, in your template.",
+ p:"Below is a resolved case or ticket thread. Write a knowledge article with these sections: the symptom as the customer or user would describe it, who it affects, resolution steps in order, and how to confirm it's fixed.\n\nWrite for someone who doesn't know the system. Remove names, case numbers and customer details. Where the thread implies a step without stating it, mark it [VERIFY].\n\n[paste thread]",
+ c:"The person who solved it reviews the draft. A confidently wrong article costs more than no article."},
+{id:"triage",t:"Find the root causes in a ticket backlog",r:["IT","Customer care"],s:["Tickets & queues","Data cleanup"],lvl:"build",save:"4–8 hrs/week",
+ what:"Categorise tickets, group duplicates, and spot the ones that share an underlying problem. The grouping is where the value is, because it finds the single fix that closes thirty tickets.",
+ p:"Below are [N] ticket titles and descriptions. Do three things:\n1. Assign each to one of these categories: [your list]. Use \"Unclear\" rather than guessing.\n2. Group tickets that look like the same underlying issue, and name the issue.\n3. List the three root causes that would close the most tickets if fixed, with the ticket IDs for each.\n\n[paste tickets]",
+ c:"Before routing tickets on its categories, sample fifty and measure how often it's right. Never auto-close anything on its say-so."},
+{id:"postmortem",t:"Draft the factual half of an incident review",r:["IT","Supply chain & ops"],s:["Writing","Contracts & documents"],lvl:"start",save:"2–3 hrs per incident",
+ what:"The timeline and impact sections are assembled from material you already have in the channel and the ticket. Let it do the assembly. You write the analysis, because that's where the judgement is.",
+ p:"Below is the incident channel log and ticket history. Draft the factual sections of an incident review: timeline with timestamps, how it was detected, impact and duration, and actions taken in order.\n\nDo not write root cause, contributing factors or follow-up actions. Leave those as empty headings. Mark anything you inferred rather than read directly as [INFERRED].\n\n[paste log]",
+ c:"Check timestamps and impact figures against monitoring. The analysis stays with people, because that's where the learning happens."},
+{id:"jd",t:"Rewrite a job description so people apply",r:["HR"],s:["Writing"],lvl:"start",save:"1 hr per role",
+ what:"Most job descriptions are lists of responsibilities copied from the last posting. Ask for a rewrite that leads with the actual work and cuts phrases that appear in every advert.",
+ p:"Rewrite this job description. Open with what the person will actually work on in their first six months. Cut every phrase that could appear in any job ad at any company. Keep the required qualifications exactly as written, without adding, removing or softening any. Aim for 40% shorter.\n\n[paste job description]",
+ c:"Compare the qualifications with the original line by line. A quietly changed requirement is a compliance problem, not a style issue."},
+{id:"interview",t:"Turn interview notes into a structured scorecard",r:["HR","Everyone"],s:["Meetings","Writing"],lvl:"start",save:"20 min per interview",
+ what:"Scribbled notes become a consistent scorecard against your actual criteria, which makes debriefs shorter and comparisons fairer.",
+ p:"Here are my rough notes from an interview. Organise them against these criteria: [list your competencies].\n\nFor each criterion, give the evidence from my notes and mark it Strong, Mixed or Not observed. Where I recorded no evidence, the answer is Not observed; don't infer a rating. Finish with two questions I should have asked and didn't.\n\n[paste notes]",
+ c:"Never let it recommend whether to hire. It organises your evidence; the judgement stays yours and is recorded as yours."},
+{id:"benefitsq",t:"Answer the same policy question asked forty different ways",r:["HR","Finance"],s:["Policy questions","Email"],lvl:"build",save:"3–5 hrs/week",
+ what:"People ask the same twenty questions in endless variations. Answer from the actual policy, with the source quoted, so employees get a quick answer and you keep a record of where it came from.",
+ p:"Answer this employee question using only the policy text below.\n\nQuestion: [paste it]\n\nAnswer in under 100 words, in plain language, and quote the sentence you're relying on. If the policy doesn't clearly answer it, say so and direct them to [team]. Don't fill gaps with what other companies typically do.\n\n[paste policy]",
+ c:"Wrong answers about pay, leave or benefits have real consequences for people. A person reviews anything about eligibility or money before it's sent."},
+{id:"announce",t:"Rewrite an announcement so people actually read it",r:["Comms","HR","Everyone"],s:["Writing","Email"],lvl:"start",save:"30–60 min each",
+ what:"Corporate announcements tend to bury the point in paragraph four. Ask for the change first, then the action needed, then the background, with the filler phrases listed so you can defend the edit.",
+ p:"Rewrite this internal announcement. Open with what's changing and what the reader has to do, then the date, then any background. Cut corporate filler and list the phrases you cut. Keep every fact, date, name and system reference exactly as written. Aim for 40% shorter.\n\n[paste announcement]",
+ c:"Check dates, names and system names against the original. Details get lost quietly when text is shortened."},
+{id:"audiences",t:"One update, three audiences",r:["Comms","Projects"],s:["Reports & decks","Writing"],lvl:"build",save:"2–4 hrs per deck",
+ what:"The same content has to work for an executive, a technical team and a bottler audience. Paste your notes and ask for each version, with what to cut and what to lead with.",
+ p:"Here are my notes for an update on [project]. Produce three versions:\n1. Executive: five points maximum, decisions and money only\n2. Technical team: how it works and what changes for them\n3. Bottler-facing: what changes for their people and when, with no internal detail\n\nFor each, say what you cut from my notes and what the opening line should be.\n\n[paste notes]",
+ c:"Check the bottler-facing version most carefully for internal detail that shouldn't go outside."},
+{id:"status",t:"Write the weekly status report you keep rewriting",r:["Projects","IT"],s:["Reports & decks","Writing"],lvl:"start",save:"1–2 hrs/week",
+ what:"Same format, new facts, every week. Give it last week's report and this week's raw updates, and ask it to spell out what changed, which is the part readers want.",
+ p:"Here's last week's status report and this week's raw updates from the team.\n\nWrite this week's report in exactly the same format. Spell out what changed: anything that slipped, anything newly at risk, and anything that disappeared from the updates without being closed.\n\nLAST WEEK:\n[paste]\n\nTHIS WEEK'S UPDATES:\n[paste]",
+ c:"The \"disappeared without being closed\" list is the most useful output. Confirm it with the team before publishing."},
+{id:"premortem",t:"Find the holes in a plan before you present it",r:["Projects","Everyone"],s:["Planning","Research"],lvl:"start",save:"1 hr, high payoff",
+ what:"A pre-mortem you can run alone at your desk. Describe the plan, ask why it failed, and ask what a particular sceptic will object to. It won't always be right, but it usually finds a couple of things you'd stopped seeing.",
+ p:"Below is a plan I'm presenting to [audience]. Do three passes:\n1. It's six months later and this has failed. Give the five most likely reasons, ranked by likelihood, not drama.\n2. What am I assuming that I haven't said?\n3. What will [a named sceptical stakeholder, and what they care about] object to first?\n\nBe specific to this plan and skip generic project risks.\n\n[paste plan]",
+ c:"Treat the output as things to think about, not findings. Its job is to break your tunnel vision, not to be right."},
+{id:"exceltable",t:"Clean up a column of free text",r:["Everyone","Finance","HR"],s:["Data cleanup","Spreadsheets"],lvl:"build",save:"2–4 hrs per dataset",
+ what:"Free-text fields where people typed job titles, locations or reasons however they liked. Ask for a mapping table you keep and can audit, rather than cleaned data you can't trace.",
+ p:"Below is a column of free-text values typed by people. Propose a standard mapping: for each distinct raw value, the standard value it should map to.\n\nList the standard values first, keeping the set small and sensible. Then output a two-column table I can paste into a lookup: raw value | standard value. Put anything genuinely ambiguous under REVIEW rather than forcing it.\n\n[paste values]",
+ c:"Keep the mapping table, not just the cleaned output. When someone asks how a value was categorised, you need to be able to show them."},
+{id:"jepacket",t:"Completeness check on a journal entry packet",r:["Finance"],s:["Contracts & documents","Data cleanup"],lvl:"stretch",save:"1–2 hrs per packet",
+ what:"Not approval. A completeness check before the packet reaches the reviewer: is the support there, do the amounts appear in it, is anything obviously missing. It cuts down on packets sent back, not on errors.",
+ p:"Below is a journal entry and its supporting documents. Act only as a completeness check. You are not approving anything.\n\nCheck:\n- Does every amount in the entry appear somewhere in the support?\n- Is any referenced document missing?\n- Is the stated business reason consistent with the support?\n- Are approvals present where the entry says they are?\n\nList only what's missing or inconsistent. Don't recalculate anything and don't comment on whether the accounting is correct.\n\n[paste entry and support]",
+ c:"This never replaces reviewer approval and never touches SOX sign-off. The only claim is that fewer packets get sent back."},
+{id:"forecastq",t:"Question a forecast before you sign up to it",r:["Supply chain & ops","Finance","Sales & customer"],s:["Planning","Spreadsheets","Research"],lvl:"stretch",save:"varies, high payoff",
+ what:"Paste the assumptions behind a volume or cost forecast and ask what would have to be true for it to hold. It won't know our market better than you, but it will list the assumptions you haven't examined.",
+ p:"Below are the assumptions behind a [volume / cost / revenue] forecast for [period].\n\nDon't produce a new forecast. Instead:\n1. List every assumption, including implied ones, and rate how sensitive the result is to each (high, medium, low)\n2. For the high-sensitivity ones, say what evidence would confirm or break them\n3. Name one plausible scenario the forecast ignores\n\n[paste assumptions and headline figures]",
+ c:"It will be confident about industry patterns it can't check. Use the list to direct your own checks. Don't quote it."},
+{id:"askbetter",t:"Find the question you should have asked",r:["Everyone"],s:["Research","Planning","Meetings"],lvl:"stretch",save:"varies, high payoff",
+ what:"An underused approach. Describe a situation and ask what you're not considering, given your role and constraints. It works well before a decision and badly after one, when you're mostly looking for agreement.",
+ p:"Here's a situation I'm working through: [describe it, including constraints and what I've already ruled out].\n\nDon't recommend what to do. Tell me: what am I not considering, what would someone in [another function] see that I'm missing, and what question would I regret not asking before I decide? Be specific to this situation.",
+ c:"Ask before you decide. Afterwards you'll keep the answers that agree with you and dismiss the rest."},
+{id:"shorten",t:"Make writing shorter without making it cold",r:["Everyone","Comms"],s:["Writing","Email"],lvl:"start",save:"15 min each",
+ what:"Most people over-write when the stakes feel high. Ask for a cut that keeps the tone and locks the facts, and ask what it removed so you can put back anything that mattered.",
+ p:"Cut this by about a third without changing the tone or losing any fact, date, name or commitment. Keep it warm, not clipped. Then list what you removed so I can put back anything that mattered.\n\n[paste text]",
+ c:"Read the removal list. The sentence you actually needed will be there."},
+{id:"rfpq",t:"Draft the question list for an RFP",r:["Procurement","IT"],s:["Contracts & documents","Planning"],lvl:"start",save:"2–3 hrs per RFP",
+ what:"A solid first draft of the questions is mostly routine work. Describe what you're buying and ask specifically for the questions vendors dislike, because those are the ones that separate them.",
+ p:"We're buying [category] for [context: scale, users, systems it must connect to, constraints].\n\nDraft an RFP question list grouped under: functional fit, integration, security and data handling, commercial terms, support. Then add a short section of questions vendors usually dodge, where a vague answer is itself a finding.",
+ c:"Our Legal, Security and Procurement standards override anything it suggests. Use it to make sure you've covered everything, not for compliance wording."},
+{id:"dataextract",t:"Pull a table out of a PDF or scan",r:["Finance","Procurement","Supply chain & ops","Everyone"],s:["Data cleanup","Contracts & documents","Spreadsheets"],lvl:"build",save:"30–90 min each",
+ what:"A rate card, a price list or a remittance in a PDF, and you need it in Excel. Ask for a paste-ready table with the rows it couldn't read clearly listed separately.",
+ p:"Extract the table from the document below into tab-separated text I can paste into Excel. Columns: [list the columns you want].\n\nKeep numbers exactly as printed, with no rounding and no currency conversion. If a cell is unreadable or ambiguous, write ?? in it and list those rows at the end with the reason.\n\n[paste or attach the document]",
+ c:"Check the row count and spot-check the totals against the PDF. Dropped or merged rows are the usual error, and they're silent."}
+];
+</script>
+<script>
+"use strict";
+/* ============================================================
+   Helpers
+   ============================================================ */
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const uid=()=>Math.random().toString(36).slice(2,10);
+const store={
+  get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v);}catch(e){return d;}},
+  set(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+};
+function num(v){if(typeof v==="number")return isFinite(v)?v:0;if(!v)return 0;
+  const m=String(v).trim().toLowerCase().replace(/[$,\s]/g,"").match(/^(-?\d*\.?\d+)(k|m)?$/);if(!m)return 0;
+  let n=parseFloat(m[1]);if(m[2]==="k")n*=1e3;if(m[2]==="m")n*=1e6;return isFinite(n)?n:0;}
+const money=n=>(n<0?"-$":"$")+Math.abs(Math.round(n)).toLocaleString("en-US");
+function short$(n){const a=Math.abs(n),s=n<0?"-":"";
+  if(a>=1e6)return s+"$"+(a/1e6).toFixed(a>=1e7?1:2).replace(/\.?0+$/,"")+"M";
+  if(a>=1e3)return s+"$"+Math.round(a/1e3)+"k";return s+"$"+Math.round(a);}
+let tT;function toast(m){const t=$("toast");t.textContent=m;t.classList.add("on");clearTimeout(tT);tT=setTimeout(()=>t.classList.remove("on"),2600);}
+function copyText(text,done){
+  const fb=()=>{const a=document.createElement("textarea");a.value=text;a.style.position="fixed";a.style.opacity="0";document.body.appendChild(a);a.select();
+    let ok=false;try{ok=document.execCommand("copy");}catch(e){}a.remove();ok?done():toast("Couldn't copy. Select the text and press Ctrl+C.");};
+  try{navigator.clipboard.writeText(text).then(done,fb);}catch(e){fb();}
+}
+async function saveFile(name,data){
+  let dl=null;try{if(window.claude&&window.claude.use)dl=await window.claude.use("downloads");}catch(e){}
+  if(dl){try{await dl.save({filename:name,data});toast("Saved "+name);}
+    catch(e){toast(e&&e.code==="declined"?"Save cancelled":"Saving files isn't available here");}return;}
+  const blob=data instanceof Blob?data:new Blob([data],{type:"text/plain"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();
+  setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},500);toast("Saved "+name);
+}
+const slug=s=>(s||"brief").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,50)||"brief";
+const hl=s=>esc(s).replace(/\[([^\]]+)\]/g,"<mark>[$1]</mark>");
+
+/* ============================================================
+   Navigation
+   ============================================================ */
+const VIEWS=["home","learn","prompts","check","brief"];
+function go(v,noScroll){
+  if(!VIEWS.includes(v))v="home";
+  VIEWS.forEach(x=>{$("v-"+x).hidden=x!==v;});
+  document.querySelectorAll("nav.menu button").forEach(b=>b.setAttribute("aria-current",b.dataset.go===v?"page":"false"));
+  if(v==="home")renderHome();
+  try{history.replaceState(null,"","#"+v);}catch(e){}
+  store.set("cp-view",v);
+  if(!noScroll)window.scrollTo(0,0);
+}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-go]");if(!b)return;
+  if(b.dataset.lesson){L.current=b.dataset.lesson;saveL();renderLearn();}go(b.dataset.go);});
+window.addEventListener("hashchange",()=>{const v=location.hash.slice(1);if(VIEWS.includes(v))go(v);});
+
+/* ============================================================
+   Home
+   ============================================================ */
+function renderHome(){
+  const done=LESSONS.filter(l=>L.done[l.id]).length,next=LESSONS.find(l=>!L.done[l.id]);
+  $("homeProgress").innerHTML=`<h3>Your progress</h3>
+    <div><span class="big num">${done}</span><span> of ${LESSONS.length} lessons</span></div>
+    <div class="bar"><i style="width:${done/LESSONS.length*100}%"></i></div>
+    <p>${done===LESSONS.length?"All done. Pick a weekly task and keep it going, or run the team session.":next?`Next up: ${esc(next.title)}.`:""}</p>
+    <div><button class="btn red" type="button" id="homeGo">${done?"Keep going":"Start lesson 1"}</button></div>`;
+  $("homeGo").onclick=()=>{L.current=next?next.id:LESSONS[0].id;saveL();renderLearn();go("learn");};
+}
+
+/* ============================================================
+   Learn
+   ============================================================ */
+let L=Object.assign({current:LESSONS[0].id,done:{},quiz:{}},store.get("cp-learn",{}));
+const saveL=()=>store.set("cp-learn",L);
+function renderLearn(){
+  const toc=[...LESSONS.map((l,i)=>`<button type="button" data-l="${l.id}" class="${L.done[l.id]?"done":""}" aria-current="${L.current===l.id}"><span class="n">${L.done[l.id]?"✓":i+1}</span><span>${esc(l.title)}</span></button>`),
+    `<hr>`,`<button type="button" data-l="session" aria-current="${L.current==="session"}"><span class="n">▶</span><span>Run a 30-minute team session</span></button>`,
+    `<button type="button" data-l="cheat" aria-current="${L.current==="cheat"}"><span class="n">≡</span><span>One-page cheat sheet</span></button>`].join("");
+  $("toc").innerHTML=`<span class="lbl">Lessons · ${LESSONS.filter(l=>L.done[l.id]).length} of ${LESSONS.length} done</span>`+toc;
+  $("toc").querySelectorAll("[data-l]").forEach(b=>b.onclick=()=>{L.current=b.dataset.l;saveL();renderLearn();$("v-learn").scrollIntoView();});
+  const host=$("lesson");
+  if(L.current==="session")return renderSession(host);
+  if(L.current==="cheat")return renderCheat(host);
+  const i=Math.max(0,LESSONS.findIndex(l=>l.id===L.current)),l=LESSONS[i],ans=L.quiz[l.id];
+  host.innerHTML=`
+    <div><p class="eyebrow">Lesson ${i+1} of ${LESSONS.length}</p><h2 style="margin-top:6px">${esc(l.title)}</h2><p class="meta">About ${l.mins} minutes</p></div>
+    <p class="why">${esc(l.why)}</p>
+    <ul class="points">${l.points.map(p=>`<li><span>${p}</span></li>`).join("")}</ul>
+    <div class="compare">
+      <div class="side weak"><span class="tag">${esc(l.compare.weak.tag)}</span><pre>${hl(l.compare.weak.text)}</pre><p class="note">${esc(l.compare.weak.note)}</p></div>
+      <div class="side strong"><span class="tag">${esc(l.compare.strong.tag)}</span><pre>${hl(l.compare.strong.text)}</pre><p class="note">${esc(l.compare.strong.note)}</p></div>
+    </div>
+    <div class="box grey"><h3>Try it on your own work</h3><p>${esc(l.tryit)}</p></div>
+    <div class="quiz"><p class="eyebrow">Quick check</p><p class="q">${esc(l.quiz.q)}</p>
+      <div class="opts">${l.quiz.opts.map((o,k)=>`<button type="button" class="opt ${ans==null?"":k===l.quiz.right?"right":k===ans?"wrong":""}" data-a="${k}">${esc(o)}</button>`).join("")}</div>
+      ${ans!=null?`<p class="fb">${esc(l.quiz.fb[ans])}${ans!==l.quiz.right?" Try another answer.":""}</p>`:""}
+    </div>
+    <div class="lesson-nav">
+      ${i>0?`<button class="btn" type="button" id="prevL">← ${esc(LESSONS[i-1].title)}</button>`:"<span></span>"}
+      ${i<LESSONS.length-1?`<button class="btn ${L.done[l.id]?"red":"dark"}" type="button" id="nextL">${L.done[l.id]?"Next lesson":"Skip to next"} →</button>`
+        :`<button class="btn red" type="button" id="nextL">Run a session with your team →</button>`}
+    </div>`;
+  host.querySelectorAll("[data-a]").forEach(b=>b.onclick=()=>{const a=+b.dataset.a;L.quiz[l.id]=a;
+    if(a===l.quiz.right&&!L.done[l.id]){L.done[l.id]=true;toast(LESSONS.every(x=>L.done[x.id])?"All six lessons done. Nice work.":"Lesson complete");}
+    saveL();renderLearn();});
+  const p=$("prevL");if(p)p.onclick=()=>{L.current=LESSONS[i-1].id;saveL();renderLearn();window.scrollTo(0,0);};
+  $("nextL").onclick=()=>{L.current=i<LESSONS.length-1?LESSONS[i+1].id:"session";saveL();renderLearn();window.scrollTo(0,0);};
+}
+function renderSession(host){
+  host.innerHTML=`<div><p class="eyebrow">For team leads</p><h2 style="margin-top:6px">Run a 30-minute session with your team</h2><p class="meta">No slides. Works in person or on Teams.</p></div>
+    <p class="why">The goal is simple: by the end, everyone has used AI on a piece of their own work and picked one weekly task to keep using it on.</p>
+    <ol class="plan">${SESSION.map(([t,h,d])=>`<li><span class="t">${t}</span><span><b>${esc(h)}</b>${esc(d)}</span></li>`).join("")}</ol>
+    <div class="box grey"><h3>Bring</h3><ul class="points">${SESSION_BRING.map(x=>`<li><span>${esc(x)}</span></li>`).join("")}</ul></div>
+    <div class="box"><h3>If someone asks…</h3>
+      <p><b>“Is this going to replace my job?”</b> Be honest about what it's for: the reading and writing that eats everyone's week. It doesn't know our customers, our plants or our history. People do.</p>
+      <p><b>“It got something wrong.”</b> Good, that's the point of practising. Show how to check it and how to tell it what to fix.</p>
+      <p><b>“Can I use it for X?”</b> If X involves personal or sensitive data, check the AI policy first. If it's a whole process, run it through the Idea check.</p></div>
+    <div class="row"><button class="btn dark" type="button" id="copySession">Copy the plan</button><button class="btn" type="button" id="toCheat">See the cheat sheet</button></div>`;
+  $("copySession").onclick=()=>copyText("30-MINUTE AI SESSION\n\n"+SESSION.map(([t,h,d])=>`${t}  ${h}\n${d}`).join("\n\n")+"\n\nBRING\n"+SESSION_BRING.map(x=>"- "+x).join("\n"),()=>toast("Plan copied. Paste it into the meeting invite."));
+  $("toCheat").onclick=()=>{L.current="cheat";saveL();renderLearn();window.scrollTo(0,0);};
+}
+function renderCheat(host){
+  host.innerHTML=`<div><p class="eyebrow">Keep this handy</p><h2 style="margin-top:6px">The one-page cheat sheet</h2></div>
+    <div class="cheat">${CHEAT.map(([h,items])=>`<div class="box"><h3>${esc(h)}</h3><ul>${items.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>`).join("")}</div>
+    <div class="row"><button class="btn dark" type="button" id="copyCheat">Copy as text</button></div>`;
+  $("copyCheat").onclick=()=>copyText(CHEAT.map(([h,items])=>h.toUpperCase()+"\n"+items.map(x=>"- "+x).join("\n")).join("\n\n"),()=>toast("Cheat sheet copied"));
+}
+
+/* ============================================================
+   Prompt library
+   ============================================================ */
+let PF={role:"",text:""},openP=null;
+function renderPrompts(){
+  $("pRoles").innerHTML=[["","All functions"],...ROLES.map(r=>[r,r])].map(([v,l])=>`<button class="chip" type="button" data-r="${esc(v)}" aria-pressed="${PF.role===v}">${esc(l)}</button>`).join("");
+  $("pRoles").querySelectorAll("[data-r]").forEach(b=>b.onclick=()=>{PF.role=b.dataset.r;renderPrompts();});
+  const t=PF.text.toLowerCase();
+  const list=PROMPTS.filter(p=>(!PF.role||p.r.includes(PF.role)||(PF.role!=="Everyone"&&p.r.includes("Everyone")))&&
+    (!t||[p.t,p.what,p.p,p.r.join(" ")].join(" ").toLowerCase().includes(t)))
+    .sort((a,b)=>(b.first||0)-(a.first||0)||["start","build","stretch"].indexOf(a.lvl)-["start","build","stretch"].indexOf(b.lvl));
+  $("pCount").textContent=`Showing ${list.length} of ${PROMPTS.length}. The ones marked "good first try" are easy to check, so they're the best place to start.`;
+  $("plist").innerHTML=list.length?list.map(p=>`<div class="pitem${openP===p.id?" open":""}" id="p-${p.id}">
+    <button type="button" data-p="${p.id}" aria-expanded="${openP===p.id}"><h3>${esc(p.t)}</h3><span class="saves">Saves ${esc(p.save)}</span>
+      <span class="who">${esc(p.r.join(" · "))}${p.lvl==="start"?" · <b style='color:var(--red)'>good first try</b>":""}</span></button>
+    <div class="body"><p class="what">${esc(p.what)}</p>
+      <div class="prompt"><div class="ph"><span>The prompt</span><button class="btn sm dark" type="button" data-copy="${p.id}">Copy prompt</button></div><pre>${hl(p.p)}</pre></div>
+      <div class="checknote"><b>Check</b><span>${esc(p.c)}</span></div></div></div>`).join("")
+    :`<div class="empty">Nothing matches. Try a shorter search, or pick “All functions”.</div>`;
+}
+$("plist").addEventListener("click",e=>{
+  const c=e.target.closest("[data-copy]");
+  if(c){const p=PROMPTS.find(x=>x.id===c.dataset.copy);copyText(p.p,()=>{c.textContent="Copied";setTimeout(()=>c.textContent="Copy prompt",1500);toast("Copied. Replace the red parts with your details.");});return;}
+  const o=e.target.closest("[data-p]");if(o){openP=openP===o.dataset.p?null:o.dataset.p;renderPrompts();}
+});
+$("pSearch").addEventListener("input",e=>{PF.text=e.target.value.trim();renderPrompts();});
+
+/* ============================================================
+   Idea check
+   ============================================================ */
+let IC=Object.assign({task:"",people:"",hours:"",a:{}},store.get("cp-check",{}));
+const saveIC=()=>store.set("cp-check",IC);
+function renderCheckForm(){
+  $("qs").innerHTML=`
+    <div class="grid2">
+      <div class="field" style="grid-column:1/-1"><label for="icTask">The task, in a few words</label><span class="hint">Be specific. “Answering retailer delivery queries” works. “AI in customer care” doesn't.</span>
+        <input id="icTask" value="${esc(IC.task)}" placeholder="e.g. Answering retailer delivery queries"></div>
+      <div class="field"><label for="icPeople">How many people do it?</label><input id="icPeople" inputmode="decimal" value="${esc(IC.people)}" placeholder="e.g. 6"></div>
+      <div class="field"><label for="icHours">Hours each, per week</label><input id="icHours" inputmode="decimal" value="${esc(IC.hours)}" placeholder="e.g. 5"></div>
+    </div>
+    ${IDEA_QS.map((q,i)=>`<div class="qq" role="radiogroup" aria-labelledby="t-${q.id}"><p class="t" id="t-${q.id}"><span>${i+1}</span>${esc(q.q)}</p>
+      <div class="choices">${q.o.map((o,k)=>`<label class="choice${IC.a[q.id]===k?" on":""}"><input type="radio" name="ic-${q.id}" id="ic-${q.id}-${k}" data-q="${q.id}" data-k="${k}"${IC.a[q.id]===k?" checked":""}><span>${esc(o[0])}</span></label>`).join("")}</div></div>`).join("")}
+    <div class="row"><button class="btn plain" type="button" id="icReset">Clear my answers</button><span id="icConfirm"></span></div>`;
+  $("icTask").oninput=e=>{IC.task=e.target.value;saveIC();renderCheckSide();};
+  $("icPeople").oninput=e=>{IC.people=e.target.value;saveIC();renderCheckSide();};
+  $("icHours").oninput=e=>{IC.hours=e.target.value;saveIC();renderCheckSide();};
+  $("qs").querySelectorAll("[data-q]").forEach(r=>r.onchange=()=>{IC.a[r.dataset.q]=+r.dataset.k;
+    r.closest(".choices").querySelectorAll(".choice").forEach(c=>c.classList.toggle("on",c.contains(r)));saveIC();renderCheckSide();});
+  $("icReset").onclick=()=>{$("icConfirm").innerHTML=`<span class="confirm">Clear everything? <button class="btn sm" type="button" id="icYes">Clear</button><button class="btn sm plain" type="button" id="icNo">Keep</button></span>`;
+    $("icYes").onclick=()=>{IC={task:"",people:"",hours:"",a:{}};saveIC();renderCheckForm();};$("icNo").onclick=()=>{$("icConfirm").innerHTML="";};};
+  renderCheckSide();
+}
+function ideaResult(){
+  const g=id=>{const q=IDEA_QS.find(x=>x.id===id),k=IC.a[id];return k==null?null:q.o[k][1];};
+  const picked=IDEA_QS.filter(q=>IC.a[q.id]!=null).map(q=>({q,o:q.o[IC.a[q.id]]}));
+  const hoursYr=num(IC.people)*num(IC.hours)*46;
+  const answered=picked.length,total=IDEA_QS.length;
+  let v;
+  if(picked.some(p=>p.o[3]))v="blocked";
+  else if(g("own")===0)v="own";
+  else if(g("rules")===0||g("words")===0)v="automate";
+  else if([g("input"),g("spot"),g("owner")].includes(0)||picked.filter(p=>p.o[1]===1).length>=4)v="notyet";
+  else if(g("often")===0||(hoursYr>0&&hoursYr<150))v="small";
+  else v="pilot";
+  const issues=picked.filter(p=>p.o[2]).sort((a,b)=>a.o[1]-b.o[1]).map(p=>p.o[2]);
+  if(hoursYr>0&&hoursYr<150)issues.push(`About ${Math.round(hoursYr)} hours a year across everyone. Building, testing and looking after a tool usually costs more than that.`);
+  return {v,issues,hoursYr,answered,total,complete:answered===total&&hoursYr>0};
+}
+function renderCheckSide(){
+  const r=ideaResult(),V=VERDICT_TEXT[r.v];
+  if(r.answered<3){$("checkSide").innerHTML=`<div class="verdict"><span class="lbl">Answer a few questions</span><h3>Your answer shows up here</h3><p>It updates as you go. Most people finish in about five minutes.</p></div>
+    <p class="small muted">${r.answered} of ${r.total} answered</p>`;return;}
+  $("checkSide").innerHTML=`<div class="verdict ${V.cls}"><span class="lbl">${r.complete?V.lbl:"Leaning towards"}</span><h3>${V.h}</h3><p>${V.p}</p></div>
+    ${r.issues.length?`<div class="box"><h3>What's holding it back</h3><ul class="reasons">${r.issues.map(x=>`<li><span>${esc(x)}</span></li>`).join("")}</ul></div>`:""}
+    <div class="stat"><span>Answered</span><b>${r.answered} of ${r.total}</b></div>
+    <div class="stat"><span>Time spent on it now</span><b>${r.hoursYr?Math.round(r.hoursYr).toLocaleString()+" hrs/yr":"add people and hours"}</b></div>
+    ${r.complete&&(r.v==="pilot"||r.v==="automate")?`<button class="btn red" type="button" id="toBrief">Turn this into an exec brief →</button>`:""}
+    ${r.complete?`<button class="btn" type="button" id="copyCheck">Copy the result</button>`:""}`;
+  const tb=$("toBrief");if(tb)tb.onclick=()=>{
+    const b=BLANK_BRIEF();b.title=IC.task;b.decision=r.v==="pilot"?"Approve a pilot":"Approve funding";
+    b.problem=`${IC.people} people spend about ${IC.hours} hours a week each on ${IC.task.toLowerCase()||"this task"}, around ${Math.round(r.hoursYr).toLocaleString()} hours a year.`;
+    b.timeSaved=true;B.list.unshift(b);B.active=b.id;saveB();renderBrief();go("brief");toast("Brief started. Fill in the rest on the left.");};
+  const cc=$("copyCheck");if(cc)cc.onclick=()=>copyText(`IDEA CHECK: ${IC.task||"Untitled task"}\nVerdict: ${V.h}\n${V.p}\n\nTime spent now: about ${Math.round(r.hoursYr).toLocaleString()} hours a year\n${r.issues.length?"\nWhat's holding it back:\n"+r.issues.map(x=>"- "+x).join("\n"):""}`,()=>toast("Result copied"));
+}
+
+/* ============================================================
+   Exec brief
+   ============================================================ */
+let B={list:store.get("cp-briefs",null),active:store.get("cp-brief-active",null),confirm:false};
+if(!Array.isArray(B.list)||!B.list.length)B.list=[JSON.parse(JSON.stringify(EXAMPLE_BRIEF))];
+if(!B.list.find(b=>b.id===B.active))B.active=B.list[0].id;
+const saveB=()=>{store.set("cp-briefs",B.list);store.set("cp-brief-active",B.active);};
+const cur=()=>B.list.find(b=>b.id===B.active);
+
+function calc(b){
+  const factor=CONF_LEVELS[b.conf][0], counted=num(b.benefit)*factor, running=num(b.running), once=num(b.once);
+  const start=Math.min(36,Math.max(1,Math.round(num(b.startMonth))||1)), live=37-start;
+  const monthly=(counted-running)/12;
+  const net3=monthly*live-once;
+  let payback=null;if(monthly>0){const m=start-1+Math.ceil(once/monthly);payback=m<=36?m:null;}
+  return {factor,counted,running,once,start,net3,payback,monthly};
+}
+const sentences=t=>(t||"").split(/(?<=[.!?])\s+/).filter(s=>s.trim());
+const words=t=>((t||"").match(/\b[\w'’-]+\b/g)||[]).length;
+const hasNum=t=>/\d/.test(t||"");
+function review(b){
+  const all=[b.ask,b.problem,b.plan,b.ifnot,b.basis,b.success,...b.risks.flat(),...b.milestones.map(m=>m[0])].join(" ");
+  const wc=words(all), longS=[b.ask,b.problem,b.plan,b.ifnot].flatMap(sentences).filter(s=>words(s)>30);
+  const low=" "+all.toLowerCase().replace(/[^a-z\s-]/g," ")+" ";
+  const jargon=[...new Set(JARGON.filter(j=>low.includes(" "+j+" ")))];
+  const c=calc(b);
+  const items=[
+    [!!b.title.trim()&&!!b.ask.trim(),"The ask is written",b.ask.trim()?"":"Write the ask as one sentence: what you want them to approve, and for how much."],
+    [sentences(b.ask).length<=1&&hasNum(b.ask),"The ask is one sentence with a number in it","Execs decide faster on “approve $85k for a 12-week pilot” than on a paragraph. Put the amount or the scale in the ask."],
+    [hasNum(b.problem),"The problem has a number in it","Say how big the problem is: hours, dollars, days, complaints. Without a number it's an opinion."],
+    [!!b.ifnot.trim(),"You've said what happens if we don't","Execs always ask “what if we do nothing?” Answer it before they do."],
+    [num(b.benefit)===0||b.basis.trim().length>10,"The benefit says how you know","Add where the benefit number comes from: a trial, a measurement, a vendor figure. That's the first thing they'll ask."],
+    [!b.timeSaved||b.timeGoes.trim().length>5,"Freed-up time has somewhere to go","You've counted time saved as a benefit. Say what that time will be used for, or an exec will (rightly) treat it as zero."],
+    [b.risks.some(r=>r[0].trim()),"At least one risk is named","A brief with no risks reads as a sales pitch. Name the main one and what you'll do about it."],
+    [!!b.success.trim(),"You've said how you'll know it worked","Give one or two measures you'll report back on."],
+    [!!b.author.trim()&&!!b.sponsor.trim(),"Owner and sponsor are named","Say who's accountable and who's backing it."],
+    [jargon.length===0,"No buzzwords",`Swap these for plain words: ${jargon.join(", ")}.`],
+    [longS.length===0,"Sentences are short enough",`${longS.length} sentence${longS.length===1?" is":"s are"} over 30 words. Split ${longS.length===1?"it":"them"} in two.`],
+    [wc<=450,"Fits on one page",`About ${wc} words. Aim for under 450 so it fits on one page.`]
+  ];
+  return {items,wc,c};
+}
+
+function renderBriefTop(){
+  $("briefsTop").innerHTML=`<label class="small" for="bPick"><b>Your briefs</b></label>
+    <select id="bPick">${B.list.map(b=>`<option value="${esc(b.id)}"${b.id===B.active?" selected":""}>${esc(b.title||"Untitled brief")}${b.example?" (example)":""}</option>`).join("")}</select>
+    <button class="btn sm red" type="button" id="bNew">New brief</button>
+    <button class="btn sm" type="button" id="bDup">Duplicate</button>
+    <button class="btn sm" type="button" id="bOpen">Open a saved file</button><input type="file" id="bFile" accept=".json" hidden>
+    <button class="btn sm plain" type="button" id="bDel">Delete</button><span id="bConfirm"></span>`;
+  $("bPick").onchange=e=>{B.active=e.target.value;saveB();renderBrief();};
+  $("bNew").onclick=()=>{const b=BLANK_BRIEF();B.list.unshift(b);B.active=b.id;saveB();renderBrief();$("f_title").focus();};
+  $("bDup").onclick=()=>{const b=JSON.parse(JSON.stringify(cur()));b.id=uid();b.example=false;b.title=(b.title||"Untitled brief")+" (copy)";B.list.unshift(b);B.active=b.id;saveB();renderBrief();toast("Duplicated");};
+  $("bOpen").onclick=()=>$("bFile").click();
+  $("bFile").onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();
+    r.onload=()=>{try{const d=JSON.parse(r.result),b=Object.assign(BLANK_BRIEF(),d.brief||d);if(typeof b.ask!=="string")throw 0;
+      b.id=uid();b.example=false;B.list.unshift(b);B.active=b.id;saveB();renderBrief();toast("Brief opened");}catch(err){toast("That file isn't a brief saved from this portal");}};
+    r.readAsText(f);e.target.value="";};
+  $("bDel").onclick=()=>{$("bConfirm").innerHTML=`<span class="confirm">Delete this brief? <button class="btn sm" type="button" id="bYes">Delete</button><button class="btn sm plain" type="button" id="bNo">Keep</button></span>`;
+    $("bYes").onclick=()=>{B.list=B.list.filter(x=>x.id!==B.active);if(!B.list.length)B.list=[BLANK_BRIEF()];B.active=B.list[0].id;saveB();renderBrief();toast("Brief deleted");};
+    $("bNo").onclick=()=>{$("bConfirm").innerHTML="";};};
+}
+const F=(id,label,val,o)=>{o=o||{};const hint=o.hint?`<span class="hint">${o.hint}</span>`:"";
+  const inp=o.area?`<textarea id="f_${id}" data-b="${id}" rows="${o.rows||3}" placeholder="${esc(o.ph||"")}">${esc(val)}</textarea>`
+   :o.select?`<select id="f_${id}" data-b="${id}">${o.select.map(x=>`<option${x===val?" selected":""}>${esc(x)}</option>`).join("")}</select>`
+   :`<input id="f_${id}" data-b="${id}" value="${esc(o.money&&num(val)?money(val):val)}" placeholder="${esc(o.ph||"")}"${o.money?' inputmode="decimal" data-money="1"':""}${o.type?` type="${o.type}"`:""}>`;
+  return `<div class="field${o.wide?" wide":""}"${o.wide?' style="grid-column:1/-1"':""}><label for="f_${id}">${label}</label>${hint}${inp}</div>`;};
+function renderForm(){
+  const b=cur();
+  $("bform").innerHTML=`
+  <section><h3><span>1</span>The ask</h3>
+    ${F("title","Project name",b.title,{ph:"e.g. AI drafts for customer care email"})}
+    ${F("ask","What are you asking them to approve?",b.ask,{area:1,rows:2,hint:"One sentence. Include the amount or the scale.",ph:"Approve a 12-week pilot with 15 agents, costing $85,000, to…"})}
+    <div class="grid2">${F("decision","Type of decision",b.decision,{select:DECISIONS})}${F("decideBy","Decision needed by",b.decideBy,{type:"date"})}
+      ${F("author","Owner",b.author,{ph:"Team or person"})}${F("sponsor","Executive sponsor",b.sponsor,{ph:"e.g. VP Customer Service"})}</div>
+  </section>
+  <section><h3><span>2</span>The problem and the plan</h3>
+    ${F("problem","What's the problem today?",b.problem,{area:1,hint:"Who feels it, and how big it is. Use a number.",ph:"Agents spend about 40% of their day on email replies…"})}
+    ${F("plan","What will we do?",b.plan,{area:1,hint:"Two or three sentences. Say what changes for people, not how the technology works.",ph:"Use the drafting feature we already license…"})}
+    ${F("ifnot","What happens if we don't?",b.ifnot,{area:1,rows:2,ph:"Response times keep slipping as volume grows…"})}
+  </section>
+  <section><h3><span>3</span>The numbers</h3>
+    <div class="moneyrow">${F("once","One-time cost",b.once,{money:1,ph:"$0"})}${F("running","Running cost per year",b.running,{money:1,ph:"$0"})}${F("benefit","Benefit per year",b.benefit,{money:1,ph:"$0"})}</div>
+    ${F("basis","How do you know the benefit?",b.basis,{area:1,rows:2,hint:"A trial, a measurement, a quote, a benchmark. Be honest.",ph:"4-week trial with 6 agents: handle time fell 22%…"})}
+    <div class="grid2">
+      <div class="field"><label for="f_conf">How sure are you about the benefit?</label><select id="f_conf" data-b="conf">${Object.entries(CONF_LEVELS).map(([k,[f,t]])=>`<option value="${k}"${b.conf===k?" selected":""}>${k}: ${t}</option>`).join("")}</select>
+        <span class="hint">Medium counts 75% of the benefit, Low counts 50%. Being upfront about this builds trust.</span></div>
+      ${F("startMonth","Benefits start in month",b.startMonth,{hint:"Months from approval until it's live.",ph:"3"})}
+    </div>
+    <label class="choice${b.timeSaved?" on":""}" style="max-width:none"><input type="checkbox" id="f_timeSaved" data-b="timeSaved"${b.timeSaved?" checked":""}><span>Some of the benefit is <b>time saved</b> (people's hours freed up)</span></label>
+    ${b.timeSaved?F("timeGoes","Where will that time go?",b.timeGoes,{area:1,rows:2,hint:"Hires you won't need, overtime that stops, or named work people will move to. If the time just gets absorbed, it isn't a saving.",ph:"Four planned hires not needed; the rest goes to…"}):""}
+  </section>
+  <section><h3><span>4</span>Timeline</h3>
+    ${b.milestones.map((m,i)=>`<div class="minirow"><input data-ms="${i}" data-k="0" id="ms${i}a" value="${esc(m[0])}" placeholder="Milestone" aria-label="Milestone"><input data-ms="${i}" data-k="1" id="ms${i}b" value="${esc(m[1])}" placeholder="When" aria-label="When"><button class="x" type="button" data-rmms="${i}" aria-label="Remove milestone">×</button></div>`).join("")}
+    ${b.milestones.length<6?`<div><button class="btn sm" type="button" id="addMs">Add a milestone</button></div>`:""}
+  </section>
+  <section><h3><span>5</span>Risks</h3>
+    ${b.risks.map((r,i)=>`<div class="minirow r3"><input data-rk="${i}" data-k="0" id="rk${i}a" value="${esc(r[0])}" placeholder="What could go wrong" aria-label="Risk"><input data-rk="${i}" data-k="1" id="rk${i}b" value="${esc(r[1])}" placeholder="What we'll do about it" aria-label="Mitigation"><button class="x" type="button" data-rmrk="${i}" aria-label="Remove risk">×</button></div>`).join("")}
+    ${b.risks.length<5?`<div><button class="btn sm" type="button" id="addRk">Add a risk</button></div>`:""}
+  </section>
+  <section><h3><span>6</span>How we'll know it worked</h3>
+    ${F("success","One or two measures you'll report back on",b.success,{area:1,rows:2,ph:"First-response time under 4 hours, quality scores the same or better."})}
+  </section>`;
+}
+function renderPaper(){
+  const b=cur(),c=calc(b);
+  const T=(v,ph)=>v&&String(v).trim()?esc(v):`<span class="blank">${ph}</span>`;
+  const ms=b.milestones.filter(m=>m[0].trim()),rk=b.risks.filter(r=>r[0].trim());
+  const date=b.decideBy?new Date(b.decideBy+"T12:00").toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}):"";
+  $("paper").innerHTML=`<div class="rule"></div>
+    <div><p class="kicker">Executive brief · ${esc(b.decision)}${date?" · decision needed by "+date:""}</p><h2 style="margin-top:4px">${T(b.title,"Project name")}</h2>
+      <p class="by">Owner: ${T(b.author,"not named")} · Sponsor: ${T(b.sponsor,"not named")}</p></div>
+    <div class="ask"><b>The ask</b><p>${T(b.ask,"What you want them to approve, in one sentence.")}</p></div>
+    <div><h4>The problem</h4><p>${T(b.problem,"What goes wrong today, and how big it is.")}</p></div>
+    <div><h4>What we'll do</h4><p>${T(b.plan,"What changes, in two or three sentences.")}</p></div>
+    <div><h4>The numbers</h4>
+      <div class="nums">
+        <div><span>One-time cost</span><b>${short$(c.once)}</b></div>
+        <div><span>Running cost / yr</span><b>${short$(c.running)}</b></div>
+        <div><span>Benefit / yr${c.factor<1?` (counted at ${c.factor*100}%)`:""}</span><b>${short$(c.counted)}</b></div>
+        <div><span>Net over 3 years</span><b class="${c.net3<0?"neg":""}">${short$(c.net3)}</b></div>
+        <div><span>Pays back</span><b>${c.payback?`Month ${c.payback}`:"Not in 3 yrs"}</b></div>
+        <div><span>Confidence</span><b>${esc(b.conf)}</b></div>
+      </div>
+      <p class="small" style="margin-top:6px">${b.basis.trim()?"<b>Basis:</b> "+esc(b.basis):`<span class="blank">How you know the benefit.</span>`}</p>
+      ${b.timeSaved?`<p class="small" style="margin-top:4px">${b.timeGoes.trim()?"<b>Freed-up time goes to:</b> "+esc(b.timeGoes):`<span style="color:var(--red)"><b>Includes time saved with no plan for where the time goes.</b></span>`}</p>`:""}
+    </div>
+    ${ms.length?`<div><h4>Timeline</h4><div class="tl">${ms.map(m=>`<div><span>${esc(m[1]||"TBC")}</span><p>${esc(m[0])}</p></div>`).join("")}</div></div>`:""}
+    <div><h4>Risks</h4>${rk.length?`<ul>${rk.map(r=>`<li><b>${esc(r[0])}.</b> ${esc(r[1])}</li>`).join("")}</ul>`:`<p class="blank">The main risk and what you'll do about it.</p>`}</div>
+    <div><h4>How we'll know it worked</h4><p>${T(b.success,"One or two measures.")}</p></div>
+    <div><h4>If we don't do this</h4><p>${T(b.ifnot,"What happens if we do nothing.")}</p></div>
+    <p class="foot-note">Benefits and running costs start in month ${c.start}. The three-year net counts ${c.factor===1?"the full benefit":`${c.factor*100}% of the stated benefit (${esc(b.conf.toLowerCase())} confidence)`}, minus all costs.</p>`;
+  const r=review(b),ok=r.items.filter(x=>x[0]).length;
+  $("review").innerHTML=`<div class="review"><h3>Brief check</h3>
+    <div class="score"><b>${ok} of ${r.items.length}</b><span class="muted">${ok===r.items.length?"Ready to send.":"Fix the red items before it goes to an exec."}</span></div>
+    <ul>${r.items.filter(x=>!x[0]).map(x=>`<li><span><b>${esc(x[1].replace("is written","").trim()?x[1]:x[1])}</b><br>${esc(x[2])}</span></li>`).join("")}
+      ${r.items.filter(x=>x[0]).map(x=>`<li class="ok"><span>${esc(x[1])}</span></li>`).join("")}</ul></div>`;
+}
+function renderBrief(){
+  renderBriefTop();renderForm();renderPaper();
+  $("briefActions").innerHTML=`<button class="btn red" type="button" id="bPdf">Download PDF</button><button class="btn dark" type="button" id="bCopy">Copy for email</button><button class="btn" type="button" id="bSave">Save as file</button>`;
+  $("bPdf").onclick=()=>briefPDF(cur());
+  $("bCopy").onclick=()=>copyText(briefText(cur()),()=>toast("Copied. Paste it into an email."));
+  $("bSave").onclick=()=>saveFile(slug(cur().title)+".json",JSON.stringify({format:"cona-ai-brief",version:1,brief:cur()},null,2));
+}
+/* form events (delegated so typing never loses focus) */
+function touchB(b){b.example=false;saveB();renderPaper();const o=$("bPick")&&$("bPick").querySelector(`option[value="${b.id}"]`);if(o)o.textContent=b.title||"Untitled brief";}
+$("bform").addEventListener("input",e=>{
+  const el=e.target,b=cur();
+  if(el.dataset.b&&el.type!=="checkbox"){b[el.dataset.b]=el.dataset.money?num(el.value):el.value;}
+  else if(el.dataset.ms!=null){b.milestones[+el.dataset.ms][+el.dataset.k]=el.value;}
+  else if(el.dataset.rk!=null){b.risks[+el.dataset.rk][+el.dataset.k]=el.value;}
+  else return;
+  touchB(b);
+});
+$("bform").addEventListener("change",e=>{
+  const el=e.target,b=cur();
+  if(el.dataset.b==="timeSaved"){b.timeSaved=el.checked;touchB(b);renderForm();$("f_timeSaved").focus();return;}
+  if(el.dataset.money){const v=num(el.value);el.value=v?money(v):"";}
+});
+$("bform").addEventListener("click",e=>{
+  const b=cur(),t=e.target;
+  if(t.id==="addMs"){b.milestones.push(["",""]);touchB(b);renderForm();$("ms"+(b.milestones.length-1)+"a").focus();}
+  else if(t.id==="addRk"){b.risks.push(["",""]);touchB(b);renderForm();$("rk"+(b.risks.length-1)+"a").focus();}
+  else if(t.dataset.rmms!=null){b.milestones.splice(+t.dataset.rmms,1);touchB(b);renderForm();}
+  else if(t.dataset.rmrk!=null){b.risks.splice(+t.dataset.rmrk,1);touchB(b);renderForm();}
+});
+function briefText(b){
+  const c=calc(b),ms=b.milestones.filter(m=>m[0].trim()),rk=b.risks.filter(r=>r[0].trim());
+  return [b.title||"Untitled brief",`${b.decision}${b.decideBy?" · decision needed by "+b.decideBy:""}`,`Owner: ${b.author||"-"} · Sponsor: ${b.sponsor||"-"}`,"",
+    "THE ASK",b.ask,"","THE PROBLEM",b.problem,"","WHAT WE'LL DO",b.plan,"",
+    "THE NUMBERS",`One-time cost ${money(c.once)} · Running ${money(c.running)}/yr · Benefit ${money(c.counted)}/yr${c.factor<1?` (counted at ${c.factor*100}%)`:""}`,
+    `Net over 3 years ${money(c.net3)} · Pays back ${c.payback?"in month "+c.payback:"not within 3 years"}`,b.basis?"Basis: "+b.basis:"",b.timeSaved?(b.timeGoes?"Freed-up time goes to: "+b.timeGoes:"Note: includes time saved with no plan for where the time goes."):"","",
+    ms.length?"TIMELINE\n"+ms.map(m=>`- ${m[1]||"TBC"}: ${m[0]}`).join("\n")+"\n":"",
+    "RISKS",...(rk.length?rk.map(r=>`- ${r[0]}. ${r[1]}`):["- None named"]),"","HOW WE'LL KNOW IT WORKED",b.success,"","IF WE DON'T DO THIS",b.ifnot].filter(x=>x!==undefined).join("\n").replace(/\n{3,}/g,"\n\n");
+}
+/* PDF */
+function loadJsPDF(){
+  if(window.jspdf&&window.jspdf.jsPDF)return Promise.resolve(window.jspdf.jsPDF);
+  return new Promise((res,rej)=>{const s=document.createElement("script");s.src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";
+    s.onload=()=>window.jspdf?res(window.jspdf.jsPDF):rej();s.onerror=rej;document.head.appendChild(s);});
+}
+async function briefPDF(b){
+  let J;try{J=await loadJsPDF();}catch(e){toast("Couldn't load the PDF maker. Use Copy for email instead.");return;}
+  const doc=new J({unit:"mm",format:"letter"}),W=215.9,H=279.4,M=20,CW=W-2*M,c=calc(b);let y=0;
+  const RED=[228,0,43],BLK=[17,17,17],GRY=[107,107,107],LN=[226,226,226],SOFT=[245,245,245];
+  const color=a=>doc.setTextColor(a[0],a[1],a[2]);
+  const need=h=>{if(y+h>H-16){doc.addPage();y=M;}};
+  const text=(t,size,col,bold,gap,x,w)=>{doc.setFont("helvetica",bold?"bold":"normal");doc.setFontSize(size);color(col);
+    doc.splitTextToSize(String(t||""),w||CW).forEach(l=>{need(size*.42);doc.text(l,x||M,y);y+=size*.42;});y+=gap==null?2:gap;};
+  const head=t=>{need(12);y+=2;doc.setFont("helvetica","bold");doc.setFontSize(8.5);color(BLK);doc.text(t.toUpperCase(),M,y);y+=1.8;
+    doc.setDrawColor(LN[0],LN[1],LN[2]);doc.line(M,y,W-M,y);y+=5;};
+  doc.setFillColor(RED[0],RED[1],RED[2]);doc.rect(0,0,W,4,"F");y=16;
+  const date=b.decideBy?new Date(b.decideBy+"T12:00").toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}):"";
+  text(`EXECUTIVE BRIEF · ${b.decision.toUpperCase()}${date?" · DECISION NEEDED BY "+date.toUpperCase():""}`,8,GRY,true,2);
+  text(b.title||"Untitled brief",20,BLK,true,1);
+  text(`Owner: ${b.author||"not named"} · Sponsor: ${b.sponsor||"not named"}`,9,GRY,false,5);
+  /* ask box */
+  doc.setFont("helvetica","bold");doc.setFontSize(12);const al=doc.splitTextToSize(b.ask||"",CW-12),ah=al.length*5.2+11;
+  need(ah);doc.setFillColor(SOFT[0],SOFT[1],SOFT[2]);doc.rect(M,y-4,CW,ah,"F");doc.setFillColor(RED[0],RED[1],RED[2]);doc.rect(M,y-4,1.5,ah,"F");
+  doc.setFontSize(7.5);color(RED);doc.text("THE ASK",M+6,y+1);doc.setFontSize(12);color(BLK);al.forEach((l,i)=>doc.text(l,M+6,y+7+i*5.2));y+=ah+3;
+  head("The problem");text(b.problem,10.5,BLK);
+  head("What we'll do");text(b.plan,10.5,BLK);
+  head("The numbers");need(24);
+  const cells=[["One-time cost",short$(c.once)],["Running cost / yr",short$(c.running)],[`Benefit / yr${c.factor<1?` (at ${c.factor*100}%)`:""}`,short$(c.counted)],
+    ["Net over 3 years",short$(c.net3)],["Pays back",c.payback?"Month "+c.payback:"Not in 3 yrs"],["Confidence",b.conf]];
+  const cw=CW/3;cells.forEach(([l,v],i)=>{const x=M+(i%3)*cw,yy=y+Math.floor(i/3)*12;doc.setFont("helvetica","normal");doc.setFontSize(7.5);color(GRY);doc.text(l,x,yy);
+    doc.setFont("helvetica","bold");doc.setFontSize(13);color(i===3&&c.net3<0?RED:BLK);doc.text(v,x,yy+5.5);});
+  y+=25;
+  if(b.basis)text("Basis: "+b.basis,9,GRY,false,1.5);
+  if(b.timeSaved)text(b.timeGoes?"Freed-up time goes to: "+b.timeGoes:"Includes time saved with no plan for where the time goes.",9,b.timeGoes?GRY:RED,!b.timeGoes,1.5);
+  const ms=b.milestones.filter(m=>m[0].trim());
+  if(ms.length){head("Timeline");ms.forEach(m=>{need(6);doc.setFont("helvetica","bold");doc.setFontSize(10);color(BLK);doc.text(m[1]||"TBC",M,y);
+    const yy=y;text(m[0],10,BLK,false,1,M+28,CW-28);if(y<yy+5)y=yy+5;});}
+  const rk=b.risks.filter(r=>r[0].trim());
+  head("Risks");if(rk.length)rk.forEach(r=>text(`${r[0]}. ${r[1]}`,10,BLK,false,1.5));else text("None named.",10,GRY);
+  head("How we'll know it worked");text(b.success,10.5,BLK);
+  head("If we don't do this");text(b.ifnot,10.5,BLK);
+  y+=2;text(`Benefits and running costs start in month ${c.start}. The three-year net counts ${c.factor===1?"the full benefit":`${c.factor*100}% of the stated benefit`}, minus all costs.`,7.5,GRY,false,0);
+  saveFile(slug(b.title)+".pdf",doc.output("blob"));
+}
+
+/* ============================================================
+   Start
+   ============================================================ */
+$("promptCount").textContent=PROMPTS.length;
+renderLearn();renderPrompts();renderCheckForm();renderBrief();
+const start=location.hash.slice(1)||store.get("cp-view","home");
+go(VIEWS.includes(start)?start:"home",true);
+</script>
