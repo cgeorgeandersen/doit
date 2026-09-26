@@ -443,13 +443,13 @@ const LESSONS=[
 {id:"briefing",title:"Ask the way you'd brief a colleague",mins:5,
  why:"Most bad answers come from short questions. If you'd give a colleague more context, give the AI more context too.",
  points:[
-  "<b>Say who it's for.</b> “For the plant manager, who'll read it on her phone” gets a very different answer from no audience at all.",
+  "<b>Say who it's for.</b> “For the VP of Sales, who'll read it on their phone” gets a very different answer from no audience at all.",
   "<b>Say what you want done.</b> Draft, shorten, compare, list, explain. One clear verb.",
   "<b>Give it the material.</b> Paste the email, the notes, the table. Don't make it guess.",
   "<b>Say what good looks like.</b> Length, format, tone. “Under 120 words, three bullets, no jargon.”",
   "<b>If you have an example you like, paste it.</b> “Write it like this one” beats any description of a style."],
- compare:{weak:{tag:"Short question",text:"Write an email about the delivery delay.",note:"You'll get a generic apology letter you have to rewrite."},
-          strong:{tag:"Proper brief",text:"Write an email to our contact at a regional grocery chain. Their Tuesday delivery to 14 stores will arrive Thursday because a line was down at the plant. We've added a Saturday run for the three busiest stores. Firm and factual, one apology, under 120 words. End by offering a call tomorrow.",note:"Everything it needs is there. You'll mostly just check it and send."}},
+ compare:{weak:{tag:"Short question",text:"Write an email about the export delay.",note:"You'll get a generic apology letter you have to rewrite."},
+          strong:{tag:"Proper brief",text:"Write an email to our main contact at [customer]. Their data export scheduled for Tuesday will now run Thursday because a migration failed overnight. We've run their three most-used reports manually so they aren't blocked. Firm and factual, one apology, under 120 words. End by offering a call tomorrow.",note:"Everything it needs is there. You'll mostly just check it and send."}},
  tryit:"Take an email you need to write today. Before asking for a draft, write two lines: who it's for and what they need to do after reading it. Put those at the top of your prompt.",
  quiz:{q:"Which prompt will get the most useful first draft?",
   opts:["“Summarise this.”","“Summarise this thread for my director in five bullets: the decision needed, the options, and who disagrees.”","“Please could you kindly summarise this long thread as best you can?”"],
@@ -511,7 +511,38 @@ const LESSONS=[
  tryit:"Choose your one weekly task now. Find a matching prompt in the prompt library, save it somewhere you'll see it, and use it the next time the task comes round.",
  quiz:{q:"The first answer isn't quite right. What usually works best?",
   opts:["Start a new chat and ask the same question again","Tell it what's wrong: “too formal, cut it by half, lead with the decision”","Give up and write it yourself"],
-  right:1,fb:["You'll get another random version. Telling it what to fix is faster.","Right. Specific feedback gets you there in one or two rounds.","Sometimes that's right, but one round of feedback usually fixes it."]}}
+  right:1,fb:["You'll get another random version. Telling it what to fix is faster.","Right. Specific feedback gets you there in one or two rounds.","Sometimes that's right, but one round of feedback usually fixes it."]}},
+
+{id:"principles",title:"Microsoft's six principles, in plain words",mins:6,
+ why:"We follow Microsoft's six responsible AI principles. They aren't just for developers. Each one turns into a plain question you can ask about anything you do with AI.",
+ points:[
+  "<b>Fairness.</b> Could this treat someone differently because of who they are? Be most careful with anything that touches hiring, pay, performance or a customer's terms.",
+  "<b>Reliability and safety.</b> What happens when it's wrong? If you can't catch a mistake before it matters, don't rely on it.",
+  "<b>Privacy and security.</b> Is this data allowed in this tool? Use approved tools, share only what's needed, and keep sensitivity labels on.",
+  "<b>Inclusiveness.</b> Does it work for everyone who has to use it, including people on screen readers or working in a second language?",
+  "<b>Transparency.</b> Do people know AI was involved, and what it can't do? Don't pass off AI output as a checked fact.",
+  "<b>Accountability.</b> A person owns every AI output and every AI project. “The AI did it” is never the answer."],
+ compare:{weak:{tag:"Needs a project and review",text:"Used AI to rank 40 job applicants and sent the top five to the hiring manager.",note:"Decisions about people's jobs are what Microsoft calls a sensitive use. That needs a project, a Tier 3 review and a person making every call."},
+          strong:{tag:"Fine as personal use",text:"Used AI to turn my own interview notes into a scorecard against our criteria. I made the ratings and the decision myself.",note:"It organises your evidence. The judgement is yours, and it's recorded as yours."}},
+ tryit:"Think of one way you use AI now. Run it past the six questions above. If any answer makes you uneasy, talk to your manager or start a project so it gets reviewed.",
+ quiz:{q:"Which of these needs a project and a review, not just a prompt?",
+  opts:["Summarising your own meeting notes","Using AI to shortlist job candidates","Rewriting an internal announcement"],
+  right:1,fb:["That's everyday personal use. Just check the output.","Right. It affects people's job opportunities, which is a sensitive use under Microsoft's standard.","That's everyday personal use. Just check facts and dates."]}},
+
+{id:"copilot",title:"Copilot sees what you can see",mins:5,
+ why:"Microsoft 365 Copilot works inside our tenant and draws on the files, emails, chats and meetings you already have access to. That's what makes it useful. It's also why careless sharing matters more than it used to.",
+ points:[
+  "<b>It respects your permissions.</b> Copilot only uses content you can already open. It never gives you access to anything new.",
+  "<b>But it finds things fast.</b> If a folder was shared with the whole company by mistake, Copilot can surface it in someone's answer. Oversharing that nobody noticed for years becomes visible in seconds.",
+  "<b>Sensitivity labels matter.</b> Put the right label on confidential files. Copilot respects labels, and content it creates from a labelled file picks up that label.",
+  "<b>Check the references.</b> Copilot shows which files and messages it used. Open them. If it cited something you didn't expect to see, tell the owner.",
+  "<b>Share on purpose.</b> Share with named people or groups, not everyone in the organisation, unless everyone really needs it."],
+ compare:{weak:{tag:"Risky",text:"Shared the salary review spreadsheet with “People in your organization” so two managers could open it.",note:"Now it can turn up in anyone's Copilot answer about pay."},
+          strong:{tag:"Safe",text:"Shared it with the two managers by name and applied the Confidential sensitivity label.",note:"They can open it. It won't appear for anyone else."}},
+ tryit:"Open the sharing settings on the three folders or sites you use most. Check who they're shared with, and tighten anything shared more widely than it needs to be.",
+ quiz:{q:"Copilot shows you a document about a reorganisation you weren't meant to see. What most likely happened?",
+  opts:["Copilot got around our security","The document was shared more widely than intended, and Copilot found it","Copilot made the document up"],
+  right:1,fb:["Copilot only uses content you already have permission to open.","Right. Tell the file owner or IT so they can fix the sharing.","It can get details wrong, but a real document in its references means it exists and you can open it."]}}
 ];
 
 /* Team session plan */
@@ -594,7 +625,7 @@ const FREQ={once:["Just this once",1],monthly:["Every month",12],weekly:["Every 
 /* Levels. Each check is evaluated by the app (see levelOf). */
 const LEVELS=[
  {n:1,name:"Starter",blurb:"You've signed in and picked your team."},
- {n:2,name:"Practitioner",blurb:"You've done all six lessons."},
+ {n:2,name:"Practitioner",blurb:"You've done all the lessons."},
  {n:3,name:"Regular",blurb:"You're using AI on real work, often enough to log it."},
  {n:4,name:"Champion",blurb:"You're helping others get there too."}
 ];
@@ -617,19 +648,29 @@ const CHALLENGES=[
 
 /* Governance */
 const STAGES=["Idea","Assessed","Awaiting approval","Approved","Pilot","Live","Closed"];
+const RAI=[
+ {id:"fairness",name:"Fairness",def:"AI systems should treat all people fairly.",q:"How could it lead to unequal treatment or bias in decisions?",ask:"Who could be treated differently, and how you'll check for it.",ph:"e.g. Drafts are checked by agents; we sample replies across customer tiers and regions monthly for differences in tone or offers."},
+ {id:"reliability",name:"Reliability and safety",def:"AI systems should perform reliably and safely.",q:"In what situations could it fail, or produce unreliable results?",ask:"How it's tested, what's monitored, and how to switch it off.",ph:"e.g. Tested on 50 past tickets before launch; weekly edit-rate and error log; feature flag lets support ops turn it off in minutes."},
+ {id:"privacy",name:"Privacy and security",def:"AI systems should be secure and respect privacy.",q:"How might it handle sensitive data, or become a security risk?",ask:"What data it touches, where that data goes, and who approved the tool.",ph:"e.g. Uses ticket text only, stays in our Microsoft 365 tenant, tool approved by Security on [date]; no payment data."},
+ {id:"inclusiveness",name:"Inclusiveness",def:"AI systems should empower everyone and engage all people.",q:"Could some groups be left out or disadvantaged by how it's designed or rolled out?",ask:"Who uses or is affected by it, and how you've made it work for them.",ph:"e.g. Works in English and Spanish; screen-reader tested; agents who opt out keep the old workflow."},
+ {id:"transparency",name:"Transparency",def:"AI systems should be understandable.",q:"What about it would be hard for people to understand or explain?",ask:"Who knows AI is involved, and how its limits are explained to them.",ph:"e.g. Agents see an 'AI draft' label and a one-page guide to its limits; customers get replies written and sent by a named agent."},
+ {id:"accountability",name:"Accountability",def:"People should be accountable for AI systems.",q:"Where could it be unclear who is responsible?",ask:"The named owner, who reviews outputs, and who handles complaints.",ph:"e.g. Owner: Head of Support Ops. Agents own every reply they send. Issues go to the support ops lead within one business day."}
+];
 const RISK_QS=[
- {id:"personal",q:"Does it use personal data about customers or employees?",tier:2,control:"Privacy review before build; only the fields that are needed."},
- {id:"restricted",q:"Does it use confidential, regulated or NDA-covered data?",tier:2,control:"Written confirmation that the tool is approved for this data."},
- {id:"external",q:"Will its output reach customers or the public without a person checking it first?",tier:3,control:"A person reviews output before it goes out, or a sampled quality check with a named owner."},
- {id:"people",q:"Will it make or shape decisions about people, such as hiring, pay, performance or access?",tier:3,control:"Legal and People sign-off; a person makes every final decision."},
- {id:"finance",q:"Does it feed financial reporting, billing or a regulated process?",tier:2,control:"A documented human control step before any number is used."},
- {id:"autonomous",q:"Will it take actions in other systems (send, update, delete) without a person approving each one?",tier:2,control:"Limits on what it can do, logging, and a way to switch it off fast."},
- {id:"vendor",q:"Does it need a new vendor or AI tool that isn't already approved?",tier:2,control:"Security and procurement review of the vendor."}
+ {id:"su_life",group:"Sensitive use",p:"Fairness",q:"Could it affect someone's legal position or life opportunities, such as employment, pay, credit, housing, insurance or access to services?",tier:3,control:"Sensitive-use review with Legal and People; a person makes every final decision."},
+ {id:"su_injury",group:"Sensitive use",p:"Reliability and safety",q:"Could its use or misuse cause someone significant physical or psychological harm?",tier:3,control:"Sensitive-use review; safety testing before launch; a fast way to switch it off."},
+ {id:"su_rights",group:"Sensitive use",p:"Privacy and security",q:"Could it restrict or undermine someone's human rights, such as privacy or freedom of expression?",tier:3,control:"Sensitive-use review with Legal before any build."},
+ {id:"external",group:"Screening",p:"Transparency",q:"Will its output reach customers or the public without a person checking it first?",tier:3,control:"A person reviews output before it goes out, or a sampled quality check with a named owner; people are told when AI is involved."},
+ {id:"personal",group:"Screening",p:"Privacy and security",q:"Does it use personal data about customers or employees?",tier:2,control:"Privacy review before build; only the fields that are needed."},
+ {id:"restricted",group:"Screening",p:"Privacy and security",q:"Does it use confidential, regulated or NDA-covered data?",tier:2,control:"Written confirmation that the tool is approved for this data, with sensitivity labels applied."},
+ {id:"finance",group:"Screening",p:"Reliability and safety",q:"Does it feed financial reporting, billing or a regulated process?",tier:2,control:"A documented human control step before any number is used."},
+ {id:"autonomous",group:"Screening",p:"Accountability",q:"Will it take actions in other systems (send, update, delete) without a person approving each one?",tier:2,control:"Limits on what it can do, logging, and a named person who can switch it off."},
+ {id:"vendor",group:"Screening",p:"Privacy and security",q:"Does it need a new vendor, model or AI tool that isn't already approved?",tier:2,control:"Security and procurement review of the vendor and its data handling."}
 ];
 const TIERS={
- 1:{name:"Tier 1: Low risk",who:"Team lead and the AI governance lead",blurb:"Internal use, general data, a person checks the output. Light-touch approval."},
- 2:{name:"Tier 2: Medium risk",who:"The AI review board",blurb:"Sensitive data or automated actions. Needs a pilot with a pass mark set in advance, plus human oversight and monitoring."},
- 3:{name:"Tier 3: High risk",who:"The AI review board, with Legal and Security",blurb:"Affects customers, the public or decisions about people. Needs everything in Tier 2, plus privacy and legal sign-off before going live."}
+ 1:{name:"Tier 1: Low risk",who:"Team lead and the AI governance lead",blurb:"Internal use, general data, and a person checks the output. Light-touch approval.",reviewMonths:12},
+ 2:{name:"Tier 2: Medium risk",who:"The AI review board",blurb:"Sensitive data, automated actions or a new vendor. Needs a pilot with a pass mark set in advance and a full Responsible AI assessment.",reviewMonths:12},
+ 3:{name:"Tier 3: High risk",who:"The AI review board, with Legal and Security",blurb:"A Microsoft-defined sensitive use, or output reaching customers unchecked. Needs everything in Tier 2, plus privacy and legal sign-off before going live, and a risk review every quarter.",reviewMonths:3}
 };
 /* Which artifacts each tier needs. key -> [label, minimum tier] */
 const ARTIFACTS=[
@@ -638,160 +679,191 @@ const ARTIFACTS=[
  ["brief","Exec brief",1],
  ["approval","Approval record",1],
  ["pilot","Pilot plan and result",2],
- ["controls","Oversight and monitoring",2],
+ ["controls","Responsible AI assessment",2],
  ["signoff","Privacy and legal sign-off",3],
  ["benefits","Benefits tracking",1],
  ["review","Post-launch review",1]
 ];
 const DECISION_TYPES={approved:"Approved",conditions:"Approved with conditions",deferred:"Deferred",rejected:"Not approved"};
+const CAF_STEPS=[
+ ["Assess","Understand each AI use and its risks, using the six principles.","Intake and idea check, risk screen (including Microsoft's sensitive uses), Responsible AI assessment."],
+ ["Document","Write down the policies that address those risks.","Risk tiers, the paperwork each tier needs, approval authority, and the lessons everyone takes."],
+ ["Enforce","Apply the policies, with automation where you can and people where you can't.","Stage gates that block progress until paperwork is done, board-only approvals, independent approvers, and Microsoft Purview labels on the data."],
+ ["Monitor","Keep checking risk and results once it's running.","Risk reviews (quarterly for Tier 3, yearly otherwise), benefits tracking, post-launch reviews, and the Value dashboard."]
+];
 const RECS={scale:"Scale it further",keep:"Keep as is",change:"Keep, with changes",stop:"Stop it"};
 </script>
 <script>
 "use strict";
-const ROLES=["Finance","Procurement","Supply chain & ops","Sales & customer","Customer care","HR","IT","Legal & compliance","Comms","Projects","Everyone"];
+const ROLES=["Engineering","Product & Design","Data & Analytics","IT & Security","Sales","Customer Success","Marketing","Finance","People","Legal","Operations","Everyone"];
+const APPS=["Copilot Chat","Teams","Outlook","Word","Excel","PowerPoint"];
 const LVL_NAME={start:"Start here",build:"Worth setting up",stretch:"For the curious"};
 
 const PROMPTS=[
-{id:"formula",t:"Explain a spreadsheet formula you inherited",r:["Finance","Everyone"],s:["Spreadsheets"],lvl:"start",save:"30–90 min each time",first:1,
+{id:"formula",app:["Excel", "Copilot Chat"],t:"Explain a spreadsheet formula you inherited",r:["Finance","Everyone"],s:["Spreadsheets"],lvl:"start",save:"30–90 min each time",first:1,
  what:"A colleague left and their workbook has a formula nested seven levels deep. Paste it in and get a plain-English walkthrough. It's the best first try for anyone who works in spreadsheets, because you can check the answer against the cell straight away.",
  p:"Explain this Excel formula in plain English. Work from the innermost function outward, one step per line. Then tell me:\n- what it returns in the normal case\n- what it returns when a lookup finds nothing\n- any assumption it makes that could silently give a wrong number\n\nFormula:\n[paste formula]\n\nWhat the columns hold:\n[e.g. A = material number, C = plant, F = price]",
  c:"This one checks itself: compare the explanation with what the cell actually shows. If they differ, you've caught it within seconds."},
-{id:"notes",t:"Turn messy meeting notes into decisions, owners and dates",r:["Projects","Everyone"],s:["Meetings","Writing"],lvl:"start",save:"2–4 hrs/week",first:1,
+{id:"notes",app:["Teams", "Copilot Chat"],t:"Turn messy meeting notes into decisions, owners and dates",r:["Product & Design","Everyone","Engineering"],s:["Meetings","Writing"],lvl:"start",save:"2–4 hrs/week",first:1,
  what:"Paste your own rough notes and get back a clean list. You were in the meeting, so you'll know immediately whether it's right. That makes it the safest place to learn how these tools behave.",
  p:"Below are my rough notes from a meeting about [topic]. Pull out three lists:\n\nDECISIONS: what was actually decided\nACTIONS: task, owner, due date\nOPEN: questions raised but not settled\n\nUse only what's in the notes. If no owner or date was stated, write \"unassigned\" rather than guessing. At the end, list anything that sounds like a decision but has no owner.\n\n[paste notes]",
  c:"You were there, so read it against your memory. Watch for actions it assigned to whoever spoke loudest."},
-{id:"longdoc",t:"Get what matters to you out of a long document",r:["Everyone","Legal & compliance","Finance"],s:["Research","Policy questions","Contracts & documents"],lvl:"start",save:"1–3 hrs each",first:1,
+{id:"longdoc",app:["Copilot Chat", "Word"],t:"Get what matters to you out of a long document",r:["Everyone","Legal","Finance"],s:["Research","Policy questions","Contracts & documents"],lvl:"start",save:"1–3 hrs each",first:1,
  what:"The 60-page report, the new regulation, the 40-message thread. Don't ask for a summary. Ask what it means for your job and what you can safely skip.",
  p:"I'm a [your role] and I care about [your specific concern]. Read the document below and tell me:\n1. The three things in it that affect me, each with a direct quote\n2. Anything that would change a decision I'm making about [decision]\n3. What I can safely ignore\n\nIf nothing in it affects my area, say so plainly. Don't stretch to find something.\n\n[paste document]",
  c:"Read the quoted passages before you act. The \"say so plainly\" line matters: without it you'll get relevance that isn't really there."},
-{id:"variance",t:"Draft month-end variance commentary",r:["Finance"],s:["Reports & decks","Spreadsheets","Writing"],lvl:"start",save:"3–5 hrs per close",
+{id:"variance",app:["Excel", "Word"],t:"Draft month-end variance commentary",r:["Finance"],s:["Reports & decks","Spreadsheets","Writing"],lvl:"start",save:"3–5 hrs per close",
  what:"Every close, someone writes the same kind of paragraph about the same kind of variance table. Give it the table and last month's commentary as a style guide, then edit rather than start from nothing.",
  p:"Below is a budget-vs-actual variance table for [entity, period]. Write close commentary in the voice of the example underneath it.\n\nRules:\n- Only cover variances over [$ amount] or [%]\n- One short paragraph per line item: direction, amount, and the driver if the data shows it\n- If the data doesn't show the driver, write \"driver to be confirmed\". Don't guess.\n- Quote numbers exactly as they appear in the table. Don't calculate new ones.\n\n[paste table]\n\nLast month's commentary:\n[paste two or three paragraphs]",
  c:"It can see that a number moved, but not why. Every stated cause is a guess until you confirm it, and every figure needs checking against the table."},
-{id:"buildformula",t:"Write the formula you can't remember",r:["Finance","Supply chain & ops","Everyone"],s:["Spreadsheets"],lvl:"start",save:"1–2 hrs/week",
+{id:"buildformula",app:["Excel", "Copilot Chat"],t:"Write the formula you can't remember",r:["Finance","Operations","Everyone"],s:["Spreadsheets"],lvl:"start",save:"1–2 hrs/week",
  what:"Describe the result you want in words and get the formula back with an explanation. It's quicker than a search engine, and you'll understand what you're pasting.",
  p:"My Excel data starts in row 2. Column A is [x], column B is [y], column C is [z]. In column D I want [the result, in plain words].\n\nGive me the formula, explain each argument, and tell me what it returns when there's no match or a blank. If a newer function (XLOOKUP, FILTER, LET) makes it simpler, use it and say which Excel version it needs.",
  c:"Before you fill it down 10,000 rows, test it on five rows where you already know the answer."},
-{id:"reconcile",t:"Match two lists that don't quite line up",r:["Finance","Procurement","Supply chain & ops"],s:["Data cleanup","Spreadsheets"],lvl:"build",save:"2–6 hrs per cycle",
+{id:"reconcile",app:["Excel", "Copilot Chat"],t:"Match two lists that don't quite line up",r:["Finance","Operations"],s:["Data cleanup","Spreadsheets"],lvl:"build",save:"2–6 hrs per cycle",
  what:"Vendor names spelled four ways, customer numbers with and without leading zeros, an export that almost matches the master. AI is good at proposing which rows refer to the same thing. It's poor at arithmetic, so let it propose matches and let Excel do the totals.",
  p:"Below are two lists of [vendors / customers / SKUs]. List A is the master. List B is an export from [system].\n\nFor each entry in B, propose the most likely match in A and rate your confidence as high, medium or low. Put anything you're unsure about under a \"needs a person\" heading rather than forcing a match.\n\nOutput a table: B value | proposed A match | confidence | reason.\nDon't sum, count or total anything.\n\nList A:\n[paste]\n\nList B:\n[paste]",
  c:"Accept only the high-confidence matches without review, and do every total in Excel, never in the chat."},
-{id:"sapmsg",t:"Decode an SAP error or system message",r:["Finance","Supply chain & ops","Procurement","IT"],s:["SAP & systems"],lvl:"start",save:"20–45 min each",
+{id:"sapmsg",app:["Copilot Chat"],t:"Decode an error message from a business system",r:["Finance","Operations","IT & Security"],s:["SAP & systems"],lvl:"start",save:"20–45 min each",
  what:"A message number, a short text, and a transaction you were halfway through. Ask what it usually means, what to check first, and who normally owns the fix, before you raise a ticket that goes round in circles.",
- p:"I got this message in SAP S/4HANA while doing [what you were doing, e.g. posting a goods receipt in MIGO].\n\nMessage: [message class and number, e.g. M7 021]\nText: [the exact text]\n\nExplain in plain language what it usually means, the three most likely causes in order, what I can check myself with display-only access, and which team normally fixes each cause (master data, config, security, or the business owner). Don't suggest configuration changes.",
+ p:"I got this message in [system, e.g. Dynamics 365, Azure DevOps, our ERP] while doing [what you were doing].\n\nMessage: [error code, if there is one]\nText: [the exact text]\n\nExplain in plain language what it usually means, the three most likely causes in order, what I can check myself with display-only access, and which team normally fixes each cause (data, configuration, access, or the business owner). Don't suggest configuration changes.",
  c:"The general meaning is usually right. Our own configuration and custom messages aren't public, so treat the causes as a checklist to work through, not a diagnosis."},
-{id:"contract5",t:"Pull the five terms you need from a contract",r:["Procurement","Legal & compliance"],s:["Contracts & documents","Research"],lvl:"build",save:"1–3 hrs per contract",
+{id:"contract5",app:["Word", "Copilot Chat"],t:"Pull the five terms you need from a contract",r:["Operations","Legal"],s:["Contracts & documents","Research"],lvl:"build",save:"1–3 hrs per contract",
  what:"You don't need a legal opinion. You need the renewal date, the notice period, what happens if volumes fall, and whether the price moves. Ask for those with clause references, then read those clauses yourself.",
  p:"From the agreement below, extract only the following. For each, give the clause number and a direct quote:\n1. Term, renewal mechanism, and the exact date notice must be given to stop auto-renewal\n2. Price, and anything that lets either party change it (indexation, surcharges, review clauses)\n3. Volume or minimum commitments, and the penalty for missing them\n4. Termination rights for each party\n5. Liability caps, and any unusual indemnity\n\nIf the document doesn't address one of these, write \"not addressed\". Don't fill in standard terms.\n\n[paste agreement]",
  c:"This helps you read the contract. It isn't legal review. Read every clause it cites, and send anything that would change a decision to Legal."},
-{id:"rfpgrid",t:"Compare vendor proposals on the same criteria",r:["Procurement","IT"],s:["Contracts & documents","Reports & decks"],lvl:"build",save:"3–6 hrs per RFP",
+{id:"rfpgrid",app:["Copilot Chat"],t:"Compare vendor proposals on the same criteria",r:["Operations","IT & Security"],s:["Contracts & documents","Reports & decks"],lvl:"build",save:"3–6 hrs per RFP",
  what:"Three vendors answer the same RFP in three different layouts. Have it build the comparison grid first, with a \"didn't answer\" option, which often tells you the most.",
  p:"Below are responses from [N] vendors to the same RFP. Build a table with one row per criterion and one column per vendor.\n\nCriteria:\n[list yours]\n\nIn each cell, quote or closely paraphrase what the vendor said. If a vendor didn't address a criterion, write NOT ANSWERED. Don't fill the gap with what vendors usually say. After the table, list the three differences most likely to change the decision.\n\n[paste responses, each labelled with the vendor name]",
  c:"Check every NOT ANSWERED. The usual failure is an answer buried in an appendix."},
-{id:"redline",t:"See what really changed between two versions",r:["Procurement","Legal & compliance","Everyone"],s:["Contracts & documents"],lvl:"build",save:"1–2 hrs per redline",
+{id:"redline",app:["Word"],t:"See what really changed between two versions",r:["Operations","Legal","Everyone"],s:["Contracts & documents"],lvl:"build",save:"1–2 hrs per redline",
  what:"A redline shows every changed comma. Ask instead for the changes that shift risk, money or obligations, ranked and in plain language, then go and read those in the redline.",
  p:"Here are two versions of the same document. Ignore formatting, numbering and wording changes that don't change meaning.\n\nList only substantive changes, ranked by how much they shift risk, cost or obligation. For each: quote old and new text, and say in one sentence who it now favours and why.\n\nVERSION 1:\n[paste]\n\nVERSION 2:\n[paste]",
  c:"Still run the real comparison. Use this to know where to look, not as a replacement for looking."},
-{id:"supplierletter",t:"Draft a firm but fair supplier email",r:["Procurement","Supply chain & ops"],s:["Email","Writing"],lvl:"start",save:"20–40 min each",
+{id:"supplierletter",app:["Outlook"],t:"Draft a firm but fair supplier email",r:["Operations"],s:["Email","Writing"],lvl:"start",save:"20–40 min each",
  what:"A late delivery, a quality issue, a price increase you're pushing back on. Getting the tone right takes longer than getting the facts right. Give it the facts and tell it the relationship matters.",
  p:"Draft an email to [supplier contact] about [issue]. Facts:\n- [what happened, with dates and PO numbers]\n- [impact on us]\n- [what we need from them, and by when]\n\nTone: firm, specific, no threats, no apologising for raising it. We want to keep this supplier. Under 180 words. End with one clear request and a date.",
  c:"Check that every date, PO number and quantity matches your source. Don't let it add commitments or remedies you haven't agreed internally."},
-{id:"exceptions",t:"Turn the daily exception report into the six lines people read",r:["Supply chain & ops"],s:["Reports & decks","Data cleanup"],lvl:"build",save:"45 min/day",
+{id:"exceptions",app:["Copilot Chat"],t:"Turn the daily exception report into the six lines people read",r:["Operations"],s:["Reports & decks","Data cleanup"],lvl:"build",save:"45 min/day",
  what:"An export arrives every morning with a few hundred exception rows, and someone turns it into the half-dozen lines people actually read. That step repeats every day and is mostly writing, which suits these tools well.",
  p:"Below is today's exception export. Write a summary for the morning ops call in this format:\n- Headline: the single most important thing, one sentence\n- By category: count, plus the notable items only\n- Changed since yesterday: compare with the summary below\n- Needs a decision today: each with the specific decision needed\n\nUse only what's in the data. Don't guess at causes.\n\nToday's export:\n[paste]\n\nYesterday's summary:\n[paste]",
  c:"The counts are the risk. Check totals against the source file, and never quote a number the model worked out."},
-{id:"sop",t:"Write an SOP from someone describing their job",r:["Supply chain & ops","IT","HR","Finance"],s:["Writing","Contracts & documents"],lvl:"start",save:"2–4 hrs per SOP",
+{id:"sop",app:["Word"],t:"Write an SOP from someone describing their job",r:["Operations","IT & Security","People","Finance"],s:["Writing","Contracts & documents"],lvl:"start",save:"2–4 hrs per SOP",
  what:"The person who does the work can explain it in ten minutes but will never write it down. Type up or transcribe their explanation, and they only have to correct the draft, which people are much happier to do.",
  p:"Below is a transcript of someone explaining how they do [task]. Turn it into a written procedure with: purpose, what triggers it, what you need before starting, numbered steps in the order given, decision points with the criteria for each, and what to do when it goes wrong.\n\nWhere the transcript is unclear or a step seems to be missing, insert [GAP: confirm …] rather than filling it in.\n\n[paste transcript]",
  c:"The [GAP] markers are the point. The person who explained it reviews the draft. Never publish a procedure nobody has checked."},
-{id:"incidentnote",t:"Turn an internal incident into a customer update",r:["Supply chain & ops","Customer care","Sales & customer","IT"],s:["Writing","Email"],lvl:"start",save:"30–45 min per incident",
+{id:"incidentnote",app:["Outlook", "Teams"],t:"Turn an internal incident into a customer update",r:["Operations","Customer Success","Sales","IT & Security"],s:["Writing","Email"],lvl:"start",save:"30–45 min per incident",
  what:"Internal incident notes are full of system names, blame and speculation. Rewriting them for a customer at 7pm is a chore. Give it the notes and tell it what must not be said.",
  p:"Below are internal notes about an incident affecting [customer or customer group]. Draft a customer update.\n\nConstraints: no internal system names, no guessing at root cause, no blame. Say what the customer experienced, what we've done, what happens next, and when they'll next hear from us. Under 150 words. Direct, one apology at most.\n\n[paste notes]",
  c:"It will happily promise a fix time nobody agreed. Someone with authority approves every commitment before it's sent."},
-{id:"meetprep",t:"Prepare for a customer meeting in five minutes",r:["Sales & customer"],s:["Meetings","Research"],lvl:"start",save:"45 min per meeting",
+{id:"meetprep",app:["Copilot Chat", "Outlook"],t:"Prepare for a customer meeting in five minutes",r:["Sales"],s:["Meetings","Research"],lvl:"start",save:"45 min per meeting",
  what:"Paste in last quarter's notes, the open issues and the account numbers, and get a one-page brief: where things stand, what's unresolved, what the customer is likely to raise, and three questions worth asking.",
  p:"I'm meeting [account] on [date]. Below are notes from our last three conversations and their current numbers.\n\nGive me a one-page brief:\n- Where the relationship stands, in two sentences\n- What's still unresolved from last time\n- The two things they're most likely to raise\n- Three questions I should ask that I might not think of\n\nFlag anything in the notes that contradicts something else in the notes.\n\n[paste notes and numbers]",
  c:"The contradictions it flags are the most useful part. Treat \"likely to raise\" as a prompt for your own thinking, not as intelligence about the customer."},
-{id:"followup",t:"Turn a call transcript into a follow-up email and commitments",r:["Sales & customer","Projects","Customer care"],s:["Meetings","Email","Writing"],lvl:"start",save:"30 min per call",
+{id:"followup",app:["Teams", "Outlook"],t:"Turn a call transcript into a follow-up email and commitments",r:["Sales","Product & Design","Customer Success","Engineering"],s:["Meetings","Email","Writing"],lvl:"start",save:"30 min per call",
  what:"The follow-up email you keep meaning to send. Paste the transcript and get the recap email, plus a separate internal list of what was promised, by whom and by when.",
  p:"Below is a transcript of a call with [customer]. Produce two things:\n\n1. A follow-up email to the customer confirming what was agreed and the next steps, with owners and dates. No filler opening.\n2. A separate internal list of every commitment made on our side, who made it and the date attached. Include vague ones and mark them VAGUE.\n\nOnly include commitments actually said in the transcript.\n\n[paste transcript]",
  c:"Check the commitments against your memory of the call before sending anything. The vague ones are where you'll find promises you didn't realise you'd made."},
-{id:"qbr",t:"Draft the business review story from the numbers",r:["Sales & customer","Finance"],s:["Reports & decks","Writing"],lvl:"build",save:"4–6 hrs per review",
+{id:"qbr",app:["PowerPoint", "Word"],t:"Draft the business review story from the numbers",r:["Sales","Finance"],s:["Reports & decks","Writing"],lvl:"build",save:"4–6 hrs per review",
  what:"You have the numbers. You need the story and slide titles that actually say something. Give it the data and last quarter's version, and forbid it from inventing figures.",
  p:"Here is this quarter's performance data for [account] and last quarter's review narrative for tone.\n\nDraft this quarter's narrative: what happened, why it matters to them, what we propose next. Also give me a title for each slide that states the point, not the topic.\n\nUse only the figures I've given. Don't calculate, estimate or round. Wherever a claim needs a number I haven't provided, write [NEED FIGURE].\n\n[paste data]\n\n[paste last quarter's narrative]",
  c:"Check every number in the draft against your source. Invented figures do the most damage in this use."},
-{id:"careemail",t:"Reply to a difficult customer email",r:["Customer care","Sales & customer"],s:["Email","Writing"],lvl:"start",save:"10–20 min each",
+{id:"careemail",app:["Outlook"],t:"Reply to a difficult customer email",r:["Customer Success","Sales"],s:["Email","Writing"],lvl:"start",save:"10–20 min each",
  what:"The customer is angry and partly right. Paste their email and the facts you've confirmed, and get a reply that acknowledges the problem, states what you'll do, and avoids promising what you can't deliver.",
  p:"Draft a reply to the customer email below. Confirmed facts:\n- [what actually happened]\n- [what we can offer: credit, redelivery, callback]\n- [what we cannot offer]\n\nAcknowledge the specific problem in their words. State exactly what we'll do and when. Don't over-apologise, don't blame anyone, and don't offer anything not listed above. Under 130 words.\n\n[paste customer email]",
  c:"Check that the offer matches what you're authorised to give. Models tend to add goodwill gestures nobody approved."},
-{id:"kb",t:"Turn a solved case into a knowledge article",r:["Customer care","IT"],s:["Tickets & queues","Writing"],lvl:"start",save:"20 min per article",
+{id:"kb",app:["Copilot Chat"],t:"Turn a solved case into a knowledge article",r:["Customer Success","IT & Security"],s:["Tickets & queues","Writing"],lvl:"start",save:"20 min per article",
  what:"The knowledge base is thin because nobody enjoys writing articles. Resolved case in, draft article out, in your template.",
  p:"Below is a resolved case or ticket thread. Write a knowledge article with these sections: the symptom as the customer or user would describe it, who it affects, resolution steps in order, and how to confirm it's fixed.\n\nWrite for someone who doesn't know the system. Remove names, case numbers and customer details. Where the thread implies a step without stating it, mark it [VERIFY].\n\n[paste thread]",
  c:"The person who solved it reviews the draft. A confidently wrong article costs more than no article."},
-{id:"triage",t:"Find the root causes in a ticket backlog",r:["IT","Customer care"],s:["Tickets & queues","Data cleanup"],lvl:"build",save:"4–8 hrs/week",
+{id:"triage",app:["Copilot Chat"],t:"Find the root causes in a ticket backlog",r:["IT & Security","Customer Success"],s:["Tickets & queues","Data cleanup"],lvl:"build",save:"4–8 hrs/week",
  what:"Categorise tickets, group duplicates, and spot the ones that share an underlying problem. The grouping is where the value is, because it finds the single fix that closes thirty tickets.",
  p:"Below are [N] ticket titles and descriptions. Do three things:\n1. Assign each to one of these categories: [your list]. Use \"Unclear\" rather than guessing.\n2. Group tickets that look like the same underlying issue, and name the issue.\n3. List the three root causes that would close the most tickets if fixed, with the ticket IDs for each.\n\n[paste tickets]",
  c:"Before routing tickets on its categories, sample fifty and measure how often it's right. Never auto-close anything on its say-so."},
-{id:"postmortem",t:"Draft the factual half of an incident review",r:["IT","Supply chain & ops"],s:["Writing","Contracts & documents"],lvl:"start",save:"2–3 hrs per incident",
+{id:"postmortem",app:["Copilot Chat"],t:"Draft the factual half of an incident review",r:["IT & Security","Operations"],s:["Writing","Contracts & documents"],lvl:"start",save:"2–3 hrs per incident",
  what:"The timeline and impact sections are assembled from material you already have in the channel and the ticket. Let it do the assembly. You write the analysis, because that's where the judgement is.",
  p:"Below is the incident channel log and ticket history. Draft the factual sections of an incident review: timeline with timestamps, how it was detected, impact and duration, and actions taken in order.\n\nDo not write root cause, contributing factors or follow-up actions. Leave those as empty headings. Mark anything you inferred rather than read directly as [INFERRED].\n\n[paste log]",
  c:"Check timestamps and impact figures against monitoring. The analysis stays with people, because that's where the learning happens."},
-{id:"jd",t:"Rewrite a job description so people apply",r:["HR"],s:["Writing"],lvl:"start",save:"1 hr per role",
+{id:"jd",app:["Word"],t:"Rewrite a job description so people apply",r:["People"],s:["Writing"],lvl:"start",save:"1 hr per role",
  what:"Most job descriptions are lists of responsibilities copied from the last posting. Ask for a rewrite that leads with the actual work and cuts phrases that appear in every advert.",
  p:"Rewrite this job description. Open with what the person will actually work on in their first six months. Cut every phrase that could appear in any job ad at any company. Keep the required qualifications exactly as written, without adding, removing or softening any. Aim for 40% shorter.\n\n[paste job description]",
  c:"Compare the qualifications with the original line by line. A quietly changed requirement is a compliance problem, not a style issue."},
-{id:"interview",t:"Turn interview notes into a structured scorecard",r:["HR","Everyone"],s:["Meetings","Writing"],lvl:"start",save:"20 min per interview",
+{id:"interview",app:["Copilot Chat"],t:"Turn interview notes into a structured scorecard",r:["People","Everyone"],s:["Meetings","Writing"],lvl:"start",save:"20 min per interview",
  what:"Scribbled notes become a consistent scorecard against your actual criteria, which makes debriefs shorter and comparisons fairer.",
  p:"Here are my rough notes from an interview. Organise them against these criteria: [list your competencies].\n\nFor each criterion, give the evidence from my notes and mark it Strong, Mixed or Not observed. Where I recorded no evidence, the answer is Not observed; don't infer a rating. Finish with two questions I should have asked and didn't.\n\n[paste notes]",
  c:"Never let it recommend whether to hire. It organises your evidence; the judgement stays yours and is recorded as yours."},
-{id:"benefitsq",t:"Answer the same policy question asked forty different ways",r:["HR","Finance"],s:["Policy questions","Email"],lvl:"build",save:"3–5 hrs/week",
+{id:"benefitsq",app:["Copilot Chat"],t:"Answer the same policy question asked forty different ways",r:["People","Finance"],s:["Policy questions","Email"],lvl:"build",save:"3–5 hrs/week",
  what:"People ask the same twenty questions in endless variations. Answer from the actual policy, with the source quoted, so employees get a quick answer and you keep a record of where it came from.",
  p:"Answer this employee question using only the policy text below.\n\nQuestion: [paste it]\n\nAnswer in under 100 words, in plain language, and quote the sentence you're relying on. If the policy doesn't clearly answer it, say so and direct them to [team]. Don't fill gaps with what other companies typically do.\n\n[paste policy]",
  c:"Wrong answers about pay, leave or benefits have real consequences for people. A person reviews anything about eligibility or money before it's sent."},
-{id:"announce",t:"Rewrite an announcement so people actually read it",r:["Comms","HR","Everyone"],s:["Writing","Email"],lvl:"start",save:"30–60 min each",
+{id:"announce",app:["Outlook", "Word"],t:"Rewrite an announcement so people actually read it",r:["Marketing","People","Everyone"],s:["Writing","Email"],lvl:"start",save:"30–60 min each",
  what:"Corporate announcements tend to bury the point in paragraph four. Ask for the change first, then the action needed, then the background, with the filler phrases listed so you can defend the edit.",
  p:"Rewrite this internal announcement. Open with what's changing and what the reader has to do, then the date, then any background. Cut corporate filler and list the phrases you cut. Keep every fact, date, name and system reference exactly as written. Aim for 40% shorter.\n\n[paste announcement]",
  c:"Check dates, names and system names against the original. Details get lost quietly when text is shortened."},
-{id:"audiences",t:"One update, three audiences",r:["Comms","Projects"],s:["Reports & decks","Writing"],lvl:"build",save:"2–4 hrs per deck",
- what:"The same content has to work for an executive, a technical team and a bottler audience. Paste your notes and ask for each version, with what to cut and what to lead with.",
- p:"Here are my notes for an update on [project]. Produce three versions:\n1. Executive: five points maximum, decisions and money only\n2. Technical team: how it works and what changes for them\n3. Bottler-facing: what changes for their people and when, with no internal detail\n\nFor each, say what you cut from my notes and what the opening line should be.\n\n[paste notes]",
- c:"Check the bottler-facing version most carefully for internal detail that shouldn't go outside."},
-{id:"status",t:"Write the weekly status report you keep rewriting",r:["Projects","IT"],s:["Reports & decks","Writing"],lvl:"start",save:"1–2 hrs/week",
+{id:"audiences",app:["PowerPoint", "Word"],t:"One update, three audiences",r:["Marketing","Product & Design","Engineering"],s:["Reports & decks","Writing"],lvl:"build",save:"2–4 hrs per deck",
+ what:"The same content has to work for an executive, a technical team and customers. Paste your notes and ask for each version, with what to cut and what to lead with.",
+ p:"Here are my notes for an update on [project]. Produce three versions:\n1. Executive: five points maximum, decisions and money only\n2. Technical team: how it works and what changes for them\n3. Customer-facing: what changes for them and when, with no internal detail\n\nFor each, say what you cut from my notes and what the opening line should be.\n\n[paste notes]",
+ c:"Check the customer-facing version most carefully for internal detail that shouldn't go outside."},
+{id:"status",app:["Word", "Copilot Chat"],t:"Write the weekly status report you keep rewriting",r:["Product & Design","IT & Security","Engineering"],s:["Reports & decks","Writing"],lvl:"start",save:"1–2 hrs/week",
  what:"Same format, new facts, every week. Give it last week's report and this week's raw updates, and ask it to spell out what changed, which is the part readers want.",
  p:"Here's last week's status report and this week's raw updates from the team.\n\nWrite this week's report in exactly the same format. Spell out what changed: anything that slipped, anything newly at risk, and anything that disappeared from the updates without being closed.\n\nLAST WEEK:\n[paste]\n\nTHIS WEEK'S UPDATES:\n[paste]",
  c:"The \"disappeared without being closed\" list is the most useful output. Confirm it with the team before publishing."},
-{id:"premortem",t:"Find the holes in a plan before you present it",r:["Projects","Everyone"],s:["Planning","Research"],lvl:"start",save:"1 hr, high payoff",
+{id:"premortem",app:["Copilot Chat"],t:"Find the holes in a plan before you present it",r:["Product & Design","Everyone","Engineering"],s:["Planning","Research"],lvl:"start",save:"1 hr, high payoff",
  what:"A pre-mortem you can run alone at your desk. Describe the plan, ask why it failed, and ask what a particular sceptic will object to. It won't always be right, but it usually finds a couple of things you'd stopped seeing.",
  p:"Below is a plan I'm presenting to [audience]. Do three passes:\n1. It's six months later and this has failed. Give the five most likely reasons, ranked by likelihood, not drama.\n2. What am I assuming that I haven't said?\n3. What will [a named sceptical stakeholder, and what they care about] object to first?\n\nBe specific to this plan and skip generic project risks.\n\n[paste plan]",
  c:"Treat the output as things to think about, not findings. Its job is to break your tunnel vision, not to be right."},
-{id:"exceltable",t:"Clean up a column of free text",r:["Everyone","Finance","HR"],s:["Data cleanup","Spreadsheets"],lvl:"build",save:"2–4 hrs per dataset",
+{id:"exceltable",app:["Excel", "Copilot Chat"],t:"Clean up a column of free text",r:["Everyone","Finance","People"],s:["Data cleanup","Spreadsheets"],lvl:"build",save:"2–4 hrs per dataset",
  what:"Free-text fields where people typed job titles, locations or reasons however they liked. Ask for a mapping table you keep and can audit, rather than cleaned data you can't trace.",
  p:"Below is a column of free-text values typed by people. Propose a standard mapping: for each distinct raw value, the standard value it should map to.\n\nList the standard values first, keeping the set small and sensible. Then output a two-column table I can paste into a lookup: raw value | standard value. Put anything genuinely ambiguous under REVIEW rather than forcing it.\n\n[paste values]",
  c:"Keep the mapping table, not just the cleaned output. When someone asks how a value was categorised, you need to be able to show them."},
-{id:"jepacket",t:"Completeness check on a journal entry packet",r:["Finance"],s:["Contracts & documents","Data cleanup"],lvl:"stretch",save:"1–2 hrs per packet",
+{id:"jepacket",app:["Copilot Chat"],t:"Completeness check on a journal entry packet",r:["Finance"],s:["Contracts & documents","Data cleanup"],lvl:"stretch",save:"1–2 hrs per packet",
  what:"Not approval. A completeness check before the packet reaches the reviewer: is the support there, do the amounts appear in it, is anything obviously missing. It cuts down on packets sent back, not on errors.",
  p:"Below is a journal entry and its supporting documents. Act only as a completeness check. You are not approving anything.\n\nCheck:\n- Does every amount in the entry appear somewhere in the support?\n- Is any referenced document missing?\n- Is the stated business reason consistent with the support?\n- Are approvals present where the entry says they are?\n\nList only what's missing or inconsistent. Don't recalculate anything and don't comment on whether the accounting is correct.\n\n[paste entry and support]",
  c:"This never replaces reviewer approval and never touches SOX sign-off. The only claim is that fewer packets get sent back."},
-{id:"forecastq",t:"Question a forecast before you sign up to it",r:["Supply chain & ops","Finance","Sales & customer"],s:["Planning","Spreadsheets","Research"],lvl:"stretch",save:"varies, high payoff",
+{id:"forecastq",app:["Copilot Chat"],t:"Question a forecast before you sign up to it",r:["Operations","Finance","Sales"],s:["Planning","Spreadsheets","Research"],lvl:"stretch",save:"varies, high payoff",
  what:"Paste the assumptions behind a volume or cost forecast and ask what would have to be true for it to hold. It won't know our market better than you, but it will list the assumptions you haven't examined.",
  p:"Below are the assumptions behind a [volume / cost / revenue] forecast for [period].\n\nDon't produce a new forecast. Instead:\n1. List every assumption, including implied ones, and rate how sensitive the result is to each (high, medium, low)\n2. For the high-sensitivity ones, say what evidence would confirm or break them\n3. Name one plausible scenario the forecast ignores\n\n[paste assumptions and headline figures]",
  c:"It will be confident about industry patterns it can't check. Use the list to direct your own checks. Don't quote it."},
-{id:"askbetter",t:"Find the question you should have asked",r:["Everyone"],s:["Research","Planning","Meetings"],lvl:"stretch",save:"varies, high payoff",
+{id:"askbetter",app:["Copilot Chat"],t:"Find the question you should have asked",r:["Everyone"],s:["Research","Planning","Meetings"],lvl:"stretch",save:"varies, high payoff",
  what:"An underused approach. Describe a situation and ask what you're not considering, given your role and constraints. It works well before a decision and badly after one, when you're mostly looking for agreement.",
  p:"Here's a situation I'm working through: [describe it, including constraints and what I've already ruled out].\n\nDon't recommend what to do. Tell me: what am I not considering, what would someone in [another function] see that I'm missing, and what question would I regret not asking before I decide? Be specific to this situation.",
  c:"Ask before you decide. Afterwards you'll keep the answers that agree with you and dismiss the rest."},
-{id:"shorten",t:"Make writing shorter without making it cold",r:["Everyone","Comms"],s:["Writing","Email"],lvl:"start",save:"15 min each",
+{id:"shorten",app:["Outlook", "Word"],t:"Make writing shorter without making it cold",r:["Everyone","Marketing"],s:["Writing","Email"],lvl:"start",save:"15 min each",
  what:"Most people over-write when the stakes feel high. Ask for a cut that keeps the tone and locks the facts, and ask what it removed so you can put back anything that mattered.",
  p:"Cut this by about a third without changing the tone or losing any fact, date, name or commitment. Keep it warm, not clipped. Then list what you removed so I can put back anything that mattered.\n\n[paste text]",
  c:"Read the removal list. The sentence you actually needed will be there."},
-{id:"rfpq",t:"Draft the question list for an RFP",r:["Procurement","IT"],s:["Contracts & documents","Planning"],lvl:"start",save:"2–3 hrs per RFP",
+{id:"rfpq",app:["Copilot Chat"],t:"Draft the question list for an RFP",r:["Operations","IT & Security"],s:["Contracts & documents","Planning"],lvl:"start",save:"2–3 hrs per RFP",
  what:"A solid first draft of the questions is mostly routine work. Describe what you're buying and ask specifically for the questions vendors dislike, because those are the ones that separate them.",
  p:"We're buying [category] for [context: scale, users, systems it must connect to, constraints].\n\nDraft an RFP question list grouped under: functional fit, integration, security and data handling, commercial terms, support. Then add a short section of questions vendors usually dodge, where a vague answer is itself a finding.",
  c:"Our Legal, Security and Procurement standards override anything it suggests. Use it to make sure you've covered everything, not for compliance wording."},
-{id:"dataextract",t:"Pull a table out of a PDF or scan",r:["Finance","Procurement","Supply chain & ops","Everyone"],s:["Data cleanup","Contracts & documents","Spreadsheets"],lvl:"build",save:"30–90 min each",
+{id:"dataextract",app:["Copilot Chat"],t:"Pull a table out of a PDF or scan",r:["Finance","Operations","Everyone"],s:["Data cleanup","Contracts & documents","Spreadsheets"],lvl:"build",save:"30–90 min each",
  what:"A rate card, a price list or a remittance in a PDF, and you need it in Excel. Ask for a paste-ready table with the rows it couldn't read clearly listed separately.",
  p:"Extract the table from the document below into tab-separated text I can paste into Excel. Columns: [list the columns you want].\n\nKeep numbers exactly as printed, with no rounding and no currency conversion. If a cell is unreadable or ambiguous, write ?? in it and list those rows at the end with the reason.\n\n[paste or attach the document]",
- c:"Check the row count and spot-check the totals against the PDF. Dropped or merged rows are the usual error, and they're silent."}
+ c:"Check the row count and spot-check the totals against the PDF. Dropped or merged rows are the usual error, and they're silent."},
+{id:"cp-recap",app:["Teams"],t:"Catch up on a Teams meeting you missed",r:["Everyone"],s:[],lvl:"start",save:"20–40 min per meeting",first:1,
+ what:"If the meeting was recorded or transcribed, Copilot in Teams can tell you what happened. Ask for what matters to you, not a general summary.",
+ p:"I missed this meeting. Tell me:\n1. Decisions that were made\n2. Anything assigned to me or my team, with who asked\n3. Open questions that are still unresolved\n4. Anything that was said about [my project or area]\n\nFor each point, say roughly when in the meeting it came up so I can check the recording.",
+ c:"Jump to the moments it points to and listen for yourself before acting on anything assigned to you. Recaps can miss tone and context."},
+{id:"cp-thread",app:["Outlook"],t:"Summarise a long email thread and draft your reply",r:["Everyone"],s:[],lvl:"start",save:"15–30 min per thread",
+ what:"Use Copilot in Outlook on the thread you've been avoiding. Get the state of play first, then a draft reply you edit.",
+ p:"Summarise this thread in five bullets: what's been decided, what's still open, and what people are waiting on me for.\n\nThen draft a reply that [answers the open question about X / confirms Y / pushes back on Z]. Keep it under 120 words, direct and friendly. Don't commit to any date or deliverable I haven't mentioned.",
+ c:"Check the draft for promises. Outlook drafts sometimes agree to things just to be helpful."},
+{id:"cp-word",app:["Word"],t:"Draft a document from your own files in Word",r:["Everyone","Product & Design"],s:[],lvl:"build",save:"1–3 hrs per document",
+ what:"Copilot in Word can draft from files you reference, so you start from your own material rather than generic text. Type / in the Copilot prompt to pick the files.",
+ p:"Draft a [one-page proposal / project update / customer summary] for [audience] using [reference the source files].\n\nStructure: [the headings you want]. Use only facts from the referenced files. Where you'd need information that isn't in them, write [NEED INPUT] instead of filling the gap. Keep it under [length].",
+ c:"Check every figure and claim against the files it used. [NEED INPUT] markers are where your judgement is needed."},
+{id:"cp-excel",app:["Excel"],t:"Find what's going on in a spreadsheet with Copilot in Excel",r:["Finance","Sales","Operations","Data & Analytics"],s:[],lvl:"build",save:"30–90 min per analysis",
+ what:"Copilot in Excel works best when your data is formatted as a table with clear column headers. Ask it for patterns and for formulas you can check, not for final numbers to paste into a report.",
+ p:"Look at this table and tell me:\n1. The three biggest changes in [measure] between [period A] and [period B]\n2. Which [segment / region / product] is driving each one\n3. A formula column or PivotTable I could add to check this myself\n\nFlag anything that looks like a data problem (blanks, duplicates, odd outliers) before drawing conclusions.",
+ c:"Re-check every number with a formula or PivotTable before it goes in a report. Use Copilot to point you at where to look."},
+{id:"cp-ppt",app:["PowerPoint"],t:"Turn a Word document into a first-draft deck",r:["Everyone","Product & Design","Sales"],s:[],lvl:"start",save:"1–2 hrs per deck",
+ what:"Copilot in PowerPoint can build a draft presentation from a Word document you reference. Tell it who the audience is and how many slides, then fix it up.",
+ p:"Create a [8]-slide presentation from [reference the Word document] for [audience].\n\nOpen with the decision or key message, not background. One idea per slide, slide titles that state the point, and no more than four bullets per slide. Put the detail in speaker notes.",
+ c:"Check that numbers and names came across correctly, and replace any generic images. Your template and brand rules still apply."},
+{id:"cp-prep",app:["Copilot Chat"],t:"Prepare for a meeting using your email, chats and files",r:["Everyone","Sales","Customer Success"],s:[],lvl:"start",save:"20–45 min per meeting",
+ what:"Microsoft 365 Copilot Chat can pull together what you already have on a topic across Outlook, Teams and your files. It only uses content you can already open.",
+ p:"I'm meeting [person / customer / team] about [topic] on [day]. From my recent emails, Teams chats and files, pull together:\n- Where things stand, in three bullets\n- Anything I promised and haven't done\n- Open questions or disagreements\n- Three questions I should ask\n\nList the sources you used for each point.",
+ c:"Open the sources it lists. If it pulled in something you didn't expect to have access to, tell the owner. That's an oversharing problem worth fixing."}
 ];
 </script>
 <script>
@@ -1008,16 +1080,19 @@ function renderHome(){
     </div>
   </div>
   <div class="cards4">
-    <button class="door" type="button" data-go="learn"><span class="when">Everyone</span><h3>Learn the basics</h3><p>Six five-minute lessons, a team session plan and a cheat sheet.</p><span class="go">Start learning →</span></button>
+    <button class="door" type="button" data-go="learn"><span class="when">Everyone</span><h3>Learn the basics</h3><p>${LESSONS.length} five-minute lessons, including Microsoft's responsible AI principles and Copilot, plus a team session plan.</p><span class="go">Start learning →</span></button>
     <button class="door" type="button" data-go="prompts"><span class="when">You have a task in front of you</span><h3>Find a prompt</h3><p>${PROMPTS.length} tested prompts, plus ones your colleagues have shared.</p><span class="go">Browse prompts →</span></button>
     <button class="door" type="button" data-go="projects"><span class="when">An idea bigger than one person</span><h3>Start a project</h3><p>Check the idea, set the risk tier, write the brief and get it approved, all in one place.</p><span class="go">Go to projects →</span></button>
     <button class="door" type="button" data-go="value"><span class="when">Leadership</span><h3>See the value</h3><p>Adoption by team, hours returned, project value planned against delivered, and a quarterly report.</p><span class="go">See the value →</span></button>
   </div>
   <div class="rules">
-    <div><h4>Use the approved tools</h4><p>Company data only goes into AI tools the company has approved. Not sure? Ask before you paste.</p></div>
+    <div><h4>Use the approved tools</h4><p>Company data only goes into approved tools, like Microsoft 365 Copilot in our tenant. Not sure? Ask before you paste.</p></div>
     <div><h4>You own what you send</h4><p>AI writes fluently even when it's wrong. Check facts, numbers and names first.</p></div>
-    <div><h4>Anything customer-facing or about people is a project</h4><p>If AI would touch customers, decisions about people or sensitive data, log it as a project so it gets the right review.</p></div>
-  </div>`;
+    <div><h4>Anything that affects people is a project</h4><p>If AI would touch customers, decisions about people or sensitive data, start a project so it gets the right review.</p></div>
+  </div>
+  <div class="box grey"><div class="row"><h3>Our six responsible AI principles</h3><button class="btn sm plain push" type="button" data-go="learn" data-lesson="principles">What they mean in practice →</button></div>
+    <p class="small muted">We use Microsoft's Responsible AI principles for everything we build or use with AI.</p>
+    <div class="cheat">${RAI.map(r=>`<div><b>${esc(r.name)}</b><p class="small">${esc(r.def)}</p></div>`).join("")}</div></div>`;
   const ts=$("teamSave");if(ts)ts.onclick=async()=>{const t=$("teamPick").value;if(!t){toast("Pick a team first");return;}
     await put("people",D.me,Object.assign(myPerson(),{team:t,done:myPerson().done||[],updated:new Date().toISOString()}));toast("Thanks. You're at Level 1.");};
   const chp=$("chPrompt");if(chp)chp.onclick=()=>{PF.open=wk.c.p;PF.text="";PF.role="";go("prompts");setTimeout(()=>{const el=$("p-"+wk.c.p);if(el)el.scrollIntoView({block:"start"});},60);};
@@ -1090,7 +1165,7 @@ function renderLearn(){
     </div>`;
   host.querySelectorAll("[data-a]").forEach(b=>b.onclick=async()=>{const a=+b.dataset.a;L.quiz[l.id]=a;saveL();
     if(a===l.quiz.right&&!done.has(l.id)){
-      if(D.canWrite&&D.me){await markDone(l.id);toast(LESSONS.every(x=>new Set(myPerson().done||[]).has(x.id))?"All six done. You're a Practitioner.":"Lesson complete");}
+      if(D.canWrite&&D.me){await markDone(l.id);toast(LESSONS.every(x=>new Set(myPerson().done||[]).has(x.id))?`All ${LESSONS.length} done. You're a Practitioner.`:"Lesson complete");}
       else toast("Correct");}
     renderLearn();});
   const p=$("prevL");if(p)p.onclick=()=>{L.current=LESSONS[i-1].id;saveL();renderLearn();window.scrollTo(0,0);};
@@ -1123,28 +1198,29 @@ function renderCheat(host){
 /* ============================================================
    PROMPTS (library + shared by colleagues)
    ============================================================ */
-const PF={role:"",text:"",open:null,tab:"library",sharing:false};
+const PF={role:"",app:"",text:"",open:null,tab:"library",sharing:false};
 function renderPrompts(){
   const shared=D.prompts.slice().sort((a,b)=>(b.created||"").localeCompare(a.created||""));
   const t=PF.text.toLowerCase();
-  const fit=p=>(!PF.role||(p.r||[]).includes(PF.role)||(PF.role!=="Everyone"&&(p.r||[]).includes("Everyone")))&&(!t||[p.t,p.what,p.p,(p.r||[]).join(" ")].join(" ").toLowerCase().includes(t));
+  const fit=p=>(!PF.app||(p.app||[]).includes(PF.app))&&(!PF.role||(p.r||[]).includes(PF.role)||(PF.role!=="Everyone"&&(p.r||[]).includes("Everyone")))&&(!t||[p.t,p.what,p.p,(p.r||[]).join(" ")].join(" ").toLowerCase().includes(t));
   const lib=PROMPTS.filter(fit).sort((a,b)=>(b.first||0)-(a.first||0)||["start","build","stretch"].indexOf(a.lvl)-["start","build","stretch"].indexOf(b.lvl));
-  const col=shared.map(x=>({id:x.id,t:x.title,r:[x.role||"Everyone"],p:x.prompt,c:x.check,what:x.what||"",by:x.by,example:x.example,created:x.created,shared:true})).filter(fit);
+  const col=shared.map(x=>({id:x.id,t:x.title,r:[x.role||"Everyone"],app:x.app?[x.app]:[],p:x.prompt,c:x.check,what:x.what||"",by:x.by,example:x.example,created:x.created,shared:true})).filter(fit);
   const list=PF.tab==="library"?lib:col;
   $("v-prompts").innerHTML=`
   <div class="head"><p class="eyebrow">Prompts</p><h2>Copy a prompt, fill in the red parts, paste it into an approved tool.</h2>
-    <p>Each one says roughly how much time it saves and what to check before you trust the answer. Found one that works? Share it.</p></div>
+    <p>Filter by your function or by the Microsoft 365 app you're in. Each one says roughly how much time it saves and what to check before you trust the answer. Found one that works? Share it.</p></div>
   <div class="filterbar">
     <div class="row"><div class="tabs2"><button class="chip" type="button" data-tab="library" aria-pressed="${PF.tab==="library"}">Library (${PROMPTS.length})</button><button class="chip" type="button" data-tab="shared" aria-pressed="${PF.tab==="shared"}">From colleagues (${shared.length})</button></div>
       ${D.canWrite?`<button class="btn red sm push" type="button" id="shareOpen">Share a prompt</button>`:""}</div>
     <div id="shareBox"></div>
-    <input class="search" id="pSearch" type="search" placeholder="Search: contract, variance, email, SQL…" aria-label="Search prompts" value="${esc(PF.text)}">
-    <div class="chips">${[["","All functions"],...ROLES.map(r=>[r,r])].map(([v,l])=>`<button class="chip" type="button" data-r="${esc(v)}" aria-pressed="${PF.role===v}">${esc(l)}</button>`).join("")}</div>
+    <input class="search" id="pSearch" type="search" placeholder="Search: meeting, contract, Excel, SQL…" aria-label="Search prompts" value="${esc(PF.text)}">
+    <div class="chips"><span class="small muted" style="align-self:center;min-width:70px">Function</span>${[["","All"],...ROLES.map(r=>[r,r])].map(([v,l])=>`<button class="chip" type="button" data-r="${esc(v)}" aria-pressed="${PF.role===v}">${esc(l)}</button>`).join("")}</div>
+    <div class="chips"><span class="small muted" style="align-self:center;min-width:70px">Where</span>${[["","Any app"],...APPS.map(a=>[a,a])].map(([v,l])=>`<button class="chip" type="button" data-app="${esc(v)}" aria-pressed="${PF.app===v}">${esc(l)}</button>`).join("")}</div>
     <p class="small muted">Showing ${list.length}. ${PF.tab==="library"?"The ones marked “good first try” are easy to check, so start there.":"Shared by people here. Check them the same way you'd check any prompt."}</p>
   </div>
   <div class="plist">${list.length?list.map(p=>`<div class="pitem${PF.open===p.id?" open":""}" id="p-${esc(p.id)}">
     <button type="button" data-p="${esc(p.id)}" aria-expanded="${PF.open===p.id}"><h3>${esc(p.t)}</h3><span class="saves">${p.shared?(p.example?'<span class="tag ex">Example</span>':fmtDate(p.created)):"Saves "+esc(p.save)}</span>
-      <span class="who">${esc((p.r||[]).join(" · "))}${p.lvl==="start"?" · <b style='color:var(--red)'>good first try</b>":""}${p.shared?` · shared by ${who(p.by)}`:""}</span></button>
+      <span class="who">${(p.app||[]).length?`<b style="color:var(--black)">${esc(p.app.join(" · "))}</b> · `:""}${esc((p.r||[]).join(" · "))}${p.lvl==="start"?" · <b style='color:var(--red)'>good first try</b>":""}${p.shared?` · shared by ${who(p.by)}`:""}</span></button>
     <div class="body">${p.what?`<p class="what">${esc(p.what)}</p>`:""}
       <div class="prompt"><div class="ph"><span>The prompt</span><button class="btn sm dark" type="button" data-copy="${esc(p.id)}">Copy prompt</button></div><pre>${hl(p.p)}</pre></div>
       ${p.c?`<div class="checknote"><b>Check</b><span>${esc(p.c)}</span></div>`:""}
@@ -1153,6 +1229,7 @@ function renderPrompts(){
   const v=$("v-prompts");
   v.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>{PF.tab=b.dataset.tab;PF.open=null;renderPrompts();fillNames(v);});
   v.querySelectorAll("[data-r]").forEach(b=>b.onclick=()=>{PF.role=b.dataset.r;renderPrompts();fillNames(v);});
+  v.querySelectorAll("[data-app]").forEach(b=>b.onclick=()=>{PF.app=b.dataset.app;renderPrompts();fillNames(v);});
   $("pSearch").oninput=e=>{PF.text=e.target.value.trim();const pos=e.target.selectionStart;renderPrompts();fillNames(v);const s=$("pSearch");s.focus();s.setSelectionRange(pos,pos);};
   const so=$("shareOpen");if(so)so.onclick=()=>{PF.sharing=!PF.sharing;renderShare();};
   renderShare();
@@ -1170,12 +1247,13 @@ function renderShare(){
   box.innerHTML=`<form class="box" id="shareForm" autocomplete="off"><h3>Share a prompt that worked for you</h3>
     <div class="grid2"><div class="field"><label for="s_t">What it's for</label><input id="s_t" required placeholder="e.g. Turn a Jira epic into release notes"></div>
       <div class="field"><label for="s_r">Most useful for</label><select id="s_r">${ROLES.map(r=>`<option${r===(myPerson().team&&ROLES.includes(myPerson().team)?myPerson().team:"Everyone")?" selected":""}>${esc(r)}</option>`).join("")}</select></div></div>
+    <div class="field"><label for="s_a">Where you used it</label><select id="s_a">${APPS.map(a=>`<option>${esc(a)}</option>`).join("")}</select></div>
     <div class="field"><label for="s_p">The prompt</label><span class="hint">Put the parts people should change in [square brackets]. Remove anything confidential.</span><textarea id="s_p" rows="6" required></textarea></div>
     <div class="field"><label for="s_c">What to check before trusting the answer</label><input id="s_c" placeholder="e.g. Check every ticket number against Jira"></div>
     <div class="row"><button class="btn red" type="submit">Share it</button><button class="btn plain" type="button" id="s_cancel">Cancel</button></div></form>`;
   $("s_cancel").onclick=()=>{PF.sharing=false;renderShare();};
   $("shareForm").onsubmit=async e=>{e.preventDefault();
-    const x={by:D.me,title:$("s_t").value.trim(),role:$("s_r").value,prompt:$("s_p").value.trim(),check:$("s_c").value.trim(),created:new Date().toISOString()};
+    const x={by:D.me,title:$("s_t").value.trim(),role:$("s_r").value,app:$("s_a").value,prompt:$("s_p").value.trim(),check:$("s_c").value.trim(),created:new Date().toISOString()};
     if(!x.title||!x.prompt){toast("Add a title and the prompt");return;}
     try{await put("prompts",uid("p"),x);}catch(err){return;}
     PF.sharing=false;PF.tab="shared";toast("Shared. Thank you.");renderPrompts();fillNames($("v-prompts"));};
@@ -1190,11 +1268,24 @@ const BRIEF_BLANK=()=>({decision:"Approve a pilot",decideBy:"",ask:"",problem:""
   timeSaved:false,timeGoes:"",startMonth:3,milestones:[["",""],["",""]],risks:[["",""]],success:""});
 const PROJECT_BLANK=()=>({title:"",team:"",sponsor:"",by:D.me,created:new Date().toISOString(),stage:"Idea",
   intake:{people:"",hours:"",a:{}},risk:{},brief:BRIEF_BLANK(),
-  pilot:{passMark:"",start:"",end:"",result:"",actual:""},controls:{oversight:"",monitoring:"",switchoff:""},
+  pilot:{passMark:"",start:"",end:"",result:"",actual:""},controls:{fairness:"",reliability:"",privacy:"",inclusiveness:"",transparency:"",accountability:"",lastReview:""},
   signoff:{privacy:"",privacyDate:"",legal:"",legalDate:"",security:"",securityDate:""},
   benefits:[],review:{worked:"",didnt:"",lessons:"",rec:"",date:""},history:[]});
 function deepFill(t,d){for(const k in d){if(t[k]==null)t[k]=clone(d[k]);else if(d[k]&&typeof d[k]==="object"&&!Array.isArray(d[k])&&typeof t[k]==="object")deepFill(t[k],d[k]);}return t;}
-const normProject=p=>deepFill(p,PROJECT_BLANK());
+function normProject(p){
+  const c=p.controls||{};/* older projects stored oversight/monitoring; carry them into the matching principles */
+  if(c.oversight&&!c.accountability)c.accountability=c.oversight;
+  if((c.monitoring||c.switchoff)&&!c.reliability)c.reliability=[c.monitoring,c.switchoff].filter(Boolean).join(" ");
+  p.controls=c;return deepFill(p,PROJECT_BLANK());
+}
+const raiDone=p=>RAI.every(r=>(p.controls[r.id]||"").trim().length>10);
+function liveSince(p){const h=(p.history||[]).filter(x=>/ to Live$/.test(x.what));return h.length?h[h.length-1].at:null;}
+function reviewDue(p){
+  if(p.stage!=="Live")return null;
+  const base=p.controls.lastReview||liveSince(p)||p.created;if(!base)return null;
+  const d=new Date(base);d.setMonth(d.getMonth()+TIERS[tierOf(p).tier].reviewMonths);
+  return {due:d,overdue:d<new Date()};
+}
 
 function calc(b){
   b=b||{};const factor=(CONF_LEVELS[b.conf]||CONF_LEVELS.Medium)[0],counted=num(b.benefit)*factor,running=num(b.running),once=num(b.once);
@@ -1242,7 +1333,7 @@ function pstatus(p){
   const ap=D.approvals.find(a=>a.id===p.id),t=tierOf(p),ir=ideaResult(p.intake),rv=review(briefObj(p));
   const done={intake:ir.complete,risk:t.complete,brief:[0,2,4,5,6,7,8].every(i=>rv[i][0]),
     approval:!!ap&&(ap.decision==="approved"||ap.decision==="conditions"),
-    pilot:!!p.pilot.passMark.trim()&&!!p.pilot.result,controls:!!p.controls.oversight.trim()&&!!p.controls.monitoring.trim(),
+    pilot:!!p.pilot.passMark.trim()&&!!p.pilot.result,controls:raiDone(p),
     signoff:!!(p.signoff.privacy.trim()&&p.signoff.privacyDate&&p.signoff.legal.trim()&&p.signoff.legalDate),
     benefits:p.benefits.some(r=>num(r.actual)>0),review:!!p.review.rec&&!!p.review.worked.trim()};
   const required=ARTIFACTS.filter(a=>a[2]<=t.tier).map(a=>a[0]);
@@ -1253,15 +1344,15 @@ function gate(p,st){
     case "Idea":return {to:"Assessed",needs:[["Intake and idea check complete",st.done.intake],["Risk questions answered",st.done.risk]]};
     case "Assessed":return {to:"Awaiting approval",needs:[["Exec brief complete (see the brief check)",st.done.brief]]};
     case "Awaiting approval":return {to:null,wait:`Waiting for ${TIERS[st.t.tier].who} to record a decision.`};
-    case "Approved":return st.t.tier>=2?{to:"Pilot",needs:[["Pilot pass mark written down before starting",!!p.pilot.passMark.trim()],["Pilot start date set",!!p.pilot.start],["Oversight and monitoring described",st.done.controls]]}
+    case "Approved":return st.t.tier>=2?{to:"Pilot",needs:[["Pilot pass mark written down before starting",!!p.pilot.passMark.trim()],["Pilot start date set",!!p.pilot.start],["Responsible AI assessment complete",st.done.controls]]}
       :{to:"Live",needs:[["Approval recorded",st.done.approval]]};
-    case "Pilot":{const n=[["Pilot result recorded as a pass",p.pilot.result==="pass"],["Oversight and monitoring described",st.done.controls]];
+    case "Pilot":{const n=[["Pilot result recorded as a pass",p.pilot.result==="pass"],["Responsible AI assessment complete",st.done.controls]];
       if(st.t.tier>=3)n.push(["Privacy and legal sign-off recorded",st.done.signoff]);return {to:"Live",needs:n};}
     case "Live":return {to:"Closed",needs:[["Post-launch review done",st.done.review]]};
     default:return {to:null,wait:"This project is closed."};
   }
 }
-function nextStep(p,st){const g=gate(p,st);if(!g.to)return g.wait;const miss=g.needs.find(n=>!n[1]);return miss?miss[0].replace(/ complete.*| answered| done| set| recorded.*| described| written down before starting/,"")+(miss?" needed":""):`Ready to move to ${g.to}`;}
+function nextStep(p,st){const rd=reviewDue(p);if(rd&&rd.overdue)return "Risk review overdue";if(rd&&!st.done.review)return "Post-launch review needed";if(rd)return "Next risk review "+rd.due.toLocaleDateString("en-US",{month:"short",year:"numeric"});const g=gate(p,st);if(!g.to)return g.wait;const miss=g.needs.find(n=>!n[1]);return miss?miss[0].replace(/ complete.*| answered| done| set| recorded.*| described| written down before starting/,"")+(miss?" needed":""):`Ready to move to ${g.to}`;}
 const addHist=(p,what)=>{p.history=p.history||[];p.history.push({at:new Date().toISOString(),by:D.me,what});};
 
 /* ============================================================
@@ -1286,14 +1377,18 @@ function renderRegister(){
     ${rows.length?rows.map(p=>{const st=pstatus(p),c=calc(p.brief),real=p.benefits.reduce((a,r)=>a+num(r.actual),0);
       return `<tr class="click" data-go="projects" data-open="${esc(p.id)}" tabindex="0"><td><span class="pt">${esc(p.title||"Untitled project")}</span>${p.example?' <span class="tag ex">Example</span>':""}<br><span class="small muted">${esc(p.team||"No team")}</span></td>
       <td><span class="tag st">${esc(p.stage)}</span></td><td>${st.t.complete?`<span class="tag t${st.t.tier}">Tier ${st.t.tier}</span>`:'<span class="small muted">Not set</span>'}</td>
-      <td class="r">${c.counted?short$(c.counted):"–"}</td><td class="r">${real?short$(real):"–"}</td><td class="small">${esc(nextStep(p,st))}</td></tr>`;}).join("")
+      <td class="r">${c.counted?short$(c.counted):"–"}</td><td class="r">${real?short$(real):"–"}</td><td class="small">${nextStep(p,st)==="Risk review overdue"?'<span class="tag warn">Risk review overdue</span>':esc(nextStep(p,st))}</td></tr>`;}).join("")
     :`<tr><td colspan="6"><div class="empty" style="border:0">${PJ.filter==="active"?"No projects in progress. Start one when an idea is bigger than one person's prompt.":"Nothing here yet."}</div></td></tr>`}
   </tbody></table></div>
-  <details class="more"><summary>How project governance works</summary><div>
-    <p>Every project moves through the same stages: ${STAGES.map(esc).join(" → ")}. You can't skip a stage until its paperwork is done, and only the AI review board can record an approval.</p>
+  <div class="box grey"><h3>How this lines up with Microsoft's framework</h3>
+    <p class="small muted">Our process follows the four Govern AI steps in Microsoft's Cloud Adoption Framework, and uses Microsoft's six Responsible AI principles to assess each project.</p>
+    <div class="cheat">${CAF_STEPS.map(([s,what,here],i)=>`<div class="box"><p class="eyebrow">${i+1} · ${esc(s)}</p><p class="small">${esc(what)}</p><p class="small"><b>In this portal:</b> ${esc(here)}</p></div>`).join("")}</div>
+    <div class="chips">${RAI.map(r=>`<span class="chip" title="${esc(r.def)}">${esc(r.name)}</span>`).join("")}<button class="btn sm plain" type="button" data-go="learn" data-lesson="principles">What the principles mean →</button></div></div>
+  <details class="more"><summary>Risk tiers, and what each one needs</summary><div>
+    <p>Every project moves through the same stages: ${STAGES.map(esc).join(" → ")}. A project can't move to the next stage until its paperwork is done. Only the AI review board can record an approval, and never on a project they started.</p>
     <div class="cheat">${[1,2,3].map(n=>`<div class="box"><span class="tag t${n}" style="align-self:flex-start">${esc(TIERS[n].name)}</span><p class="small">${esc(TIERS[n].blurb)}</p><p class="small"><b>Approved by:</b> ${esc(TIERS[n].who)}</p>
-      <p class="small"><b>Needs:</b> ${ARTIFACTS.filter(a=>a[2]<=n).map(a=>esc(a[1])).join(", ")}</p></div>`).join("")}</div>
-    <p class="small muted">The tier comes from seven yes/no questions in each project. The highest “yes” sets it.</p></div></details>`;
+      <p class="small"><b>Needs:</b> ${ARTIFACTS.filter(a=>a[2]<=n).map(a=>esc(a[1])).join(", ")}</p><p class="small"><b>Risk review once live:</b> every ${TIERS[n].reviewMonths===3?"quarter":"year"}</p></div>`).join("")}</div>
+    <p class="small muted">The tier comes from nine yes/no questions in each project. Any “yes” to one of Microsoft's three sensitive uses (life opportunities, physical or psychological harm, human rights) makes it Tier 3.</p></div></details>`;
   const v=$("v-projects");
   v.querySelectorAll("[data-f]").forEach(b=>b.onclick=()=>{PJ.filter=b.dataset.f;renderRegister();});
   v.querySelectorAll("tr.click").forEach(r=>r.onkeydown=e=>{if(e.key==="Enter"){PJ.open=r.dataset.open;renderProjects();}});
@@ -1365,7 +1460,7 @@ function sectionsHTML(p,st){
   const intake=`<div class="grid2">${inp("intake.people","How many people do this task today?",{ph:"e.g. 6"})}${inp("intake.hours","Hours each, per week",{ph:"e.g. 5"})}</div>
     ${IDEA_QS.map((q,i)=>`<div class="qq"><p class="t"><span>${i+1}</span>${esc(q.q)}</p><div class="choices">${q.o.map((o,k)=>`<label class="choice${p.intake.a[q.id]===k?" on":""}"><input type="radio" name="iq-${q.id}" data-k="intake.a.${q.id}" data-v="${k}"${p.intake.a[q.id]===k?" checked":""}${dis}><span>${esc(o[0])}</span></label>`).join("")}</div></div>`).join("")}
     <div id="pIdea">${ideaHTML(ir)}</div>`;
-  const risk=RISK_QS.map(q=>`<div class="yn"><p>${esc(q.q)}${p.risk[q.id]===true?`<small>Needs: ${esc(q.control)}</small>`:""}</p><span class="seg2" role="group" aria-label="${esc(q.q)}"><button type="button" data-yn="${q.id}" data-v="1" aria-pressed="${p.risk[q.id]===true}"${dis}>Yes</button><button type="button" data-yn="${q.id}" data-v="0" aria-pressed="${p.risk[q.id]===false}"${dis}>No</button></span></div>`).join("")
+  const risk=RISK_QS.map((q,i)=>`${i===0||RISK_QS[i-1].group!==q.group?`<p class="eyebrow" style="margin-top:${i?14:0}px">${q.group==="Sensitive use"?"Microsoft sensitive uses (any yes makes it Tier 3)":"Screening"}</p>`:""}<div class="yn"><p>${esc(q.q)}<small>Principle: ${esc(q.p)}</small>${p.risk[q.id]===true?`<small><b>Needs:</b> ${esc(q.control)}</small>`:""}</p><span class="seg2" role="group" aria-label="${esc(q.q)}"><button type="button" data-yn="${q.id}" data-v="1" aria-pressed="${p.risk[q.id]===true}"${dis}>Yes</button><button type="button" data-yn="${q.id}" data-v="0" aria-pressed="${p.risk[q.id]===false}"${dis}>No</button></span></div>`).join("")
     +`<div class="tierbox t${t.tier}"><h3>${t.complete?esc(TIERS[t.tier].name):"Answer all seven to set the tier"}</h3>${t.complete?`<p>${esc(TIERS[t.tier].blurb)}</p><p><b>Approved by:</b> ${esc(TIERS[t.tier].who)}</p>${t.yes.length?`<ul>${t.yes.map(q=>`<li>${esc(q.control)}</li>`).join("")}</ul>`:""}`:""}</div>`;
   const b=p.brief;
   const brief=`<div class="briefgrid"><div class="stack">
@@ -1390,18 +1485,21 @@ function sectionsHTML(p,st){
   const approval=`${ap?`<div class="approval"><span class="small muted">Decision recorded ${fmtDate(ap.recordedAt)} by ${who(ap.by)}</span><span class="dec">${esc(DECISION_TYPES[ap.decision]||ap.decision)}</span>
       ${ap.date?`<span class="small">Decision date: ${esc(ap.date)}</span>`:""}${ap.conditions?`<p><b>Conditions:</b> ${esc(ap.conditions)}</p>`:""}<span class="small">Tier at decision: ${esc(TIERS[ap.tier]?TIERS[ap.tier].name:"–")}</span></div>`
      :`<div class="approval no"><span class="dec" style="color:var(--grey)">No decision yet</span><p class="small">${p.stage==="Awaiting approval"?`This is with ${esc(TIERS[t.tier].who)}.`:"Complete the brief and move the project to Awaiting approval."}</p></div>`}
-    ${D.admin?`<form class="box grey" id="apForm"><h3>${ap?"Update the decision":"Record the decision"}</h3><p class="small muted">You're seeing this because you're on the AI review board (Editor access).</p>
+    ${D.admin&&D.mode==="shared"&&p.by===D.me?`<div class="banner red">You started this project, so another board member should record the decision. Microsoft's governance guidance calls for reviewers who aren't involved in the work.</div>`:D.admin?`<form class="box grey" id="apForm"><h3>${ap?"Update the decision":"Record the decision"}</h3><p class="small muted">You're seeing this because you're on the AI review board (Editor access).</p>
       <div class="grid2"><div class="field"><label for="ap_d">Decision</label><select id="ap_d">${Object.entries(DECISION_TYPES).map(([k,l])=>`<option value="${k}"${ap&&ap.decision===k?" selected":""}>${esc(l)}</option>`).join("")}</select></div>
       <div class="field"><label for="ap_date">Decision date</label><input type="date" id="ap_date" value="${esc(ap?ap.date:new Date().toISOString().slice(0,10))}"></div></div>
       <div class="field"><label for="ap_c">Conditions or reasons</label><textarea id="ap_c" rows="2">${esc(ap?ap.conditions:"")}</textarea></div>
-      <div class="row"><button class="btn red" type="submit">Record decision</button></div></form>`:`<p class="small muted">Only the AI review board can record a decision here, so every approval has a clear owner.</p>`}`;
+      <div class="row"><button class="btn red" type="submit">Record decision</button></div></form>`:`<p class="small muted">Only the AI review board can record a decision here, and never on a project they started, so every approval is independent.</p>`}`;
   const pilot=`<div class="grid2">${inp("pilot.passMark","Pass mark, written before the pilot starts",{area:1,rows:2,wide:1,hint:"The accuracy and time saving that would justify rolling it out. Setting it afterwards means it will pass by default.",ph:"e.g. 90% of drafts need only light edits; handle time down 15% or more"})}
       ${inp("pilot.start","Start date",{type:"date"})}${inp("pilot.end","End date",{type:"date"})}
       ${inp("pilot.result","Result",{select:[["","Not finished yet"],["pass","Passed"],["fail","Didn't pass"],["extend","Extended"]]})}
       ${inp("pilot.actual","What actually happened",{area:1,rows:2,wide:1,ph:"The numbers against the pass mark."})}</div>`;
-  const controls=`<div class="grid2">${inp("controls.oversight","Human oversight: who checks what, and when",{area:1,rows:2,wide:1,ph:"e.g. Agents read every draft before sending; team lead samples 20 a week"})}
-      ${inp("controls.monitoring","Monitoring: what's measured, how often, by whom",{area:1,rows:2,wide:1,ph:"e.g. Weekly quality score and error log reviewed by the product owner"})}
-      ${inp("controls.switchoff","How to switch it off if it goes wrong",{area:1,rows:2,wide:1})}</div>`;
+  const rdue=reviewDue(p);
+  const controls=`<p class="small muted">One short answer per principle. These are Microsoft's six Responsible AI principles, and the questions come from Microsoft's Cloud Adoption Framework guidance on assessing AI risk.</p>
+    ${RAI.map(r=>`<div class="field"><label for="k_controls_${r.id}">${esc(r.name)}</label><span class="hint">${esc(r.q)} Write: ${esc(r.ask)}</span>
+      <textarea id="k_controls_${r.id}" data-k="controls.${r.id}" rows="2" placeholder="${esc(r.ph)}"${dis}>${esc(p.controls[r.id])}</textarea></div>`).join("")}
+    <div class="grid2">${inp("controls.lastReview","Last risk review",{type:"date",hint:`Live projects are reviewed every ${TIERS[t.tier].reviewMonths===3?"quarter":"year"} at Tier ${t.tier}.`})}
+      <div class="field"><span style="font-weight:700;font-size:14px">Next review due</span><span class="${rdue&&rdue.overdue?"tag warn":"small"}" style="align-self:flex-start">${rdue?(rdue.overdue?"Overdue since ":"")+rdue.due.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}):"Starts once the project is live"}</span></div></div>`;
   const signoff=`<div class="grid2">${inp("signoff.privacy","Privacy reviewer",{ph:"Name"})}${inp("signoff.privacyDate","Date",{type:"date"})}
       ${inp("signoff.legal","Legal reviewer",{ph:"Name"})}${inp("signoff.legalDate","Date",{type:"date"})}
       ${inp("signoff.security","Security reviewer (if new vendor)",{ph:"Name"})}${inp("signoff.securityDate","Date",{type:"date"})}</div>`;
@@ -1421,11 +1519,11 @@ function sectionsHTML(p,st){
     ${D.canWrite&&(p.by===D.me||D.admin)?`<div class="row" id="delRow"><button class="btn sm plain" type="button" id="delProj">Delete this project</button></div>`:""}`;
   return [
     art("intake","Intake and idea check","Is this a job for AI at all? Answer for how things are today.",intake,st),
-    art("risk","Risk tier","Seven yes/no questions. The highest “yes” sets the tier, and the tier sets the paperwork.",risk,st),
+    art("risk","Risk tier","Nine yes/no questions, starting with the three sensitive uses from Microsoft's Responsible AI Standard. The highest “yes” sets the tier, and the tier sets the paperwork.",risk,st),
     art("brief","Exec brief","One page, one decision. The right side is what the approvers see.",brief,st),
     art("approval","Approval record","Who approved it, when, and on what conditions.",approval,st),
     art("pilot","Pilot plan and result","Decide what “good” looks like before you start, then record what happened.",pilot,st),
-    art("controls","Oversight and monitoring","How people stay in control once it's running.",controls,st),
+    art("controls","Responsible AI assessment","How the project meets each of Microsoft's six principles, and when its risks were last reviewed.",controls,st),
     art("signoff","Privacy and legal sign-off","Needed for Tier 3 before going live.",signoff,st),
     art("benefits","Benefits tracking","Planned against actual, quarter by quarter.",benefits,st),
     art("review","Post-launch review","About three months after going live. Short and honest.",rev,st),
@@ -1587,7 +1685,7 @@ async function governancePDF(p){
   K.head("Paperwork checklist");ARTIFACTS.forEach(([k,l,min])=>{const req=st.required.includes(k);K.kv(l,`${st.done[k]?"Complete":req?"Missing":"Not required"}${req?"":" (optional for this tier)"}`);});
   K.head("1. Intake and idea check");K.kv("Time spent today",`${p.intake.people||"?"} people × ${p.intake.hours||"?"} hrs/week ≈ ${fmtN(ir.hoursYr)} hrs/yr`);
   IDEA_QS.forEach(q=>K.kv(q.q.replace("?",""),p.intake.a[q.id]!=null?q.o[p.intake.a[q.id]][0]:"Not answered"));K.kv("Verdict",VERDICT_TEXT[ir.v].h);
-  K.head("2. Risk tier");RISK_QS.forEach(q=>K.kv(q.q.replace("?",""),p.risk[q.id]===true?"Yes. Control: "+q.control:p.risk[q.id]===false?"No":"Not answered"));
+  K.head("2. Risk tier (Microsoft sensitive uses and screening)");RISK_QS.forEach(q=>K.kv(`${q.group==="Sensitive use"?"[Sensitive use] ":""}${q.q.replace("?","")}`,(p.risk[q.id]===true?"Yes. Control: "+q.control:p.risk[q.id]===false?"No":"Not answered")+` (${q.p})`));
   K.kv("Result",`${TIERS[st.t.tier].name}. Approved by ${TIERS[st.t.tier].who}.`);
   const b=p.brief;K.head("3. Exec brief");K.kv("The ask",b.ask);K.kv("Problem",b.problem);K.kv("Plan",b.plan);K.kv("If we don't",b.ifnot);
   K.kv("Numbers",`One-time ${money(c.once)} · Running ${money(c.running)}/yr · Benefit ${money(c.counted)}/yr counted (${b.conf}) · 3-yr net ${money(c.net3)} · Payback ${c.payback?"month "+c.payback:"beyond 3 years"}`);
@@ -1595,10 +1693,13 @@ async function governancePDF(p){
   b.risks.filter(r=>r[0].trim()).forEach(r=>K.kv("Risk",`${r[0]}. ${r[1]}`));
   K.head("4. Approval record");if(ap){K.kv("Decision",DECISION_TYPES[ap.decision]);K.kv("Decided on",ap.date);K.kv("Recorded by",`${nm(ap.by)}, ${fmtDate(ap.recordedAt)}`);K.kv("Conditions",ap.conditions);K.kv("Tier at decision",TIERS[ap.tier]?TIERS[ap.tier].name:"");}else K.text("No decision recorded.",10,K.GRY);
   K.head("5. Pilot plan and result");K.kv("Pass mark",p.pilot.passMark||"Not set");K.kv("Dates",[p.pilot.start,p.pilot.end].filter(Boolean).join(" to "));K.kv("Result",{pass:"Passed",fail:"Didn't pass",extend:"Extended"}[p.pilot.result]||"Not finished");K.kv("What happened",p.pilot.actual);
-  K.head("6. Oversight and monitoring");K.kv("Human oversight",p.controls.oversight||"Not described");K.kv("Monitoring",p.controls.monitoring||"Not described");K.kv("Switch-off plan",p.controls.switchoff);
+  K.head("6. Responsible AI assessment");RAI.forEach(r=>K.kv(r.name,p.controls[r.id]||"Not answered"));const rdd=reviewDue(p);K.kv("Last risk review",p.controls.lastReview||"None recorded");if(rdd)K.kv("Next review due",fmtDate(rdd.due.toISOString())+(rdd.overdue?" (overdue)":""));
   K.head("7. Privacy and legal sign-off");K.kv("Privacy",[p.signoff.privacy,p.signoff.privacyDate].filter(Boolean).join(", ")||"Not recorded");K.kv("Legal",[p.signoff.legal,p.signoff.legalDate].filter(Boolean).join(", ")||"Not recorded");K.kv("Security",[p.signoff.security,p.signoff.securityDate].filter(Boolean).join(", "));
   K.head("8. Benefits tracking");if(p.benefits.length){K.table(["Quarter","Planned $","Actual $","Evidence"],p.benefits.map(r=>[r.period,num(r.planned),num(r.actual),r.evidence||""]),[.18,.17,.17,.48]);}else K.text("No quarters recorded.",10,K.GRY);
   K.head("9. Post-launch review");K.kv("What worked",p.review.worked);K.kv("What didn't",p.review.didnt);K.kv("Lessons",p.review.lessons);K.kv("Recommendation",RECS[p.review.rec]||"Not done yet");
+  K.head("Alignment with Microsoft's Govern AI steps");
+  const ev={Assess:[st.done.intake,st.done.risk,st.done.controls||!st.required.includes("controls")],Document:[st.done.brief],Enforce:[st.done.approval,!st.required.includes("signoff")||st.done.signoff],Monitor:[p.stage!=="Live"||!(reviewDue(p)||{}).overdue,!st.required.includes("benefits")||p.stage!=="Live"||st.done.benefits]};
+  CAF_STEPS.forEach(([s,,portal])=>K.kv(s,`${ev[s].every(Boolean)?"Evidenced":"Gaps remain"}. In this pack: ${portal}`));
   K.head("Audit trail");(p.history||[]).forEach(h=>K.kv(fmtDate(h.at),`${h.what} · ${nm(h.by)}`));
   K.foot(K.footer);saveFile(slug(p.title)+"-governance-pack.pdf",K.doc.output("blob"));
 }
@@ -1643,8 +1744,11 @@ function monthRows(){const out=[],now=new Date();
     out.push({label:d.toLocaleDateString("en-US",{month:"short"}),v:D.wins.filter(w=>{const c=new Date(w.created);return c.getFullYear()+"-"+c.getMonth()===k;}).reduce((a,w)=>a+winHours(w),0)*countFactor()});}
   return out;}
 function projRows(){return D.projects.map(p=>normProject(clone(p))).filter(p=>p.benefits.length).map(p=>({label:p.title||"Untitled",a:p.benefits.reduce((s,r)=>s+num(r.planned),0),b:p.benefits.reduce((s,r)=>s+num(r.actual),0)}));}
+function govStats(){const ps=D.projects.map(p=>normProject(clone(p)));const sts=ps.map(p=>[p,pstatus(p)]);
+  return {complete:sts.filter(([p,st])=>st.required.filter(k=>k!=="review"&&k!=="benefits").every(k=>st.done[k])).length,t3:sts.filter(([p,st])=>st.t.complete&&st.t.tier===3).length,
+    live:ps.filter(p=>p.stage==="Live").length,overdue:ps.filter(p=>(reviewDue(p)||{}).overdue).length};}
 function renderValue(){
-  const s=stats(),c=cfg(),tr=teamRows().filter(t=>t.signed||t.wins),pr=projRows();
+  const g=govStats(),s=stats(),c=cfg(),tr=teamRows().filter(t=>t.signed||t.wins),pr=projRows();
   const byStage=STAGES.map(st=>[st,D.projects.filter(p=>p.stage===st).length]);
   const wins=D.wins.slice().sort((a,b)=>(b.created||"").localeCompare(a.created||"")).slice(0,12);
   $("v-value").innerHTML=`
@@ -1663,6 +1767,11 @@ function renderValue(){
     <div><span>Project benefit approved</span><b>${short$(s.planned)}</b><small>a year, confidence-adjusted</small></div>
     <div><span>Project benefit delivered</span><b>${short$(s.realized)}</b><small>to date, from benefits tracking</small></div></div>
     <p class="method">Hours back is time people have got back and reported. It's not a budget saving until it's put to other use, so the approved and delivered project numbers are the ones to hold teams to.</p></div>
+  <div class="stack"><h3>Governance</h3><div class="pulse">
+    <div><span>Projects with complete paperwork</span><b>${fmtN(g.complete)}</b><small>of ${fmtN(D.projects.length)} in the register</small></div>
+    <div><span>Sensitive-use projects</span><b>${fmtN(g.t3)}</b><small>Tier 3 under Microsoft's standard</small></div>
+    <div><span>Risk reviews overdue</span><b style="color:${g.overdue?"var(--red)":"inherit"}">${fmtN(g.overdue)}</b><small>of ${fmtN(g.live)} live projects</small></div>
+    <div><span>Decisions on record</span><b>${fmtN(D.approvals.length)}</b><small>all recorded by the AI review board</small></div></div></div>
   <div class="charts">
     <div class="chart"><h3>Trained, by team</h3><p class="sub">People who finished all ${LESSONS.length} lessons. The grey figure is how many have signed in.</p>
       ${hbar(tr.map(t=>({label:t.team,a:t.trained,note:"of "+t.signed})),{fmt:fmtN,names:["trained"],aria:"People trained by team"})}</div>
@@ -1684,7 +1793,7 @@ function renderValue(){
     <p><b>Worth, in people's time</b> = counted hours × $${fmtN(num(c.rate))}, the loaded hourly cost. It shows the scale of the time returned, not cash saved.</p>
     <p><b>Project benefit approved</b> = each approved, piloting or live project's yearly benefit from its brief, cut by its confidence (Medium counts 75%, Low 50%).</p>
     <p><b>Project benefit delivered</b> = the actual figures project owners record each quarter, with evidence.</p>
-    <p><b>Trained</b> = finished all six lessons. <b>Active</b> = logged a win or completed a lesson in the last 30 days. <b>Champion</b> = Level 4.</p></div></details>
+    <p><b>Trained</b> = finished all ${LESSONS.length} lessons. <b>Active</b> = logged a win or completed a lesson in the last 30 days. <b>Champion</b> = Level 4.</p></div></details>
   ${D.admin?settingsHTML():""}`;
   const v=$("v-value");
   $("qReport").onclick=valueReportPDF;
@@ -1718,6 +1827,7 @@ async function valueReportPDF(){
   K.head("Projects");const ps=D.projects.map(p=>normProject(clone(p)));
   if(ps.length)K.table(["Project","Stage","Tier","Benefit/yr $","Delivered $"],ps.map(p=>{const st=pstatus(p);return [p.title||"Untitled",p.stage,st.t.complete?String(st.t.tier):"–",calc(p.brief).counted,p.benefits.reduce((a,r)=>a+num(r.actual),0)];}),[.4,.18,.08,.17,.17]);
   else K.text("No projects yet.",10,K.GRY);
+  const gv=govStats();K.head("Governance");K.text(`${gv.complete} of ${D.projects.length} projects have complete paperwork for their tier. ${gv.t3} ${gv.t3===1?"is a sensitive use":"are sensitive uses"} (Tier 3) under Microsoft's Responsible AI Standard. ${gv.overdue} of ${gv.live} live projects ${gv.overdue===1?"has":"have"} an overdue risk review. ${D.approvals.length} decisions are on record. The process follows the Assess, Document, Enforce and Monitor steps of Microsoft's Cloud Adoption Framework for AI.`,10);
   K.head("Pipeline");K.text(STAGES.map(st=>`${st}: ${D.projects.filter(p=>p.stage===st).length}`).join(" · "),10);
   K.head("Recent wins");D.wins.slice().sort((a,b)=>(b.created||"").localeCompare(a.created||"")).slice(0,8).forEach(w=>K.text(`${w.task} (${w.team||"no team"}) · about ${fmtN(winHours(w))} hrs/yr reported${w.note?` · “${w.note}”`:""}`,9.5,K.BLK,false,1.5));
   K.head("Method");K.text(`Hours back = minutes saved ÷ 60 × times a year, self-reported, counted at ${Math.round(countFactor()*100)}%. Value of time = counted hours × $${fmtN(num(cfg().rate))}/hr; this is capacity, not cash. Project benefit approved = yearly benefit from each approved, piloting or live project's brief, cut by confidence (Medium 75%, Low 50%). Delivered = actuals recorded quarterly by project owners with evidence.`,8.5,K.GRY,false,0);
