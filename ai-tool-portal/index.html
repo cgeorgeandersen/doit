@@ -1,0 +1,1775 @@
+<title>CONA AI Tool Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,750&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --paper:#F2F4F3; --raised:#FFFFFF; --sunk:#E7EBE9; --well:#F8FAF9;
+  --ink:#13201B; --ink-2:#34423D; --muted:#5A6863;
+  --line:#D4DBD8; --line-2:#B7C2BE;
+  --accent:#2346C8; --accent-ink:#FFFFFF; --accent-soft:#E4E9FB;
+  --go:#1E7A4C; --go-soft:#DDF0E5;
+  --wait:#9A5B06; --wait-soft:#F6EAD4;
+  --stop:#B42318; --stop-soft:#F8E1DE;
+  --auto:#6A3FB5; --auto-soft:#ECE4F8;
+  --hand:#4F5A66; --hand-soft:#E3E7EB;
+  --benefit:#2346C8; --cost:#C2410C;
+  --shadow:0 1px 2px rgba(19,32,27,.06),0 8px 24px -14px rgba(19,32,27,.25);
+  --display:"Bricolage Grotesque","Avenir Next","Segoe UI",system-ui,sans-serif;
+  --body:"Source Sans 3","Segoe UI",system-ui,-apple-system,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --r:8px;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --paper:#0E1412; --raised:#161F1C; --sunk:#0A0F0D; --well:#121A17;
+    --ink:#E5EEEA; --ink-2:#C0CCC7; --muted:#8FA09A;
+    --line:#26322E; --line-2:#3A4843;
+    --accent:#8AA3FF; --accent-ink:#0E1412; --accent-soft:#1C2545;
+    --go:#56C893; --go-soft:#14291F;
+    --wait:#E3AA4A; --wait-soft:#2C2211;
+    --stop:#F2796E; --stop-soft:#321816;
+    --auto:#B99CF5; --auto-soft:#241B36;
+    --hand:#A7B3BF; --hand-soft:#1E252C;
+    --benefit:#8AA3FF; --cost:#F08A55;
+    --shadow:0 1px 2px rgba(0,0,0,.45),0 10px 28px -16px rgba(0,0,0,.9);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --paper:#0E1412; --raised:#161F1C; --sunk:#0A0F0D; --well:#121A17;
+  --ink:#E5EEEA; --ink-2:#C0CCC7; --muted:#8FA09A;
+  --line:#26322E; --line-2:#3A4843;
+  --accent:#8AA3FF; --accent-ink:#0E1412; --accent-soft:#1C2545;
+  --go:#56C893; --go-soft:#14291F;
+  --wait:#E3AA4A; --wait-soft:#2C2211;
+  --stop:#F2796E; --stop-soft:#321816;
+  --auto:#B99CF5; --auto-soft:#241B36;
+  --hand:#A7B3BF; --hand-soft:#1E252C;
+  --benefit:#8AA3FF; --cost:#F08A55;
+  --shadow:0 1px 2px rgba(0,0,0,.45),0 10px 28px -16px rgba(0,0,0,.9);
+}
+
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:var(--display);font-weight:750;letter-spacing:-.02em;line-height:1.15;text-wrap:balance;margin:0}
+p{margin:0}
+input,select,textarea,button{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.pos{color:var(--go)} .neg{color:var(--stop)}
+.label{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.quiet{color:var(--muted);font-size:13.5px}
+
+/* ---------- app bar ---------- */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:var(--raised);border-bottom:1px solid var(--line)}
+.bar-in{max-width:1220px;margin:0 auto;padding-inline:16px;display:flex;align-items:center;gap:8px 20px;flex-wrap:wrap;min-height:58px}
+.wordmark{display:flex;align-items:center;gap:10px;background:none;border:0;padding:6px 0;text-align:left}
+.glyph{width:28px;height:28px;border-radius:7px;background:var(--ink);display:grid;place-items:center;flex:none}
+.glyph i{display:block;width:12px;height:12px;border:2.5px solid var(--paper);border-radius:50%;border-right-color:transparent;transform:rotate(-45deg)}
+.wordmark b{font-family:var(--display);font-size:17px;letter-spacing:-.02em;display:block;line-height:1.1}
+.wordmark span{font-size:11.5px;color:var(--muted);display:block}
+.tabs{display:flex;gap:2px;margin-left:auto;overflow-x:auto;scrollbar-width:none;max-width:100%}
+.tabs::-webkit-scrollbar{display:none}
+.tab{background:none;border:0;border-bottom:2px solid transparent;padding:17px 12px 15px;font-weight:600;font-size:14px;color:var(--muted);white-space:nowrap}
+.tab:hover{color:var(--ink)}
+.tab[aria-current="page"]{color:var(--ink);border-bottom-color:var(--accent)}
+.tab .k{font-family:var(--mono);font-size:10.5px;color:var(--muted);margin-right:6px;font-weight:400}
+
+.wrap{max-width:1220px;margin:0 auto;padding-inline:16px;padding-block:28px 72px}
+.view{display:flex;flex-direction:column;gap:26px}
+.view[hidden]{display:none!important}
+.intro{display:flex;flex-direction:column;gap:8px;max-width:72ch}
+.intro h1{font-size:clamp(28px,4vw,40px)}
+.intro h2{font-size:clamp(24px,3.2vw,32px)}
+.intro p{color:var(--ink-2);font-size:16px}
+
+/* ---------- buttons, fields ---------- */
+.btn{display:inline-flex;align-items:center;gap:7px;background:var(--raised);border:1px solid var(--line-2);border-radius:6px;padding:7px 13px;font-size:13.5px;font-weight:600;line-height:1.3}
+.btn:hover{border-color:var(--ink-2)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.primary:hover{filter:brightness(1.07)}
+.btn.ghost{background:transparent;border-color:transparent;color:var(--muted)}
+.btn.ghost:hover{color:var(--ink);border-color:var(--line)}
+.btn.sm{padding:4px 9px;font-size:12.5px}
+.field{display:flex;flex-direction:column;gap:5px;min-width:0}
+.field>label,.field>.label{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.field input,.field select,.field textarea{background:var(--raised);border:1px solid var(--line);border-radius:6px;padding:8px 10px;font-size:14px;width:100%;min-width:0}
+.field textarea{resize:vertical;min-height:72px;line-height:1.5}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px 16px}
+.field.wide{grid-column:1/-1}
+.panel{background:var(--raised);border:1px solid var(--line);border-radius:var(--r);padding:18px 20px;display:flex;flex-direction:column;gap:12px}
+.panel>h3{font-size:18px}
+.panel>.sub{color:var(--muted);font-size:13.5px;margin-top:-6px}
+
+/* ---------- home ---------- */
+.home-hero{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:28px;align-items:end}
+.home-hero h1{font-size:clamp(32px,5vw,52px);letter-spacing:-.035em}
+.home-hero .lede{font-size:17px;color:var(--ink-2);max-width:60ch}
+.funnel{display:flex;flex-direction:column;gap:6px;font-family:var(--mono);font-size:12px}
+.funnel div{display:flex;justify-content:space-between;gap:12px;border-radius:5px;padding:7px 10px;background:var(--sunk);color:var(--ink-2)}
+.funnel div b{font-weight:600;color:var(--ink)}
+.funnel .f2{margin-inline:6%}.funnel .f3{margin-inline:14%;background:var(--accent-soft)}.funnel .f4{margin-inline:24%;background:var(--accent);color:var(--accent-ink)}
+.funnel .f4 b{color:var(--accent-ink)}
+.tools{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.toolcard{display:flex;flex-direction:column;gap:10px;text-align:left;background:var(--raised);border:1px solid var(--line);border-radius:var(--r);padding:20px;transition:border-color .15s,box-shadow .15s}
+.toolcard:hover{border-color:var(--line-2);box-shadow:var(--shadow)}
+.toolcard .who{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.toolcard h3{font-size:21px}
+.toolcard p{color:var(--ink-2);font-size:14.5px}
+.toolcard dl{display:grid;grid-template-columns:auto 1fr;gap:3px 12px;margin:4px 0 0;font-size:13px;border-top:1px solid var(--line);padding-top:10px}
+.toolcard dt{color:var(--muted)} .toolcard dd{margin:0}
+.toolcard .go{margin-top:auto;font-weight:700;color:var(--accent);font-size:14px}
+.beliefs{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.belief{border-top:2px solid var(--ink);padding-top:12px;display:flex;flex-direction:column;gap:6px}
+.belief h4{font-size:16px}
+.belief p{color:var(--ink-2);font-size:14px}
+
+/* ---------- tool 01: pilot check ---------- */
+.pc{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:26px;align-items:start}
+.pc-main{display:flex;flex-direction:column;gap:22px;min-width:0}
+.block{display:flex;flex-direction:column;gap:14px}
+.block-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px;border-bottom:1px solid var(--line);padding-bottom:8px}
+.block-head h3{font-size:20px}
+.block-head .k{font-family:var(--mono);font-size:12px;color:var(--accent);font-weight:600}
+.block-head p{flex:1 1 100%;color:var(--muted);font-size:14px}
+.q{display:flex;flex-direction:column;gap:8px}
+.q .qt{font-weight:700;font-size:15.5px;line-height:1.35}
+.q .help{color:var(--muted);font-size:13.5px;margin-top:-4px}
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:6px}
+.opt{display:flex;gap:9px;align-items:flex-start;background:var(--raised);border:1px solid var(--line);border-radius:6px;padding:9px 11px;font-size:14px;line-height:1.35;cursor:pointer}
+.opt:hover{border-color:var(--line-2)}
+.opt input{margin:2px 0 0;accent-color:var(--accent);flex:none}
+.opt.on{border-color:var(--accent);background:var(--accent-soft)}
+.gate{display:flex;gap:10px;align-items:flex-start;background:var(--raised);border:1px solid var(--line);border-radius:6px;padding:11px 13px;cursor:pointer;font-size:14.5px}
+.gate input{margin-top:3px;accent-color:var(--stop);flex:none}
+.gate.on{border-color:var(--stop);background:var(--stop-soft)}
+.gate .hard{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--stop);border:1px solid currentColor;border-radius:3px;padding:0 5px;margin-right:6px;vertical-align:1px}
+.numrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+
+.board{position:sticky;top:calc(env(safe-area-inset-top,0px) + 76px);display:flex;flex-direction:column;gap:14px;background:var(--raised);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.board h3{font-size:15px;font-family:var(--body);font-weight:700;letter-spacing:0}
+.meter{display:grid;grid-template-columns:1fr auto;gap:4px 8px;align-items:baseline}
+.meter .n{font-weight:600;font-size:14px}
+.meter .v{font-family:var(--mono);font-size:13px;font-variant-numeric:tabular-nums}
+.track{grid-column:1/-1;position:relative;height:8px;border-radius:4px;background:var(--sunk);overflow:visible}
+.track .fill{position:absolute;left:0;top:0;bottom:0;border-radius:4px;background:var(--mc,var(--muted));transition:width .25s ease}
+.track .tick{position:absolute;top:-3px;bottom:-3px;width:1.5px;background:var(--line-2)}
+.meter .d{grid-column:1/-1;font-size:12px;color:var(--muted)}
+.lean{border-radius:6px;padding:10px 12px;background:var(--vs,var(--sunk));border-left:3px solid var(--vc,var(--line-2));display:flex;flex-direction:column;gap:2px}
+.lean b{font-size:15px;color:var(--vc,var(--ink))}
+.lean span{font-size:12.5px;color:var(--ink-2)}
+.progress{font-family:var(--mono);font-size:12px;color:var(--muted);display:flex;justify-content:space-between}
+.board .row{display:flex;justify-content:space-between;font-size:13px;border-top:1px solid var(--line);padding-top:8px}
+.board .row b{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+.verdict{border-radius:var(--r);border:1px solid var(--line);border-top:4px solid var(--vc);background:var(--raised);padding:22px 22px 20px;display:flex;flex-direction:column;gap:10px}
+.verdict .tag{display:inline-flex;align-self:flex-start;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--vc);background:var(--vs);border-radius:4px;padding:3px 8px}
+.verdict h2{font-size:clamp(24px,3.4vw,32px)}
+.verdict .why{font-size:16px;color:var(--ink-2);max-width:70ch}
+.verdict .task{font-size:13px;color:var(--muted)}
+.mathgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.mathgrid div{background:var(--well);padding:10px 12px;display:flex;flex-direction:column;gap:2px}
+.mathgrid .v{font-family:var(--mono);font-size:19px;font-weight:600;font-variant-numeric:tabular-nums}
+.caveat{font-size:13.5px;color:var(--muted)}
+.drags{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.drags li{display:grid;grid-template-columns:92px minmax(0,1fr);gap:12px;align-items:start;border-bottom:1px solid var(--line);padding-bottom:8px}
+.drags li:last-child{border-bottom:0;padding-bottom:0}
+.drags b{display:block;font-size:14.5px}
+.drags span.d{font-size:13.5px;color:var(--ink-2)}
+.sev{font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;border-radius:4px;padding:3px 7px;text-align:center;white-space:nowrap}
+.sev.stop{background:var(--stop-soft);color:var(--stop)}
+.sev.open{background:var(--wait-soft);color:var(--wait)}
+.sev.drag{background:var(--hand-soft);color:var(--hand)}
+.sev.High{background:var(--stop-soft);color:var(--stop)}
+.sev.Medium{background:var(--wait-soft);color:var(--wait)}
+.sev.Low{background:var(--hand-soft);color:var(--hand)}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.steps div{border-left:2px solid var(--vc,var(--accent));padding:2px 0 2px 12px;display:flex;flex-direction:column;gap:3px}
+.steps b{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.steps p{font-size:14px;color:var(--ink-2)}
+ol.moves{margin:0;padding:0;list-style:none;counter-reset:m;display:flex;flex-direction:column;gap:10px}
+ol.moves li{counter-increment:m;display:grid;grid-template-columns:28px 1fr;gap:10px}
+ol.moves li::before{content:counter(m);font-family:var(--mono);font-weight:600;font-size:13px;width:24px;height:24px;border-radius:50%;background:var(--sunk);display:grid;place-items:center}
+ol.moves b{display:block}
+ol.moves span{color:var(--ink-2);font-size:14px}
+.actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.actions .grow{flex:1}
+
+/* ---------- tool 02: case desk ---------- */
+.desk{display:grid;grid-template-columns:270px minmax(0,1fr);gap:24px;align-items:start}
+.port{display:flex;flex-direction:column;gap:10px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 76px)}
+.port-head{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.portsum{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.portsum div{background:var(--raised);padding:8px 10px;display:flex;flex-direction:column}
+.portsum b{font-family:var(--mono);font-size:15px;font-variant-numeric:tabular-nums}
+.caselist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;max-height:calc(100vh - 330px);overflow:auto}
+.citem{width:100%;text-align:left;background:var(--raised);border:1px solid var(--line);border-radius:6px;padding:9px 11px;display:flex;flex-direction:column;gap:5px}
+.citem:hover{border-color:var(--line-2)}
+.citem[aria-current="true"]{border-color:var(--accent);box-shadow:inset 3px 0 0 var(--accent)}
+.citem .t{font-weight:600;font-size:14px;line-height:1.3}
+.citem .m{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12.5px}
+.citem .n{font-family:var(--mono);font-weight:600;font-variant-numeric:tabular-nums}
+.pill{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;border-radius:999px;padding:2px 8px;white-space:nowrap}
+.pill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.pill.Draft{background:var(--hand-soft);color:var(--hand)}
+.pill.In-review{background:var(--wait-soft);color:var(--wait)}
+.pill.Approved{background:var(--go-soft);color:var(--go)}
+.pill.Deferred,.pill.Declined{background:var(--stop-soft);color:var(--stop)}
+.pill.ex{background:transparent;color:var(--muted);border:1px dashed var(--line-2)}
+.pill.ex::before{display:none}
+.newpop{display:flex;flex-direction:column;gap:2px;background:var(--raised);border:1px solid var(--line-2);border-radius:8px;padding:6px;box-shadow:var(--shadow)}
+.newpop button{background:none;border:0;text-align:left;padding:7px 9px;border-radius:5px;font-size:14px;line-height:1.3}
+.newpop button:hover{background:var(--sunk)}
+.newpop button small{display:block;color:var(--muted);font-size:12px}
+
+.sheet{display:flex;flex-direction:column;gap:22px;min-width:0}
+.titlerow{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center}
+.titleinput{flex:1 1 320px;min-width:0;font-family:var(--display);font-weight:750;font-size:clamp(22px,3vw,30px);letter-spacing:-.025em;background:transparent;border:0;border-bottom:1.5px dashed transparent;padding:2px 0}
+.titleinput:hover{border-bottom-color:var(--line-2)}
+.titleinput:focus{outline:none;border-bottom-color:var(--accent)}
+h2.brieft{flex:1 1 320px;font-size:clamp(22px,3vw,30px)}
+.seg{display:inline-flex;border:1px solid var(--line-2);border-radius:6px;overflow:hidden}
+.seg button{border:0;background:var(--raised);padding:6px 13px;font-size:13px;font-weight:600;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.ready{display:flex;flex-direction:column;gap:6px}
+.ready .bar2{display:flex;gap:3px}
+.ready .bar2 i{flex:1;height:5px;border-radius:3px;background:var(--sunk)}
+.ready .bar2 i.ok{background:var(--go)}
+.ready .todo{font-size:13px;color:var(--muted);display:flex;flex-wrap:wrap;gap:4px 12px}
+.ready .todo button{background:none;border:0;padding:0;color:var(--ink-2);border-bottom:1px dashed var(--line-2);font-size:13px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.kpi{background:var(--raised);padding:12px 14px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.kpi b{font-family:var(--mono);font-size:clamp(18px,2.2vw,22px);font-weight:600;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.kpi small{font-size:12px;color:var(--muted)}
+.kpi.lead{background:var(--well)}
+.assume{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px 16px;align-items:end}
+.assume p{grid-column:1/-1;font-size:13px;color:var(--muted)}
+.chartbox{background:var(--raised);border:1px solid var(--line);border-radius:var(--r);padding:14px 14px 8px}
+.chartbox .ch{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px 16px;margin-bottom:4px}
+.chartbox h3{font-size:15px;font-family:var(--body);font-weight:700;letter-spacing:0}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--ink-2)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.sw{width:11px;height:11px;border-radius:2px;display:inline-block}
+.plot{position:relative}
+.plot svg{display:block;width:100%;height:auto}
+.plot .gl{stroke:var(--line);stroke-width:1}
+.plot .zl{stroke:var(--line-2);stroke-width:1.5}
+.plot .ax{fill:var(--muted);font-family:var(--mono);font-size:11px}
+.plot .yr{fill:var(--ink-2);font-family:var(--mono);font-size:12px}
+.plot .bb{fill:var(--benefit)} .plot .bc{fill:var(--cost)}
+.plot .cl{fill:none;stroke:var(--ink);stroke-width:2;stroke-linejoin:round}
+.plot .cd{fill:var(--ink);stroke:var(--raised);stroke-width:2}
+.plot .ct{fill:var(--ink);font-family:var(--mono);font-size:11.5px;font-weight:600;paint-order:stroke;stroke:var(--raised);stroke-width:4px;stroke-linejoin:round}
+.plot .hit{fill:transparent}
+.plot .hit:hover{fill:var(--ink);fill-opacity:.04}
+.tip{position:absolute;pointer-events:none;background:var(--raised);border:1px solid var(--line-2);border-radius:6px;box-shadow:var(--shadow);padding:8px 10px;font-size:12.5px;min-width:170px;transform:translateX(-50%);opacity:0;transition:opacity .12s}
+.tip.on{opacity:1}
+.tip dl{display:grid;grid-template-columns:1fr auto;gap:2px 12px;margin:4px 0 0}
+.tip dd{margin:0;font-family:var(--mono);text-align:right;font-variant-numeric:tabular-nums}
+.tablewrap{overflow-x:auto;background:var(--raised);border:1px solid var(--line);border-radius:var(--r)}
+table{border-collapse:collapse;width:100%}
+th,td{padding:7px 9px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+thead th{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:400;background:var(--well);white-space:nowrap}
+tbody tr:last-child td{border-bottom:0}
+td.num,th.num{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+tfoot td{background:var(--well);font-weight:600;border-top:1px solid var(--line-2);border-bottom:0}
+.yt table{min-width:560px}
+.yt td:first-child{white-space:nowrap}
+.yt tr.sum td{font-weight:700;border-top:1px solid var(--line-2)}
+.led table{min-width:720px}
+.led input,.led select{width:100%;background:transparent;border:1px solid transparent;border-radius:4px;padding:5px 6px;font-size:14px;min-width:0}
+.led input:hover,.led select:hover{border-color:var(--line)}
+.led input:focus,.led select:focus{outline:none;border-color:var(--accent);background:var(--paper)}
+.led input.money{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums}
+.led input.basis{font-size:12.5px;color:var(--muted)}
+.led select.dest{font-size:12.5px;margin-top:3px}
+.led select.dest.bad{color:var(--stop);border-color:var(--stop-soft);background:var(--stop-soft)}
+.led td.x{width:34px;text-align:center}
+.rm{background:none;border:0;color:var(--muted);font-size:17px;line-height:1;padding:4px 7px;border-radius:4px}
+.rm:hover{color:var(--stop);background:var(--stop-soft)}
+.zero{display:inline-block;font-family:var(--mono);font-size:10.5px;color:var(--stop);margin-top:3px}
+.rule{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;color:var(--ink-2);background:var(--wait-soft);border-radius:6px;padding:9px 12px}
+.rule b{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--wait);padding-top:2px;white-space:nowrap}
+.narr{font-size:17px;line-height:1.62;max-width:70ch;border-left:3px solid var(--accent);padding:4px 0 4px 18px}
+.narr b{font-weight:700}
+.blist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.blist li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 16px;padding:9px 0;border-bottom:1px solid var(--line)}
+.blist li:last-child{border-bottom:0}
+.blist .v{font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+.blist .b{grid-column:1/-1;font-size:13px;color:var(--muted)}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+details.how{background:var(--well);border:1px solid var(--line);border-radius:var(--r);padding:12px 16px}
+details.how summary{cursor:pointer;font-weight:700}
+details.how .body{display:flex;flex-direction:column;gap:8px;margin-top:10px;font-size:14px;color:var(--ink-2);max-width:74ch}
+details.how code{font-family:var(--mono);font-size:12.5px;background:var(--raised);border:1px solid var(--line);border-radius:3px;padding:0 4px}
+.confirm{display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:var(--stop-soft);border-radius:6px;padding:8px 12px;font-size:14px}
+
+/* ---------- tool 03: prompt library ---------- */
+.starter{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:20px;background:var(--ink);color:var(--paper);border-radius:var(--r);padding:22px}
+.starter h3{font-size:22px}
+.starter p{color:color-mix(in srgb,var(--paper) 78%,transparent);font-size:14.5px;margin-top:8px}
+.starter ol{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px;counter-reset:s}
+.starter li{counter-increment:s;display:grid;grid-template-columns:30px 1fr;gap:8px;font-size:14.5px}
+.starter li::before{content:counter(s);font-family:var(--mono);font-weight:600;border:1px solid color-mix(in srgb,var(--paper) 40%,transparent);border-radius:50%;width:24px;height:24px;display:grid;place-items:center;font-size:12px}
+.starter li button{background:none;border:0;padding:0;color:inherit;text-align:left;font-weight:700;text-decoration:underline;text-decoration-color:color-mix(in srgb,var(--paper) 40%,transparent);text-underline-offset:3px}
+.filters{display:flex;flex-direction:column;gap:10px;background:var(--raised);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px}
+.frow{display:grid;grid-template-columns:150px minmax(0,1fr);gap:8px 14px;align-items:start}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:4px 11px;font-size:13px}
+.chip:hover{border-color:var(--line-2)}
+.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.search{display:flex;gap:10px;align-items:center;border-top:1px solid var(--line);padding-top:10px;flex-wrap:wrap}
+.search input{flex:1 1 220px;background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:7px 10px;font-size:14px;min-width:0}
+.search input:focus{outline:none;border-color:var(--accent)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:12px;align-items:start}
+.pcard{background:var(--raised);border:1px solid var(--line);border-radius:var(--r);display:flex;flex-direction:column}
+.pcard.open{border-color:var(--line-2);box-shadow:var(--shadow);grid-column:1/-1}
+.pcard .hd{background:none;border:0;text-align:left;padding:14px 16px;display:flex;flex-direction:column;gap:6px;width:100%}
+.pcard h3{font-size:17px}
+.pcard .fn{font-size:12.5px;color:var(--muted)}
+.pcard .meta{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;font-size:12.5px}
+.lvl{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;border-radius:4px;padding:2px 7px}
+.lvl.start{background:var(--go-soft);color:var(--go)}
+.lvl.build{background:var(--accent-soft);color:var(--accent)}
+.lvl.stretch{background:var(--auto-soft);color:var(--auto)}
+.saves{font-family:var(--mono);color:var(--ink-2)}
+.pcard .bd{display:none;padding:0 16px 16px;flex-direction:column;gap:12px}
+.pcard.open .bd{display:flex}
+.pcard .what{font-size:15px;color:var(--ink-2);max-width:78ch}
+.pbox{border:1px solid var(--line);border-radius:6px;background:var(--well);overflow:hidden}
+.pbox .ph{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 10px;border-bottom:1px solid var(--line)}
+.pbox pre{margin:0;padding:12px;white-space:pre-wrap;word-break:break-word;font-family:var(--mono);font-size:12.5px;line-height:1.6;max-height:360px;overflow:auto}
+.pbox pre mark{background:var(--accent-soft);color:var(--accent);border-radius:3px;padding:0 2px}
+.check{display:grid;grid-template-columns:auto 1fr;gap:10px;font-size:14px;border-left:3px solid var(--wait);background:var(--wait-soft);padding:9px 12px;border-radius:0 6px 6px 0}
+.check b{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--wait);padding-top:2px}
+.empty{padding:36px 12px;text-align:center;color:var(--muted);background:var(--raised);border:1px dashed var(--line-2);border-radius:var(--r)}
+
+.foot{border-top:1px solid var(--line);padding-top:14px;font-size:12.5px;color:var(--muted);display:flex;flex-wrap:wrap;gap:6px 18px;justify-content:space-between}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:9px 15px;border-radius:6px;font-size:14px;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:opacity .2s;z-index:50;max-width:calc(100% - 32px)}
+.toast.on{opacity:1}
+
+@media (max-width:980px){
+  .pc,.desk{grid-template-columns:1fr}
+  .board,.port{position:static}
+  .caselist{max-height:none;flex-direction:row;overflow-x:auto;padding-bottom:4px}
+  .caselist li{flex:0 0 230px}
+  .tools{grid-template-columns:1fr}
+  .home-hero{grid-template-columns:1fr}
+  .starter{grid-template-columns:1fr}
+}
+@media (max-width:620px){
+  .frow{grid-template-columns:1fr}
+  .cards{grid-template-columns:1fr}
+  .drags li{grid-template-columns:1fr}
+  .drags .sev{justify-self:start}
+  .tab{padding:12px 9px 10px}
+  .bar-in{padding-block:4px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<header class="bar">
+  <div class="bar-in">
+    <button class="wordmark" type="button" data-go="home" aria-label="Portal home">
+      <span class="glyph" aria-hidden="true"><i></i></span>
+      <span><b>AI Tool Portal</b><span>CONA Services · AI Enablement</span></span>
+    </button>
+    <nav class="tabs" aria-label="Tools">
+      <button class="tab" type="button" data-go="home" aria-current="page">Start</button>
+      <button class="tab" type="button" data-go="pilot"><span class="k">01</span>Pilot check</button>
+      <button class="tab" type="button" data-go="cases"><span class="k">02</span>Business cases</button>
+      <button class="tab" type="button" data-go="prompts"><span class="k">03</span>Prompt library</button>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- ============================ HOME ============================ -->
+<section class="view" id="v-home">
+  <div class="home-hero">
+    <div class="intro">
+      <span class="label">Internal · runs entirely in your browser</span>
+      <h1>Most AI ideas should be tested for fifteen minutes before anyone spends a quarter on them.</h1>
+      <p class="lede">Three tools for the question that arrives every week: “can we use AI for this?” The first says whether it should be AI at all. The second turns the survivors into a business case a council can decide on. The third helps any individual get time back this week, with no project needed.</p>
+    </div>
+    <div class="funnel" aria-label="How ideas narrow through the tools">
+      <div class="f1"><span>Ideas that arrive as “use AI for X”</span><b>all</b></div>
+      <div class="f2"><span>Pass the pilot check</span><b>01</b></div>
+      <div class="f3"><span>Hold up as a funded case</span><b>02</b></div>
+      <div class="f4"><span>Go to a council</span><b>decision</b></div>
+    </div>
+  </div>
+
+  <div class="tools">
+    <button class="toolcard" type="button" data-go="pilot">
+      <span class="who">01 · For one specific task</span>
+      <h3>Should this be an AI pilot?</h3>
+      <p>Scores a task on whether AI can do it, whether AI is the right kind of tool, and whether the payoff is worth the effort. You get one of six verdicts, and “automate it conventionally” is a common one.</p>
+      <dl><dt>Takes</dt><dd>14 questions and a reality check, about 10 minutes</dd><dt>You get</dt><dd>Verdict, three scores, the reasons, next moves</dd></dl>
+      <span class="go">Check a task →</span>
+    </button>
+    <button class="toolcard" type="button" data-go="cases">
+      <span class="who">02 · For anything that needs money</span>
+      <h3>Business case desk</h3>
+      <p>Five years of costs, benefits and risks on the same basis as every other case: confidence-weighted, ramped for adoption, discounted. Freed-up hours count as zero until someone says where that time goes.</p>
+      <dl><dt>Takes</dt><dd>About 20 minutes for a full case</dd><dt>You get</dt><dd>Written brief, PDF, CSV, a file to share</dd></dl>
+      <span class="go">Open the desk →</span>
+    </button>
+    <button class="toolcard" type="button" data-go="prompts">
+      <span class="who">03 · For individuals, no project needed</span>
+      <h3>Prompt library</h3>
+      <p><span id="promptCount">35</span> uses, filtered by your function and by what fills your week. Each has a prompt you can paste as-is, the time it usually gives back, and the specific way it can mislead you.</p>
+      <dl><dt>Takes</dt><dd>Browse, no setup</dd><dt>You get</dt><dd>Copyable prompts with checks</dd></dl>
+      <span class="go">Find something to try →</span>
+    </button>
+  </div>
+
+  <div class="panel">
+    <h3>What these tools take for granted</h3>
+    <p class="sub">All three are built on these. If you disagree with one, the tools will disagree with you in the same place.</p>
+    <div class="beliefs">
+      <div class="belief"><h4>“Don't build it” is a good outcome</h4><p>A lot of work needs a rule, a report someone already built, or a licensed feature nobody switched on. Ruling out an idea in fifteen minutes is cheaper than finding out after a quarter.</p></div>
+      <div class="belief"><h4>Ordinary automation often beats AI</h4><p>When the rules are written down and the inputs are clean, a workflow or scheduled job gives the same answer every time and leaves an audit trail. A model is non-deterministic by design.</p></div>
+      <div class="belief"><h4>Hours saved are not money saved</h4><p>Freed time with nowhere to go gets absorbed. The case desk counts it at zero until someone commits it to named work, a backfill that won't happen, or overtime that stops.</p></div>
+      <div class="belief"><h4>Every case uses the same yardstick</h4><p>One confidence haircut, one adoption ramp, one discount rate, one five-year window. Councils then compare cases on the same terms, whichever team was most optimistic.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>Nothing you type is sent anywhere. Your answers and cases are kept in this browser only. Use Save to file to share a case.</span><span>Built for CONA Services AI Enablement</span></div>
+</section>
+
+<!-- ============================ 01 PILOT CHECK ============================ -->
+<section class="view" id="v-pilot" hidden>
+  <div class="intro">
+    <span class="label">Tool 01 · Pilot check</span>
+    <h2>Should this be an AI pilot?</h2>
+    <p>Answer for how things are today, not how they will be after the project. The scoreboard updates as you go. Once every question is answered, the verdict appears below the questions.</p>
+  </div>
+  <div class="pc">
+    <div class="pc-main" id="pcMain"></div>
+    <aside class="board" id="pcBoard" aria-live="polite"></aside>
+  </div>
+  <div id="pcResult"></div>
+</section>
+
+<!-- ============================ 02 CASE DESK ============================ -->
+<section class="view" id="v-cases" hidden>
+  <div class="intro">
+    <span class="label">Tool 02 · Business case desk</span>
+    <h2>What are we asking a council to approve?</h2>
+    <p>One case per initiative, all on the same basis. Fill it in from top to bottom. The numbers, chart and written brief update as you type.</p>
+  </div>
+  <div class="desk">
+    <aside class="port" id="port"></aside>
+    <div class="sheet" id="sheet"></div>
+  </div>
+</section>
+
+<!-- ============================ 03 PROMPT LIBRARY ============================ -->
+<section class="view" id="v-prompts" hidden>
+  <div class="intro">
+    <span class="label">Tool 03 · Prompt library</span>
+    <h2>Things worth trying on real work this week</h2>
+    <p>Pick your function and what fills your week. Each card opens to a prompt you can paste into an approved AI tool as-is. Replace the highlighted brackets with your own details, and read the check before you send the output to anyone.</p>
+  </div>
+  <div class="starter">
+    <div>
+      <h3>New to this? Start with these three.</h3>
+      <p>Use real work you already have open. When these go wrong, it's obvious, and that's what you want while you decide whether to trust the tool.</p>
+    </div>
+    <ol id="starterList"></ol>
+  </div>
+  <div class="filters">
+    <div class="frow"><span class="label">Your function</span><div class="chips" id="fRole"></div></div>
+    <div class="frow"><span class="label">What fills your week</span><div class="chips" id="fSink"></div></div>
+    <div class="frow"><span class="label">Your AI experience</span><div class="chips" id="fLevel"></div></div>
+    <div class="search">
+      <input id="fText" type="search" placeholder="Search prompts, e.g. contract, SAP, variance" aria-label="Search prompts">
+      <span class="quiet" id="fCount"></span>
+      <button class="btn ghost sm" type="button" id="fClear">Clear filters</button>
+    </div>
+  </div>
+  <div class="cards" id="cards"></div>
+</section>
+
+</div>
+<div class="toast" id="toast" role="status"></div>
+<script>
+"use strict";
+/* ================================================================
+   Shared constants. Every hours-to-dollars conversion uses these.
+   ================================================================ */
+const WEEKS = 46;              // working weeks a year after PTO and holidays
+const FTE_HOURS = WEEKS * 40;  // 1,840 hours = one full-time person
+
+/* ================================================================
+   TOOL 01 — Pilot check
+   v   = how favourable the answer is for an AI pilot (0–10)
+   r   = how "rule-shaped" the answer makes the task (0–10), used for
+         the automation signal. Only set on the questions that bear on it.
+   flag = [headline, explanation] shown when this answer drags the case.
+   ================================================================ */
+const FEAS = [
+ {id:"F1", q:"Where does the input for this task live today?",
+  help:"A model can only work on what it can be handed. This question rules out more ideas than any other.",
+  opts:[
+   {t:"In a system we can export or query", v:10},
+   {t:"Digital, but spread across email, Teams and shared drives", v:7},
+   {t:"In PDFs, scans or screenshots", v:4, flag:["The input is locked inside documents","Getting the data out of those documents is its own project, and it has to be done before any AI work can start."]},
+   {t:"On paper, in phone calls, or in someone's head", v:0, flag:["There is no digital input","Nothing can read this task's inputs today. The information has to exist somewhere a system can open before a pilot has anything to work on."]}]},
+ {id:"F2", q:"How much of the work is reading, writing or interpreting language?",
+  help:"Language is what current models are good at. Exact arithmetic and system entry are not.",
+  opts:[
+   {t:"Nearly all of it", v:10, r:0},
+   {t:"About half. The rest is numbers or clicking through screens", v:7, r:4},
+   {t:"A little. Mostly it's moving data between places", v:3, r:8, flag:["There is little language in the work","Moving and matching data is faster, cheaper and more reliable with conventional tooling."]},
+   {t:"None. It's calculation and data entry", v:1, r:10, flag:["This is calculation, not interpretation","Models are unreliable at arithmetic and reconciliation. A formula, query or scheduled job will do better."]}]},
+ {id:"F3", q:"If the output were wrong, would a person notice?",
+  help:"An error nobody can detect is worse than having no answer.",
+  opts:[
+   {t:"Yes, at a glance", v:10},
+   {t:"Yes, with a quick check against the source", v:8},
+   {t:"Only an experienced person would catch it", v:4, flag:["Only experts can spot errors","Review becomes the bottleneck, and most of the time saved goes into checking."]},
+   {t:"No. We'd find out weeks later, if ever", v:0, flag:["Wrong answers would go unnoticed","There is no way to check output before it is used. That is the strongest single reason not to pilot."]}]},
+ {id:"F4", q:"What does a wrong answer realistically cost?",
+  help:"The realistic case, not the worst one you can imagine.",
+  opts:[
+   {t:"Little. It's a draft a person edits anyway", v:10},
+   {t:"Rework and annoyance, caught internally", v:7},
+   {t:"Money, a customer relationship, or an audit finding", v:3, flag:["Mistakes are expensive here","You will need a control step on every output, which changes the economics of the idea."]},
+   {t:"Safety, legal exposure, or a regulatory filing", v:0, flag:["The consequences of an error are too severe","Using AI to assist a person may be fine. Letting it make or shape the decision is not."]}]},
+ {id:"F5", q:"What kind of data would it touch?",
+  help:"Answer for the data as it is, including anything that tends to ride along in attachments.",
+  opts:[
+   {t:"Public or general internal information", v:10},
+   {t:"Confidential, but allowed in our approved AI tools", v:7},
+   {t:"Personal data about customers or employees", v:3, flag:["Personal data is involved","Plan for a privacy review and an approved environment before the first prompt is written."]},
+   {t:"Regulated, SOX-scoped, or covered by a third-party NDA", v:1, flag:["The data is regulated or restricted by contract","Confirm in writing what is allowed before going further. Then run this check again."]}]},
+ {id:"F6", q:"Do you have examples of this work done well?",
+  help:"Examples are what you test against. Without them you cannot tell whether a pilot worked.",
+  opts:[
+   {t:"Hundreds, and I know where they are", v:10},
+   {t:"A few dozen good ones", v:8},
+   {t:"A handful I could dig up", v:5},
+   {t:"None. Every case is different", v:2, flag:["There are no examples of good output","Collect twenty finished examples first. It takes about a week and tells you what the pilot has to match."]}]}
+];
+
+const FIT = [
+ {id:"G1", q:"Could a new starter do this correctly from a written checklist?",
+  help:"This is the automation question. Answer it honestly.",
+  opts:[
+   {t:"Yes. The rules are written down and rarely change", v:1, r:10, flag:["The rules already exist on paper","Checklist work belongs in a rule, a workflow or a macro, which runs the same way every time. A model does not."]},
+   {t:"Mostly, with some judgement calls", v:6, r:5},
+   {t:"No. It takes real reading and interpretation", v:10, r:0}]},
+ {id:"G2", q:"How much does one instance differ from the next?",
+  opts:[
+   {t:"Identical every time", v:1, r:10, flag:["Every instance is identical","Same input, same output is exactly what conventional automation is for."]},
+   {t:"Same layout, different values", v:3, r:8, flag:["The inputs are tightly structured","A template, formula or mail merge handles same-layout work more reliably than a model."]},
+   {t:"Same goal, but messy and varied inputs", v:10, r:1},
+   {t:"Every one is a new problem", v:5, r:0, flag:["Nothing repeats","Without a pattern there is nothing to build on, and no way to measure whether the tool helps."]}]},
+ {id:"G3", q:"Has anyone checked whether a system we already pay for does this?",
+  help:"SAP, Salesforce, ServiceNow, Coupa and Microsoft 365 all have features that are licensed and never switched on.",
+  opts:[
+   {t:"Yes. Nothing we own covers it", v:9},
+   {t:"It's a new capability; nothing like it exists", v:10},
+   {t:"Probably not. Nobody has looked", v:3, flag:["Nobody has checked what we already own","It takes an afternoon to check. A licensed feature is supported and already paid for, so build only what it can't do."]},
+   {t:"Yes, and it does. We just don't use it", v:0, flag:["We already own a tool that does this","Building alongside an unused feature leaves two things to maintain and an adoption problem you already have."]}]},
+ {id:"G4", q:"Does the output have to be exactly right, or good enough to work from?",
+  opts:[
+   {t:"A strong first draft would be a real win", v:10, r:0},
+   {t:"It must be right, but a person approves it first", v:8, r:3},
+   {t:"Exact and repeatable: same input, same output", v:2, r:10, flag:["The output must be repeatable","Models are probabilistic, so the same input can give different output. If you need repeatability, AI is the wrong tool."]}]},
+ {id:"G5", q:"How often does this happen?",
+  opts:[
+   {t:"Daily or continuously", v:10},
+   {t:"Weekly", v:8},
+   {t:"Monthly, at close or in a review cycle", v:6},
+   {t:"A few times a year", v:2, flag:["It doesn't happen often enough","Rare work rarely repays the build, and by the next time it comes round nobody remembers how the tool works."]}]},
+ {id:"G6", q:"Who owns this once the pilot ends?",
+  help:"Pilots are abandoned more often for lack of an owner than for any technical reason.",
+  opts:[
+   {t:"A named person with time set aside", v:10},
+   {t:"A team that wants it", v:8},
+   {t:"We'll work that out later", v:3, flag:["Nobody owns it yet","Pilots without a named owner are usually dropped within two quarters, and that makes the next AI proposal harder to get approved."]},
+   {t:"Me, in my spare time", v:1, flag:["It depends on one person's goodwill","When that person gets busy the tool stops working, and the failure gets blamed on AI."]}]}
+];
+
+const PAIN = {id:"V2", q:"How much does this hurt today?", opts:[
+ {t:"It comes up in every team meeting", v:10},
+ {t:"A steady, low-level drag", v:7},
+ {t:"Mildly annoying", v:4, flag:["Nobody is really suffering","When people barely notice a problem, they don't change how they work to fix it."]},
+ {t:"Honestly, nobody minds", v:1, flag:["There is no felt problem","It will be built, demoed once and then quietly ignored."]}]};
+const BUILD = {id:"V3", q:"What would it take to build?", opts:[
+ {t:"A good prompt and a template. Someone could do it this week", v:10},
+ {t:"A small tool on platforms we already have, a few weeks", v:8},
+ {t:"Integration work and IT capacity", v:5},
+ {t:"A new system, procurement and a vendor", v:2, flag:["It's expensive to build","Months of procurement and integration come before anyone sees value. Keep that for problems that clearly justify it."]}]};
+
+const GATES = [
+ {id:"B1", hard:true, t:"The data is regulated or under NDA, and no approved AI tool is cleared for it.",
+  flag:["No approved environment for this data","Until it is cleared in writing, the next step is an approval, not a prototype."]},
+ {id:"B2", hard:true, t:"The output would feed a reported, audited or SOX-controlled number with no person signing it off.",
+  flag:["A controlled number with no human control","Anything that reaches a reported figure needs a documented human review. Add the reviewer and the idea may be fine."]},
+ {id:"B3", hard:false, t:"Nobody has agreed to own it after the pilot.",
+  flag:["Ownership is unresolved","Get a name and a few hours a month committed before anything is built."]},
+ {id:"B4", hard:false, t:"Nobody has checked whether a system we already license does this.",
+  flag:["The “do we already own this?” question is open","An afternoon in the admin console could make this whole exercise unnecessary."]},
+ {id:"B5", hard:false, t:"The people who do the work today haven't been asked about it.",
+  flag:["The people doing the work haven't been consulted","They know where the exceptions are, and they decide whether the tool gets used. Talk to two of them this week."]}
+];
+
+const SHARES = [[20,"trims the edges"],[35,"a real dent"],[50,"about half"],[70,"most of it"]];
+
+const PC_EXAMPLE = {
+ task:{name:"Vendor invoice exception triage",who:"Accounts payable, 5 analysts",
+   how:"Invoices that fail the three-way match land in a work queue in S/4HANA. An analyst opens each one, works out why it failed, emails the buyer or the receiving dock, then corrects or re-routes it. About 350 a week. The reasons repeat, but the emails and notes attached never look the same twice."},
+ ans:{F1:1,F2:1,F3:1,F4:1,F5:1,F6:1,G1:1,G2:2,G3:0,G4:1,G5:0,G6:1,V2:0,V3:1},
+ nums:{people:5,hours:10,share:35,rate:58}, gates:{B5:true}
+};
+
+/* Verdict copy. Functions take the score object s. */
+const VERDICTS = {
+ PILOT:{tag:"Worth a pilot",c:"var(--go)",s:"var(--go-soft)",
+  title:s=>s.strong?"Pilot it. This is a good candidate.":"Pilot it, with a small scope.",
+  why:s=>`All three scores clear the bar${s.strong?"":", though at least one is only workable, not strong"}. The work is mostly language, a person can check the output before it counts, and about ${fmt(s.hours)} hours a year is enough to justify someone's attention. ${s.soft?"Some items in the reality check are still open. Those are what usually stop a pilot, so settle them in the first week.":"Scope it so you find out whether it works in six weeks rather than six months."}`,
+  planTitle:"Scope it to get an answer quickly",
+  plan:[["Weeks 1–2","Collect <b>30 real past cases</b> with the correct outcome for each. That's your test set. If you can't put it together, stop and report that."],
+        ["Weeks 3–6","Run it <b>alongside the people</b> doing the work, not instead of them. Count how often the tool and the person disagree, and read every disagreement."],
+        ["Before you start","<b>Write down the pass mark</b>: the accuracy and time saving that would justify rolling it out. If you set it afterwards, the pilot will pass by default."],
+        ["Build in","A <b>review step</b> you can point to, and a log of what the tool was asked and what it answered."]],
+  moves:[["Name the owner and get their manager to agree the hours.","It's the cheapest step and the one most often skipped."],
+         ["Pull the 30-case test set from work that's already finished.","It takes an afternoon, and then the pilot is judged on evidence instead of opinion."],
+         ["Take the numbers to the business case desk.","The hours estimate goes across automatically. Say where the freed time will go, or the case counts it at zero."]]},
+ AUTOMATE:{tag:"Automate, don't use AI",c:"var(--auto)",s:"var(--auto-soft)",
+  title:()=>"Automate this the conventional way.",
+  why:s=>`You've described work that follows written rules on inputs that barely change. A rules engine, workflow, scheduled report or macro handles that the same way every time, with a log an auditor can read. A model would do it a little worse, less predictably, and for more money. The ${fmt(s.hours)} hours a year are real and worth chasing, just not with AI. For this task, conventional automation is the better technology.`,
+  planTitle:"Build this instead",
+  plan:[["First","<b>Check the systems we already license.</b> SAP, Salesforce, ServiceNow, Coupa and Power Automate all have workflow and rules engines that most teams have never switched on."],
+        ["If nothing fits","It's a <b>workflow, scripted report or Power Automate</b> job: weeks rather than quarters, and supportable by people we already have."],
+        ["Before building","Put the decision rules in a table. <b>Where two experts disagree on a row</b>, that row is the only part that might need AI later."],
+        ["Expect to hear","That it isn't innovative enough. What counts is hours returned and errors avoided, whatever the technology."]],
+  moves:[["Spend an afternoon in the admin console of the system that owns the data.","That's the highest-return hour you can spend on this idea."],
+         ["Write the rules in a table and have two experts review it.","Where they disagree, you've found the ambiguous cases. The rest can be automated now."],
+         ["Take it to the case desk with the same hours estimate.","The case for doing it is the same. Only the build approach changes."]]},
+ MANUAL:{tag:"Leave it manual",c:"var(--hand)",s:"var(--hand-soft)",
+  title:()=>"Keep doing this by hand for now.",
+  why:s=>`At about ${fmt(s.hours)} hours a year${s.money>0?`, roughly $${fmt(s.money)} of people's time,`:""} this won't cover the cost of building, testing, governing and maintaining a tool, let alone getting people to use it. That overhead doesn't shrink for small projects. Nothing has failed here: you've spent fifteen minutes instead of a quarter, and that budget is free for something bigger.`,
+  planTitle:"Cheaper ways to help",
+  plan:[["Try first","A <b>template, checklist or saved view</b>. Most small irritations turn out to be formatting problems."],
+        ["Or","<b>Stop doing part of it.</b> Ask who reads the output. Tasks often outlive their audience, and nobody notices until someone asks."],
+        ["Personally","The people doing it can still use AI <b>on their own drafting and reading</b>. That needs no project, budget or owner. Send them to the prompt library."],
+        ["Check again if","Volume triples, the team shrinks, or the task merges into a bigger process."]],
+  moves:[["Check the volume with someone who actually does the work.","If it's much higher than your estimate, run this again."],
+         ["Ask who reads the output and what they do with it.","This question gets rid of more work than any tool."],
+         ["Point the team at the prompt library.","Individual productivity doesn't need a project behind it."]]},
+ BLOCKED:{tag:"Blocked, not rejected",c:"var(--wait)",s:"var(--wait-soft)",
+  title:()=>"Clear the blocker first. It may still be a yes.",
+  why:s=>`The idea may be sound (feasibility ${s.feas}, fit ${s.fit}), but you've flagged a hard stop: restricted data with no approved tool, or output reaching a controlled number with no human sign-off. Neither is a technology problem, and a better prototype won't fix either. Both depend on other people's calendars, so start on them now rather than after building something you can't deploy.`,
+  planTitle:"The way through",
+  plan:[["Data","Take the <b>exact data fields</b> to Security and Privacy and ask which approved tool, if any, is cleared for them. Get the answer in writing."],
+        ["Controls","If it touches a reported number, <b>design the human review step first</b> and agree it with the control owner. A documented reviewer often turns a no into a yes."],
+        ["Meanwhile","Test the idea on <b>synthetic or public data</b> so you learn whether it works while approvals are pending."],
+        ["Don't","Try it quietly in an unapproved tool to prove the point. That can get the whole programme shut down."]],
+  moves:[["Send Security the list of data fields involved.","Specific questions get answered in days. Vague ones wait for months."],
+         ["Sketch the review step and take it to the control owner.","This is often the difference between rejected and approved."],
+         ["Keep this assessment and run it again once you have an answer.","The scores may already be good enough to pilot."]]},
+ GROUNDWORK:{tag:"Not yet: groundwork",c:"var(--stop)",s:"var(--stop-soft)",
+  title:()=>"Not yet. The groundwork isn't in place.",
+  why:s=>`Feasibility scored ${s.feas} out of 100, and a low feasibility score can't be offset by the other two. The inputs aren't reachable, the output can't be checked, or there's nothing to compare against. A pilot built on any of those will demo well and then fail at real volume, which costs you credibility for the next idea. Each item below can be fixed without AI.`,
+  planTitle:"Fix these before trying again",
+  plan:[["Inputs","If the information lives in PDFs, scans or people's heads, then <b>getting it out is the project</b>. It helps everything that comes after."],
+        ["Checking","If nobody could tell a right answer from a wrong one, <b>build the check before the tool</b>."],
+        ["Examples","Collect <b>twenty finished examples</b> of good work. You'd need them for any pilot anyway."],
+        ["Meanwhile","The people doing the work can still use AI on their own reading and writing."]],
+  moves:[["Fix only the lowest-scoring item below.","One bad answer here can sink the whole task, so the worst answer matters more than the average."],
+         ["Collect twenty examples of finished work.","You'll need them for any future pilot, so the effort isn't wasted."],
+         ["Run this check again after the fix.","Once feasibility clears 45, the verdict will likely change."]]},
+ RESHAPE:{tag:"Not yet: reshape it",c:"var(--stop)",s:"var(--stop-soft)",
+  title:()=>"Not yet. Split it into something a tool can target.",
+  why:s=>`Fit scored ${s.fit} out of 100. The task is too varied for rules, but too rare, unowned or unrepeatable to build a tool around. That usually means it's several tasks sharing one name. Split it up and run the check on the biggest, most repetitive piece.`,
+  planTitle:"Make it assessable",
+  plan:[["Split it","Write the task as <b>the three tasks it really is</b> and check the most repetitive one. Tasks that bundle several jobs always score badly."],
+        ["Ownership","If the real issue is that nobody owns it, that's <b>a staffing question</b>, and no tool will answer it."],
+        ["Frequency","Rare work seldom repays a tool. By the next time, everyone has forgotten how it works."],
+        ["Still useful","Individuals can use AI for the reading and writing inside the task without a project."]],
+  moves:[["Write the task down as three separate tasks.","If you can't, the description is too abstract to assess."],
+         ["Run the check on the most repetitive piece.","A narrow task scores better than a broad one on every measure."],
+         ["If nobody owns it, sort that out first.","Unowned pilots fail for reasons that get blamed on AI."]]}
+};
+
+/* ================================================================
+   TOOL 02 — Business case desk
+   ================================================================ */
+const AREAS=["Order to cash","Source to pay","Record to report","Supply chain planning","Warehouse & distribution",
+ "Manufacturing","Sales & field execution","DSD & route accounting","Customer care","People & payroll",
+ "Data & analytics","Platform & infrastructure","Security & compliance"];
+const PLATFORMS=["SAP S/4HANA","SAP BW / Datasphere","Salesforce Service Cloud","Salesforce Field Service","Blue Yonder",
+ "Handheld & route systems","Coupa","ServiceNow","Microsoft 365 & Copilot","Azure / data platform","B2B customer portal","New system"];
+const ASKS=["Fund the build","Fund a pilot","Approve a run-rate increase","Approve additional funding","Endorse the direction"];
+const STATUSES=["Draft","In review","Approved","Deferred","Declined"];
+const COST_CATS=["Build & configuration","Integration","Data preparation","Model & AI usage","Licences & subscriptions",
+ "Cloud infrastructure","Rollout & training","Change management","Run & support","Security & compliance"];
+const BEN_KINDS=["Time released","Cost removed","Cost avoided","Revenue or margin","Risk reduced"];
+const DESTS=[["","Where does the time go? (not decided)"],["work","Moved to named work"],["backfill","Backfill or hire not needed"],["overtime","Overtime or contractors stopped"]];
+const SEVS=["High","Medium","Low"];
+const CONF={High:1,Medium:0.75,Low:0.5};
+const RAMPS={
+  fast:{label:"Immediate",curve:[1,1,1,1,1]},
+  standard:{label:"Standard: 40% → 80% → 100%",curve:[.4,.8,1,1,1]},
+  slow:{label:"Slow: 20% → 50% → 80% → 100%",curve:[.2,.5,.8,1,1]}
+};
+const BEN_HINT={"Time released":"hours × loaded rate; counts only once the time has somewhere to go",
+ "Cost removed":"spend that stops: a licence, a contract, a vendor",
+ "Cost avoided":"spend you would have incurred: penalties, headcount growth",
+ "Revenue or margin":"margin, not revenue, and only what the change causes",
+ "Risk reduced":"expected loss avoided: likelihood × impact"};
+
+const uid=()=>Math.random().toString(36).slice(2,10);
+const CL=(label,cat,once,annual,note)=>({id:uid(),label,cat,once,annual,note:note||""});
+const BL=(label,kind,once,annual,note,dest)=>({id:uid(),label,kind,once,annual,note:note||"",dest:dest||""});
+const RL=(label,sev,note,once,annual)=>({id:uid(),label,sev,note:note||"",once:once||0,annual:annual||0});
+
+const TEMPLATES={
+ ai:{name:"AI or data initiative",hint:"Model, prompts, retrieval, inference",
+  costs:[["Data preparation","Data preparation"],["Build and prompt engineering","Build & configuration"],["Integration","Integration"],["Model and API usage","Model & AI usage"],["Rollout and training","Rollout & training"],["Run and support","Run & support"]],
+  bens:[["Time released","Time released"],["","Cost avoided"]],risks:[["Output quality drifts over time","Medium"],["Source data is incomplete","High"]]},
+ auto:{name:"Process automation",hint:"Rules, workflow, scheduled jobs",
+  costs:[["Build and configuration","Build & configuration"],["Integration","Integration"],["Rollout and training","Rollout & training"],["Run and support","Run & support"]],
+  bens:[["Time released","Time released"],["","Cost removed"]],risks:[["Rules misfire on edge cases","Medium"],["Adoption varies by bottler","Medium"]]},
+ platform:{name:"Platform change",hint:"Upgrade, migration, new module",
+  costs:[["Build and configuration","Build & configuration"],["Cloud infrastructure","Cloud infrastructure"],["Security review","Security & compliance"],["Cutover and training","Rollout & training"],["Run and support","Run & support"]],
+  bens:[["","Cost removed"],["","Risk reduced"]],risks:[["Regression at cutover","High"],["Cutover window slips","Medium"]]},
+ blank:{name:"Blank case",hint:"Start from nothing",costs:[["","Build & configuration"]],bens:[["","Time released"]],risks:[["","Medium"]]}
+};
+
+const EXAMPLE_CASES=[
+{id:"ex-ap",example:true,title:"AI triage for AP invoice exceptions",area:"Source to pay",platform:"SAP S/4HANA",bottlers:12,
+ owner:"Accounts Payable Operations",sponsor:"Finance Council",ask:"Fund a pilot",status:"In review",
+ summary:"Read the reason codes, notes and emails on invoices that fail three-way match, propose the fix and draft the message to the buyer or dock. Analysts approve every action. Today five analysts work the queue by hand, and early-payment discounts expire while invoices wait.",
+ startYear:2027,recurStart:2,ramp:"standard",confidence:"Medium",
+ costs:[CL("Build: queue integration, prompts, review screen","Build & configuration",260000,0,"Estimate from S/4 build team, ±25%"),
+        CL("Exception history clean-up for test set","Data preparation",45000,0,""),
+        CL("Model usage","Model & AI usage",0,38000,"~18k invoices/yr at current token pricing, doubled for headroom"),
+        CL("Analyst training and process change","Rollout & training",30000,0,""),
+        CL("Run and support","Run & support",0,55000,"0.3 FTE application support")],
+ benefits:[BL("Analyst time moved to vendor master clean-up","Time released",0,190000,"5 analysts × 10 hrs/wk × 46 wks × 35% removable × $58/hr, 40% of it committed","work"),
+           BL("Remaining analyst time released","Time released",0,285000,"Balance of the same estimate; no destination agreed yet",""),
+           BL("Early-payment discounts no longer missed","Cost avoided",0,160000,"FY26: $210k of 2% discounts lapsed while invoices were blocked; assume three-quarters recovered")],
+ risks:[RL("Proposed fixes are wrong on unusual exceptions","Medium","Analyst approves every action; weekly sample review",0,20000),
+        RL("Buyers ignore AI-drafted emails","Low","Sender remains the analyst; tone reviewed in pilot",0,0),
+        RL("Vendor bank-detail changes get routed through the tool","High","Hard exclusion: bank-detail exceptions never enter the AI queue",15000,0)],
+ decision:{by:"",date:"",note:"Council asked for pilot results from two bottlers before funding the rollout."}},
+
+{id:"ex-care",example:true,title:"Drafted replies for customer care email",area:"Customer care",platform:"Salesforce Service Cloud",bottlers:12,
+ owner:"Customer Care Centre",sponsor:"Commercial Council",ask:"Fund the build",status:"Approved",
+ summary:"Draft replies to inbound retailer email in Service Cloud using the case history and the knowledge base. Agents edit and send. Built with the Service Cloud generative features we already license, plus a grounding layer over approved knowledge articles only.",
+ startYear:2026,recurStart:1,ramp:"standard",confidence:"High",
+ costs:[CL("Configuration of licensed generative features","Build & configuration",140000,0,"Existing licence tier; no new SKU"),
+        CL("Knowledge article clean-up","Data preparation",60000,15000,"400 articles reviewed, then quarterly"),
+        CL("Additional usage credits","Licences & subscriptions",0,72000,"Vendor quote"),
+        CL("Agent training","Rollout & training",25000,0,""),
+        CL("Run and support","Run & support",0,40000,"")],
+ benefits:[BL("Agent time moved to proactive outreach","Time released",0,420000,"62 agents; average handle time on email down 22% in the 4-week trial","work"),
+           BL("Seasonal contractors not rehired for summer peak","Time released",0,180000,"Six contractors, 14 weeks, current agency rate","overtime"),
+           BL("Fewer credits issued for slow responses","Cost avoided",0,55000,"Trial cut first-response time from 9h to 3h")],
+ risks:[RL("Draft cites a policy that has changed","Medium","Grounded on approved articles only; article owners named",0,10000),
+        RL("Agents send drafts without reading them","Medium","Send requires an edit or explicit confirm; QA sampling",0,15000)],
+ decision:{by:"Commercial Council",date:"2026-06-11",note:"Approved. Handle-time benefit reviewed at month 6 against the trial baseline."}},
+
+{id:"ex-route",example:true,title:"Route settlement variance explainer",area:"DSD & route accounting",platform:"Handheld & route systems",bottlers:4,
+ owner:"Route Accounting",sponsor:"Field Operations Council",ask:"Fund a pilot",status:"Draft",
+ summary:"When a route settles short or over, draft the likely explanation from handheld transactions, returns and credits so the settlement clerk starts from a hypothesis rather than a blank screen.",
+ startYear:2027,recurStart:2,ramp:"slow",confidence:"Low",
+ costs:[CL("Handheld transaction feed into the data platform","Integration",210000,0,""),
+        CL("Build and prompt engineering","Build & configuration",120000,0,""),
+        CL("Model usage","Model & AI usage",0,22000,""),
+        CL("Run and support","Run & support",0,45000,"")],
+ benefits:[BL("Clerk time released","Time released",0,240000,"Vendor benchmark, not measured here",""),
+           BL("Shrink found sooner","Revenue or margin",0,90000,"Guess; no baseline yet")],
+ risks:[RL("Explanations sound plausible but are wrong","High","Pilot measures agreement with clerk's final finding",0,0),
+        RL("Feed latency makes it useless at settlement time","Medium","",0,0)],
+ decision:{by:"",date:"",note:""}}
+];
+
+/* ================================================================
+   TOOL 03 — Prompt library
+   ================================================================ */
+const ROLES=["Finance","Procurement","Supply chain & ops","Sales & customer","Customer care","HR","IT","Legal & compliance","Comms","Projects","Everyone"];
+const SINKS=["Email","Meetings","Spreadsheets","Reports & decks","Contracts & documents","Data cleanup","Research","Policy questions","Tickets & queues","Writing","Planning","SAP & systems"];
+const LEVELS=[["any","Use it most weeks"],["some","Tried it a few times"],["new","Never really used it"]];
+const LVL_NAME={start:"Start here",build:"Worth setting up",stretch:"For the curious"};
+
+const PROMPTS=[
+{id:"formula",t:"Explain a spreadsheet formula you inherited",r:["Finance","Everyone"],s:["Spreadsheets"],lvl:"start",save:"30–90 min each time",first:1,
+ what:"A colleague left and their workbook has a formula nested seven levels deep. Paste it in and get a plain-English walkthrough. It's the best first try for anyone who works in spreadsheets, because you can check the answer against the cell straight away.",
+ p:"Explain this Excel formula in plain English. Work from the innermost function outward, one step per line. Then tell me:\n- what it returns in the normal case\n- what it returns when a lookup finds nothing\n- any assumption it makes that could silently give a wrong number\n\nFormula:\n[paste formula]\n\nWhat the columns hold:\n[e.g. A = material number, C = plant, F = price]",
+ c:"This one checks itself: compare the explanation with what the cell actually shows. If they differ, you've caught it within seconds."},
+{id:"notes",t:"Turn messy meeting notes into decisions, owners and dates",r:["Projects","Everyone"],s:["Meetings","Writing"],lvl:"start",save:"2–4 hrs/week",first:1,
+ what:"Paste your own rough notes and get back a clean list. You were in the meeting, so you'll know immediately whether it's right. That makes it the safest place to learn how these tools behave.",
+ p:"Below are my rough notes from a meeting about [topic]. Pull out three lists:\n\nDECISIONS: what was actually decided\nACTIONS: task, owner, due date\nOPEN: questions raised but not settled\n\nUse only what's in the notes. If no owner or date was stated, write \"unassigned\" rather than guessing. At the end, list anything that sounds like a decision but has no owner.\n\n[paste notes]",
+ c:"You were there, so read it against your memory. Watch for actions it assigned to whoever spoke loudest."},
+{id:"longdoc",t:"Get what matters to you out of a long document",r:["Everyone","Legal & compliance","Finance"],s:["Research","Policy questions","Contracts & documents"],lvl:"start",save:"1–3 hrs each",first:1,
+ what:"The 60-page report, the new regulation, the 40-message thread. Don't ask for a summary. Ask what it means for your job and what you can safely skip.",
+ p:"I'm a [your role] and I care about [your specific concern]. Read the document below and tell me:\n1. The three things in it that affect me, each with a direct quote\n2. Anything that would change a decision I'm making about [decision]\n3. What I can safely ignore\n\nIf nothing in it affects my area, say so plainly. Don't stretch to find something.\n\n[paste document]",
+ c:"Read the quoted passages before you act. The \"say so plainly\" line matters: without it you'll get relevance that isn't really there."},
+{id:"variance",t:"Draft month-end variance commentary",r:["Finance"],s:["Reports & decks","Spreadsheets","Writing"],lvl:"start",save:"3–5 hrs per close",
+ what:"Every close, someone writes the same kind of paragraph about the same kind of variance table. Give it the table and last month's commentary as a style guide, then edit rather than start from nothing.",
+ p:"Below is a budget-vs-actual variance table for [entity, period]. Write close commentary in the voice of the example underneath it.\n\nRules:\n- Only cover variances over [$ amount] or [%]\n- One short paragraph per line item: direction, amount, and the driver if the data shows it\n- If the data doesn't show the driver, write \"driver to be confirmed\". Don't guess.\n- Quote numbers exactly as they appear in the table. Don't calculate new ones.\n\n[paste table]\n\nLast month's commentary:\n[paste two or three paragraphs]",
+ c:"It can see that a number moved, but not why. Every stated cause is a guess until you confirm it, and every figure needs checking against the table."},
+{id:"buildformula",t:"Write the formula you can't remember",r:["Finance","Supply chain & ops","Everyone"],s:["Spreadsheets"],lvl:"start",save:"1–2 hrs/week",
+ what:"Describe the result you want in words and get the formula back with an explanation. It's quicker than a search engine, and you'll understand what you're pasting.",
+ p:"My Excel data starts in row 2. Column A is [x], column B is [y], column C is [z]. In column D I want [the result, in plain words].\n\nGive me the formula, explain each argument, and tell me what it returns when there's no match or a blank. If a newer function (XLOOKUP, FILTER, LET) makes it simpler, use it and say which Excel version it needs.",
+ c:"Before you fill it down 10,000 rows, test it on five rows where you already know the answer."},
+{id:"reconcile",t:"Match two lists that don't quite line up",r:["Finance","Procurement","Supply chain & ops"],s:["Data cleanup","Spreadsheets"],lvl:"build",save:"2–6 hrs per cycle",
+ what:"Vendor names spelled four ways, customer numbers with and without leading zeros, an export that almost matches the master. AI is good at proposing which rows refer to the same thing. It's poor at arithmetic, so let it propose matches and let Excel do the totals.",
+ p:"Below are two lists of [vendors / customers / SKUs]. List A is the master. List B is an export from [system].\n\nFor each entry in B, propose the most likely match in A and rate your confidence as high, medium or low. Put anything you're unsure about under a \"needs a person\" heading rather than forcing a match.\n\nOutput a table: B value | proposed A match | confidence | reason.\nDon't sum, count or total anything.\n\nList A:\n[paste]\n\nList B:\n[paste]",
+ c:"Accept only the high-confidence matches without review, and do every total in Excel, never in the chat."},
+{id:"sapmsg",t:"Decode an SAP error or system message",r:["Finance","Supply chain & ops","Procurement","IT"],s:["SAP & systems"],lvl:"start",save:"20–45 min each",
+ what:"A message number, a short text, and a transaction you were halfway through. Ask what it usually means, what to check first, and who normally owns the fix, before you raise a ticket that goes round in circles.",
+ p:"I got this message in SAP S/4HANA while doing [what you were doing, e.g. posting a goods receipt in MIGO].\n\nMessage: [message class and number, e.g. M7 021]\nText: [the exact text]\n\nExplain in plain language what it usually means, the three most likely causes in order, what I can check myself with display-only access, and which team normally fixes each cause (master data, config, security, or the business owner). Don't suggest configuration changes.",
+ c:"The general meaning is usually right. Our own configuration and custom messages aren't public, so treat the causes as a checklist to work through, not a diagnosis."},
+{id:"contract5",t:"Pull the five terms you need from a contract",r:["Procurement","Legal & compliance"],s:["Contracts & documents","Research"],lvl:"build",save:"1–3 hrs per contract",
+ what:"You don't need a legal opinion. You need the renewal date, the notice period, what happens if volumes fall, and whether the price moves. Ask for those with clause references, then read those clauses yourself.",
+ p:"From the agreement below, extract only the following. For each, give the clause number and a direct quote:\n1. Term, renewal mechanism, and the exact date notice must be given to stop auto-renewal\n2. Price, and anything that lets either party change it (indexation, surcharges, review clauses)\n3. Volume or minimum commitments, and the penalty for missing them\n4. Termination rights for each party\n5. Liability caps, and any unusual indemnity\n\nIf the document doesn't address one of these, write \"not addressed\". Don't fill in standard terms.\n\n[paste agreement]",
+ c:"This helps you read the contract. It isn't legal review. Read every clause it cites, and send anything that would change a decision to Legal."},
+{id:"rfpgrid",t:"Compare vendor proposals on the same criteria",r:["Procurement","IT"],s:["Contracts & documents","Reports & decks"],lvl:"build",save:"3–6 hrs per RFP",
+ what:"Three vendors answer the same RFP in three different layouts. Have it build the comparison grid first, with a \"didn't answer\" option, which often tells you the most.",
+ p:"Below are responses from [N] vendors to the same RFP. Build a table with one row per criterion and one column per vendor.\n\nCriteria:\n[list yours]\n\nIn each cell, quote or closely paraphrase what the vendor said. If a vendor didn't address a criterion, write NOT ANSWERED. Don't fill the gap with what vendors usually say. After the table, list the three differences most likely to change the decision.\n\n[paste responses, each labelled with the vendor name]",
+ c:"Check every NOT ANSWERED. The usual failure is an answer buried in an appendix."},
+{id:"redline",t:"See what really changed between two versions",r:["Procurement","Legal & compliance","Everyone"],s:["Contracts & documents"],lvl:"build",save:"1–2 hrs per redline",
+ what:"A redline shows every changed comma. Ask instead for the changes that shift risk, money or obligations, ranked and in plain language, then go and read those in the redline.",
+ p:"Here are two versions of the same document. Ignore formatting, numbering and wording changes that don't change meaning.\n\nList only substantive changes, ranked by how much they shift risk, cost or obligation. For each: quote old and new text, and say in one sentence who it now favours and why.\n\nVERSION 1:\n[paste]\n\nVERSION 2:\n[paste]",
+ c:"Still run the real comparison. Use this to know where to look, not as a replacement for looking."},
+{id:"supplierletter",t:"Draft a firm but fair supplier email",r:["Procurement","Supply chain & ops"],s:["Email","Writing"],lvl:"start",save:"20–40 min each",
+ what:"A late delivery, a quality issue, a price increase you're pushing back on. Getting the tone right takes longer than getting the facts right. Give it the facts and tell it the relationship matters.",
+ p:"Draft an email to [supplier contact] about [issue]. Facts:\n- [what happened, with dates and PO numbers]\n- [impact on us]\n- [what we need from them, and by when]\n\nTone: firm, specific, no threats, no apologising for raising it. We want to keep this supplier. Under 180 words. End with one clear request and a date.",
+ c:"Check that every date, PO number and quantity matches your source. Don't let it add commitments or remedies you haven't agreed internally."},
+{id:"exceptions",t:"Turn the daily exception report into the six lines people read",r:["Supply chain & ops"],s:["Reports & decks","Data cleanup"],lvl:"build",save:"45 min/day",
+ what:"An export arrives every morning with a few hundred exception rows, and someone turns it into the half-dozen lines people actually read. That step repeats every day and is mostly writing, which suits these tools well.",
+ p:"Below is today's exception export. Write a summary for the morning ops call in this format:\n- Headline: the single most important thing, one sentence\n- By category: count, plus the notable items only\n- Changed since yesterday: compare with the summary below\n- Needs a decision today: each with the specific decision needed\n\nUse only what's in the data. Don't guess at causes.\n\nToday's export:\n[paste]\n\nYesterday's summary:\n[paste]",
+ c:"The counts are the risk. Check totals against the source file, and never quote a number the model worked out."},
+{id:"sop",t:"Write an SOP from someone describing their job",r:["Supply chain & ops","IT","HR","Finance"],s:["Writing","Contracts & documents"],lvl:"start",save:"2–4 hrs per SOP",
+ what:"The person who does the work can explain it in ten minutes but will never write it down. Type up or transcribe their explanation, and they only have to correct the draft, which people are much happier to do.",
+ p:"Below is a transcript of someone explaining how they do [task]. Turn it into a written procedure with: purpose, what triggers it, what you need before starting, numbered steps in the order given, decision points with the criteria for each, and what to do when it goes wrong.\n\nWhere the transcript is unclear or a step seems to be missing, insert [GAP: confirm …] rather than filling it in.\n\n[paste transcript]",
+ c:"The [GAP] markers are the point. The person who explained it reviews the draft. Never publish a procedure nobody has checked."},
+{id:"incidentnote",t:"Turn an internal incident into a customer update",r:["Supply chain & ops","Customer care","Sales & customer","IT"],s:["Writing","Email"],lvl:"start",save:"30–45 min per incident",
+ what:"Internal incident notes are full of system names, blame and speculation. Rewriting them for a customer at 7pm is a chore. Give it the notes and tell it what must not be said.",
+ p:"Below are internal notes about an incident affecting [customer or customer group]. Draft a customer update.\n\nConstraints: no internal system names, no guessing at root cause, no blame. Say what the customer experienced, what we've done, what happens next, and when they'll next hear from us. Under 150 words. Direct, one apology at most.\n\n[paste notes]",
+ c:"It will happily promise a fix time nobody agreed. Someone with authority approves every commitment before it's sent."},
+{id:"meetprep",t:"Prepare for a customer meeting in five minutes",r:["Sales & customer"],s:["Meetings","Research"],lvl:"start",save:"45 min per meeting",
+ what:"Paste in last quarter's notes, the open issues and the account numbers, and get a one-page brief: where things stand, what's unresolved, what the customer is likely to raise, and three questions worth asking.",
+ p:"I'm meeting [account] on [date]. Below are notes from our last three conversations and their current numbers.\n\nGive me a one-page brief:\n- Where the relationship stands, in two sentences\n- What's still unresolved from last time\n- The two things they're most likely to raise\n- Three questions I should ask that I might not think of\n\nFlag anything in the notes that contradicts something else in the notes.\n\n[paste notes and numbers]",
+ c:"The contradictions it flags are the most useful part. Treat \"likely to raise\" as a prompt for your own thinking, not as intelligence about the customer."},
+{id:"followup",t:"Turn a call transcript into a follow-up email and commitments",r:["Sales & customer","Projects","Customer care"],s:["Meetings","Email","Writing"],lvl:"start",save:"30 min per call",
+ what:"The follow-up email you keep meaning to send. Paste the transcript and get the recap email, plus a separate internal list of what was promised, by whom and by when.",
+ p:"Below is a transcript of a call with [customer]. Produce two things:\n\n1. A follow-up email to the customer confirming what was agreed and the next steps, with owners and dates. No filler opening.\n2. A separate internal list of every commitment made on our side, who made it and the date attached. Include vague ones and mark them VAGUE.\n\nOnly include commitments actually said in the transcript.\n\n[paste transcript]",
+ c:"Check the commitments against your memory of the call before sending anything. The vague ones are where you'll find promises you didn't realise you'd made."},
+{id:"qbr",t:"Draft the business review story from the numbers",r:["Sales & customer","Finance"],s:["Reports & decks","Writing"],lvl:"build",save:"4–6 hrs per review",
+ what:"You have the numbers. You need the story and slide titles that actually say something. Give it the data and last quarter's version, and forbid it from inventing figures.",
+ p:"Here is this quarter's performance data for [account] and last quarter's review narrative for tone.\n\nDraft this quarter's narrative: what happened, why it matters to them, what we propose next. Also give me a title for each slide that states the point, not the topic.\n\nUse only the figures I've given. Don't calculate, estimate or round. Wherever a claim needs a number I haven't provided, write [NEED FIGURE].\n\n[paste data]\n\n[paste last quarter's narrative]",
+ c:"Check every number in the draft against your source. Invented figures do the most damage in this use."},
+{id:"careemail",t:"Reply to a difficult customer email",r:["Customer care","Sales & customer"],s:["Email","Writing"],lvl:"start",save:"10–20 min each",
+ what:"The customer is angry and partly right. Paste their email and the facts you've confirmed, and get a reply that acknowledges the problem, states what you'll do, and avoids promising what you can't deliver.",
+ p:"Draft a reply to the customer email below. Confirmed facts:\n- [what actually happened]\n- [what we can offer: credit, redelivery, callback]\n- [what we cannot offer]\n\nAcknowledge the specific problem in their words. State exactly what we'll do and when. Don't over-apologise, don't blame anyone, and don't offer anything not listed above. Under 130 words.\n\n[paste customer email]",
+ c:"Check that the offer matches what you're authorised to give. Models tend to add goodwill gestures nobody approved."},
+{id:"kb",t:"Turn a solved case into a knowledge article",r:["Customer care","IT"],s:["Tickets & queues","Writing"],lvl:"start",save:"20 min per article",
+ what:"The knowledge base is thin because nobody enjoys writing articles. Resolved case in, draft article out, in your template.",
+ p:"Below is a resolved case or ticket thread. Write a knowledge article with these sections: the symptom as the customer or user would describe it, who it affects, resolution steps in order, and how to confirm it's fixed.\n\nWrite for someone who doesn't know the system. Remove names, case numbers and customer details. Where the thread implies a step without stating it, mark it [VERIFY].\n\n[paste thread]",
+ c:"The person who solved it reviews the draft. A confidently wrong article costs more than no article."},
+{id:"triage",t:"Find the root causes in a ticket backlog",r:["IT","Customer care"],s:["Tickets & queues","Data cleanup"],lvl:"build",save:"4–8 hrs/week",
+ what:"Categorise tickets, group duplicates, and spot the ones that share an underlying problem. The grouping is where the value is, because it finds the single fix that closes thirty tickets.",
+ p:"Below are [N] ticket titles and descriptions. Do three things:\n1. Assign each to one of these categories: [your list]. Use \"Unclear\" rather than guessing.\n2. Group tickets that look like the same underlying issue, and name the issue.\n3. List the three root causes that would close the most tickets if fixed, with the ticket IDs for each.\n\n[paste tickets]",
+ c:"Before routing tickets on its categories, sample fifty and measure how often it's right. Never auto-close anything on its say-so."},
+{id:"postmortem",t:"Draft the factual half of an incident review",r:["IT","Supply chain & ops"],s:["Writing","Contracts & documents"],lvl:"start",save:"2–3 hrs per incident",
+ what:"The timeline and impact sections are assembled from material you already have in the channel and the ticket. Let it do the assembly. You write the analysis, because that's where the judgement is.",
+ p:"Below is the incident channel log and ticket history. Draft the factual sections of an incident review: timeline with timestamps, how it was detected, impact and duration, and actions taken in order.\n\nDo not write root cause, contributing factors or follow-up actions. Leave those as empty headings. Mark anything you inferred rather than read directly as [INFERRED].\n\n[paste log]",
+ c:"Check timestamps and impact figures against monitoring. The analysis stays with people, because that's where the learning happens."},
+{id:"jd",t:"Rewrite a job description so people apply",r:["HR"],s:["Writing"],lvl:"start",save:"1 hr per role",
+ what:"Most job descriptions are lists of responsibilities copied from the last posting. Ask for a rewrite that leads with the actual work and cuts phrases that appear in every advert.",
+ p:"Rewrite this job description. Open with what the person will actually work on in their first six months. Cut every phrase that could appear in any job ad at any company. Keep the required qualifications exactly as written, without adding, removing or softening any. Aim for 40% shorter.\n\n[paste job description]",
+ c:"Compare the qualifications with the original line by line. A quietly changed requirement is a compliance problem, not a style issue."},
+{id:"interview",t:"Turn interview notes into a structured scorecard",r:["HR","Everyone"],s:["Meetings","Writing"],lvl:"start",save:"20 min per interview",
+ what:"Scribbled notes become a consistent scorecard against your actual criteria, which makes debriefs shorter and comparisons fairer.",
+ p:"Here are my rough notes from an interview. Organise them against these criteria: [list your competencies].\n\nFor each criterion, give the evidence from my notes and mark it Strong, Mixed or Not observed. Where I recorded no evidence, the answer is Not observed; don't infer a rating. Finish with two questions I should have asked and didn't.\n\n[paste notes]",
+ c:"Never let it recommend whether to hire. It organises your evidence; the judgement stays yours and is recorded as yours."},
+{id:"benefitsq",t:"Answer the same policy question asked forty different ways",r:["HR","Finance"],s:["Policy questions","Email"],lvl:"build",save:"3–5 hrs/week",
+ what:"People ask the same twenty questions in endless variations. Answer from the actual policy, with the source quoted, so employees get a quick answer and you keep a record of where it came from.",
+ p:"Answer this employee question using only the policy text below.\n\nQuestion: [paste it]\n\nAnswer in under 100 words, in plain language, and quote the sentence you're relying on. If the policy doesn't clearly answer it, say so and direct them to [team]. Don't fill gaps with what other companies typically do.\n\n[paste policy]",
+ c:"Wrong answers about pay, leave or benefits have real consequences for people. A person reviews anything about eligibility or money before it's sent."},
+{id:"announce",t:"Rewrite an announcement so people actually read it",r:["Comms","HR","Everyone"],s:["Writing","Email"],lvl:"start",save:"30–60 min each",
+ what:"Corporate announcements tend to bury the point in paragraph four. Ask for the change first, then the action needed, then the background, with the filler phrases listed so you can defend the edit.",
+ p:"Rewrite this internal announcement. Open with what's changing and what the reader has to do, then the date, then any background. Cut corporate filler and list the phrases you cut. Keep every fact, date, name and system reference exactly as written. Aim for 40% shorter.\n\n[paste announcement]",
+ c:"Check dates, names and system names against the original. Details get lost quietly when text is shortened."},
+{id:"audiences",t:"One update, three audiences",r:["Comms","Projects"],s:["Reports & decks","Writing"],lvl:"build",save:"2–4 hrs per deck",
+ what:"The same content has to work for an executive, a technical team and a bottler audience. Paste your notes and ask for each version, with what to cut and what to lead with.",
+ p:"Here are my notes for an update on [project]. Produce three versions:\n1. Executive: five points maximum, decisions and money only\n2. Technical team: how it works and what changes for them\n3. Bottler-facing: what changes for their people and when, with no internal detail\n\nFor each, say what you cut from my notes and what the opening line should be.\n\n[paste notes]",
+ c:"Check the bottler-facing version most carefully for internal detail that shouldn't go outside."},
+{id:"status",t:"Write the weekly status report you keep rewriting",r:["Projects","IT"],s:["Reports & decks","Writing"],lvl:"start",save:"1–2 hrs/week",
+ what:"Same format, new facts, every week. Give it last week's report and this week's raw updates, and ask it to spell out what changed, which is the part readers want.",
+ p:"Here's last week's status report and this week's raw updates from the team.\n\nWrite this week's report in exactly the same format. Spell out what changed: anything that slipped, anything newly at risk, and anything that disappeared from the updates without being closed.\n\nLAST WEEK:\n[paste]\n\nTHIS WEEK'S UPDATES:\n[paste]",
+ c:"The \"disappeared without being closed\" list is the most useful output. Confirm it with the team before publishing."},
+{id:"premortem",t:"Find the holes in a plan before you present it",r:["Projects","Everyone"],s:["Planning","Research"],lvl:"start",save:"1 hr, high payoff",
+ what:"A pre-mortem you can run alone at your desk. Describe the plan, ask why it failed, and ask what a particular sceptic will object to. It won't always be right, but it usually finds a couple of things you'd stopped seeing.",
+ p:"Below is a plan I'm presenting to [audience]. Do three passes:\n1. It's six months later and this has failed. Give the five most likely reasons, ranked by likelihood, not drama.\n2. What am I assuming that I haven't said?\n3. What will [a named sceptical stakeholder, and what they care about] object to first?\n\nBe specific to this plan and skip generic project risks.\n\n[paste plan]",
+ c:"Treat the output as things to think about, not findings. Its job is to break your tunnel vision, not to be right."},
+{id:"exceltable",t:"Clean up a column of free text",r:["Everyone","Finance","HR"],s:["Data cleanup","Spreadsheets"],lvl:"build",save:"2–4 hrs per dataset",
+ what:"Free-text fields where people typed job titles, locations or reasons however they liked. Ask for a mapping table you keep and can audit, rather than cleaned data you can't trace.",
+ p:"Below is a column of free-text values typed by people. Propose a standard mapping: for each distinct raw value, the standard value it should map to.\n\nList the standard values first, keeping the set small and sensible. Then output a two-column table I can paste into a lookup: raw value | standard value. Put anything genuinely ambiguous under REVIEW rather than forcing it.\n\n[paste values]",
+ c:"Keep the mapping table, not just the cleaned output. When someone asks how a value was categorised, you need to be able to show them."},
+{id:"jepacket",t:"Completeness check on a journal entry packet",r:["Finance"],s:["Contracts & documents","Data cleanup"],lvl:"stretch",save:"1–2 hrs per packet",
+ what:"Not approval. A completeness check before the packet reaches the reviewer: is the support there, do the amounts appear in it, is anything obviously missing. It cuts down on packets sent back, not on errors.",
+ p:"Below is a journal entry and its supporting documents. Act only as a completeness check. You are not approving anything.\n\nCheck:\n- Does every amount in the entry appear somewhere in the support?\n- Is any referenced document missing?\n- Is the stated business reason consistent with the support?\n- Are approvals present where the entry says they are?\n\nList only what's missing or inconsistent. Don't recalculate anything and don't comment on whether the accounting is correct.\n\n[paste entry and support]",
+ c:"This never replaces reviewer approval and never touches SOX sign-off. The only claim is that fewer packets get sent back."},
+{id:"forecastq",t:"Question a forecast before you sign up to it",r:["Supply chain & ops","Finance","Sales & customer"],s:["Planning","Spreadsheets","Research"],lvl:"stretch",save:"varies, high payoff",
+ what:"Paste the assumptions behind a volume or cost forecast and ask what would have to be true for it to hold. It won't know our market better than you, but it will list the assumptions you haven't examined.",
+ p:"Below are the assumptions behind a [volume / cost / revenue] forecast for [period].\n\nDon't produce a new forecast. Instead:\n1. List every assumption, including implied ones, and rate how sensitive the result is to each (high, medium, low)\n2. For the high-sensitivity ones, say what evidence would confirm or break them\n3. Name one plausible scenario the forecast ignores\n\n[paste assumptions and headline figures]",
+ c:"It will be confident about industry patterns it can't check. Use the list to direct your own checks. Don't quote it."},
+{id:"askbetter",t:"Find the question you should have asked",r:["Everyone"],s:["Research","Planning","Meetings"],lvl:"stretch",save:"varies, high payoff",
+ what:"An underused approach. Describe a situation and ask what you're not considering, given your role and constraints. It works well before a decision and badly after one, when you're mostly looking for agreement.",
+ p:"Here's a situation I'm working through: [describe it, including constraints and what I've already ruled out].\n\nDon't recommend what to do. Tell me: what am I not considering, what would someone in [another function] see that I'm missing, and what question would I regret not asking before I decide? Be specific to this situation.",
+ c:"Ask before you decide. Afterwards you'll keep the answers that agree with you and dismiss the rest."},
+{id:"shorten",t:"Make writing shorter without making it cold",r:["Everyone","Comms"],s:["Writing","Email"],lvl:"start",save:"15 min each",
+ what:"Most people over-write when the stakes feel high. Ask for a cut that keeps the tone and locks the facts, and ask what it removed so you can put back anything that mattered.",
+ p:"Cut this by about a third without changing the tone or losing any fact, date, name or commitment. Keep it warm, not clipped. Then list what you removed so I can put back anything that mattered.\n\n[paste text]",
+ c:"Read the removal list. The sentence you actually needed will be there."},
+{id:"rfpq",t:"Draft the question list for an RFP",r:["Procurement","IT"],s:["Contracts & documents","Planning"],lvl:"start",save:"2–3 hrs per RFP",
+ what:"A solid first draft of the questions is mostly routine work. Describe what you're buying and ask specifically for the questions vendors dislike, because those are the ones that separate them.",
+ p:"We're buying [category] for [context: scale, users, systems it must connect to, constraints].\n\nDraft an RFP question list grouped under: functional fit, integration, security and data handling, commercial terms, support. Then add a short section of questions vendors usually dodge, where a vague answer is itself a finding.",
+ c:"Our Legal, Security and Procurement standards override anything it suggests. Use it to make sure you've covered everything, not for compliance wording."},
+{id:"dataextract",t:"Pull a table out of a PDF or scan",r:["Finance","Procurement","Supply chain & ops","Everyone"],s:["Data cleanup","Contracts & documents","Spreadsheets"],lvl:"build",save:"30–90 min each",
+ what:"A rate card, a price list or a remittance in a PDF, and you need it in Excel. Ask for a paste-ready table with the rows it couldn't read clearly listed separately.",
+ p:"Extract the table from the document below into tab-separated text I can paste into Excel. Columns: [list the columns you want].\n\nKeep numbers exactly as printed, with no rounding and no currency conversion. If a cell is unreadable or ambiguous, write ?? in it and list those rows at the end with the reason.\n\n[paste or attach the document]",
+ c:"Check the row count and spot-check the totals against the PDF. Dropped or merged rows are the usual error, and they're silent."}
+];
+</script>
+<script>
+"use strict";
+/* ================================================================
+   Utilities
+   ================================================================ */
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const plain=h=>String(h).replace(/<[^>]+>/g,"").replace(/&amp;/g,"&").replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&quot;/g,'"').replace(/&#39;/g,"'");
+const fmt=n=>Math.round(n).toLocaleString("en-US");
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const mean=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:0;
+function num(v){
+  if(typeof v==="number")return isFinite(v)?v:0;
+  if(!v)return 0;
+  const s=String(v).trim().toLowerCase().replace(/[$,\s]/g,"");
+  const m=s.match(/^(-?\d*\.?\d+)(k|m)?$/); if(!m)return 0;
+  let n=parseFloat(m[1]); if(m[2]==="k")n*=1e3; if(m[2]==="m")n*=1e6;
+  return isFinite(n)?n:0;
+}
+const money=n=>(n<0?"−$":"$")+Math.abs(Math.round(n)).toLocaleString("en-US");
+function compact(n){
+  const a=Math.abs(n),s=n<0?"−":"";
+  if(a>=1e6)return s+"$"+(a/1e6).toFixed(a>=1e7?1:2).replace(/\.?0+$/,"")+"M";
+  if(a>=1e3)return s+"$"+Math.round(a/1e3)+"k";
+  return s+"$"+Math.round(a);
+}
+const store={
+  get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v);}catch(e){return d;}},
+  set(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+};
+let toastT;
+function toast(m){const t=$("toast");t.textContent=m;t.classList.add("on");clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove("on"),2800);}
+function copyText(text,done){
+  const fb=()=>{const a=document.createElement("textarea");a.value=text;a.setAttribute("readonly","");a.style.position="fixed";a.style.opacity="0";
+    document.body.appendChild(a);a.select();let ok=false;try{ok=document.execCommand("copy");}catch(e){}document.body.removeChild(a);
+    ok?done():toast("Copy was blocked. Select the text and press Ctrl/Cmd+C.");};
+  try{navigator.clipboard.writeText(text).then(done,fb);}catch(e){fb();}
+}
+/* Saving files: inside claude.ai the page asks the viewer through the
+   downloads capability; opened as a plain file, it uses a normal link. */
+async function saveFile(filename,data){
+  let dl=null;
+  try{if(window.claude&&window.claude.use)dl=await window.claude.use("downloads");}catch(e){}
+  if(dl){
+    try{await dl.save({filename,data});toast("Saved "+filename);}
+    catch(e){
+      const c=e&&e.code;
+      if(c==="declined")toast("Save cancelled");
+      else if(c==="rate_limited")toast("A save is already waiting for your answer");
+      else toast("Saving files isn't available in this view");
+    }
+    return;
+  }
+  const blob=data instanceof Blob?data:new Blob([data],{type:"text/plain"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=filename;
+  document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},500);
+  toast("Saved "+filename);
+}
+const slug=s=>(s||"case").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,60)||"case";
+
+/* ================================================================
+   Navigation
+   ================================================================ */
+const VIEWS=["home","pilot","cases","prompts"];
+function go(v,noScroll){
+  if(!VIEWS.includes(v))v="home";
+  VIEWS.forEach(x=>{$("v-"+x).hidden=x!==v;});
+  document.querySelectorAll(".tab").forEach(b=>b.setAttribute("aria-current",b.dataset.go===v?"page":"false"));
+  if(v==="cases")renderDesk();
+  try{history.replaceState(null,"",v==="home"?location.pathname+location.search:"#"+v);}catch(e){}
+  store.set("aitp-view",v);
+  if(!noScroll)window.scrollTo({top:0,behavior:"auto"});
+}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-go]");if(b)go(b.dataset.go);});
+
+/* ================================================================
+   TOOL 01 — Pilot check
+   ================================================================ */
+const PC_BLANK=()=>({task:{name:"",who:"",how:""},ans:{},nums:{people:4,hours:5,share:35,rate:60},gates:{}});
+let P=Object.assign(PC_BLANK(),store.get("aitp-pilot",{}));
+const savePC=()=>store.set("aitp-pilot",P);
+const ALLQ=[...FEAS,...FIT,PAIN,BUILD];
+const pickOpt=q=>{const i=P.ans[q.id];return i==null?null:q.opts[i];};
+
+function score(){
+  const fv=FEAS.map(pickOpt).filter(Boolean).map(o=>o.v);
+  const gv=FIT.map(pickOpt).filter(Boolean).map(o=>o.v);
+  /* Feasibility blends the average with the single worst answer:
+     one missing precondition sinks a task however good the rest is. */
+  const feas=fv.length?Math.round(10*(0.6*mean(fv)+0.4*Math.min(...fv))):null;
+  const fit=gv.length?Math.round(10*mean(gv)):null;
+  const rv=ALLQ.map(pickOpt).filter(o=>o&&o.r!=null).map(o=>o.r);
+  const rules=rv.length?Math.round(10*mean(rv)):null;
+  const n=P.nums;
+  const hours=Math.max(0,num(n.people)*num(n.hours)*WEEKS*num(n.share)/100);
+  const money=hours*num(n.rate);
+  /* Hours are scored on a log scale: 20 h/yr = 0, 5,000 h/yr = 100.
+     Going from 50 to 500 hours matters as much as going from 500 to 5,000. */
+  const hoursScore=clamp(100*Math.log10(Math.max(hours,1)/20)/Math.log10(250),0,100);
+  const pain=pickOpt(PAIN),build=pickOpt(BUILD);
+  const value=Math.round(0.5*hoursScore+(pain?pain.v*2.5:12.5)+(build?build.v*2.5:12.5));
+  const hard=GATES.some(g=>g.hard&&P.gates[g.id]), soft=GATES.some(g=>!g.hard&&P.gates[g.id]);
+  const answered=ALLQ.filter(q=>P.ans[q.id]!=null).length, total=ALLQ.length;
+  const F=feas??100, G=fit??100, R=rules??0;
+  let v;
+  if(hard)v="BLOCKED";
+  else if(R>=60&&G<60)v="AUTOMATE";
+  else if(F<45)v="GROUNDWORK";
+  else if(hours<100||value<40)v="MANUAL";
+  else if(G<45)v="RESHAPE";
+  else v="PILOT";
+  const strong=v==="PILOT"&&Math.min(F,G,value)>=70&&!soft;
+  return {feas,fit,rules,value,hours,money,hoursScore,v,strong,hard,soft,answered,total,
+    complete:answered===total&&!!P.task.name.trim()};
+}
+function drags(){
+  const out=[];
+  GATES.forEach(g=>{if(P.gates[g.id])out.push({sev:g.hard?"stop":"open",lab:g.hard?"Hard stop":"Open item",t:g.flag[0],d:g.flag[1],v:g.hard?-2:-1});});
+  ALLQ.forEach(q=>{const o=pickOpt(q);if(o&&o.flag)out.push({sev:"drag",lab:o.v<=2?"Serious":"Drag",t:o.flag[0],d:o.flag[1],v:o.v});});
+  return out.sort((a,b)=>a.v-b.v).slice(0,6);
+}
+const band=s=>s==null?["–","var(--line-2)"]:s>=70?["Strong","var(--go)"]:s>=45?["Workable","var(--wait)"]:["Weak","var(--stop)"];
+
+function qHTML(q){
+  return `<div class="q" role="radiogroup" aria-labelledby="qt-${q.id}">
+    <div class="qt" id="qt-${q.id}">${esc(q.q)}</div>${q.help?`<p class="help">${esc(q.help)}</p>`:""}
+    <div class="opts">${q.opts.map((o,i)=>`<label class="opt${P.ans[q.id]===i?" on":""}"><input type="radio" name="${q.id}" id="${q.id}-${i}" data-q="${q.id}" data-i="${i}"${P.ans[q.id]===i?" checked":""}><span>${esc(o.t)}</span></label>`).join("")}</div></div>`;
+}
+function renderPilot(){
+  const n=P.nums;
+  $("pcMain").innerHTML=`
+  <div class="block">
+    <div class="block-head"><span class="k">A</span><h3>The task</h3><p>One specific piece of work, not a category. “Invoice exception triage” can be assessed; “AI in finance” can't. This labels your result.</p></div>
+    <div class="fields">
+      <div class="field"><label for="pcName">Task</label><input id="pcName" data-t="name" value="${esc(P.task.name)}" placeholder="e.g. Vendor invoice exception triage"></div>
+      <div class="field"><label for="pcWho">Who does it today</label><input id="pcWho" data-t="who" value="${esc(P.task.who)}" placeholder="e.g. Accounts payable, 5 analysts"></div>
+      <div class="field wide"><label for="pcHow">How it works today</label><textarea id="pcHow" data-t="how" placeholder="What happens, in order. Where it gets stuck.">${esc(P.task.how)}</textarea></div>
+    </div>
+  </div>
+  <div class="block">
+    <div class="block-head"><span class="k">B</span><h3>Could AI actually do this?</h3><p>Feasibility: whether the inputs exist, the output can be checked, and the data is allowed. One bad answer here outweighs several good ones.</p></div>
+    ${FEAS.map(qHTML).join("")}
+  </div>
+  <div class="block">
+    <div class="block-head"><span class="k">C</span><h3>Is AI the right kind of tool?</h3><p>Fit: a task can be doable by AI and still better served by a rule, a report, or a feature we already own.</p></div>
+    ${FIT.map(qHTML).join("")}
+  </div>
+  <div class="block">
+    <div class="block-head"><span class="k">D</span><h3>Is the payoff worth someone's quarter?</h3><p>Value: rough numbers are fine. What matters is the order of magnitude: forty hours a year or four thousand.</p></div>
+    <div class="q"><div class="qt">How much time goes into this today?</div>
+      <p class="help">Be conservative about the share. Review, exceptions and handing work back to a person eat most of the theoretical saving.</p>
+      <div class="numrow">
+        <div class="field"><label for="pcPeople">People who do it</label><input id="pcPeople" data-n="people" inputmode="decimal" value="${esc(n.people)}"></div>
+        <div class="field"><label for="pcHours">Hours each per week</label><input id="pcHours" data-n="hours" inputmode="decimal" value="${esc(n.hours)}"></div>
+        <div class="field"><label for="pcShare">Share AI could remove</label><select id="pcShare" data-n="share">${SHARES.map(([v,l])=>`<option value="${v}"${num(n.share)===v?" selected":""}>${v}%: ${l}</option>`).join("")}</select></div>
+        <div class="field"><label for="pcRate">Loaded cost per hour ($)</label><input id="pcRate" data-n="rate" inputmode="decimal" value="${esc(n.rate)}"></div>
+      </div></div>
+    ${qHTML(PAIN)}${qHTML(BUILD)}
+  </div>
+  <div class="block">
+    <div class="block-head"><span class="k">E</span><h3>Reality check</h3><p>Tick anything that's true today. These are what most often stop a promising pilot after the money is spent. Leaving one unticked because you plan to fix it later defeats the purpose.</p></div>
+    ${GATES.map(g=>`<label class="gate${P.gates[g.id]?" on":""}"><input type="checkbox" id="gate-${g.id}" data-g="${g.id}"${P.gates[g.id]?" checked":""}><span>${g.hard?'<span class="hard">Hard stop</span>':""}${esc(g.t)}</span></label>`).join("")}
+  </div>`;
+  updatePilot();
+}
+function meterHTML(name,v,desc,ticks){
+  const [bl,c]=band(v);
+  return `<div class="meter" style="--mc:${c}"><span class="n">${name}</span><span class="v">${v==null?"–":v} <span class="quiet">${bl}</span></span>
+    <div class="track"><div class="fill" style="width:${v??0}%"></div>${(ticks||[45,70]).map(t=>`<span class="tick" style="left:${t}%"></span>`).join("")}</div>
+    <span class="d">${desc}</span></div>`;
+}
+function updatePilot(){
+  const s=score(),V=VERDICTS[s.v];
+  const ruleC=s.rules==null?"var(--line-2)":s.rules>=60?"var(--auto)":"var(--hand)";
+  $("pcBoard").innerHTML=`
+    <div class="progress"><span>Scoreboard</span><span>${s.answered} of ${s.total} answered</span></div>
+    ${meterHTML("Feasibility",s.feas,"Inputs, checking, data, examples")}
+    ${meterHTML("Fit",s.fit,"AI versus a rule, report or existing feature")}
+    ${meterHTML("Value",s.answered?s.value:null,"Hours on the table, pain, build effort")}
+    <div class="meter" style="--mc:${ruleC}"><span class="n">Rule-shaped</span><span class="v">${s.rules==null?"–":s.rules+"%"}</span>
+      <div class="track"><div class="fill" style="width:${s.rules??0}%"></div><span class="tick" style="left:60%"></span></div>
+      <span class="d">Above 60%, conventional automation usually wins</span></div>
+    <div class="row"><span>Hours back a year</span><b>${fmt(s.hours)}</b></div>
+    <div class="row"><span>Worth, in people's time</span><b>$${fmt(s.money)}</b></div>
+    <div class="lean" style="--vc:${V.c};--vs:${V.s}">
+      <span class="label">${s.complete?"Verdict":"Leaning towards"}</span><b>${V.tag}</b>
+      <span>${s.complete?`<a href="#pcResult" id="toResult">Read the reasoning ↓</a>`:s.answered<4?"Too early to tell. Keep going.":"Provisional until every question is answered."}</span>
+    </div>
+    <div class="actions"><button class="btn sm" type="button" id="pcExample">Load an example</button><button class="btn ghost sm" type="button" id="pcReset">Start over</button></div>
+    <div id="pcResetConfirm"></div>`;
+  $("pcExample").onclick=()=>{P=JSON.parse(JSON.stringify(PC_EXAMPLE));savePC();renderPilot();toast("Example loaded. Change any answer to see the verdict move.");};
+  $("pcReset").onclick=()=>{$("pcResetConfirm").innerHTML=`<div class="confirm"><span>Clear every answer?</span><button class="btn sm" type="button" id="pcResetYes">Clear</button><button class="btn ghost sm" type="button" id="pcResetNo">Keep</button></div>`;
+    $("pcResetYes").onclick=()=>{P=PC_BLANK();savePC();renderPilot();window.scrollTo({top:0});};
+    $("pcResetNo").onclick=()=>{$("pcResetConfirm").innerHTML="";};};
+  const tr=$("toResult");if(tr)tr.onclick=e=>{e.preventDefault();$("pcResult").scrollIntoView({behavior:"smooth",block:"start"});};
+  renderResult(s);
+}
+$("pcMain").addEventListener("change",e=>{
+  const el=e.target;
+  if(el.dataset.q){P.ans[el.dataset.q]=+el.dataset.i;
+    el.closest(".opts").querySelectorAll(".opt").forEach(l=>l.classList.toggle("on",l.contains(el)));}
+  else if(el.dataset.g){P.gates[el.dataset.g]=el.checked;el.closest(".gate").classList.toggle("on",el.checked);}
+  else if(el.dataset.n){P.nums[el.dataset.n]=el.value;}
+  else return;
+  savePC();updatePilot();
+});
+$("pcMain").addEventListener("input",e=>{
+  const el=e.target;
+  if(el.dataset.t){P.task[el.dataset.t]=el.value;}
+  else if(el.dataset.n&&el.tagName==="INPUT"){P.nums[el.dataset.n]=el.value;}
+  else return;
+  savePC();updatePilot();
+});
+
+function renderResult(s){
+  const host=$("pcResult");
+  if(!s.complete){host.innerHTML="";return;}
+  const V=VERDICTS[s.v],D=drags(),n=P.nums;
+  host.innerHTML=`<div class="view" style="gap:18px">
+    <div class="verdict" style="--vc:${V.c};--vs:${V.s}">
+      <span class="tag">${V.tag}</span><h2>${V.title(s)}</h2><p class="why">${V.why(s)}</p>
+      <p class="task">${esc(P.task.name)}${P.task.who?" · "+esc(P.task.who):""} · ${new Date().toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})}</p>
+    </div>
+    <div class="two">
+      <div class="panel"><h3>The arithmetic</h3>
+        <p class="sub">${esc(n.people)} ${num(n.people)===1?"person":"people"} × ${esc(n.hours)} hrs a week × ${WEEKS} weeks × ${esc(n.share)}% removable</p>
+        <div class="mathgrid">
+          <div><span class="label">Hours a year</span><span class="v">${fmt(s.hours)}</span></div>
+          <div><span class="label">At $${esc(n.rate)}/hr</span><span class="v">$${fmt(s.money)}</span></div>
+          <div><span class="label">Full-time people</span><span class="v">${(s.hours/FTE_HOURS).toFixed(2)}</span></div>
+          <div><span class="label">Rule-shaped</span><span class="v">${s.rules}%</span></div>
+        </div>
+        <p class="caveat">This is gross time, not savings. It becomes money only once someone decides what the freed time is used for. The case desk counts it at zero until then.</p>
+      </div>
+      <div class="panel"><h3>What's holding it back</h3>
+        ${D.length?`<p class="sub">From your specific answers, worst first.</p><ul class="drags">${D.map(d=>`<li><span class="sev ${d.sev}">${d.lab}</span><div><b>${esc(d.t)}</b><span class="d">${esc(d.d)}</span></div></li>`).join("")}</ul>`
+        :`<p class="sub">Nothing flagged. Every answer was in a workable range, which is unusual. Check the optimistic ones with someone who does the work.</p>`}
+      </div>
+    </div>
+    <div class="panel" style="--vc:${V.c}"><h3>${V.planTitle}</h3><div class="steps">${V.plan.map(([b,h])=>`<div><b>${b}</b><p>${h}</p></div>`).join("")}</div></div>
+    <div class="panel"><h3>Your next three moves</h3><p class="sub">This week, before anything is built.</p>
+      <ol class="moves">${V.moves.map(m=>`<li><span><b>${esc(m[0])}</b><span>${esc(m[1])}</span></span></li>`).join("")}</ol></div>
+    <div class="actions">
+      ${s.v==="PILOT"||s.v==="AUTOMATE"?`<button class="btn primary" type="button" id="pcToCase">Start a business case from this →</button>`:""}
+      <button class="btn" type="button" id="pcCopy">Copy the summary</button>
+      <span class="grow"></span><span class="quiet">Answers are kept in this browser until you start over.</span>
+    </div></div>`;
+  $("pcCopy").onclick=()=>{
+    const txt=`AI PILOT CHECK — ${P.task.name}\n${P.task.who?P.task.who+"\n":""}${new Date().toDateString()}\n\nVERDICT: ${V.tag.toUpperCase()} — ${V.title(s)}\n\nFeasibility ${s.feas}/100 · Fit ${s.fit}/100 · Value ${s.value}/100 · Rule-shaped ${s.rules}%\n${fmt(s.hours)} hours a year (about $${fmt(s.money)} of people's time; gross, not savings)\n\nWHY\n${plain(V.why(s))}\n\nWHAT'S HOLDING IT BACK\n${D.length?D.map(d=>`- [${d.lab}] ${d.t}. ${d.d}`).join("\n"):"- Nothing flagged."}\n\n${V.planTitle.toUpperCase()}\n${V.plan.map(([b,h])=>`- ${b}: ${plain(h)}`).join("\n")}\n\nNEXT THREE MOVES\n${V.moves.map((m,i)=>`${i+1}. ${m[0]} ${m[1]}`).join("\n")}\n`;
+    copyText(txt,()=>toast("Summary copied. Paste it into an email or a ticket."));
+  };
+  const tc=$("pcToCase");
+  if(tc)tc.onclick=()=>{
+    const minS=Math.min(s.feas,s.fit,s.value);
+    const c=newCase(s.v==="AUTOMATE"?"auto":"ai",{
+      title:P.task.name,summary:P.task.how,
+      owner:P.task.who,confidence:s.strong?"High":minS>=55?"Medium":"Low",
+      benefits:[BL("Time released: "+P.task.name.toLowerCase(),"Time released",0,Math.round(s.money),
+        `${n.people} × ${n.hours} hrs/wk × ${WEEKS} wks × ${n.share}% × $${n.rate}/hr = ${fmt(s.hours)} hrs/yr (from the pilot check)`,"")],
+      risks:D.slice(0,3).map(d=>RL(d.t,d.sev==="drag"&&d.v>2?"Medium":"High",""))
+    });
+    go("cases");
+    toast("Case started. Say where the freed time goes, or it counts as zero.");
+    setTimeout(()=>{const el=$("led_benefits");if(el)el.scrollIntoView({behavior:"smooth",block:"start"});},250);
+    return c;
+  };
+}
+
+/* ================================================================
+   TOOL 02 — Business case desk
+   ================================================================ */
+const D={cases:[],active:null,view:"edit",discount:store.get("aitp-disc",9),confirmDel:false};
+function normCase(c){
+  c.id=c.id||uid(); c.title=c.title||""; c.area=c.area||AREAS[0]; c.platform=c.platform||PLATFORMS[0];
+  c.bottlers=c.bottlers||12; c.ask=c.ask||ASKS[0]; c.status=STATUSES.includes(c.status)?c.status:"Draft";
+  c.startYear=c.startYear||new Date().getFullYear()+1; c.recurStart=c.recurStart===1?1:2;
+  c.ramp=RAMPS[c.ramp]?c.ramp:"standard"; c.confidence=CONF[c.confidence]?c.confidence:"Medium";
+  ["costs","benefits","risks"].forEach(k=>{c[k]=Array.isArray(c[k])?c[k]:[];c[k].forEach(l=>{l.id=l.id||uid();});});
+  c.decision=Object.assign({by:"",date:"",note:""},c.decision||{});
+  ["owner","sponsor","summary"].forEach(k=>{c[k]=c[k]||"";});
+  return c;
+}
+function loadCases(){
+  const saved=store.get("aitp-cases",null);
+  D.cases=(Array.isArray(saved)&&saved.length?saved:JSON.parse(JSON.stringify(EXAMPLE_CASES))).map(normCase);
+  D.active=store.get("aitp-active",null);
+  if(!D.cases.find(c=>c.id===D.active))D.active=D.cases[0]&&D.cases[0].id;
+}
+const saveCases=()=>{store.set("aitp-cases",D.cases);store.set("aitp-active",D.active);};
+const activeCase=()=>D.cases.find(c=>c.id===D.active);
+
+function newCase(tpl,over){
+  const T=TEMPLATES[tpl]||TEMPLATES.blank;
+  const c=normCase(Object.assign({
+    id:uid(),title:"",status:"Draft",
+    costs:T.costs.map(([l,cat])=>CL(l,cat,0,0)),
+    benefits:T.bens.map(([l,k])=>BL(l,k,0,0,"")),
+    risks:T.risks.map(([l,s])=>RL(l,s,""))},over||{}));
+  if(over&&over.benefits&&over.benefits.length)c.benefits=over.benefits.concat(T.bens.slice(1).map(([l,k])=>BL(l,k,0,0,"")));
+  D.cases.unshift(c);D.active=c.id;D.view="edit";saveCases();
+  return c;
+}
+
+/* ---------- the model ---------- */
+const counts=l=>l.kind!=="Time released"||!!l.dest;
+function model(c){
+  const rs=c.recurStart===1?0:1, conf=CONF[c.confidence], curve=RAMPS[c.ramp].curve;
+  const z=()=>[0,0,0,0,0];
+  const cost=z(),mit=z(),claimed=z(),uncounted=z(),eligible=z(),counted=z();
+  for(let i=0;i<5;i++){
+    const on=i>=rs, ramp=on?curve[i-rs]:0;
+    c.costs.forEach(l=>{cost[i]+=(i===0?num(l.once):0)+(on?num(l.annual):0);});
+    c.risks.forEach(l=>{mit[i]+=(i===0?num(l.once):0)+(on?num(l.annual):0);});
+    c.benefits.forEach(l=>{
+      const g=(i===0?num(l.once):0)+(on?num(l.annual):0);
+      claimed[i]+=g;
+      if(!counts(l)){uncounted[i]+=g;return;}
+      eligible[i]+=g;
+      counted[i]+=((i===0?num(l.once):0)+(on?num(l.annual)*ramp:0))*conf;
+    });
+  }
+  const out=cost.map((v,i)=>v+mit[i]);
+  const net=counted.map((v,i)=>v-out[i]);
+  const cum=[];net.reduce((a,v,i)=>(cum[i]=a+v),0);
+  const r=num(D.discount)/100, df=[0,1,2,3,4].map(i=>1/Math.pow(1+r,i+1));
+  const pv=a=>a.reduce((s,v,i)=>s+v*df[i],0);
+  const pvBen=pv(counted), pvOut=pv(out), npv=pvBen-pvOut;
+  let payback=null;
+  for(let i=0;i<5;i++){if(cum[i]>=0){const prev=i?cum[i-1]:0;payback=i===0?(out[0]>0&&net[0]>0?out[0]/(counted[0]||1):0):i+(-prev)/net[i];break;}}
+  const sum=a=>a.reduce((x,y)=>x+y,0);
+  return {years:[0,1,2,3,4].map(i=>num(c.startYear)+i),cost,mit,out,claimed,uncounted,eligible,counted,
+    adj:counted.map((v,i)=>v-eligible[i]),net,cum,df,pvBen,pvOut,npv,payback,
+    net5:cum[4],totalOut:sum(out),totalBen:sum(counted),totalClaimed:sum(claimed),totalUncounted:sum(uncounted),
+    bcr:pvOut>0?pvBen/pvOut:null,
+    margin:npv>0&&pvBen>0?npv/pvBen:null, needed:npv<=0&&pvBen>0?pvOut/pvBen-1:null,
+    perBottler:cum[4]/Math.max(1,num(c.bottlers)),
+    upfront:[...c.costs,...c.risks].reduce((a,l)=>a+num(l.once),0),
+    runRate:[...c.costs,...c.risks].reduce((a,l)=>a+num(l.annual),0)};
+}
+const paybackText=m=>m.payback==null?"Beyond 5 yrs":m.payback<1?"Within year 1":m.payback.toFixed(1)+" yrs";
+function checks(c){
+  const amt=l=>num(l.once)||num(l.annual);
+  const tr=c.benefits.filter(l=>l.kind==="Time released"&&amt(l));
+  return [
+    {k:"Named and scoped",ok:!!c.title.trim(),to:"cTitle"},
+    {k:"Owner and sponsor",ok:!!c.owner.trim()&&!!c.sponsor.trim(),to:"cOwner"},
+    {k:"Proposal written",ok:c.summary.trim().length>=60,to:"cSummary"},
+    {k:"Costs entered",ok:c.costs.some(amt),to:"led_costs"},
+    {k:"A benefit with its basis",ok:c.benefits.some(l=>amt(l)&&l.note.trim().length>5),to:"led_benefits"},
+    {k:"Freed time has somewhere to go",ok:tr.every(l=>l.dest),to:"led_benefits"},
+    {k:"Risks named",ok:c.risks.some(l=>l.label.trim()),to:"led_risks"}];
+}
+function narrative(c,m){
+  const who=c.sponsor.trim()||"The sponsoring council", b=num(c.bottlers)||1;
+  let s=`<b>${esc(who)}</b> is asked to ${esc(c.ask.toLowerCase())}: ${m.upfront?`<b>${compact(m.upfront)}</b> up front`:"no up-front spend"}${m.runRate?` and <b>${compact(m.runRate)}</b> a year to run`:""}, across ${b} bottler${b===1?"":"s"}. `;
+  if(m.totalBen>0||m.totalOut>0){
+    const held=Math.round((1-CONF[c.confidence])*100);
+    s+=`Over five years it costs ${compact(m.totalOut)} and returns <b>${compact(m.totalBen)}</b>${held?` after a ${held}% haircut for ${c.confidence.toLowerCase()} confidence`:""} and a ${RAMPS[c.ramp].label.split(":")[0].toLowerCase()} adoption ramp. `;
+    s+=`That is a net of <b class="${m.net5>=0?"pos":"neg"}">${compact(m.net5)}</b>, or ${compact(m.npv)} in today's money at ${num(D.discount)}%, `;
+    s+=m.payback==null?"and it does not pay back within five years. ":`paying back in <b>${paybackText(m).toLowerCase()}</b>. `;
+    if(m.margin!=null)s+=`Benefits could fall ${Math.round(m.margin*100)}% before the case stops paying for itself. `;
+    else if(m.needed!=null)s+=`Benefits would need to be ${Math.round(m.needed*100)}% higher to break even. `;
+  } else s+="Costs and benefits aren't filled in yet. ";
+  if(m.totalUncounted>0)s+=`A further <b>${compact(m.totalUncounted)}</b> of freed time is <b>not counted</b>, because nobody has said where it goes. `;
+  const risks=c.risks.filter(r=>r.label.trim()), hi=risks.filter(r=>r.sev==="High");
+  s+=risks.length?`${risks.length} risk${risks.length===1?" is":"s are"} named${hi.length?`, the most serious being ${esc(hi[0].label.toLowerCase())}`:""}.`:"No risks are named yet.";
+  return s;
+}
+
+/* ---------- portfolio ---------- */
+function renderPort(){
+  const all=D.cases, tot=st=>all.filter(c=>st.includes(c.status)).reduce((a,c)=>a+model(c).net5,0);
+  const appr=tot(["Approved"]), pipe=tot(["Draft","In review"]);
+  const order=c=>STATUSES.indexOf(c.status);
+  const list=all.slice().sort((a,b)=>order(a)-order(b)||(a.title||"").localeCompare(b.title||""));
+  $("port").innerHTML=`
+    <div class="port-head"><span class="label">Portfolio · ${all.length} case${all.length===1?"":"s"}</span>
+      <button class="btn primary sm" type="button" id="newBtn" aria-expanded="false">New case</button></div>
+    <div id="newPop" hidden></div>
+    <div class="portsum">
+      <div><span class="label">Approved</span><b class="${appr>=0?"pos":"neg"}">${compact(appr)}</b></div>
+      <div><span class="label">In pipeline</span><b class="${pipe>=0?"pos":"neg"}">${compact(pipe)}</b></div>
+    </div>
+    <p class="quiet" style="font-size:12px;margin-top:-4px">Five-year net, counted benefits less all costs</p>
+    <ul class="caselist">${list.map(c=>{const m=model(c),ch=checks(c),done=ch.filter(x=>x.ok).length;
+      return `<li><button class="citem" type="button" data-case="${esc(c.id)}" aria-current="${c.id===D.active}">
+        <span class="t">${esc(c.title||"Untitled case")}</span>
+        <span class="m"><span class="pill ${c.status.replace(" ","-")}">${esc(c.status)}</span><span class="n ${m.net5>=0?"pos":"neg"}">${compact(m.net5)}</span></span>
+        <span class="m quiet"><span>${esc(c.area)}</span><span>${done<ch.length?`${done}/${ch.length} ready`:paybackText(m)}</span></span>
+      </button></li>`;}).join("")}</ul>
+    <div class="actions"><button class="btn ghost sm" type="button" id="openFile">Open a case file</button><input type="file" id="fileIn" accept=".json,application/json" hidden></div>`;
+  $("port").querySelectorAll("[data-case]").forEach(b=>b.onclick=()=>{D.active=b.dataset.case;D.confirmDel=false;saveCases();renderDesk();
+    if(window.innerWidth<980)$("sheet").scrollIntoView({block:"start"});});
+  $("newBtn").onclick=()=>{const p=$("newPop"),open=p.hidden;p.hidden=!open;$("newBtn").setAttribute("aria-expanded",String(open));
+    if(open){p.innerHTML=`<div class="newpop">${Object.entries(TEMPLATES).map(([k,t])=>`<button type="button" data-tpl="${k}">${esc(t.name)}<small>${esc(t.hint)}</small></button>`).join("")}
+      <button type="button" data-tpl="__ex">Restore the example cases<small>Adds the three worked examples back</small></button></div>`;
+      p.querySelectorAll("[data-tpl]").forEach(b=>b.onclick=()=>{
+        if(b.dataset.tpl==="__ex"){const have=new Set(D.cases.map(c=>c.id));
+          JSON.parse(JSON.stringify(EXAMPLE_CASES)).forEach(c=>{if(!have.has(c.id))D.cases.push(normCase(c));});saveCases();renderDesk();toast("Example cases restored");return;}
+        newCase(b.dataset.tpl);renderDesk();setTimeout(()=>{const t=$("cTitle");if(t)t.focus();},50);});}};
+  $("openFile").onclick=()=>$("fileIn").click();
+  $("fileIn").onchange=e=>{const f=e.target.files[0];if(!f)return;const rd=new FileReader();
+    rd.onload=()=>{try{const data=JSON.parse(rd.result);const arr=Array.isArray(data)?data:(data.cases||[data]);
+      let n=0;arr.forEach(c=>{if(c&&typeof c==="object"&&Array.isArray(c.costs)){c=normCase(c);c.example=false;
+        if(D.cases.find(x=>x.id===c.id))c.id=uid();D.cases.unshift(c);D.active=c.id;n++;}});
+      if(!n)throw 0;saveCases();renderDesk();toast(`Opened ${n} case${n===1?"":"s"}`);}
+      catch(err){toast("That file isn't a case file saved from this desk");}};
+    rd.readAsText(f);e.target.value="";};
+}
+
+/* ---------- sheet ---------- */
+const opts=(list,val)=>{const all=val&&!list.includes(val)?[val,...list]:list;return all.map(o=>`<option${o===val?" selected":""}>${esc(o)}</option>`).join("");};
+const LEDGERS={
+  costs:{q:"What does it cost?",sub:"Build it and run it. Enter positive amounts; 250k and 1.2m work.",col:"Category",list:COST_CATS,f:"cat",note:"Basis for the estimate"},
+  benefits:{q:"What do we get back?",sub:"Say how you know. A benefit with no basis is the first thing a council will question.",col:"Type",list:BEN_KINDS,f:"kind",note:"How we know"},
+  risks:{q:"What could go wrong?",sub:"Name the risk and what keeps it in check. Add an amount only if the mitigation costs money.",col:"Severity",list:SEVS,f:"sev",note:"Mitigation"}
+};
+function rowsHTML(c,kind){
+  const L=LEDGERS[kind];
+  if(!c[kind].length)return `<tr><td colspan="5" class="quiet" style="padding:14px 10px">Nothing here yet.</td></tr>`;
+  return c[kind].map(l=>{
+    const dest=kind==="benefits"&&l.kind==="Time released";
+    return `<tr data-line="${esc(l.id)}" data-kind="${kind}">
+      <td><input data-f="label" id="${kind}-${esc(l.id)}-label" value="${esc(l.label)}" placeholder="${kind==="risks"?"What could go wrong":"Describe the line"}" aria-label="Description">
+          <input class="basis" data-f="note" id="${kind}-${esc(l.id)}-note" value="${esc(l.note)}" placeholder="${esc(L.note)}" aria-label="${esc(L.note)}">
+          ${dest?`<select class="dest${l.dest?"":" bad"}" data-f="dest" id="${kind}-${esc(l.id)}-dest" aria-label="Where the freed time goes">${DESTS.map(([v,t])=>`<option value="${v}"${v===l.dest?" selected":""}>${esc(t)}</option>`).join("")}</select>
+          ${l.dest?"":`<span class="zero">Counted as $0 until this is decided</span>`}`:""}</td>
+      <td><select data-f="${L.f}" id="${kind}-${esc(l.id)}-${L.f}" aria-label="${L.col}">${opts(L.list,l[L.f])}</select></td>
+      <td class="num"><input class="money" data-f="once" id="${kind}-${esc(l.id)}-once" inputmode="decimal" value="${num(l.once)?money(l.once):""}" placeholder="–" aria-label="One-time amount"></td>
+      <td class="num"><input class="money" data-f="annual" id="${kind}-${esc(l.id)}-annual" inputmode="decimal" value="${num(l.annual)?money(l.annual):""}" placeholder="–" aria-label="Amount each year"></td>
+      <td class="x"><button class="rm" type="button" data-rm="${esc(l.id)}" aria-label="Remove line" title="Remove line">×</button></td></tr>`;}).join("");
+}
+function ledgerHTML(c,kind,extra){
+  const L=LEDGERS[kind];
+  return `<section class="block" id="led_${kind}">
+    <div class="block-head"><h3>${L.q}</h3><p>${L.sub}</p></div>${extra||""}
+    <div class="tablewrap led"><table>
+      <thead><tr><th>Item and ${L.note.toLowerCase()}</th><th style="width:190px">${L.col}</th><th class="num" style="width:130px">One-time</th><th class="num" style="width:130px">Each year</th><th></th></tr></thead>
+      <tbody>${rowsHTML(c,kind)}</tbody>
+      <tfoot><tr><td colspan="2"><button class="btn sm" type="button" data-add="${kind}">Add a line</button></td><td class="num" id="tot1_${kind}"></td><td class="num" id="tot2_${kind}"></td><td></td></tr></tfoot>
+    </table></div></section>`;
+}
+function headHTML(c,brief){
+  return `<div class="titlerow">
+    ${brief?`<h2 class="brieft">${esc(c.title||"Untitled case")}</h2>`:`<input class="titleinput" id="cTitle" data-c="title" value="${esc(c.title)}" placeholder="Name this initiative" aria-label="Case title">`}
+    <span class="pill ${c.status.replace(" ","-")}">${esc(c.status)}</span>${c.example?`<span class="pill ex">Example</span>`:""}
+    <span class="seg" role="group" aria-label="View"><button type="button" data-view="edit" aria-pressed="${!brief}">Fill in</button><button type="button" data-view="brief" aria-pressed="${brief}">Brief</button></span>
+  </div>`;
+}
+function kpiHTML(m){
+  return `<div class="kpi lead"><span class="label">5-year net</span><b class="${m.net5>=0?"pos":"neg"}">${compact(m.net5)}</b><small>counted benefits − all costs</small></div>
+    <div class="kpi"><span class="label">NPV at ${esc(num(D.discount))}%</span><b class="${m.npv>=0?"pos":"neg"}">${compact(m.npv)}</b><small>in today's money</small></div>
+    <div class="kpi"><span class="label">Payback</span><b>${paybackText(m)}</b><small>when the running total turns positive</small></div>
+    <div class="kpi"><span class="label">Benefit ÷ cost</span><b>${m.bcr==null?"–":m.bcr.toFixed(2)+"×"}</b><small>both in today's money</small></div>
+    <div class="kpi"><span class="label">Safety margin</span><b class="${m.margin!=null?"pos":"neg"}">${m.margin!=null?Math.round(m.margin*100)+"%":m.needed!=null?"−"+Math.round(m.needed*100)+"%":"–"}</b><small>${m.margin!=null?"benefits can fall this much and still break even":"benefits short of break-even"}</small></div>
+    <div class="kpi"><span class="label">Per bottler</span><b class="${m.perBottler>=0?"pos":"neg"}">${compact(m.perBottler)}</b><small>5-year net ÷ bottlers</small></div>`;
+}
+function renderDesk(){
+  if(!D.cases.length){$("port").innerHTML="";renderPort();$("sheet").innerHTML=`<div class="empty">No cases yet. Use New case to start one.</div>`;return;}
+  renderPort();renderSheet();
+}
+function renderSheet(){
+  const c=activeCase(),host=$("sheet");
+  if(!c){host.innerHTML=`<div class="empty">Pick a case from the portfolio, or start a new one.</div>`;return;}
+  host.innerHTML=D.view==="brief"?briefHTML(c):editHTML(c);
+  wireSheet(c);renderDerived();
+}
+function editHTML(c){
+  return headHTML(c,false)+`
+  <div class="ready" id="ready"></div>
+  <section class="block">
+    <div class="block-head"><h3>What is it?</h3><p>One paragraph a council member can read cold.</p></div>
+    <div class="fields">
+      <div class="field"><label for="cArea">Business area</label><select id="cArea" data-c="area">${opts(AREAS,c.area)}</select></div>
+      <div class="field"><label for="cPlat">Main platform</label><select id="cPlat" data-c="platform">${opts(PLATFORMS,c.platform)}</select></div>
+      <div class="field"><label for="cBott">Bottlers in scope</label><input id="cBott" data-c="bottlers" inputmode="numeric" value="${esc(c.bottlers)}"></div>
+      <div class="field"><label for="cOwner">Case owner</label><input id="cOwner" data-c="owner" value="${esc(c.owner)}" placeholder="Team or person accountable"></div>
+      <div class="field"><label for="cSponsor">Sponsoring council</label><input id="cSponsor" data-c="sponsor" value="${esc(c.sponsor)}" placeholder="e.g. Finance Council"></div>
+      <div class="field"><label for="cAsk">Decision requested</label><select id="cAsk" data-c="ask">${opts(ASKS,c.ask)}</select></div>
+      <div class="field wide"><label for="cSummary">Proposal</label><textarea id="cSummary" data-c="summary" placeholder="What changes, for whom, how it reaches bottlers, and what happens if we do nothing.">${esc(c.summary)}</textarea></div>
+    </div>
+  </section>
+  <section class="block">
+    <div class="block-head"><h3>The numbers</h3><p>Worked out from the lines below. Change an assumption to see how much the answer depends on it.</p></div>
+    <div class="kpis" id="kpis"></div>
+    <div class="assume">
+      <div class="field"><label for="cStart">First year</label><input id="cStart" data-c="startYear" inputmode="numeric" value="${esc(c.startYear)}"></div>
+      <div class="field"><label for="cRecur">Running costs and benefits start</label><select id="cRecur" data-c="recurStart"><option value="1"${c.recurStart===1?" selected":""}>Year 1</option><option value="2"${c.recurStart===2?" selected":""}>Year 2 (year 1 is the build)</option></select></div>
+      <div class="field"><label for="cRamp">Adoption ramp</label><select id="cRamp" data-c="ramp">${Object.entries(RAMPS).map(([k,r])=>`<option value="${k}"${c.ramp===k?" selected":""}>${esc(r.label)}</option>`).join("")}</select></div>
+      <div class="field"><label for="cConf">Benefit confidence</label><select id="cConf" data-c="confidence">${Object.keys(CONF).map(k=>`<option${c.confidence===k?" selected":""}>${k}</option>`).join("")}</select></div>
+      <p id="confNote"></p>
+    </div>
+    <div class="chartbox"><div class="ch"><h3>Money out, money in, and the running total</h3>
+      <div class="legend"><span><i class="sw" style="background:var(--benefit)"></i>Counted benefits</span><span><i class="sw" style="background:var(--cost)"></i>Costs and mitigation</span><span><i class="sw" style="height:2px;background:var(--ink)"></i>Running total</span></div></div>
+      <div class="plot" id="plot"></div></div>
+    <div class="tablewrap yt" id="yearTable"></div>
+  </section>
+  ${ledgerHTML(c,"costs")}
+  ${ledgerHTML(c,"benefits",`<div class="rule"><b>The rule</b><span>Freed time is counted only once someone says where it goes: named work, a hire or backfill not needed, or overtime and contractors stopped. Until then it's shown but counted at $0. Hours that are simply absorbed never show up in anyone's budget.</span></div>
+    <p class="quiet">${Object.entries(BEN_HINT).map(([k,v])=>`<b>${k}</b>: ${v}`).join(" · ")}</p>`)}
+  ${ledgerHTML(c,"risks")}
+  <section class="block">
+    <div class="block-head"><h3>Where does it stand?</h3><p>What was decided, by whom, and on what condition.</p></div>
+    <div class="fields">
+      <div class="field"><label for="cStatus">Status</label><select id="cStatus" data-c="status">${opts(STATUSES,c.status)}</select></div>
+      <div class="field"><label for="cBy">Decided by</label><input id="cBy" data-d="by" value="${esc(c.decision.by)}" placeholder="Council or forum"></div>
+      <div class="field"><label for="cDate">Decision date</label><input id="cDate" data-d="date" type="date" value="${esc(c.decision.date)}"></div>
+      <div class="field wide"><label for="cNote">Conditions and follow-up</label><textarea id="cNote" data-d="note" placeholder="What the council asked for, before or after approval.">${esc(c.decision.note)}</textarea></div>
+    </div>
+  </section>
+  ${exportBar()}
+  ${howHTML()}`;
+}
+function exportBar(){
+  return `<div class="actions" id="exportBar">
+    <button class="btn primary" type="button" data-act="pdf">Download PDF brief</button>
+    <button class="btn" type="button" data-act="copy">Copy brief as text</button>
+    <button class="btn" type="button" data-act="csv">Download CSV</button>
+    <button class="btn" type="button" data-act="json">Save case file</button>
+    <button class="btn" type="button" data-act="dup">Duplicate</button>
+    <span class="grow"></span>
+    <button class="btn ghost" type="button" data-act="del">Delete case</button>
+  </div><div id="delConfirm"></div>`;
+}
+function howHTML(){
+  return `<details class="how"><summary>How the numbers are worked out</summary><div class="body">
+    <p><b>Timing.</b> One-time amounts land in year 1. Running amounts start in the year you pick. Benefits then follow the adoption ramp, because nobody gets full value the day a tool goes live.</p>
+    <p><b>Confidence haircut.</b> Benefits are multiplied by <code>High 1.0</code>, <code>Medium 0.75</code> or <code>Low 0.5</code>. Think of it as a rough expected value: a benefit you're 50/50 on is worth about half of itself today. Costs are never haircut, because they're the part you're sure to pay.</p>
+    <p><b>Freed time.</b> Time-released lines without a destination are shown in the year table and counted as $0.</p>
+    <p><b>NPV</b> discounts each year's net at the desk rate, with each year's cash treated as arriving at the end of that year: <code>Σ net(y) ÷ (1+r)^y</code>. That's the same convention Excel's NPV() uses. <b>Payback</b> is when the running total first turns positive, interpolated within the year.</p>
+    <p><b>Safety margin</b> is NPV ÷ present value of benefits: how far the counted benefits could fall before the case stops paying for itself. It's often more useful to a council than NPV, because it answers “what if they're wrong?”</p>
+    <p>One discount rate applies to every case on the desk, so cases can be compared directly.</p>
+    <div class="field" style="max-width:190px"><label for="deskRate">Desk discount rate (%)</label><input id="deskRate" inputmode="decimal" value="${esc(D.discount)}"></div>
+  </div></details>`;
+}
+function briefHTML(c){
+  const m=model(c),amt=l=>num(l.once)||num(l.annual),w=l=>num(l.once)+num(l.annual)*4;
+  const val=l=>[num(l.once)?money(l.once)+" once":"",num(l.annual)?money(l.annual)+"/yr":""].filter(Boolean).join(" + ");
+  const li=(l,extra)=>`<li><span>${esc(l.label||"Unnamed line")}</span><span class="v">${val(l)}</span>${extra||""}${l.note.trim()?`<span class="b">${esc(l.note)}</span>`:""}</li>`;
+  const bens=c.benefits.filter(amt).sort((a,b)=>w(b)-w(a)), costs=c.costs.filter(amt).sort((a,b)=>w(b)-w(a));
+  const risks=c.risks.filter(r=>r.label.trim()).sort((a,b)=>SEVS.indexOf(a.sev)-SEVS.indexOf(b.sev));
+  return headHTML(c,true)+`
+  <p class="quiet">${esc(c.area)} · ${esc(c.platform)} · ${esc(c.bottlers)} bottlers · Owner: ${esc(c.owner||"not named")} · Sponsor: ${esc(c.sponsor||"not named")}</p>
+  <p class="narr">${narrative(c,m)}</p>
+  <div class="kpis" id="kpis"></div>
+  <div class="chartbox"><div class="ch"><h3>Money out, money in, and the running total</h3>
+    <div class="legend"><span><i class="sw" style="background:var(--benefit)"></i>Counted benefits</span><span><i class="sw" style="background:var(--cost)"></i>Costs and mitigation</span><span><i class="sw" style="height:2px;background:var(--ink)"></i>Running total</span></div></div>
+    <div class="plot" id="plot"></div></div>
+  ${c.summary.trim()?`<div class="panel"><h3>The proposal</h3><p>${esc(c.summary)}</p></div>`:""}
+  <div class="two">
+    <div class="panel"><h3>What we get back</h3>${bens.length?`<ul class="blist">${bens.map(l=>li(l,counts(l)?"":`<span class="b" style="color:var(--stop)">Not counted: nobody has said where this time goes</span>`)).join("")}</ul>`:`<p class="quiet">No benefits entered.</p>`}</div>
+    <div class="panel"><h3>What it costs</h3>${costs.length?`<ul class="blist">${costs.map(l=>li(l)).join("")}</ul>`:`<p class="quiet">No costs entered.</p>`}</div>
+  </div>
+  <div class="panel"><h3>What could go wrong</h3>${risks.length?`<ul class="drags">${risks.map(r=>`<li><span class="sev ${r.sev}">${r.sev}</span><div><b>${esc(r.label)}</b><span class="d">${esc(r.note||"No mitigation recorded.")}${amt(r)?` · ${val(r)}`:""}</span></div></li>`).join("")}</ul>`:`<p class="quiet">No risks named.</p>`}</div>
+  <div class="panel"><h3>Decision</h3>
+    <p><span class="pill ${c.status.replace(" ","-")}">${esc(c.status)}</span>${c.decision.by?` · ${esc(c.decision.by)}`:""}${c.decision.date?` · ${esc(c.decision.date)}`:""}</p>
+    ${c.decision.note?`<p>${esc(c.decision.note)}</p>`:`<p class="quiet">No conditions recorded.</p>`}
+    <p class="quiet">Assumptions: ${esc(c.confidence)} confidence (×${CONF[c.confidence]}), ${esc(RAMPS[c.ramp].label.toLowerCase())} ramp, running amounts from year ${c.recurStart}, ${esc(num(D.discount))}% discount rate, ${c.startYear}–${num(c.startYear)+4}.</p>
+  </div>
+  ${exportBar()}`;
+}
+
+function renderDerived(){
+  const c=activeCase();if(!c)return;const m=model(c);
+  const k=$("kpis");if(k)k.innerHTML=kpiHTML(m);
+  const cn=$("confNote");if(cn)cn.textContent=`Benefits are counted at ${Math.round(CONF[c.confidence]*100)}% for ${c.confidence.toLowerCase()} confidence. Costs are counted in full.`;
+  drawChart(m);
+  const yt=$("yearTable");
+  if(yt){const row=(lab,a,cls,f)=>`<tr class="${cls||""}"><td>${lab}</td>${a.map(v=>`<td class="num">${(f||compact)(v)}</td>`).join("")}<td class="num">${(f||compact)(a.reduce((x,y)=>x+y,0))}</td></tr>`;
+    yt.innerHTML=`<table><thead><tr><th>Year</th>${m.years.map(y=>`<th class="num">${y}</th>`).join("")}<th class="num">5-yr</th></tr></thead><tbody>
+      ${row("Benefits claimed",m.claimed)}
+      ${m.totalUncounted?row("− Freed time with nowhere to go",m.uncounted.map(v=>-v),"neg"):""}
+      ${row("− Ramp and confidence",m.adj)}
+      ${row("= Benefits counted",m.counted,"sum")}
+      ${row("Costs",m.cost.map(v=>-v))}
+      ${row("Risk mitigation",m.mit.map(v=>-v))}
+      ${row("Net",m.net,"sum")}
+      <tr><td>Running total</td>${m.cum.map(v=>`<td class="num ${v>=0?"pos":"neg"}">${compact(v)}</td>`).join("")}<td></td></tr>
+    </tbody></table>`;}
+  const r=$("ready");
+  if(r){const ch=checks(c),done=ch.filter(x=>x.ok).length;
+    r.innerHTML=`<div class="bar2">${ch.map(x=>`<i class="${x.ok?"ok":""}" title="${esc(x.k)}"></i>`).join("")}</div>
+      <div class="todo">${done===ch.length?`<span class="pos"><b>Ready for a council.</b> Every section is answered.</span>`
+        :`<span><b>${done} of ${ch.length}</b> ready. Still to do:</span>${ch.filter(x=>!x.ok).map(x=>`<button type="button" data-jump="${x.to}">${esc(x.k)}</button>`).join("")}`}</div>`;
+    r.querySelectorAll("[data-jump]").forEach(b=>b.onclick=()=>{const el=$(b.dataset.jump);if(el){el.scrollIntoView({behavior:"smooth",block:"center"});if(el.focus&&el.tagName!=="SECTION")el.focus({preventScroll:true});}});}
+  ["costs","benefits","risks"].forEach(kd=>{const a=$("tot1_"+kd),b=$("tot2_"+kd);
+    if(a)a.textContent=money(c[kd].reduce((s,l)=>s+num(l.once),0));
+    if(b)b.textContent=money(c[kd].reduce((s,l)=>s+num(l.annual),0))+"/yr";});
+}
+
+/* ---------- chart ---------- */
+function niceMax(v){if(v<=0)return 1;const p=Math.pow(10,Math.floor(Math.log10(v))),f=v/p;return (f<=1?1:f<=2?2:f<=2.5?2.5:f<=5?5:10)*p;}
+function drawChart(m){
+  const host=$("plot");if(!host)return;
+  const W=760,H=300,L=64,R=18,T=24,B=36,pw=W-L-R,ph=H-T-B;
+  const hi=Math.max(...m.counted,...m.cum,0), lo=Math.min(...m.out.map(v=>-v),...m.cum,0);
+  const top=niceMax(hi), bot=-niceMax(-lo), span=top-bot||1;
+  const y=v=>T+(top-v)/span*ph, step=pw/5, bw=Math.min(34,step*0.3);
+  const ticks=[];const st=niceMax(span/5);for(let v=Math.ceil(bot/st)*st;v<=top+1e-6;v+=st)ticks.push(v);
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Five-year chart of counted benefits, costs and the running total">`;
+  ticks.forEach(v=>{s+=`<line class="${Math.abs(v)<1e-6?"zl":"gl"}" x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}"/><text class="ax" x="${L-8}" y="${y(v)+4}" text-anchor="end">${compact(v)}</text>`;});
+  m.years.forEach((yr,i)=>{
+    const cx=L+step*i+step/2;
+    const b=m.counted[i],o=m.out[i];
+    if(b>0)s+=`<rect class="bb" x="${cx-bw-2}" y="${y(b)}" width="${bw}" height="${Math.max(0.5,y(0)-y(b))}" rx="2"/>`;
+    if(o>0)s+=`<rect class="bc" x="${cx+2}" y="${y(0)}" width="${bw}" height="${Math.max(0.5,y(-o)-y(0))}" rx="2"/>`;
+    s+=`<text class="yr" x="${cx}" y="${H-12}" text-anchor="middle">${yr}</text>`;
+  });
+  const pts=m.cum.map((v,i)=>[L+step*i+step/2,y(v)]);
+  s+=`<polyline class="cl" points="${pts.map(p=>p.join(",")).join(" ")}"/>`;
+  pts.forEach((p,i)=>{s+=`<circle class="cd" cx="${p[0]}" cy="${p[1]}" r="${i===4?5:3.5}"/>`;});
+  const lp=pts[4];s+=`<text class="ct" x="${lp[0]}" y="${lp[1]+(m.cum[4]>=0?-11:19)}" text-anchor="middle">${compact(m.cum[4])}</text>`;
+  m.years.forEach((yr,i)=>{s+=`<rect class="hit" data-i="${i}" x="${L+step*i}" y="${T}" width="${step}" height="${ph}"/>`;});
+  s+=`</svg><div class="tip" id="tip"></div>`;
+  host.innerHTML=s;
+  const tip=$("tip");
+  host.querySelectorAll(".hit").forEach(h=>{
+    const show=()=>{const i=+h.dataset.i,rect=host.getBoundingClientRect(),sc=rect.width/W;
+      tip.innerHTML=`<span class="label">${m.years[i]}</span><dl><dt>Benefits counted</dt><dd>${money(m.counted[i])}</dd><dt>Costs + mitigation</dt><dd>${money(-m.out[i])}</dd><dt>Net</dt><dd>${money(m.net[i])}</dd><dt>Running total</dt><dd>${money(m.cum[i])}</dd></dl>`;
+      tip.style.left=clamp((L+step*i+step/2)*sc,95,rect.width-95)+"px";tip.style.top=(T*sc)+"px";tip.classList.add("on");};
+    h.addEventListener("mouseenter",show);h.addEventListener("click",show);
+    h.addEventListener("mouseleave",()=>tip.classList.remove("on"));
+  });
+}
+
+/* ---------- wiring ---------- */
+function touch(c){c.example=false;c.updated=new Date().toISOString();saveCases();}
+let portT;const portSoon=()=>{clearTimeout(portT);portT=setTimeout(renderPort,250);};
+function wireSheet(c){
+  const host=$("sheet");
+  host.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>{D.view=b.dataset.view;renderSheet();$("v-cases").scrollIntoView({block:"start"});});
+  host.oninput=e=>{
+    const el=e.target;
+    if(el.dataset.c){let v=el.value;if(["recurStart"].includes(el.dataset.c))v=+v;c[el.dataset.c]=v;}
+    else if(el.dataset.d){c.decision[el.dataset.d]=el.value;}
+    else if(el.id==="deskRate"){D.discount=num(el.value);store.set("aitp-disc",D.discount);}
+    else if(el.dataset.f){const tr=el.closest("tr"),line=c[tr.dataset.kind].find(l=>l.id===tr.dataset.line);if(!line)return;
+      line[el.dataset.f]=(el.dataset.f==="once"||el.dataset.f==="annual")?num(el.value):el.value;}
+    else return;
+    touch(c);renderDerived();portSoon();
+  };
+  host.onchange=e=>{
+    const el=e.target;
+    if(el.dataset.f==="kind"||el.dataset.f==="dest"||el.dataset.c==="status"){renderSheetKeepScroll();return;}
+    if(el.classList.contains("money")){const v=num(el.value);el.value=v?money(v):"";}
+  };
+  host.onclick=e=>{
+    const add=e.target.closest("[data-add]"),rm=e.target.closest("[data-rm]"),act=e.target.closest("[data-act]");
+    if(add){const k=add.dataset.add;
+      c[k].push(k==="costs"?CL("",COST_CATS[0],0,0):k==="benefits"?BL("","Time released",0,0,""):RL("","Medium",""));
+      touch(c);renderSheetKeepScroll();const rows=$("led_"+k).querySelectorAll("tbody tr");const inp=rows[rows.length-1].querySelector("input");if(inp)inp.focus();}
+    if(rm){const tr=rm.closest("tr");c[tr.dataset.kind]=c[tr.dataset.kind].filter(l=>l.id!==rm.dataset.rm);touch(c);renderSheetKeepScroll();}
+    if(act)doAction(act.dataset.act,c);
+  };
+}
+function renderSheetKeepScroll(){const y=window.scrollY;const f=document.activeElement&&document.activeElement.id;renderSheet();renderPort();window.scrollTo(0,y);if(f&&$(f))$(f).focus({preventScroll:true});}
+
+function doAction(a,c){
+  const m=model(c),name=slug(c.title);
+  if(a==="copy")copyText(briefText(c,m),()=>toast("Brief copied as text"));
+  if(a==="csv")saveFile(name+".csv",csvText(c,m));
+  if(a==="json")saveFile(name+".json",JSON.stringify({format:"ai-tool-portal-case",version:1,cases:[c]},null,2));
+  if(a==="pdf")exportPDF(c,m);
+  if(a==="dup"){const d=normCase(JSON.parse(JSON.stringify(c)));d.id=uid();d.example=false;d.title=(c.title||"Untitled case")+" (copy)";d.status="Draft";
+    [d.costs,d.benefits,d.risks].forEach(a=>a.forEach(l=>l.id=uid()));D.cases.unshift(d);D.active=d.id;D.view="edit";saveCases();renderDesk();toast("Duplicated");}
+  if(a==="del"){$("delConfirm").innerHTML=`<div class="confirm"><span>Delete “${esc(c.title||"Untitled case")}” from this browser? This can't be undone.</span><button class="btn sm" type="button" id="delYes">Delete</button><button class="btn ghost sm" type="button" id="delNo">Keep it</button></div>`;
+    $("delYes").onclick=()=>{D.cases=D.cases.filter(x=>x.id!==c.id);D.active=D.cases[0]&&D.cases[0].id;saveCases();renderDesk();toast("Case deleted");};
+    $("delNo").onclick=()=>{$("delConfirm").innerHTML="";};}
+}
+function briefText(c,m){
+  const val=l=>[num(l.once)?money(l.once)+" once":"",num(l.annual)?money(l.annual)+"/yr":""].filter(Boolean).join(" + ");
+  const amt=l=>num(l.once)||num(l.annual);
+  return [`BUSINESS CASE — ${c.title||"Untitled case"}`,`${c.area} · ${c.platform} · ${c.bottlers} bottlers · Status: ${c.status}`,`Owner: ${c.owner||"not named"} · Sponsor: ${c.sponsor||"not named"}`,"",
+    plain(narrative(c,m)),"",
+    `5-year net ${compact(m.net5)} · NPV ${compact(m.npv)} at ${num(D.discount)}% · Payback ${paybackText(m)} · Benefit/cost ${m.bcr==null?"–":m.bcr.toFixed(2)+"x"} · ${m.margin!=null?"Safety margin "+Math.round(m.margin*100)+"%":"Below break-even"} · Per bottler ${compact(m.perBottler)}`,"",
+    c.summary?`PROPOSAL\n${c.summary}\n`:"",
+    "BENEFITS",...c.benefits.filter(amt).map(l=>`- ${l.label||"Unnamed"} [${l.kind}] ${val(l)}${counts(l)?"":" — NOT COUNTED: freed time has no destination"}${l.note?" — "+l.note:""}`),"",
+    "COSTS",...c.costs.filter(amt).map(l=>`- ${l.label||"Unnamed"} [${l.cat}] ${val(l)}${l.note?" — "+l.note:""}`),"",
+    "RISKS",...c.risks.filter(r=>r.label.trim()).map(r=>`- [${r.sev}] ${r.label}${r.note?" — "+r.note:""}${amt(r)?" ("+val(r)+")":""}`),"",
+    `DECISION: ${c.status}${c.decision.by?" · "+c.decision.by:""}${c.decision.date?" · "+c.decision.date:""}${c.decision.note?"\n"+c.decision.note:""}`,"",
+    `Assumptions: ${c.confidence} confidence (x${CONF[c.confidence]}), ${RAMPS[c.ramp].label} ramp, running amounts from year ${c.recurStart}, ${num(D.discount)}% discount rate.`].join("\n");
+}
+function csvText(c,m){
+  const q=v=>{const s=String(v==null?"":v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;};
+  const rows=[["Business case",c.title],["Status",c.status],["Area",c.area],["Platform",c.platform],["Bottlers",c.bottlers],["Owner",c.owner],["Sponsor",c.sponsor],
+    ["Confidence",c.confidence],["Ramp",RAMPS[c.ramp].label],["Running amounts start","Year "+c.recurStart],["Discount rate %",num(D.discount)],[],
+    ["Year",...m.years,"5-yr"]];
+  const add=(lab,a)=>rows.push([lab,...a.map(Math.round),Math.round(a.reduce((x,y)=>x+y,0))]);
+  add("Benefits claimed",m.claimed);add("Not counted (no destination)",m.uncounted.map(v=>-v));add("Ramp and confidence",m.adj);
+  add("Benefits counted",m.counted);add("Costs",m.cost.map(v=>-v));add("Risk mitigation",m.mit.map(v=>-v));add("Net",m.net);
+  rows.push(["Running total",...m.cum.map(Math.round)]);
+  rows.push([],["NPV",Math.round(m.npv)],["Payback",paybackText(m)],["Benefit/cost (PV)",m.bcr==null?"":m.bcr.toFixed(2)],["Safety margin",m.margin==null?"":Math.round(m.margin*100)+"%"],["Per bottler",Math.round(m.perBottler)],[]);
+  rows.push(["Costs"],["Item","Category","Basis","One-time","Each year"]);c.costs.forEach(l=>rows.push([l.label,l.cat,l.note,num(l.once),num(l.annual)]));
+  rows.push([],["Benefits"],["Item","Type","How we know","Where freed time goes","Counted","One-time","Each year"]);
+  c.benefits.forEach(l=>rows.push([l.label,l.kind,l.note,l.kind==="Time released"?(DESTS.find(d=>d[0]===l.dest)||["",""])[1]:"",counts(l)?"Yes":"No",num(l.once),num(l.annual)]));
+  rows.push([],["Risks"],["Risk","Severity","Mitigation","One-time","Each year"]);c.risks.forEach(l=>rows.push([l.label,l.sev,l.note,num(l.once),num(l.annual)]));
+  return rows.map(r=>r.map(q).join(",")).join("\n");
+}
+
+/* ---------- PDF brief (jsPDF, loaded on first use) ---------- */
+const JSPDF_SRC="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";
+function loadJsPDF(){
+  if(window.jspdf&&window.jspdf.jsPDF)return Promise.resolve(window.jspdf.jsPDF);
+  return new Promise((res,rej)=>{const s=document.createElement("script");s.src=JSPDF_SRC;
+    s.onload=()=>window.jspdf?res(window.jspdf.jsPDF):rej();s.onerror=rej;document.head.appendChild(s);});
+}
+async function exportPDF(c,m){
+  let J;try{J=await loadJsPDF();}catch(e){toast("Couldn't load the PDF library. Try Copy brief as text instead.");return;}
+  const doc=new J({unit:"mm",format:"letter"}),W=215.9,Hh=279.4,M=18,CW=W-2*M;let y=M,page=1;
+  const INK=[19,32,27],MUT=[90,104,99],LN=[212,219,216],BEN=[35,70,200],CST=[194,65,12],GO=[30,122,76],BAD=[180,35,24];
+  const col=a=>doc.setTextColor(a[0],a[1],a[2]);
+  const foot=()=>{doc.setFont("helvetica","normal");doc.setFontSize(7.5);col(MUT);doc.text(`${c.title||"Untitled case"} · generated ${new Date().toLocaleDateString("en-US")} · page ${page}`,M,Hh-10);};
+  const need=h=>{if(y+h>Hh-18){foot();doc.addPage();page++;y=M;}};
+  const para=(t,size,color,style,gap)=>{doc.setFont("helvetica",style||"normal");doc.setFontSize(size);col(color||INK);
+    doc.splitTextToSize(t,CW).forEach(ln=>{need(size*0.45);doc.text(ln,M,y);y+=size*0.42;});y+=gap==null?2:gap;};
+  const head=t=>{need(14);y+=2;doc.setDrawColor(LN[0],LN[1],LN[2]);doc.line(M,y,W-M,y);y+=6;para(t,11.5,INK,"bold",1.5);};
+  para("BUSINESS CASE · "+c.status.toUpperCase(),8,MUT,"bold",2);
+  para(c.title||"Untitled case",19,INK,"bold",2);
+  para(`${c.area} · ${c.platform} · ${c.bottlers} bottlers · Owner: ${c.owner||"not named"} · Sponsor: ${c.sponsor||"not named"}`,9,MUT,"normal",4);
+  para(plain(narrative(c,m)),10.5,INK,"normal",4);
+  /* KPI strip */
+  const k=[["5-year net",compact(m.net5),m.net5>=0?GO:BAD],["NPV at "+num(D.discount)+"%",compact(m.npv),m.npv>=0?GO:BAD],["Payback",paybackText(m),INK],
+    ["Benefit ÷ cost",m.bcr==null?"–":m.bcr.toFixed(2)+"x",INK],["Safety margin",m.margin!=null?Math.round(m.margin*100)+"%":"below break-even",m.margin!=null?GO:BAD],["Per bottler",compact(m.perBottler),m.perBottler>=0?GO:BAD]];
+  need(18);const kw=CW/k.length;
+  k.forEach(([l,v,cc],i)=>{const x=M+i*kw;doc.setFont("helvetica","normal");doc.setFontSize(7);col(MUT);doc.text(l.toUpperCase(),x,y);
+    doc.setFont("helvetica","bold");doc.setFontSize(12);col(cc);doc.text(v.replace("−","-"),x,y+6);});
+  y+=13;
+  /* chart */
+  head("Money out, money in, and the running total");
+  need(62);const ch=50,cx0=M+18,cw=CW-20;
+  const hi=Math.max(...m.counted,...m.cum,0),lo=Math.min(...m.out.map(v=>-v),...m.cum,0),top=niceMax(hi),bot=-niceMax(-lo),span=top-bot||1;
+  const yy=v=>y+(top-v)/span*ch,step=cw/5,bw=Math.min(9,step*.28);
+  doc.setDrawColor(LN[0],LN[1],LN[2]);doc.setFontSize(7);doc.setFont("helvetica","normal");
+  [top,0,bot].forEach(v=>{doc.line(cx0,yy(v),cx0+cw,yy(v));col(MUT);doc.text(compact(v).replace("−","-"),cx0-2,yy(v)+1,{align:"right"});});
+  m.years.forEach((yr,i)=>{const cx=cx0+step*i+step/2;
+    if(m.counted[i]>0){doc.setFillColor(BEN[0],BEN[1],BEN[2]);doc.rect(cx-bw-0.6,yy(m.counted[i]),bw,yy(0)-yy(m.counted[i]),"F");}
+    if(m.out[i]>0){doc.setFillColor(CST[0],CST[1],CST[2]);doc.rect(cx+0.6,yy(0),bw,yy(-m.out[i])-yy(0),"F");}
+    col(INK);doc.text(String(yr),cx,y+ch+5,{align:"center"});});
+  doc.setDrawColor(INK[0],INK[1],INK[2]);doc.setLineWidth(0.6);
+  for(let i=1;i<5;i++)doc.line(cx0+step*(i-1)+step/2,yy(m.cum[i-1]),cx0+step*i+step/2,yy(m.cum[i]));
+  doc.setFillColor(INK[0],INK[1],INK[2]);m.cum.forEach((v,i)=>doc.circle(cx0+step*i+step/2,yy(v),0.9,"F"));
+  doc.setLineWidth(0.2);y+=ch+10;
+  doc.setFontSize(7.5);col(MUT);doc.text("Blue: counted benefits · Orange: costs and mitigation · Line: running total",M,y);y+=6;
+  /* year table */
+  head("Five years");
+  const tr=(lab,a,bold)=>{need(5.5);doc.setFont("helvetica",bold?"bold":"normal");doc.setFontSize(8.5);col(INK);doc.text(lab,M,y);
+    const cw2=(CW-60)/6;[...a,a.reduce((x,z)=>x+z,0)].forEach((v,i)=>doc.text(typeof v==="number"?compact(v).replace("−","-"):String(v),M+60+cw2*(i+1),y,{align:"right"}));y+=5;};
+  doc.setFont("helvetica","bold");doc.setFontSize(8);col(MUT);const cw2=(CW-60)/6;
+  [...m.years,"5-yr"].forEach((yr,i)=>doc.text(String(yr),M+60+cw2*(i+1),y,{align:"right"}));y+=5;
+  tr("Benefits claimed",m.claimed);if(m.totalUncounted)tr("Freed time with nowhere to go",m.uncounted.map(v=>-v));
+  tr("Ramp and confidence",m.adj);tr("Benefits counted",m.counted,true);tr("Costs",m.cost.map(v=>-v));tr("Risk mitigation",m.mit.map(v=>-v));tr("Net",m.net,true);
+  /* lines */
+  const amt=l=>num(l.once)||num(l.annual),val=l=>[num(l.once)?money(l.once)+" once":"",num(l.annual)?money(l.annual)+"/yr":""].filter(Boolean).join(" + ");
+  const list=(items,side)=>items.forEach(l=>{need(10);doc.setFont("helvetica","bold");doc.setFontSize(9.5);col(INK);
+    const t=doc.splitTextToSize(l.label||"Unnamed line",CW-50);doc.text(t,M,y);doc.setFont("helvetica","normal");doc.text(side(l).replace("−","-"),W-M,y,{align:"right"});y+=t.length*4.2;
+    const sub=[l.note,l.kind==="Time released"&&!l.dest?"NOT COUNTED: nobody has said where this time goes.":""].filter(Boolean).join(" · ");
+    if(sub)para(sub,8.5,l.kind==="Time released"&&!l.dest?BAD:MUT,"normal",1.5);else y+=1.5;});
+  head("What we get back");list(c.benefits.filter(amt),val);
+  head("What it costs");list(c.costs.filter(amt),val);
+  head("What could go wrong");list(c.risks.filter(r=>r.label.trim()),r=>r.sev+(amt(r)?" · "+val(r):""));
+  if(c.summary.trim()){head("The proposal");para(c.summary,10,INK);}
+  head("Decision");
+  para(`${c.status}${c.decision.by?" · "+c.decision.by:""}${c.decision.date?" · "+c.decision.date:""}`,10,INK,"bold",1);
+  if(c.decision.note)para(c.decision.note,10,INK);
+  para(`Assumptions: ${c.confidence} confidence (benefits ×${CONF[c.confidence]}); ${RAMPS[c.ramp].label} adoption ramp; running amounts from year ${c.recurStart}; ${num(D.discount)}% discount rate, end-of-year convention. Freed time without a destination is counted at $0.`,8,MUT,"normal",0);
+  foot();
+  saveFile(slug(c.title)+"-brief.pdf",doc.output("blob"));
+}
+
+/* ================================================================
+   TOOL 03 — Prompt library
+   ================================================================ */
+let F=Object.assign({role:"",sinks:[],level:"any",text:""},store.get("aitp-lib",{}));F.text="";
+let openCard=null;
+const saveF=()=>store.set("aitp-lib",{role:F.role,sinks:F.sinks,level:F.level});
+function chipRow(el,items,isOn,onPick){
+  el.innerHTML=items.map(([v,l])=>`<button class="chip" type="button" data-v="${esc(v)}" aria-pressed="${isOn(v)}">${esc(l)}</button>`).join("");
+  el.querySelectorAll(".chip").forEach(b=>b.onclick=()=>onPick(b.dataset.v));
+}
+function matchP(p){
+  if(F.role&&!(p.r.includes(F.role)||(F.role!=="Everyone"&&p.r.includes("Everyone"))))return false;
+  if(F.sinks.length&&!F.sinks.some(s=>p.s.includes(s)))return false;
+  if(F.level==="new"&&p.lvl!=="start")return false;
+  if(F.level==="some"&&p.lvl==="stretch")return false;
+  if(F.text){const t=F.text.toLowerCase();if(![p.t,p.what,p.p,p.r.join(" "),p.s.join(" ")].join(" ").toLowerCase().includes(t))return false;}
+  return true;
+}
+const hl=s=>esc(s).replace(/\[([^\]]+)\]/g,"<mark>[$1]</mark>");
+function renderLib(){
+  chipRow($("fRole"),[["","Any"],...ROLES.map(r=>[r,r])],v=>F.role===v,v=>{F.role=F.role===v?"":v;saveF();renderLib();});
+  chipRow($("fSink"),SINKS.map(s=>[s,s]),v=>F.sinks.includes(v),v=>{F.sinks=F.sinks.includes(v)?F.sinks.filter(x=>x!==v):[...F.sinks,v];saveF();renderLib();});
+  chipRow($("fLevel"),LEVELS,v=>F.level===v,v=>{F.level=v;saveF();renderLib();});
+  const list=PROMPTS.filter(matchP).sort((a,b)=>(b.first||0)-(a.first||0)||["start","build","stretch"].indexOf(a.lvl)-["start","build","stretch"].indexOf(b.lvl));
+  $("fCount").textContent=`${list.length} of ${PROMPTS.length} shown`;
+  $("cards").innerHTML=list.length?list.map(p=>`<article class="pcard${openCard===p.id?" open":""}" id="card-${p.id}">
+    <button class="hd" type="button" data-open="${p.id}" aria-expanded="${openCard===p.id}">
+      <h3>${esc(p.t)}</h3><span class="fn">${esc(p.r.join(" · "))}</span>
+      <span class="meta"><span class="lvl ${p.lvl}">${LVL_NAME[p.lvl]}</span><span class="saves">saves ${esc(p.save)}</span></span></button>
+    <div class="bd"><p class="what">${esc(p.what)}</p>
+      <div class="pbox"><div class="ph"><span class="label">Prompt · paste into an approved AI tool</span><button class="btn sm" type="button" data-copy="${p.id}">Copy prompt</button></div><pre>${hl(p.p)}</pre></div>
+      <div class="check"><b>Check</b><span>${esc(p.c)}</span></div></div></article>`).join("")
+    :`<div class="empty">Nothing matches that combination. Try clearing the “what fills your week” filters, since most functions only have a few prompts for each.</div>`;
+}
+$("cards").addEventListener("click",e=>{
+  const o=e.target.closest("[data-open]"),cp=e.target.closest("[data-copy]");
+  if(cp){const p=PROMPTS.find(x=>x.id===cp.dataset.copy);copyText(p.p,()=>{cp.textContent="Copied";setTimeout(()=>cp.textContent="Copy prompt",1600);toast("Prompt copied. Replace the bracketed parts with your own details.");});return;}
+  if(o){openCard=openCard===o.dataset.open?null:o.dataset.open;renderLib();if(openCard){const el=$("card-"+openCard);if(el)el.scrollIntoView({block:"nearest"});}}
+});
+$("fText").addEventListener("input",e=>{F.text=e.target.value.trim();renderLib();});
+$("fClear").onclick=()=>{F={role:"",sinks:[],level:"any",text:""};$("fText").value="";saveF();renderLib();};
+$("starterList").innerHTML=PROMPTS.filter(p=>p.first).map(p=>`<li><span><button type="button" data-start="${p.id}">${esc(p.t)}</button><br>${esc(p.what.split(". ")[0])}.</span></li>`).join("");
+$("starterList").addEventListener("click",e=>{const b=e.target.closest("[data-start]");if(!b)return;
+  F={role:"",sinks:[],level:"any",text:""};$("fText").value="";openCard=b.dataset.start;renderLib();
+  setTimeout(()=>{const el=$("card-"+openCard);if(el)el.scrollIntoView({behavior:"smooth",block:"start"});},30);});
+
+/* ================================================================
+   Boot
+   ================================================================ */
+$("promptCount").textContent=PROMPTS.length;
+loadCases();
+renderPilot();
+renderLib();
+const startView=(location.hash||"").replace("#","")||store.get("aitp-view","home");
+go(VIEWS.includes(startView)?startView:"home",true);
+window.addEventListener("hashchange",()=>{const v=(location.hash||"").replace("#","");if(VIEWS.includes(v))go(v);});
+</script>
