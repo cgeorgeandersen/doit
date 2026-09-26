@@ -435,7 +435,14 @@ button.lg:hover{background:rgba(255,255,255,.05)}
 .plainlist em{font-style:normal;color:var(--sheet-dim);margin-left:auto;font-size:13px;white-space:nowrap}
 
 .toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:90;background:var(--ink);color:var(--paper);padding:11px 18px;border-radius:999px;font-weight:700;font-size:15px;box-shadow:var(--shadow);max-width:calc(100% - 32px);text-align:center}
-.footer{border-top:1px solid var(--rule);padding-block:24px 44px;font-size:14px;color:var(--ink-2);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.footer{border-top:1px solid var(--rule);padding-block:24px 44px;font-size:14px;color:var(--ink-2);display:flex;flex-direction:column;gap:14px}
+.foot-main{display:flex;justify-content:space-between;gap:12px 24px;flex-wrap:wrap}
+.foot-links{display:flex;gap:10px 20px;flex-wrap:wrap;align-items:center}
+.foot-cta{display:inline-flex;align-items:center;gap:7px;color:var(--link);font-weight:700;text-decoration:none}
+.foot-cta:hover{text-decoration:underline;text-underline-offset:3px}
+.credit{font-size:13px;color:var(--ink-3)}
+.credit a{color:inherit;text-decoration:underline;text-decoration-color:var(--rule);text-underline-offset:3px}
+.credit a:hover{color:var(--ink-2)}
 
 @media print{
   body{background:#FFFFFF;padding:0}
@@ -750,8 +757,11 @@ button.lg:hover{background:rgba(255,255,255,.05)}
   </main>
 
   <footer class="footer">
-    <span>What do I actually do? A free tool for mapping your work. The numbers are estimates based on typical work. Icons by Lucide.</span>
-    <button class="link" data-action="restart">Start over</button>
+    <div class="foot-main">
+      <span>What do I actually do? A free tool for mapping your work. The numbers are estimates based on typical work. Icons by Lucide.</span>
+      <span class="foot-links"><a id="team-contact" class="foot-cta" href="#" target="_blank" rel="noopener" hidden><i data-icon="users-round"></i>Want to run this with your team? Let's talk</a><button class="link" data-action="restart">Start over</button></span>
+    </div>
+    <p class="credit" id="credit" hidden>Created by <a id="credit-link" href="#" target="_blank" rel="noopener">George Andersen</a></p>
   </footer>
 </div>
 
@@ -789,6 +799,10 @@ button.lg:hover{background:rgba(255,255,255,.05)}
 
 /* Where shared links point. Change this if you host the site somewhere else. */
 const SHARE_URL = "https://cgeorgeandersen.github.io/doit/";
+/* Your LinkedIn profile. Used for the footer credit and the "run this with your team" link. Leave empty to hide both. */
+const LINKEDIN_URL = "";
+/* GoatCounter site code (privacy-friendly counts: no cookies, no personal data, never your answers). Leave empty to turn off. */
+const GOATCOUNTER_CODE = "";
 
 const ICONS = {
   "wrench":"<path d=\"M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.106-3.105c.32-.322.863-.22.983.218a6 6 0 0 1-8.259 7.057l-7.91 7.91a1 1 0 0 1-2.999-3l7.91-7.91a6 6 0 0 1 7.057-8.259c.438.12.54.662.219.984z\"/>",
@@ -1687,9 +1701,15 @@ async function copy(text, done){
 let toastT;
 function toast(msg){ const t = $("#toast"); t.textContent = msg; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => { t.hidden = true; }, 2400); }
 
+/* ---------- counting (only when GOATCOUNTER_CODE is set, and never inside the claude.ai viewer) ---------- */
+function track(name){
+  try{ if (window.goatcounter && window.goatcounter.count) window.goatcounter.count({path:name, title:name, event:true}); }catch(e){}
+}
+
 /* ---------- finishing ---------- */
 function finish(){
   const a = analyze(state);
+  track("blueprint-finished");
   completed = true;
   const h = store.get(K_HIST, []);
   h.push({d:Date.now(), pct:a.pct});
@@ -1739,8 +1759,8 @@ document.addEventListener("click", e => {
   if (d.lg){ filter = filter === d.lg ? null : d.lg; applyFilter(); return; }
   if (d.copy){
     const a = view === "result" ? analyze(state) : null;
-    if (d.copy === "post") copy($("#post").value, "Post text copied");
-    else if (d.copy === "team-msg") copy(teamMessage(), "Message copied. Paste it into email or chat.");
+    if (d.copy === "post"){ copy($("#post").value, "Post text copied"); track("post-copied"); }
+    else if (d.copy === "team-msg"){ copy(teamMessage(), "Message copied. Paste it into email or chat."); track("team-message-copied"); }
     else if (d.copy === "ask"){ const p = a && a.plan.find(x => x.kind === "auto"); if (p) copy(p.ask, "Message copied"); }
     else if (d.copy === "prompt"){ const p = a && a.plan.find(x => x.kind === "ai"); if (p) copy(p.prompt, "Prompt copied"); }
     else if (d.copy === "drawer-prompt"){ if (drawerStep && drawerStep.T.p) copy(drawerStep.T.p, "Prompt copied"); }
@@ -1754,6 +1774,7 @@ document.addEventListener("click", e => {
       if (mode === "shared") state = blank();
       mode = "own"; clearHash(); show("start"); break;
     case "begin": case "fresh":
+      track("map-started");
       if (mode !== "own" || d.action === "fresh" || completed){ mode = "own"; ownBackup = null; state = blank(); completed = false; dragIdx = 0; filter = null; clearHash(); }
       show("role"); break;
     case "last": show("result"); break;
@@ -1777,9 +1798,9 @@ document.addEventListener("click", e => {
       break;
     case "edit": dragIdx = 0; show("flows"); break;
     case "to-share": { const s = $("#share"); if (s) s.scrollIntoView({behavior:reduced() ? "auto" : "smooth", block:"start"}); break; }
-    case "save-card": saveCard(); break;
+    case "save-card": saveCard(); track("image-saved"); break;
     case "print": try{ window.print(); }catch(e){} break;
-    case "copy-link": copy(linkFor(state), "Link copied"); break;
+    case "copy-link": copy(linkFor(state), "Link copied"); track("link-copied"); break;
     case "close-drawer": closeDrawer(); break;
     case "team": closeDrawer(); show("team"); break;
     case "team-build": {
@@ -1787,7 +1808,7 @@ document.addEventListener("click", e => {
       const toks = Array.from(new Set(txt.match(/bp-[A-Za-z0-9_-]{8,}/g) || []));
       const states = toks.map(t => decodeState(t.slice(3))).filter(Boolean);
       if (!states.length){ const err = $("#team-err"); err.textContent = "We couldn't find any blueprint links. Each one ends in #bp- followed by a long code."; err.hidden = false; return; }
-      teamStates = states; teamExample = false; renderTeam();
+      teamStates = states; teamExample = false; renderTeam(); track("team-blueprint-built");
       if (toks.length > states.length) toast(`${toks.length - states.length} link${toks.length - states.length === 1 ? "" : "s"} couldn't be read and ${toks.length - states.length === 1 ? "was" : "were"} skipped.`);
       $("#team-out").scrollIntoView({behavior:reduced() ? "auto" : "smooth", block:"start"});
       break;
@@ -1816,6 +1837,17 @@ function clearHash(){ if (location.hash){ try{ history.replaceState(null, "", lo
 /* ---------- boot ---------- */
 (function boot(){
   hydrate();
+  if (LINKEDIN_URL){
+    $("#credit-link").href = LINKEDIN_URL; $("#credit").hidden = false;
+    const tc = $("#team-contact"); tc.href = LINKEDIN_URL; tc.hidden = false;
+    tc.addEventListener("click", () => track("team-contact-clicked"));
+  }
+  if (GOATCOUNTER_CODE && !(window.claude && window.claude.use)){
+    const sc = document.createElement("script");
+    sc.async = true; sc.src = "https://gc.zgo.at/count.js";
+    sc.dataset.goatcounter = `https://${GOATCOUNTER_CODE}.goatcounter.com/count`;
+    document.head.appendChild(sc);
+  }
   $("#art-rows").innerHTML = ART.map((r, ri) => `<div class="art-row"><span class="ann">${r.n}</span><ol class="mchain">${r.st.map(([t, l], i) => `<li class="mnode v-${TYPES[t].v}" style="--d:${ri*5+i}">${icon(TYPES[t].i)}<span class="ml">${l}</span>${i === r.stuck ? REDLINE : ""}</li>`).join("")}</ol></div>`).join("");
   $("#art-legend").innerHTML = VORDER.map(k => `<span class="v-${k}">${icon(VERDICTS[k].i)}${VERDICTS[k].name}</span>`).join("");
   if (window.claude && typeof window.claude.use === "function"){
