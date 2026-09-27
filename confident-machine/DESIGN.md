@@ -456,6 +456,13 @@ Principles:
   across eleven seeds; removing the zip code gives 0.82 or higher on every seed. The
   unit tests check the claim on seven seeds, not one.
 
+- **Analytics were added after launch, at the owner's request.** The site uses Vercel Web
+  Analytics through `inject()` from `@vercel/analytics`; the `/next` entry point is for
+  Next.js apps, and this site has no framework. It runs only in production builds, strips the
+  `#fragment` and skips in-page jumps so each visit counts once, and sends no custom events,
+  so the colophon's promise holds: nothing the reader types or chooses leaves the browser. The
+  colophon and README disclose the page-view counting and link Vercel's privacy page.
+
 **Could not verify, so written around**
 
 - OpenAI's figure that its 2023 classifier caught 26% of AI-written text: the primary

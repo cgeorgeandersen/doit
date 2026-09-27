@@ -19,6 +19,7 @@ import { initCitations } from './lib/citations';
 import { initNavigator } from './components/navigator';
 import { initCaseFile } from './components/caseFile';
 import { mountOpening } from './chapters/opening';
+import { startAnalytics } from './lib/analytics';
 
 type Mount = (section: HTMLElement) => void | Promise<void>;
 
@@ -67,3 +68,4 @@ function boot(): void {
 }
 
 boot();
+startAnalytics();
