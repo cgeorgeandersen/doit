@@ -1,0 +1,424 @@
+/* Chapter 1: the prediction machine. */
+
+.shannon {
+  margin-block: 1.8rem 2rem;
+}
+
+.shannon-quote {
+  margin: 0;
+  padding: 1.1rem 1.25rem;
+  background: var(--paper-2);
+  border-radius: 2px;
+}
+
+.shannon-text {
+  font-size: 0.82rem;
+  line-height: 1.8;
+  letter-spacing: 0.02em;
+}
+
+/* The stage switches panels by step. */
+.ngram-stage {
+  min-height: 28rem;
+  padding: 1.25rem 1.4rem;
+  background: var(--paper-2);
+  border-radius: 2px;
+}
+
+.panel {
+  display: none;
+}
+
+.ngram-stage[data-step='0'] .panel-train,
+.ngram-stage[data-step='1'] .panel-guess,
+.ngram-stage[data-step='2'] .panel-explore,
+.ngram-stage[data-step='3'] .panel-explore,
+.ngram-stage[data-step='4'] .panel-explore {
+  display: grid;
+  gap: 1.1rem;
+}
+
+.ngram-stage[data-step='2'] .explore-temp,
+.ngram-stage[data-step='2'] .explore-gen,
+.ngram-stage[data-step='3'] .explore-gen,
+.ngram-stage[data-step='3'] .explore-sentence,
+.ngram-stage[data-step='4'] .explore-bars,
+.ngram-stage[data-step='4'] .explore-sentence,
+.ngram-stage[data-step='4'] .explore-input {
+  display: none;
+}
+
+.stage-loading {
+  font-family: var(--font-mono);
+}
+
+.ngram-stage .stage-loading {
+  display: none;
+}
+
+.panel-title {
+  font-weight: 650;
+  font-size: 1.05rem;
+  line-height: 1.3;
+}
+
+/* Training */
+.train-list {
+  display: grid;
+  gap: 0.9rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.train-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    'title count'
+    'track track';
+  gap: 0.35rem 1rem;
+  align-items: baseline;
+}
+
+.train-title {
+  grid-area: title;
+  font-style: italic;
+}
+
+.train-count {
+  grid-area: count;
+  font-size: 0.7rem;
+  color: var(--ink-3);
+}
+
+.train-track {
+  grid-area: track;
+  height: 6px;
+  background: var(--paper-3);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.train-fill {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: var(--machine);
+  border-radius: 3px;
+  transition: width 260ms ease-out;
+}
+
+.train-row.is-reading .train-fill {
+  width: 45%;
+}
+
+.train-row.is-done .train-fill {
+  width: 100%;
+}
+
+.train-stats {
+  font-size: 0.72rem;
+  line-height: 1.7;
+  color: var(--ink-2);
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.train-stats strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* A peek at the raw tallies */
+.tally-peek {
+  display: grid;
+  gap: 0.5rem;
+  padding: 0.9rem 1rem;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+}
+
+.tally-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.tally-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.85rem;
+}
+
+.tally-list li {
+  display: inline-flex;
+  gap: 0.35rem;
+  align-items: baseline;
+}
+
+.tally-n {
+  font-size: 0.7rem;
+  color: var(--machine-ink);
+}
+
+/* Guess */
+.guess-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+
+.guess-choice {
+  align-items: center;
+}
+
+.guess-verdict {
+  font-size: 0.95rem;
+  margin-bottom: 0.9rem;
+}
+
+/* Bars: thin marks, 4px rounded data end, value at the tip. */
+.bars {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bar-row {
+  display: grid;
+  grid-template-columns: minmax(6.5rem, 9rem) minmax(0, 1fr);
+  grid-template-areas:
+    'word track'
+    'word tally';
+  column-gap: 0.8rem;
+  align-items: center;
+  width: 100%;
+  min-height: 34px;
+  padding: 0.2rem 0.4rem;
+  border: 0;
+  border-radius: 2px;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  font: inherit;
+}
+
+button.bar-row {
+  cursor: pointer;
+}
+
+button.bar-row:hover {
+  background: var(--paper-3);
+}
+
+.bar-word {
+  grid-area: word;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.82rem;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+.bar-track {
+  grid-area: track;
+  position: relative;
+  height: 14px;
+  margin-right: 3.6rem;
+}
+
+.bar-fill {
+  display: block;
+  height: 100%;
+  min-width: 2px;
+  background: var(--machine);
+  border-radius: 0 4px 4px 0;
+  transition: width 220ms ease;
+}
+
+.bar-value {
+  position: absolute;
+  top: 50%;
+  transform: translate(6px, -50%);
+  font-size: 0.66rem;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+
+.bar-tally {
+  grid-area: tally;
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  color: var(--ink-3);
+  line-height: 1.3;
+}
+
+.bar-tag {
+  padding: 0 0.35em;
+  border: 1px solid var(--ink-3);
+  border-radius: 2px;
+  font-size: 0.55rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+.bar-tag--you {
+  border-color: var(--human);
+  background: var(--human-wash);
+  color: var(--human-ink);
+}
+
+.bar-row.is-guess .bar-word {
+  color: var(--human-ink);
+}
+
+.bars-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.bars-temp {
+  font-weight: 400;
+  color: var(--ink-3);
+}
+
+/* Explore */
+.explore-input input {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+}
+
+.sentence {
+  min-height: 3rem;
+  padding: 0.65rem 0.8rem;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+.sentence-typed {
+  color: var(--ink);
+}
+
+.sentence-hint {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  color: var(--ink-3);
+}
+
+.sentence-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.sentence-actions .btn {
+  min-height: 36px;
+  font-size: 0.66rem;
+}
+
+/* Temperature */
+.explore-temp {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.temp-ticks {
+  position: relative;
+  height: 1rem;
+  margin: 0 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.temp-ticks span {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.temp-ticks span:first-child {
+  transform: none;
+}
+
+.temp-ticks span:last-child {
+  transform: translateX(-100%);
+}
+
+.temp-readout {
+  margin-top: 0.4rem;
+  font-size: 0.7rem;
+  color: var(--ink-2);
+}
+
+/* Generate */
+.explore-gen {
+  display: grid;
+  gap: 0.8rem;
+  justify-items: start;
+}
+
+.gen-list {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: gen;
+}
+
+.gen-list li {
+  counter-increment: gen;
+  position: relative;
+  padding: 0.5rem 0 0.5rem 1.6rem;
+  border-top: 1px solid var(--rule);
+  font-size: 0.95rem;
+  line-height: 1.65;
+}
+
+.gen-list li::before {
+  content: counter(gen);
+  position: absolute;
+  left: 0;
+  top: 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  color: var(--ink-3);
+}
+
+.gen-prompt {
+  color: var(--ink-2);
+}
+
+@media (max-width: 959px) {
+  .ngram-stage {
+    min-height: 0;
+    padding: 0.9rem;
+  }
+
+  .bar-row {
+    grid-template-columns: minmax(5.5rem, 7rem) minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 420px) {
+  .guess-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

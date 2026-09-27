@@ -1,0 +1,643 @@
+{
+  "meta": {
+    "description": "Every time-sensitive claim in The Confident Machine lives here, so the piece can be updated without touching code. Each entry carries its source and two dates: asOf (the date the source's information describes or was published) and lastChecked (the date someone last verified the claim against the source). Run `npm run check:facts` after editing.",
+    "lastReviewed": "2026-09-27",
+    "staleAfterDays": 120
+  },
+  "entries": [
+    {
+      "id": "metr-horizon",
+      "section": "capabilities",
+      "claim": "The length of software task that the best AI agents can finish half the time has doubled about every four months since 2023. In spring 2026 it passed 17 hours of skilled-human work, beyond the 16 hours METR says its current tests can measure reliably.",
+      "sourceName": "METR, Task-Completion Time Horizons of Frontier AI Models (Time Horizon 1.1)",
+      "sourceUrl": "https://metr.org/time-horizons/",
+      "asOf": "2026-05-08",
+      "lastChecked": "2026-09-27",
+      "note": "Tasks are self-contained software, machine-learning and cybersecurity problems with clear success criteria. 'Time horizon' measures how long the task takes a skilled person, not how long the AI works. METR's fitted doubling time since 2023 is 128.7 days (95% CI 104–158); its figures above 16 hours are flagged as unreliable.",
+      "data": {
+        "doublingDaysSince2023": 128.7,
+        "reliableLimitMinutes": 960,
+        "series": [
+          {
+            "model": "GPT-2",
+            "date": "2019-02-14",
+            "p50": 0.05,
+            "p80": 0.01
+          },
+          {
+            "model": "davinci-002 (GPT-3)",
+            "date": "2020-05-28",
+            "p50": 0.14,
+            "p80": 0.06
+          },
+          {
+            "model": "GPT-3.5 Turbo Instruct",
+            "date": "2022-03-15",
+            "p50": 0.6,
+            "p80": 0.26
+          },
+          {
+            "model": "GPT-4",
+            "date": "2023-03-14",
+            "p50": 3.99,
+            "p80": 0.89
+          },
+          {
+            "model": "GPT-4 (Nov 2023)",
+            "date": "2023-11-06",
+            "p50": 4.04,
+            "p80": 0.78
+          },
+          {
+            "model": "GPT-4o",
+            "date": "2024-05-13",
+            "p50": 6.99,
+            "p80": 1.27
+          },
+          {
+            "model": "Claude 3.5 Sonnet",
+            "date": "2024-06-20",
+            "p50": 11.4,
+            "p80": 1.67
+          },
+          {
+            "model": "o1-preview",
+            "date": "2024-09-12",
+            "p50": 20.33,
+            "p80": 4.42
+          },
+          {
+            "model": "Claude 3.5 Sonnet (Oct 2024)",
+            "date": "2024-10-22",
+            "p50": 20.52,
+            "p80": 2.6
+          },
+          {
+            "model": "o1",
+            "date": "2024-12-05",
+            "p50": 38.83,
+            "p80": 7.09
+          },
+          {
+            "model": "Claude 3.7 Sonnet",
+            "date": "2025-02-24",
+            "p50": 60.39,
+            "p80": 12.09
+          },
+          {
+            "model": "o3",
+            "date": "2025-04-16",
+            "p50": 119.73,
+            "p80": 29.98
+          },
+          {
+            "model": "GPT-5",
+            "date": "2025-08-07",
+            "p50": 203.01,
+            "p80": 38.31
+          },
+          {
+            "model": "Gemini 3 Pro",
+            "date": "2025-11-18",
+            "p50": 224.33,
+            "p80": 54.14
+          },
+          {
+            "model": "Claude Opus 4.5",
+            "date": "2025-11-24",
+            "p50": 292.99,
+            "p80": 49.43
+          },
+          {
+            "model": "GPT-5.2",
+            "date": "2025-12-11",
+            "p50": 352.25,
+            "p80": 66.0
+          },
+          {
+            "model": "Claude Opus 4.6",
+            "date": "2026-02-05",
+            "p50": 718.81,
+            "p80": 69.87
+          },
+          {
+            "model": "Claude Mythos Preview (early)",
+            "date": "2026-04-07",
+            "p50": 1044.78,
+            "p80": 185.91
+          }
+        ]
+      }
+    },
+    {
+      "id": "price-per-token",
+      "section": "cost",
+      "claim": "The cheapest model that matched GPT-3.5 on a general-knowledge test (MMLU) fell from $20 to $0.07 per million tokens between November 2022 and October 2024, about 280 times cheaper. GPT-4-level performance fell from $37.50 to $0.18 by February 2025.",
+      "sourceName": "Epoch AI, LLM inference prices have fallen rapidly but unequally across tasks",
+      "sourceUrl": "https://epoch.ai/data-insights/llm-inference-price-trends",
+      "asOf": "2025-03-12",
+      "lastChecked": "2026-09-27",
+      "note": "Prices are Epoch's 3:1 blend of input and output token prices, for the cheapest model at or above each benchmark threshold. Reasoning models are excluded. Epoch's September 2026 update, below, extends the trend.",
+      "data": {
+        "unit": "US dollars per million tokens",
+        "series": [
+          {
+            "id": "gpt35",
+            "label": "GPT-3.5-level",
+            "threshold": "MMLU ≥ 64.8",
+            "points": [
+              {
+                "date": "2022-11-30",
+                "price": 20.0,
+                "model": "GPT-3.5"
+              },
+              {
+                "date": "2023-03-06",
+                "price": 2.0,
+                "model": "GPT-3.5 Turbo"
+              },
+              {
+                "date": "2023-11-06",
+                "price": 0.75,
+                "model": "GPT-3.5 Turbo (Nov 2023)"
+              },
+              {
+                "date": "2024-03-04",
+                "price": 0.5,
+                "model": "Claude 3 Haiku"
+              },
+              {
+                "date": "2024-05-10",
+                "price": 0.13,
+                "model": "Gemini 1.5 Flash (May 2024)"
+              },
+              {
+                "date": "2024-07-23",
+                "price": 0.1,
+                "model": "Llama 3.1 Instruct 8B"
+              },
+              {
+                "date": "2024-10-03",
+                "price": 0.07,
+                "model": "Gemini 1.5 Flash-8B"
+              }
+            ]
+          },
+          {
+            "id": "gpt4",
+            "label": "GPT-4-level",
+            "threshold": "MMLU ≥ 86.0",
+            "points": [
+              {
+                "date": "2023-03-14",
+                "price": 37.5,
+                "model": "GPT-4 (Mar 2023)"
+              },
+              {
+                "date": "2023-11-06",
+                "price": 15.0,
+                "model": "GPT-4 Turbo"
+              },
+              {
+                "date": "2024-05-13",
+                "price": 7.5,
+                "model": "GPT-4o"
+              },
+              {
+                "date": "2024-05-23",
+                "price": 2.19,
+                "model": "Gemini 1.5 Pro (May 2024)"
+              },
+              {
+                "date": "2025-02-05",
+                "price": 0.18,
+                "model": "Gemini 2.0 Flash"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "price-of-thought",
+      "section": "cost",
+      "claim": "Across five benchmarks in math, science and games, the price of a fixed level of AI performance has fallen about 47% per quarter since 2023, roughly 13 times cheaper each year.",
+      "sourceName": "Epoch AI, The plunging price of thought (Emberson & Roodman)",
+      "sourceUrl": "https://epoch.ai/publications/the-plunging-price-of-thought",
+      "asOf": "2026-09-22",
+      "lastChecked": "2026-09-27",
+      "note": "The authors caution that companies may tune models to benchmarks, that doing well on a benchmark is not the same as useful work, and that real users rarely switch to the cheapest model."
+    },
+    {
+      "id": "jagged-imo-clocks",
+      "section": "capabilities",
+      "claim": "An AI system earned a gold medal at the 2025 International Mathematical Olympiad. In March 2026, the best model read analog clocks correctly 50.6% of the time; people managed 90.1%. When models misread the time, their median error was one to three hours. For people it was three minutes.",
+      "sourceName": "Stanford HAI, AI Index Report 2026, chapter 2",
+      "sourceUrl": "https://hai.stanford.edu/ai-index/2026-ai-index-report",
+      "asOf": "2026-04-13",
+      "lastChecked": "2026-09-27"
+    },
+    {
+      "id": "agents-osworld",
+      "section": "agents",
+      "claim": "On OSWorld, a test of AI agents doing real tasks on a computer, success rose from about 12% to 66.3%, within about six points of people. Agents still fail roughly one attempt in three on structured benchmarks.",
+      "sourceName": "Stanford HAI, AI Index Report 2026",
+      "sourceUrl": "https://hai.stanford.edu/ai-index/2026-ai-index-report",
+      "asOf": "2026-04-13",
+      "lastChecked": "2026-09-27"
+    },
+    {
+      "id": "hallucination-rates",
+      "section": "capabilities",
+      "claim": "On a knowledge test that penalizes wrong answers but not abstentions, hallucination rates across 26 leading models ranged from 22% to 94%.",
+      "sourceName": "Stanford HAI, AI Index Report 2026 (citing Artificial Analysis, AA-Omniscience)",
+      "sourceUrl": "https://hai.stanford.edu/ai-index/2026-ai-index-report",
+      "asOf": "2026-04-13",
+      "lastChecked": "2026-09-27",
+      "note": "A lower rate means the model either knows more or is better at saying it is unsure."
+    },
+    {
+      "id": "summary-hallucination",
+      "section": "capabilities",
+      "claim": "Even when summarizing a document placed in front of them, the 15 best models on Vectara's leaderboard added unsupported claims in 1.8% to 5.4% of summaries.",
+      "sourceName": "Stanford HAI, AI Index Report 2026 (citing the Vectara HHEM leaderboard)",
+      "sourceUrl": "https://hai.stanford.edu/ai-index/2026-ai-index-report",
+      "asOf": "2026-04-13",
+      "lastChecked": "2026-09-27"
+    },
+    {
+      "id": "court-hallucinations",
+      "section": "courts",
+      "claim": "A public database has now catalogued 2,086 court and tribunal decisions dealing with AI-hallucinated material in filings, usually invented case law.",
+      "sourceName": "Damien Charlotin, AI Hallucination Cases database",
+      "sourceUrl": "https://www.damiencharlotin.com/hallucinations/",
+      "asOf": "2026-09-27",
+      "lastChecked": "2026-09-27",
+      "note": "The count only includes decisions where a court found, or clearly implied, that a party relied on hallucinated material."
+    },
+    {
+      "id": "agent-deletes-database",
+      "section": "agents",
+      "claim": "In July 2025, an AI coding agent deleted a company's live database during an explicit code freeze. It then told its user the deletion could not be rolled back. It could.",
+      "sourceName": "The Register, Vibe coding service Replit deleted user's production database",
+      "sourceUrl": "https://www.theregister.com/2025/07/21/replit_saastr_vibe_coding_incident/",
+      "asOf": "2025-07-21",
+      "lastChecked": "2026-09-27"
+    },
+    {
+      "id": "owasp-agents",
+      "section": "agents",
+      "claim": "Security researchers rank prompt injection, instructions hidden in content an AI reads, as the top risk for AI applications. They warn separately about 'excessive agency': giving a system more functions, permissions or autonomy than its job needs.",
+      "sourceName": "OWASP Top 10 for LLM Applications 2025 (LLM01, LLM06)",
+      "sourceUrl": "https://genai.owasp.org/llmrisk/llm01-prompt-injection/",
+      "asOf": "2025-04-17",
+      "lastChecked": "2026-09-27"
+    },
+    {
+      "id": "eu-ai-act",
+      "section": "regulation",
+      "claim": "The EU AI Act entered into force in August 2024 and phases in by risk. In July 2026 an amendment postponed the rules for high-risk uses such as hiring, credit and education from August 2026 to December 2027.",
+      "sourceName": "European Commission, AI Omnibus enters into force",
+      "sourceUrl": "https://digital-strategy.ec.europa.eu/en/news/ai-omnibus-enters-force",
+      "asOf": "2026-07-27",
+      "lastChecked": "2026-09-27",
+      "data": {
+        "milestones": [
+          {
+            "date": "2024-08-01",
+            "label": "Act enters into force"
+          },
+          {
+            "date": "2025-02-02",
+            "label": "Banned practices prohibited; AI literacy duties begin"
+          },
+          {
+            "date": "2025-08-02",
+            "label": "Duties for general-purpose AI models apply"
+          },
+          {
+            "date": "2026-08-02",
+            "label": "Transparency duties apply (telling people they are dealing with AI, labelling generated content)"
+          },
+          {
+            "date": "2027-12-02",
+            "label": "High-risk rules for uses like hiring, credit and education apply",
+            "was": "2026-08-02"
+          },
+          {
+            "date": "2028-08-02",
+            "label": "High-risk rules for AI inside regulated products apply",
+            "was": "2027-08-02"
+          }
+        ]
+      }
+    },
+    {
+      "id": "us-federal",
+      "section": "regulation",
+      "claim": "The United States has no comprehensive federal AI law. A December 2025 executive order created a Justice Department task force to challenge state AI laws; Congress had not passed a law overriding the states as of September 2026.",
+      "sourceName": "The White House, Ensuring a National Policy Framework for Artificial Intelligence (Dec. 11, 2025); TechPolicy.Press (July 2026)",
+      "sourceUrl": "https://www.whitehouse.gov/presidential-actions/2025/12/eliminating-state-law-obstruction-of-national-artificial-intelligence-policy/",
+      "asOf": "2026-09-27",
+      "lastChecked": "2026-09-27"
+    },
+    {
+      "id": "us-states",
+      "section": "regulation",
+      "claim": "States kept legislating anyway: by July 1, 2026, 29 states had enacted 109 AI laws that year, many on chatbots and child safety.",
+      "sourceName": "TechPolicy.Press, Where State AI Legislation Stands Half Way Into 2026",
+      "sourceUrl": "https://www.techpolicy.press/where-state-ai-legislation-stands-half-way-into-2026/",
+      "asOf": "2026-07-06",
+      "lastChecked": "2026-09-27"
+    },
+    {
+      "id": "colorado",
+      "section": "regulation",
+      "claim": "Colorado, the first state to pass a broad law against algorithmic discrimination (2024), replaced it in May 2026 with a narrower law focused on disclosure and human review of adverse decisions. It takes effect January 1, 2027.",
+      "sourceName": "Hunton Andrews Kurth, Colorado AI Act Amended and Effective Date Delayed",
+      "sourceUrl": "https://www.hunton.com/privacy-and-cybersecurity-law-blog/colorado-ai-act-amended-and-effective-date-delayed",
+      "asOf": "2026-05-22",
+      "lastChecked": "2026-09-27"
+    },
+    {
+      "id": "nyc-ll144",
+      "section": "regulation",
+      "claim": "Since July 2023, New York City has required employers that use automated hiring tools to commission yearly bias audits and publish each group's selection rate and impact ratio.",
+      "sourceName": "NYC Department of Consumer and Worker Protection, Automated Employment Decision Tools",
+      "sourceUrl": "https://www.nyc.gov/site/dca/about/automated-employment-decision-tools.page",
+      "asOf": "2023-07-05",
+      "lastChecked": "2026-09-27"
+    },
+    {
+      "id": "four-fifths-status",
+      "section": "regulation",
+      "claim": "The 'four-fifths rule' comes from 1978 federal hiring guidelines. In June 2026 the Justice Department called those guidelines unlawful, and the federal personnel office removed them from its hiring rules in July 2026. The text remained in the Code of Federal Regulations as of September 2026.",
+      "sourceName": "Federal News Network, OPM drops 'disparate impact' guidelines from federal hiring regulations; eCFR 29 CFR 1607.4(D)",
+      "sourceUrl": "https://federalnewsnetwork.com/hiring-retention/2026/08/opm-drops-disparate-impact-guidelines-from-federal-hiring-regulations/",
+      "asOf": "2026-08-04",
+      "lastChecked": "2026-09-27",
+      "contested": true
+    },
+    {
+      "id": "china-labeling",
+      "section": "regulation",
+      "claim": "China has required visible labels and hidden watermarks on AI-generated content distributed online since September 1, 2025.",
+      "sourceName": "State Council Information Office of China, China requires labeling of AI-generated online content",
+      "sourceUrl": "http://english.scio.gov.cn/pressroom/2025-03/17/content_117769570.html",
+      "asOf": "2025-03-17",
+      "lastChecked": "2026-09-27"
+    },
+    {
+      "id": "adoption",
+      "section": "adoption",
+      "claim": "Generative AI reached 53% population adoption within three years, faster than the personal computer or the internet.",
+      "sourceName": "Stanford HAI, AI Index Report 2026",
+      "sourceUrl": "https://hai.stanford.edu/ai-index/2026-ai-index-report",
+      "asOf": "2026-04-13",
+      "lastChecked": "2026-09-27"
+    },
+    {
+      "id": "schools",
+      "section": "adoption",
+      "claim": "More than four in five US high school and college students use AI for schoolwork, but only half of middle and high schools have AI policies, and 6% of teachers say those policies are clear.",
+      "sourceName": "Stanford HAI, AI Index Report 2026",
+      "sourceUrl": "https://hai.stanford.edu/ai-index/2026-ai-index-report",
+      "asOf": "2026-04-13",
+      "lastChecked": "2026-09-27"
+    },
+    {
+      "id": "transparency-index",
+      "section": "adoption",
+      "claim": "The average score on the Foundation Model Transparency Index fell from 58 to 40 in a year. The most capable models often disclose the least about their training data and risks.",
+      "sourceName": "Stanford HAI, Inside the AI Index: 12 Takeaways from the 2026 Report",
+      "sourceUrl": "https://hai.stanford.edu/news/inside-the-ai-index-12-takeaways-from-the-2026-report",
+      "asOf": "2026-04-13",
+      "lastChecked": "2026-09-27"
+    },
+    {
+      "id": "incidents",
+      "section": "adoption",
+      "claim": "Documented AI incidents rose to 362 in 2025, up from 233 in 2024.",
+      "sourceName": "Stanford HAI, AI Index Report 2026",
+      "sourceUrl": "https://hai.stanford.edu/ai-index/2026-ai-index-report",
+      "asOf": "2026-04-13",
+      "lastChecked": "2026-09-27"
+    },
+    {
+      "id": "jobs-young-workers",
+      "section": "work",
+      "claim": "Employment of 22- to 25-year-olds in the most AI-exposed occupations stands about 19% below where it would be had it kept pace with less-exposed peers, mostly through less hiring. Older workers show no comparable gap, and the authors see no economy-wide displacement.",
+      "sourceName": "Stanford Digital Economy Lab (Brynjolfsson, Chandar & Chen), Canaries in the Coal Mine?, August 2026 revision",
+      "sourceUrl": "https://digitaleconomy.stanford.edu/news/canariesaug26/",
+      "asOf": "2026-08-12",
+      "lastChecked": "2026-09-27",
+      "contested": true
+    },
+    {
+      "id": "jobs-no-footprint",
+      "section": "work",
+      "claim": "Yale's Budget Lab finds no clear AI footprint in the overall labor market yet: the mix of occupations is not shifting in ways that line up with AI, and measures of AI use are unrelated to changes in employment.",
+      "sourceName": "The Budget Lab at Yale, Tracking the Impact of AI on the Labor Market",
+      "sourceUrl": "https://budgetlab.yale.edu/research/tracking-impact-ai-labor-market",
+      "asOf": "2026-09-15",
+      "lastChecked": "2026-09-27",
+      "contested": true
+    },
+    {
+      "id": "expert-public-gap",
+      "section": "work",
+      "claim": "73% of AI experts expect AI to have a positive effect on how people do their jobs, compared with 23% of the public.",
+      "sourceName": "Stanford HAI, AI Index Report 2026, chapter 9",
+      "sourceUrl": "https://hai.stanford.edu/ai-index/2026-ai-index-report",
+      "asOf": "2026-04-13",
+      "lastChecked": "2026-09-27",
+      "contested": true
+    },
+    {
+      "id": "oecd-scenarios",
+      "section": "scenarios",
+      "claim": "An international scientific report, drawing on OECD scenario work, judges four broad paths plausible by 2030: progress stalls, slows, continues, or accelerates.",
+      "sourceName": "International AI Safety Report 2026 (chair: Yoshua Bengio), section 1.3",
+      "sourceUrl": "https://internationalaisafetyreport.org/publication/international-ai-safety-report-2026",
+      "asOf": "2026-02-03",
+      "lastChecked": "2026-09-27",
+      "contested": true
+    },
+    {
+      "id": "forecaster-split",
+      "section": "scenarios",
+      "claim": "Asked the chance that AI progress in the next few years compresses six years of advances into two, AI forecasting experts gave a median of 20%. Superforecasters gave 8%.",
+      "sourceName": "International AI Safety Report 2026, section 1.3",
+      "sourceUrl": "https://internationalaisafetyreport.org/publication/international-ai-safety-report-2026",
+      "asOf": "2026-02-03",
+      "lastChecked": "2026-09-27",
+      "contested": true
+    },
+    {
+      "id": "researcher-timelines",
+      "section": "scenarios",
+      "claim": "In a survey of 2,778 published AI researchers (fielded in late 2023), the aggregate forecast put a 10% chance on machines outperforming humans at every task by 2027 and 50% by 2047, with wide disagreement.",
+      "sourceName": "Grace et al., Thousands of AI Authors on the Future of AI, Journal of Artificial Intelligence Research 84 (2025)",
+      "sourceUrl": "https://arxiv.org/abs/2401.02843",
+      "asOf": "2025-10-08",
+      "lastChecked": "2026-09-27",
+      "contested": true
+    },
+    {
+      "id": "extreme-risk",
+      "section": "risk",
+      "claim": "Experts disagree sharply about catastrophic risk. Between 38% and 51% of surveyed AI researchers gave at least a 10% chance of outcomes as bad as human extinction. Others judge such outcomes implausible.",
+      "sourceName": "Grace et al. (2025); International AI Safety Report 2026, section 2.2.2",
+      "sourceUrl": "https://internationalaisafetyreport.org/publication/international-ai-safety-report-2026",
+      "asOf": "2026-02-03",
+      "lastChecked": "2026-09-27",
+      "contested": true
+    }
+  ],
+  "halfLife": {
+    "description": "Claims about AI that were true when published. 'overtakenOn' is the date of the first source we cite that records the change, so real lifespans were often shorter.",
+    "claims": [
+      {
+        "id": "hl-cost",
+        "claim": "Running a GPT-3.5-level model costs $20 per million tokens.",
+        "statedOn": "2022-11-30",
+        "statedBy": "Epoch AI price data",
+        "statedUrl": "https://epoch.ai/data-insights/llm-inference-price-trends",
+        "status": "overtaken",
+        "overtakenOn": "2023-03-06",
+        "update": "$2.00 three months later; $0.07 by October 2024.",
+        "updateBy": "Epoch AI",
+        "updateUrl": "https://epoch.ai/data-insights/llm-inference-price-trends",
+        "lastChecked": "2026-09-27"
+      },
+      {
+        "id": "hl-swebench",
+        "claim": "The best AI model can resolve 1.96% of real GitHub issues.",
+        "statedOn": "2023-10-10",
+        "statedBy": "SWE-bench (Jimenez et al.)",
+        "statedUrl": "https://arxiv.org/abs/2310.06770",
+        "status": "overtaken",
+        "overtakenOn": "2024-05-06",
+        "update": "An agent system reached 12.5% seven months later. By February 2026 the top model resolved about 77% of a human-checked set of issues.",
+        "updateBy": "SWE-agent (Yang et al.); AI Index 2026",
+        "updateUrl": "https://arxiv.org/abs/2405.15793",
+        "lastChecked": "2026-09-27"
+      },
+      {
+        "id": "hl-osworld",
+        "claim": "AI agents complete about 12% of real computer tasks; people complete 72%.",
+        "statedOn": "2024-04-11",
+        "statedBy": "OSWorld (Xie et al.)",
+        "statedUrl": "https://arxiv.org/abs/2404.07972",
+        "status": "overtaken",
+        "overtakenOn": "2026-04-13",
+        "update": "66.3%, within about six points of people.",
+        "updateBy": "AI Index 2026",
+        "updateUrl": "https://hai.stanford.edu/ai-index/2026-ai-index-report",
+        "lastChecked": "2026-09-27"
+      },
+      {
+        "id": "hl-imo",
+        "claim": "AI can reach silver-medal level at the International Mathematical Olympiad, but not gold.",
+        "statedOn": "2024-07-25",
+        "statedBy": "Google DeepMind (AlphaProof, 28 points)",
+        "statedUrl": "https://deepmind.google/discover/blog/ai-solves-imo-problems-at-silver-medal-level/",
+        "status": "overtaken",
+        "overtakenOn": "2025-07-21",
+        "update": "Gold-medal standard, 35 points, at the 2025 Olympiad.",
+        "updateBy": "AI Index 2026",
+        "updateUrl": "https://hai.stanford.edu/ai-index/2026-ai-index-report",
+        "lastChecked": "2026-09-27"
+      },
+      {
+        "id": "hl-frontiermath",
+        "claim": "Top AI models solve under 2% of FrontierMath's research-level problems.",
+        "statedOn": "2024-11-07",
+        "statedBy": "FrontierMath (Glazer et al.)",
+        "statedUrl": "https://arxiv.org/abs/2411.04872",
+        "status": "overtaken",
+        "overtakenOn": "2026-04-13",
+        "update": "By the end of 2025 the best model solved 31% of its hardest tier.",
+        "updateBy": "AI Index 2026",
+        "updateUrl": "https://hai.stanford.edu/ai-index/2026-ai-index-report",
+        "lastChecked": "2026-09-27"
+      },
+      {
+        "id": "hl-hle",
+        "claim": "Frontier models score under 10% on Humanity's Last Exam.",
+        "statedOn": "2025-01-24",
+        "statedBy": "Humanity's Last Exam (Phan et al.)",
+        "statedUrl": "https://arxiv.org/abs/2501.14249",
+        "status": "overtaken",
+        "overtakenOn": "2026-04-13",
+        "update": "38.3% within a year.",
+        "updateBy": "AI Index 2026",
+        "updateUrl": "https://hai.stanford.edu/ai-index/2026-ai-index-report",
+        "lastChecked": "2026-09-27"
+      },
+      {
+        "id": "hl-arc2",
+        "claim": "On ARC-AGI-2, pure language models score 0% and the best reasoning systems score in single digits.",
+        "statedOn": "2025-03-24",
+        "statedBy": "ARC Prize Foundation",
+        "statedUrl": "https://arcprize.org/blog/announcing-arc-agi-2-and-arc-prize-2025",
+        "status": "overtaken",
+        "overtakenOn": "2026-04-13",
+        "update": "The top system scored 84.6% by February 2026.",
+        "updateBy": "AI Index 2026",
+        "updateUrl": "https://hai.stanford.edu/ai-index/2026-ai-index-report",
+        "lastChecked": "2026-09-27"
+      },
+      {
+        "id": "hl-detectors",
+        "claim": "AI-text detectors wrongly flag non-native English writers' essays as AI-generated.",
+        "statedOn": "2023-07-10",
+        "statedBy": "Liang et al., Patterns",
+        "statedUrl": "https://arxiv.org/abs/2304.02819",
+        "status": "revised",
+        "overtakenOn": "2026-02-05",
+        "update": "A 2026 study of Czech-language detectors found no systematic bias against non-native writers. Whether that holds for English is not settled.",
+        "updateBy": "Different Time, Different Language (2026)",
+        "updateUrl": "https://arxiv.org/abs/2602.05769",
+        "lastChecked": "2026-09-27"
+      },
+      {
+        "id": "hl-eu-date",
+        "claim": "The EU's rules for high-risk AI, including hiring tools, apply from August 2, 2026.",
+        "statedOn": "2024-08-01",
+        "statedBy": "EU AI Act",
+        "statedUrl": "https://digital-strategy.ec.europa.eu/en/news/ai-omnibus-enters-force",
+        "status": "overtaken",
+        "overtakenOn": "2026-07-27",
+        "update": "Postponed to December 2, 2027.",
+        "updateBy": "European Commission",
+        "updateUrl": "https://digital-strategy.ec.europa.eu/en/news/ai-omnibus-enters-force",
+        "lastChecked": "2026-09-27"
+      },
+      {
+        "id": "hl-hallucinate",
+        "claim": "Even the best language models 'hallucinate' facts.",
+        "statedOn": "2023-03-14",
+        "statedBy": "OpenAI, GPT-4 Technical Report",
+        "statedUrl": "https://arxiv.org/abs/2303.08774",
+        "status": "standing",
+        "update": "Still true: hallucination rates of 22% to 94% across 26 models in 2026.",
+        "updateBy": "AI Index 2026",
+        "updateUrl": "https://hai.stanford.edu/ai-index/2026-ai-index-report",
+        "lastChecked": "2026-09-27"
+      },
+      {
+        "id": "hl-clocks",
+        "claim": "Multimodal models struggle to read analog clocks.",
+        "statedOn": "2025-02-07",
+        "statedBy": "Saxena et al., Lost in Time",
+        "statedUrl": "https://arxiv.org/abs/2502.05092",
+        "status": "standing",
+        "update": "Still true: the best model read clocks correctly 50.6% of the time in March 2026.",
+        "updateBy": "AI Index 2026",
+        "updateUrl": "https://hai.stanford.edu/ai-index/2026-ai-index-report",
+        "lastChecked": "2026-09-27"
+      }
+    ]
+  }
+}

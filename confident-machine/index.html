@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>The Confident Machine</title>
+    <meta
+      name="description"
+      content="An interactive essay on calibrated trust: why AI sounds sure even when it's wrong, and how to decide when to rely on it, when to check it, and when to keep the work for yourself."
+    />
+    <meta name="color-scheme" content="light dark" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="The Confident Machine" />
+    <meta
+      property="og:description"
+      content="AI is fluent, confident, and sometimes wrong in ways you can't see. An interactive essay on learning when to trust it."
+    />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%23faf9f5'/%3E%3Crect x='6' y='9' width='11' height='11' fill='%2308856a'/%3E%3Ccircle cx='21.5' cy='19.5' r='6' fill='%23ad721c'/%3E%3C/svg%3E"
+    />
+    <script>
+      (function () {
+        document.documentElement.classList.add('js');
+        try {
+          var t = localStorage.getItem('cm-theme');
+          if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to the essay</a>
+    <header id="site-nav" class="site-nav"></header>
+    <main id="main">
+      <!-- @include masthead.html -->
+      <!-- @include opening.html -->
+      <!-- @include ch1-prediction.html -->
+      <!-- @include ch2-calibration.html -->
+      <!-- @include ch3-frontier.html -->
+      <!-- @include ch4-trustmap.html -->
+      <!-- @include ch5-responsible.html -->
+      <!-- @include ch6-moving.html -->
+      <!-- @include close.html -->
+      <!-- @include colophon.html -->
+    </main>
+    <div id="casefile-root"></div>
+    <div id="announcer" class="visually-hidden" aria-live="polite" aria-atomic="true"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

@@ -1,0 +1,209 @@
+<section
+  class="chapter"
+  id="prediction"
+  data-chapter
+  data-nav-label="The Prediction Machine"
+  data-nav-num="01"
+  data-sources="gutenberg-alice gutenberg-pride gutenberg-holmes"
+>
+  <div class="measure prose">
+    <p class="eyebrow">Chapter 1</p>
+    <h2 class="chapter-title">The Prediction Machine</h2>
+    <p class="dek">How a machine can write fluently without knowing whether anything it says is true.</p>
+
+    <aside class="analogy" aria-label="Analogy">
+      <span class="eyebrow">Think of it this way</span>
+      <p>
+        Picture an autocomplete that has read a library. Or an improv actor who never says “I don’t know.” Hand either one the
+        start of a sentence and it will carry on, smoothly, because carrying on is the only thing it knows how to do.
+      </p>
+    </aside>
+
+    <p>
+      In 1948 the mathematician Claude Shannon built a machine like this with a book and a pencil. He opened the book at
+      random, found a word, and wrote down the word that came after it. Then he opened the book somewhere else, found
+      <em>that</em> word, and wrote down what followed it. Repeat, and you get this:
+    </p>
+  </div>
+
+  <figure class="measure shannon">
+    <blockquote class="shannon-quote">
+      <span class="machine-text shannon-text"
+        >THE HEAD AND IN FRONTAL ATTACK ON AN ENGLISH WRITER THAT THE CHARACTER OF THIS POINT IS THEREFORE ANOTHER METHOD
+        FOR THE LETTERS THAT THE TIME OF WHO EVER TOLD THE PROBLEM FOR AN UNEXPECTED.</span
+      >
+    </blockquote>
+    <figcaption>Shannon’s “second-order word approximation” to English, 1948.<span data-cite="shannon-1948"></span></figcaption>
+  </figure>
+
+  <div class="measure prose">
+    <p>
+      Every pair of neighbouring words is plausible English. The whole means nothing. Shannon wanted to take the idea further
+      but noted that “the labor involved becomes enormous at the next stage.”<span data-cite="shannon-1948"></span> Your
+      browser is about to do that next stage in well under a second.
+    </p>
+  </div>
+
+  <div class="wide">
+    <div class="scrolly" id="ngram-scrolly">
+      <div
+        class="scrolly-graphic"
+        tabindex="0"
+        aria-label="The prediction machine. Use the left and right arrow keys, or the Previous and Next buttons, to move between steps."
+      >
+        <div class="scrolly-stage ngram-stage" id="ngram-stage" data-step="0">
+          <p class="stage-loading small muted">Preparing the library…</p>
+        </div>
+        <div class="scrolly-controls"></div>
+      </div>
+
+      <div class="scrolly-steps">
+        <section class="step">
+          <div class="step-inner">
+            <h4>1 · Reading the library</h4>
+            <p>
+              This model learns by doing one thing: counting. For every pair of words in three public-domain books, it tallies
+              which word came next. That is all “training” means here.
+            </p>
+            <p>
+              The books are <em>Alice’s Adventures in Wonderland</em>, most of <em>Pride and Prejudice</em>, and seven
+              Sherlock Holmes stories. Watch the counters. That is the whole training process.
+            </p>
+          </div>
+        </section>
+        <section class="step">
+          <div class="step-inner">
+            <h4>2 · Guess first</h4>
+            <p>Before the machine answers, you do. In these three books, which word most often follows “I am”?</p>
+            <p>Pick one in the panel. The bars will show the machine’s odds for every word it knows.</p>
+          </div>
+        </section>
+        <section class="step">
+          <div class="step-inner">
+            <h4>3 · Your turn</h4>
+            <p>
+              Type the start of any sentence. The bars show the ten words the machine thinks most likely to come next, and how
+              often it saw each one follow your last two words.
+            </p>
+            <p>
+              Choose a bar to add that word and keep going. Try “said the”, “Mr. Darcy” or “I do not know”. Then try a word
+              the books never use, and watch the machine fall back on how common each word is overall.
+            </p>
+          </div>
+        </section>
+        <section class="step">
+          <div class="step-inner">
+            <h4>4 · Turn up the temperature</h4>
+            <p>
+              Real systems don’t always pick the top word. They roll weighted dice. Temperature reshapes the odds before the
+              roll: low values make the favourite almost certain, high values flatten the field.
+            </p>
+            <p>Too low and the text loops on itself. Too high and it dissolves. Somewhere in between, it sounds creative.</p>
+            <p>
+              Like many real systems, this one also ignores the long tail of very unlikely words when it rolls the dice, so
+              one freak word can’t derail a sentence.
+            </p>
+          </div>
+        </section>
+        <section class="step">
+          <div class="step-inner">
+            <h4>5 · Ask five times</h4>
+            <p>
+              Continue the same start five times. Each run rolls the dice differently, so each tells a different story, all in
+              the same steady typeface.
+            </p>
+            <p>
+              The dotted underlines are this page’s way of showing which words were long shots. The machine itself gives no
+              such signal. Its unlikely words arrive in the same confident voice as its likely ones.
+            </p>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <div class="measure prose">
+    <h3>From a toy to a chatbot</h3>
+    <p>
+      Real language models are vastly larger than this one. It read about 150,000 words. Meta’s Llama 3 was trained on more
+      than 15 trillion tokens, the word-pieces these systems read, which is tens of millions of times more text.<span
+        data-cite="llama3"
+      ></span>
+    </p>
+    <p>
+      They work differently, too. Instead of a lookup table keyed on the last two words, they use a neural network that weighs
+      thousands of earlier words at once.<span data-cite="vaswani-2017"></span> After that first round of training they are
+      tuned with human feedback to follow instructions and to be helpful.<span data-cite="instructgpt"></span>
+    </p>
+    <p>
+      Those differences are enormous, and the core move is the same. OpenAI’s own technical report describes GPT-4 as “a
+      Transformer-based model pre-trained to predict the next token in a document.”<span data-cite="gpt4-report"></span>
+    </p>
+
+    <h3>Fluency without a fact-checker</h3>
+    <p>
+      Notice what is missing. Nothing in that process asks whether a sentence is true. The model learns which words tend to
+      follow which. Truth gets in only indirectly, to the extent that true sentences are common in what it read. To the
+      machine, a fluent falsehood and a fluent fact are the same kind of thing: likely text.
+    </p>
+    <p>
+      Go back to the opening. When Webb photographed its first exoplanet in September 2022, NBC News reported that the
+      telescope “snaps its first picture of an exoplanet.”<span data-cite="nbc-webb"></span> Bard wrote that Webb took “the
+      very first pictures.” We can’t see inside Bard to know why. But a system built to produce likely sequences only has to
+      lose one small word, <em>its</em>, to turn a true headline into a false history.
+    </p>
+  </div>
+
+  <details class="deeper measure">
+    <summary><span class="summary-title">Go deeper</span><span>The math inside this model</span></summary>
+    <div class="deeper-body">
+      <h4>How the counting becomes probability</h4>
+      <p>
+        For the last two words <span class="mono">u v</span>, the model looks up how often each word
+        <span class="mono">w</span> followed them. Most three-word sequences never appear in a small library, so it blends in
+        what followed just <span class="mono">v</span>, and then how common <span class="mono">w</span> is overall. This is
+        Witten–Bell smoothing:<span data-cite="witten-bell-1991"></span>
+      </p>
+      <p class="formula">P(w | u v) = λ · count(u v w) / count(u v) + (1 − λ) · P(w | v)
+λ = count(u v) / (count(u v) + number of different words seen after u v)</p>
+      <p>
+        A context followed by many different words trusts itself less and leans on the shorter context more. Because each step
+        mixes two distributions that each sum to 1, the result always sums to 1, which the page’s tests check.
+      </p>
+      <p data-ngram-live-example class="small muted"></p>
+
+      <h4>Temperature, in one line</h4>
+      <p class="formula">p′ᵢ = pᵢ^(1/T) / Σⱼ pⱼ^(1/T)</p>
+      <p>
+        Large models do the same thing by dividing their raw scores (“logits”) by T before turning them into probabilities.
+        The readout under the slider converts the distribution’s entropy <span class="mono">H</span> into “effective choices”,
+        2<sup>H</sup>: the number of equally likely words that would be just as uncertain.
+      </p>
+
+      <h4>Why not always take the top word?</h4>
+      <p>
+        Always choosing the most likely next word sounds safe, but it produces bland, repetitive text that gets stuck in loops,
+        a problem researchers documented in neural models too.<span data-cite="holtzman-2020"></span> Sampling from the
+        distribution keeps text varied, which is also why the same question can get different answers. The same researchers
+        proposed “nucleus” sampling: keep only the most likely words that together make up, say, 90% of the probability, and
+        roll the dice among those. This page samples that way, at 90%, while its bars show the full, untrimmed odds.
+      </p>
+
+      <h4>Words versus tokens</h4>
+      <p>
+        This model counts whole words and a few punctuation marks. Large models split text into sub-word pieces instead, so
+        common words are one token and rare words are several.<span data-cite="sennrich-2016"></span> GPT-2, for example,
+        used a vocabulary of 50,257 tokens.<span data-cite="gpt2-2019"></span> Chapter 3 shows one strange side effect: the
+        model never directly sees individual letters.
+      </p>
+
+      <h4>What this model read</h4>
+      <p data-ngram-corpus class="small">
+        All of <em>Alice’s Adventures in Wonderland</em> (1865), the first 34 chapters of <em>Pride and Prejudice</em>
+        (1813) and the first seven stories of <em>The Adventures of Sherlock Holmes</em> (1892), from Project Gutenberg.
+      </p>
+    </div>
+  </details>
+
+  <div class="measure" data-sources-list></div>
+</section>

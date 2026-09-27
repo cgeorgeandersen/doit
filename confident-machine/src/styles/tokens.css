@@ -1,0 +1,90 @@
+/*
+ * Design tokens. The full light palette lives on :root; dark mode redefines
+ * only the tokens, once for the OS setting (unless the reader chose light)
+ * and once for an explicit dark choice, so the toggle wins both ways.
+ * Machine/human pair validated for color-vision deficiency on both surfaces
+ * (see DESIGN.md, section 5).
+ */
+:root {
+  color-scheme: light;
+
+  --paper: #faf9f5;
+  --paper-2: #f1efe8;
+  --paper-3: #e7e4db;
+  --ink: #191a1c;
+  --ink-2: #45464b;
+  --ink-3: #6a6b70;
+  --rule: #dedbd2;
+  --rule-strong: #c5c1b6;
+
+  --machine: #08856a;
+  --machine-ink: #16674f;
+  --machine-wash: rgb(8 133 106 / 0.1);
+  --human: #ad721c;
+  --human-ink: #7b510d;
+  --human-wash: rgb(173 114 28 / 0.12);
+  --neutral-mark: #a09d94;
+
+  --shadow: 0 1px 2px rgb(25 26 28 / 0.06), 0 8px 24px rgb(25 26 28 / 0.07);
+  --focus: var(--human-ink);
+
+  --font-display: 'Bodoni Moda', 'Didot', 'Bodoni 72', 'Libre Bodoni', Georgia, serif;
+  --font-text: 'Newsreader', 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+
+  --step--2: 0.7rem;
+  --step--1: 0.8rem;
+  --step-0: 1rem;
+  --step-1: 1.25rem;
+  --step-2: 1.6rem;
+  --step-3: 2.2rem;
+  --step-4: 3.2rem;
+
+  --measure: 38rem;
+  --wide: 68rem;
+  --gutter: max(16px, 4vw);
+  --radius: 3px;
+  --nav-h: 3rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --paper: #141413;
+    --paper-2: #1c1c1a;
+    --paper-3: #262623;
+    --ink: #e6e4dc;
+    --ink-2: #b3b1a8;
+    --ink-3: #8a8880;
+    --rule: #2c2c29;
+    --rule-strong: #403f3a;
+    --machine: #33a987;
+    --machine-ink: #61c8a4;
+    --machine-wash: rgb(51 169 135 / 0.13);
+    --human: #c3862e;
+    --human-ink: #deae62;
+    --human-wash: rgb(195 134 46 / 0.15);
+    --neutral-mark: #5f5e58;
+    --shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 8px 24px rgb(0 0 0 / 0.35);
+  }
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --paper: #141413;
+  --paper-2: #1c1c1a;
+  --paper-3: #262623;
+  --ink: #e6e4dc;
+  --ink-2: #b3b1a8;
+  --ink-3: #8a8880;
+  --rule: #2c2c29;
+  --rule-strong: #403f3a;
+  --machine: #33a987;
+  --machine-ink: #61c8a4;
+  --machine-wash: rgb(51 169 135 / 0.13);
+  --human: #c3862e;
+  --human-ink: #deae62;
+  --human-wash: rgb(195 134 46 / 0.15);
+  --neutral-mark: #5f5e58;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 8px 24px rgb(0 0 0 / 0.35);
+}
