@@ -443,6 +443,7 @@ button.lg:hover{background:rgba(255,255,255,.05)}
 .credit{font-size:13px;color:var(--ink-3)}
 .credit a{color:inherit;text-decoration:underline;text-decoration-color:var(--rule);text-underline-offset:3px}
 .credit a:hover{color:var(--ink-2)}
+#counting{color:var(--ink-2)}
 
 @media print{
   body{background:#FFFFFF;padding:0}
@@ -544,7 +545,7 @@ button.lg:hover{background:rgba(255,255,255,.05)}
         <ul class="trust">
           <li><i data-icon="timer"></i>About 2 minutes</li>
           <li><i data-icon="user-round-x"></i>No sign-up</li>
-          <li><i data-icon="shield-check"></i>Nothing leaves your browser</li>
+          <li><i data-icon="shield-check"></i>Your answers stay in your browser</li>
         </ul>
       </div>
       <div class="art" aria-hidden="true">
@@ -762,6 +763,7 @@ button.lg:hover{background:rgba(255,255,255,.05)}
       <span class="foot-links"><a id="team-contact" class="foot-cta" href="#" target="_blank" rel="noopener" hidden><i data-icon="users-round"></i>Want to run this with your team? Let's talk</a><button class="link" data-action="restart">Start over</button></span>
     </div>
     <p class="credit" id="credit" hidden>Created by <a id="credit-link" href="#" target="_blank" rel="noopener">George Andersen</a></p>
+    <p class="credit" id="counting" hidden>This site counts visits with <a href="https://vercel.com/docs/analytics/privacy-policy" target="_blank" rel="noopener">Vercel Web Analytics</a>: the page address, the referring site, a rough location, and the browser and device type. No third-party cookies, and never your answers.</p>
   </footer>
 </div>
 
@@ -1497,8 +1499,8 @@ function teamSummary(T){
 /* ---------- sharing ---------- */
 function shareBase(){
   const h = location.hostname;
-  // On GitHub Pages or a local copy, share the address the page is served from. Everywhere else, use the short link.
-  if (/^https?:$/.test(location.protocol) && (h.endsWith("github.io") || h === "localhost" || h === "127.0.0.1")) return location.origin + location.pathname;
+  // On GitHub Pages, Vercel or a local copy, share the address the page is served from. Everywhere else, use the short link.
+  if (/^https?:$/.test(location.protocol) && (h.endsWith("github.io") || h.endsWith(".vercel.app") || h === "localhost" || h === "127.0.0.1")) return location.origin + location.pathname;
   return SHARE_URL;
 }
 function postText(a, inComment){
@@ -1701,9 +1703,23 @@ async function copy(text, done){
 let toastT;
 function toast(msg){ const t = $("#toast"); t.textContent = msg; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => { t.hidden = true; }, 2400); }
 
-/* ---------- counting (only when GOATCOUNTER_CODE is set, and never inside the claude.ai viewer) ---------- */
+/* ---------- counting (never inside the claude.ai viewer; GoatCounter only when GOATCOUNTER_CODE is set) ---------- */
 function track(name){
   try{ if (window.goatcounter && window.goatcounter.count) window.goatcounter.count({path:name, title:name, event:true}); }catch(e){}
+}
+/* On Vercel, count page views with Vercel Web Analytics (turn it on in the project's Analytics tab).
+   A shared link carries that person's answers after the #, so the # part is cut from every address before it is sent.
+   The footer note appears only once the counting script has loaded; on GitHub Pages and local copies nothing loads. */
+function countVisits(){
+  if (location.protocol !== "https:" || location.hostname.endsWith("github.io") || (window.claude && window.claude.use)) return;
+  window.va = window.va || function(){ (window.vaq = window.vaq || []).push(arguments); };
+  window.va("beforeSend", ev => {
+    try{ const u = new URL(ev.url); u.hash = ""; return Object.assign({}, ev, {url: u.href}); }catch(e){ return null; }
+  });
+  const sc = document.createElement("script");
+  sc.defer = true; sc.src = "/_vercel/insights/script.js";
+  sc.onload = () => { $("#counting").hidden = false; };
+  document.head.appendChild(sc);
 }
 
 /* ---------- finishing ---------- */
@@ -1848,6 +1864,7 @@ function clearHash(){ if (location.hash){ try{ history.replaceState(null, "", lo
     sc.dataset.goatcounter = `https://${GOATCOUNTER_CODE}.goatcounter.com/count`;
     document.head.appendChild(sc);
   }
+  countVisits();
   $("#art-rows").innerHTML = ART.map((r, ri) => `<div class="art-row"><span class="ann">${r.n}</span><ol class="mchain">${r.st.map(([t, l], i) => `<li class="mnode v-${TYPES[t].v}" style="--d:${ri*5+i}">${icon(TYPES[t].i)}<span class="ml">${l}</span>${i === r.stuck ? REDLINE : ""}</li>`).join("")}</ol></div>`).join("");
   $("#art-legend").innerHTML = VORDER.map(k => `<span class="v-${k}">${icon(VERDICTS[k].i)}${VERDICTS[k].name}</span>`).join("");
   if (window.claude && typeof window.claude.use === "function"){
