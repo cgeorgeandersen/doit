@@ -192,13 +192,68 @@
   }
 }
 
+.nav-mark {
+  display: none;
+}
+
+@media (max-width: 560px) {
+  .nav-inner {
+    gap: 0.6rem;
+  }
+
+  /* On phones the brand shrinks to the essay's two marks: machine square, human dot. */
+  .nav-brand-text {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .nav-mark {
+    position: relative;
+    display: inline-block;
+    width: 0.7rem;
+    height: 0.7rem;
+    margin-right: 1.05rem;
+    background: var(--machine);
+  }
+
+  .nav-mark::after {
+    content: '';
+    position: absolute;
+    left: calc(100% + 0.25rem);
+    top: 0;
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 50%;
+    background: var(--human);
+  }
+
+  .nav-brand {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .casefile-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+}
+
 @media (max-width: 520px) {
   .nav-brand {
     font-size: 0.85rem;
   }
 
   .nav-current {
-    max-width: 9.5rem;
+    max-width: 12.5rem;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;

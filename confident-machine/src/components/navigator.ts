@@ -31,7 +31,12 @@ export function initNavigator(host: HTMLElement): void {
     h(
       'div',
       { class: 'nav-inner' },
-      h('a', { href: '#top', class: 'nav-brand' }, 'The Confident Machine'),
+      h(
+        'a',
+        { href: '#top', class: 'nav-brand' },
+        h('span', { class: 'nav-mark', 'aria-hidden': 'true' }),
+        h('span', { class: 'nav-brand-text' }, 'The Confident Machine'),
+      ),
       toggle,
       menu,
       h('div', { class: 'nav-tools' }, themeToggle()),

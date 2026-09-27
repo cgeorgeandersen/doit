@@ -16,6 +16,7 @@ import { QUADRANTS, TASKS, quadrantOf } from '../content/trustmap';
 
 const MAX_KEEP = 3;
 const RULE_COUNT = 3;
+const QUIZ_LENGTH = 10;
 
 export function mountClose(section: HTMLElement): void {
   mountKeep(section);
@@ -131,9 +132,11 @@ function factsFrom(f: CaseFile): Fact[] {
   facts.push({
     label: 'Calibration',
     value:
-      cal && cal.n
-        ? `${pct(cal.meanConfidence, 0)} sure on average, right ${pct(cal.accuracy, 0)} of the time (${cal.n} ${cal.n === 1 ? 'answer' : 'answers'}): ${cal.verdict}.`
-        : 'Not measured yet. The quiz is in Chapter 2.',
+      cal && cal.n >= 5
+        ? `${pct(cal.meanConfidence, 0)} sure on average, right ${pct(cal.accuracy, 0)} of the time (${cal.n} answers): ${cal.verdict}.`
+        : cal && cal.n
+          ? `${cal.n} of ${QUIZ_LENGTH} questions answered. Finish the quiz in Chapter 2 for a verdict.`
+          : 'Not measured yet. The quiz is in Chapter 2.',
   });
 
   const split = frontierSplit(f);
@@ -177,13 +180,16 @@ function mountRules(section: HTMLElement): void {
   const copyButton = qs<HTMLButtonElement>('#rules-copy', section);
   const resetButton = qs<HTMLButtonElement>('#rules-reset', section);
 
-  let rules: string[] = (caseFile.get().rules?.length === RULE_COUNT ? caseFile.get().rules! : suggestRules(caseFile.get())).slice();
+  // Suggestions follow the case file until the reader edits a rule; after that the rules are theirs.
+  let edited = caseFile.get().rules?.length === RULE_COUNT;
+  let rules: string[] = (edited ? caseFile.get().rules! : suggestRules(caseFile.get())).slice();
 
   const inputs = Array.from({ length: RULE_COUNT }, (_, i) => {
     const id = `rule-${i + 1}`;
     const area = h('textarea', { id, rows: 2, maxlength: 140, spellcheck: 'true' });
     area.value = rules[i] ?? '';
     area.addEventListener('input', () => {
+      edited = true;
       rules[i] = area.value;
       saveRules();
       renderCard();
@@ -217,14 +223,22 @@ function mountRules(section: HTMLElement): void {
     );
   }
 
-  resetButton.addEventListener('click', () => {
+  const showSuggestions = () => {
     rules = suggestRules(caseFile.get());
     inputs.forEach((x, i) => {
-      x.area.value = rules[i] ?? '';
+      if (document.activeElement !== x.area) x.area.value = rules[i] ?? '';
     });
-    saveRules();
+  };
+
+  resetButton.addEventListener('click', () => {
+    edited = false;
+    window.clearTimeout(saveTimer);
+    caseFile.update((f) => {
+      delete f.rules;
+    });
+    showSuggestions();
     renderCard();
-    note.textContent = 'New suggestions, based on your case file.';
+    note.textContent = 'New suggestions, based on your case file. They update as you go until you edit one.';
   });
 
   copyButton.addEventListener('click', () => {
@@ -273,7 +287,10 @@ function mountRules(section: HTMLElement): void {
   });
 
   renderCard();
-  caseFile.subscribe(() => renderCard());
+  caseFile.subscribe(() => {
+    if (!edited) showSuggestions();
+    renderCard();
+  });
 }
 
 function cardText(rules: string[], facts: Fact[]): string {

@@ -48,6 +48,7 @@ const ROWS: Row[] = [
     value: (f) => {
       const s = f.calibration?.summary;
       if (!s || !s.n) return null;
+      if (s.n < 5) return `${s.n} of 10 questions answered so far.`;
       return `${pct(s.meanConfidence, 0)} sure on average, right ${pct(s.accuracy, 0)} of the time: ${s.verdict}.`;
     },
   },
@@ -120,7 +121,7 @@ export function initCaseFile(host: HTMLElement): void {
     'button',
     { type: 'button', class: 'casefile-toggle', 'aria-expanded': 'false', 'aria-controls': 'casefile-panel' },
     h('span', { class: 'casefile-tab', 'aria-hidden': 'true' }),
-    h('span', {}, 'Case file'),
+    h('span', { class: 'casefile-label' }, 'Case file'),
     count,
   );
   const list = h('dl', { class: 'casefile-list' });

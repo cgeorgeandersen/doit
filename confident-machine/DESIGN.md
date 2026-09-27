@@ -111,22 +111,35 @@ checkable, and it happens to show the mechanism the next chapter explains.
 - **Why hallucinations happen** (mechanism): no built-in truth check; the exam
   incentive (tests that don't penalize guessing train guessers, per Kalai et al. 2025);
   and people rating confident answers well.
-- **Explorable:** "Grade the machine." A slider sets the penalty for a wrong answer;
-  two bars compare a model that always guesses with one that says "I don't know" when
-  unsure. With no penalty, bluffing wins.
+- **Explorable:** "Grade the machine." The reader first predicts which strategy wins when
+  wrong answers cost nothing. Then a slider (in twelfths of a point, so the tie at
+  exactly one third is reachable) sets the penalty; unit grids show 100 questions for a
+  model that always guesses and one that says "I don't know", and score bars compare
+  them. With no penalty, bluffing wins, 70 to 60.
 - **What reduces hallucination, and why:** grounding in sources (an open-book exam
   instead of a closed one), asking for citations (so checking becomes cheap), and
   separate verification steps. Each comes with its limits: legal research tools built
   on retrieval still hallucinated 17–33% of the time.
-- **Case file:** average confidence, accuracy, gap, Brier score.
+- **Also measured:** GPT-4's own report gives expected calibration error of 0.007 before
+  post-training and 0.074 after, which the text turns into "under one percentage point"
+  versus "more than seven".
+- **Case file:** average confidence, accuracy, gap, Brier score (a verdict only after
+  five answers).
 
 ### Chapter 3: The Jagged Frontier
 
-- **Analogy:** a new colleague who won a math olympiad but can't reliably read the
-  office clock. (This is literally the 2026 AI Index headline.)
-- **Interactive (predict-then-reveal):** twelve task cards. The reader sorts each into
-  "AI is great at this" or "AI struggles". Reveal: each card shows the pattern, a
-  one-line reason, and its source; the reader's score is recorded.
+- **Analogy:** a new colleague who drafts a clean memo in a minute, translates a letter
+  and aces a PhD-level exam, but can't reliably read the clock on the wall. (The 2026 AI
+  Index pairs an Olympiad gold with 50.6% on clocks.)
+- **Interactive (predict-then-reveal):** a ledger of twelve tasks (not a card grid), each
+  with a "does well / struggles" toggle and a sticky toolbar. Reveal: each row shows the
+  research verdict, a one-line reason, a caveat and its sources. The score separates
+  over-trust (expected it to do well; it struggles) from under-trust, because they cost
+  different things.
+- **Figure:** "One experiment, two sides of the frontier", using the paper's per-group
+  numbers (quality +38% and +42.5%; correctness 84.5% without AI, 70.6% with GPT-4,
+  60.0% with GPT-4 plus a prompting overview, read from its Figure 7).
+- **Second predict-then-reveal:** a one-question poll on the METR developer trial.
 - **The research:** Dell'Acqua et al.'s study of 758 BCG consultants. Inside the
   frontier, AI users finished 12.2% more tasks, 25.1% faster, with over 40% higher
   quality. On a similar-looking task outside it, they were 19 percentage points less
@@ -140,12 +153,14 @@ checkable, and it happens to show the mechanism the next chapter explains.
 
 ### Chapter 4: The Trust Map
 
-- **Analogy:** how you already treat a capable new intern.
+- **Analogy:** how you already treat a GPS: ignore it on the commute, follow it in a
+  strange city, never onto a frozen lake.
 - **Interactive:** a 2×2 map. X axis: how easy the output is to check. Y axis: how bad
   a mistake would be. The reader places twelve tasks by dragging, or with the keyboard
-  (arrow keys move a selected task; a quadrant menu places it directly). Quadrants
-  light up with their guidance as tasks land: *Delegate freely*, *Use, then verify*,
-  *Use for ideas only*, *Keep it human, or add expert review*.
+  (Enter selects a task, a quadrant menu places it, arrow keys then nudge it). Each
+  quadrant carries its guidance: *Delegate freely*, *Use, then verify*, *Use for ideas
+  only*, *Keep it human, or add expert review*. The machine quadrant is tinted jade and
+  the human quadrant ochre, matching the essay's two signal colors.
 - **Predict-then-reveal:** "Compare with ours" draws our suggested placement for each
   task as a hollow marker with a connecting line and the reasoning. The text says
   plainly that these are judgments, not facts.
@@ -154,13 +169,19 @@ checkable, and it happens to show the mechanism the next chapter explains.
   to argue against itself; check the parts that matter. Each has a one-line reason
   grounded in the mechanism (conditioning, cheap verification, sycophancy, uneven
   error).
-- **Case file:** the reader's placements (drawn as a mini map on the rules card).
+- **Also:** the Mata v. Avianca sanctions opinion ("nothing inherently improper about
+  using a reliable artificial intelligence tool… but existing rules impose a gatekeeping
+  role") and automation bias (Parasuraman & Manzey 2010; Lee et al. 2025).
+- **Case file:** the reader's placements; the rules card lists the tasks they kept human.
 
 ### Chapter 5: When Trust Scales
 
-- **Analogy:** a misprinted ruler. One biased interviewer affects the people they
-  meet; a biased model is a ruler every carpenter in town uses, and it looks official.
-- **Centerpiece (sticky graphic, six steps):** a synthetic hiring history with two
+- **Analogy:** training a new recruiter by having them shadow ten years of decisions
+  without saying which habits to avoid, then having them read ten thousand applications
+  a day.
+- **Opening case:** Reuters on Amazon's scrapped recruiting tool, including "no guarantee
+  that the machines would not devise other ways of sorting candidates".
+- **Centerpiece (sticky graphic, five steps):** a synthetic hiring history with two
   groups that have identical qualifications by construction, a past that favoured
   group A, and a town where most of group B lives in Eastfield. A logistic-regression
   screener (written from scratch) is trained without the group column.
@@ -200,9 +221,10 @@ All content comes from `src/content/timely.json` with "last checked" stamps.
 - **Rules:** the EU timeline (with the postponed dates struck through), the US federal
   and state picture, China's labelling rule.
 - **The half-life of a fact:** eleven claims about AI with the date each was stated and
-  when a source recorded it being overtaken. *Predict:* the reader marks three claims
-  "still true" or "overtaken" before the reveal. The median lifespan is computed from
-  the data, not asserted.
+  when a source recorded it being overtaken. *Predict:* for each claim the reader says
+  "still true" or "no longer true", and its lifeline grows on a shared time axis. The
+  median lifespan (about 14 months, an upper bound) is computed from the data, not
+  asserted. One claim is "revised" rather than overtaken and is not scored.
 
 ### Close: What We Keep
 
@@ -214,9 +236,13 @@ All content comes from `src/content/timely.json` with "last checked" stamps.
   endoscopists and AI), the value of struggle in learning (the PNAS tutoring study), and
   attention and judgment (confidence in AI tracks less critical thinking). The reader
   chooses what they want to keep doing themselves.
-- **"My Rules for AI" card:** assembled from the case file (opening pick, calibration,
-  frontier score, trust-map placements, dilemma choices, keep-list) with three
-  editable rules. It downloads as a PNG drawn on a canvas and copies as plain text.
+- **"My Rules for AI" card:** assembled from the case file (calibration, frontier score
+  with over- and under-trust, tasks kept human on the trust map, dilemma choices,
+  keep-list) with three editable rules. The suggested rules follow the case file until
+  the reader edits one. It downloads as a PNG drawn on a canvas (with the image shown
+  inline as a fallback) and copies as plain text.
+- **Analogy:** the calculator, which made a sense of the right answer more valuable, not
+  less.
 
 ## 4. Engagement mechanics
 
@@ -227,8 +253,14 @@ All content comes from `src/content/timely.json` with "last checked" stamps.
 - **Case file:** a drawer (bottom right) that collects answers and scores and shows a
   running count. It persists in `localStorage` (wrapped in try/catch; the page works
   without it) and can be reset.
-- **Chapter navigator:** a slim bar across the top with chapter names and a reading
-  progress line. On phones it collapses to the current chapter plus a menu.
+- **Chapter navigator:** a slim bar across the top with a reading progress line. On wide
+  screens it shows chapter numbers with the current chapter named (hover or focus names
+  the others); below 1240px it collapses to the current chapter plus a menu, and on
+  phones the wordmark shrinks to the essay's two marks.
+- **Predict-then-reveal in every chapter:** the opening pick; the "I am" guess; ten
+  calibration questions and the grading prediction; the frontier sort and the METR
+  poll; the trust map and "compare with ours"; the screener prediction and dilemmas;
+  the time-horizon guess and "still true?".
 
 ## 5. Visual design
 
@@ -320,7 +352,8 @@ answer in the opening), the shimmer is uniform and the caption says it is stylis
 ### Motion
 
 One orchestrated moment per chapter at most: the opening reveal, the live bars, the
-calibration plot drawing in. Everything else is still. With
+research rows settling in after the frontier sort, the lifelines growing in Chapter 6.
+Everything else is still. With
 `prefers-reduced-motion: reduce`, all transitions are instant, the shimmer stops, and
 smooth scrolling is off. Nothing is hidden at rest waiting for an animation.
 
@@ -361,9 +394,8 @@ Principles:
 - **Engines are pure** and fully unit-tested; chapters only render.
 - **Prose lives in HTML**, so the essay reads without JavaScript. Interactives
   enhance placeholders.
-- **No framework.** Vanilla TypeScript with D3 modules (`d3-scale`, `d3-shape`,
-  `d3-axis`, `d3-selection`, `d3-array`, `d3-format`) for charts. SVG for all charts;
-  canvas only for the rules-card PNG.
+- **No framework.** Vanilla TypeScript with two D3 modules (`d3-scale`, `d3-shape`)
+  for charts. SVG for all charts; canvas only for the rules-card PNG.
 - **Lazy work:** the corpus (about 800 KB of text) is a separate chunk imported when
   Chapter 1 approaches the viewport, and the model trains in stages with progress
   shown.
@@ -377,11 +409,13 @@ Principles:
 - Every control is a native element (`button`, `input type=range`, `select`,
   `details`) with a visible label. Focus rings use the reader color at 2px with offset,
   visible in both themes.
-- Drag-and-drop on the trust map has a full keyboard path: Tab to a task, arrows to
-  move, and a menu to drop it into a quadrant.
-- Charts are SVG with `role="img"` and an `aria-label`; a live text description
-  under each chart states its current state in words; each chart has a "Show as table"
-  toggle.
+- Drag-and-drop on the trust map has a full keyboard path: Tab to a task, Enter to
+  select it, a menu to drop it into a quadrant, then arrow keys to nudge it.
+- Charts are SVG groups with an `aria-label`; each data point is focusable with its own
+  label and tooltip; text beside or under each chart states the result in words; each
+  chart has a "Show as table" toggle.
+- An end-to-end keyboard-only run (skip link, every interactive, the case file drawer,
+  the PNG download and copy) passes with no console errors.
 - One polite `aria-live` region announces the results of interactions (reveals, scores).
 - Color is never the only encoding (see section 5).
 - `prefers-reduced-motion` and `prefers-color-scheme` are respected; a theme toggle
@@ -440,9 +474,8 @@ Principles:
 - **Location in the repo.** The repository root holds an unrelated 2019 iOS project,
   so the essay lives in `confident-machine/`. Root-level `vercel.json` and a GitHub
   Pages workflow build from that folder, so it deploys as-is.
-- **Authorship.** The text and code were drafted with an AI model (Claude). The
-  colophon says so, which is on theme: every claim links to a source so readers can
-  check it.
+- **Authorship.** The text and code were drafted with an AI assistant. The colophon
+  says so, which is on theme: every claim links to a source so readers can check it.
 - **"Today" is 2026-09-27**, the research date. Every time-sensitive fact shows its
   own "last checked" date; the header shows the build date.
 - **Corpus size.** To keep the bundle small, the library is all of *Alice's
