@@ -50,7 +50,7 @@ npm run preview    # serves the build locally
 
 The build uses relative asset paths (`base: './'`), so `dist/` works from any path on any static host.
 
-- **Vercel (the live site):** import the repository; every push to `master` redeploys. To see visitor numbers, turn on **Analytics** in the Vercel project (Analytics tab → Enable); until then the page-view script simply isn't served and nothing is counted. Either Root Directory setting works. With the repository root, the root [`vercel.json`](../vercel.json) builds inside `confident-machine/` and copies the output to `dist/`. With Root Directory set to `confident-machine`, [`confident-machine/vercel.json`](vercel.json) runs the standard Vite build. The commands in both files check where they are running, so neither setting can point `npm ci` at the wrong folder.
+- **Vercel (the live site):** import the repository and set the project's Root Directory to `confident-machine`, where [`vercel.json`](vercel.json) runs the standard Vite build; every push to `master` redeploys. To see visitor numbers, turn on **Analytics** in the Vercel project (Analytics tab → Enable); until then the page-view script simply isn't served and nothing is counted. A project left at the repository root serves a different site, What Do I Actually Do? (see the [repository README](../README.md)).
 - **Checks:** the workflow in [`.github/workflows/confident-machine-ci.yml`](../.github/workflows/confident-machine-ci.yml) installs, tests, checks fact freshness and builds on every push and pull request that touches the essay. It does not deploy anywhere. This repository's GitHub Pages site (from the `gh-pages` branch) is a different project and is left alone.
 - **Anywhere else:** upload the contents of `dist/` to any static host.
 
