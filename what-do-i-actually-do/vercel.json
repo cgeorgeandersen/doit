@@ -3,5 +3,5 @@
   "framework": null,
   "installCommand": "",
   "buildCommand": "",
-  "outputDirectory": "what-do-i-actually-do"
+  "outputDirectory": "."
 }

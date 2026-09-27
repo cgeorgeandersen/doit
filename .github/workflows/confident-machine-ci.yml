@@ -1,15 +1,15 @@
 # Checks The Confident Machine (confident-machine/) on every push and pull
 # request that touches it: install, tests, fact freshness, production build.
-# Hosting is on Vercel (see vercel.json). This workflow deliberately does not
+# Hosting is on Vercel (see confident-machine/vercel.json). This workflow does not
 # deploy to GitHub Pages, which this repository uses for a different site.
 name: The Confident Machine
 
 on:
   push:
     branches: [master]
-    paths: ['confident-machine/**', 'vercel.json', '.github/workflows/confident-machine-ci.yml']
+    paths: ['confident-machine/**', '.github/workflows/confident-machine-ci.yml']
   pull_request:
-    paths: ['confident-machine/**', 'vercel.json', '.github/workflows/confident-machine-ci.yml']
+    paths: ['confident-machine/**', '.github/workflows/confident-machine-ci.yml']
   workflow_dispatch:
 
 permissions:
