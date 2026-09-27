@@ -24,6 +24,8 @@ export interface CaseFile {
   moving?: { horizonGuess?: number; stillTrue?: Record<string, boolean> };
   keep?: string[];
   rules?: string[];
+  /** one-question predictions scattered through the essay, by poll id */
+  polls?: Record<string, string>;
 }
 
 const KEY = 'confident-machine/case-file/v1';

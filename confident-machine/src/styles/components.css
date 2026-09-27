@@ -137,6 +137,26 @@
   transform-origin: 0 50%;
 }
 
+/* Wide screens: chapter numbers only, with the current chapter named. */
+@media (min-width: 1240px) {
+  .nav-menu a:not([aria-current]) .nav-name {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .nav-menu a:not([aria-current]) .nav-num {
+    color: var(--ink-3);
+  }
+
+  .nav-menu a:not([aria-current]):hover .nav-num {
+    color: var(--ink);
+  }
+}
+
 @media (max-width: 1239px) {
   .nav-toggle {
     display: inline-flex;
@@ -830,4 +850,72 @@ details.sources > summary {
   .sources-list li {
     break-inside: avoid;
   }
+}
+
+/* ---------- One-question predictions ---------- */
+
+.poll {
+  display: grid;
+  gap: 0.9rem;
+  margin-block: 2.2rem;
+  padding: 1.1rem 1.2rem 1.25rem;
+  background: var(--paper-2);
+  border-radius: 2px;
+}
+
+.poll-q {
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.poll-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr));
+  gap: 0.5rem;
+}
+
+.poll-choice {
+  flex-wrap: wrap;
+  align-items: center;
+  font-size: 0.95rem;
+  line-height: 1.3;
+}
+
+.poll-label {
+  flex: 1;
+  min-width: 0;
+}
+
+.poll-choice.is-correct {
+  border-color: var(--ink);
+  box-shadow: inset 0 0 0 1px var(--ink);
+}
+
+.poll-tag {
+  flex-basis: 100%;
+  padding-left: 1.85rem;
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.poll-reveal > * + * {
+  margin-top: 0.6rem;
+}
+
+.poll.is-animating .poll-reveal {
+  animation: reveal-in 380ms ease-out both;
+}
+
+@keyframes reveal-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+.poll-verdict {
+  font-size: 1.05rem;
 }

@@ -1,1 +1,197 @@
-<!-- ch3-frontier -->
+<section
+  class="chapter"
+  id="jagged-frontier"
+  data-chapter
+  data-nav-label="The Jagged Frontier"
+  data-nav-num="03"
+  data-sources="zhang-2024-summaries timely:summary-hallucination fu-2024 noy-zhang-2023 kalai-2025 timely:hallucination-rates wmt24 timely:jagged-imo-clocks saxena-2025 peng-2023 metr-rct mata-avianca timely:court-hallucinations ai-index-2026 bean-2026 gpt4-report"
+>
+  <div class="measure prose">
+    <p class="eyebrow">Chapter 3</p>
+    <h2 class="chapter-title">The Jagged Frontier</h2>
+    <p class="dek">Superhuman at some tasks, oddly bad at others, and the line between them doesn’t follow your intuition.</p>
+
+    <aside class="analogy" aria-label="Analogy">
+      <span class="eyebrow">Think of it this way</span>
+      <p>
+        Picture a new colleague who drafts a clean memo in a minute, translates a letter from Japanese and aces a PhD-level
+        science exam, but can’t reliably read the clock on the wall. You wouldn’t stop working with them. You would learn where
+        their blind spots are.
+      </p>
+    </aside>
+
+    <p>
+      Researchers studying consultants at Boston Consulting Group gave this pattern a name. AI’s abilities form a “jagged
+      technological frontier,” where “some tasks are easily done by AI, while others, though seemingly similar in difficulty
+      level, are outside the current capability of AI.”<span data-cite="dellacqua"></span>
+    </p>
+    <p>
+      The frontier is invisible. Nothing in the machine’s tone tells you which side of it you’re on. So test your own map
+      first. For each of these twelve tasks, decide whether today’s AI does it well or struggles.
+    </p>
+  </div>
+
+  <div class="wide frontier-wrap">
+    <div class="frontier" id="frontier">
+      <div class="frontier-head">
+        <p class="frontier-status" id="frontier-status" aria-live="polite">0 of 12 sorted</p>
+        <div class="frontier-actions">
+          <button type="button" class="btn btn--primary" id="frontier-reveal" disabled>Show the research</button>
+          <button type="button" class="btn btn--quiet" id="frontier-skip">Skip to the answers</button>
+        </div>
+      </div>
+      <div class="frontier-result" id="frontier-result" hidden></div>
+      <ol class="ledger" id="frontier-ledger"></ol>
+    </div>
+    <p class="caption measure-left">
+      These verdicts describe patterns that have held across several generations of models, not the score of any one
+      product. Where a number is likely to change, it carries a date.
+    </p>
+  </div>
+
+  <div class="measure prose">
+    <h3>Same tool, opposite results</h3>
+    <p>
+      In the consulting experiment, 758 consultants were randomly assigned to work with or without GPT-4.<span
+        data-cite="dellacqua"
+      ></span>
+      On 18 realistic tasks inside the frontier, such as developing ideas for a new product, those with AI finished 12.2%
+      more tasks, worked 25.1% faster and produced work rated more than 40% higher in quality.
+    </p>
+    <p>
+      Then the researchers set a task just outside the frontier: a business problem that meant combining numbers in a
+      spreadsheet with subtle clues in interview notes. They designed it so that GPT-4 would get it wrong.
+    </p>
+  </div>
+
+  <div class="wide">
+    <figure class="split" aria-labelledby="split-title">
+      <p class="figure-title" id="split-title">One experiment, two sides of the frontier</p>
+      <div class="split-panels">
+        <div class="split-panel">
+          <p class="split-kicker">Inside the frontier</p>
+          <p class="split-number">+40%</p>
+          <p class="split-label">Work rated more than 40% higher in quality with GPT-4, on a creative product task</p>
+          <ul class="split-bars" aria-label="Quality of work relative to consultants without AI">
+            <li style="--v: 0.702"><span class="split-name">No AI</span><span class="split-bar"></span><span class="split-val">baseline</span></li>
+            <li style="--v: 0.968"><span class="split-name">GPT-4</span><span class="split-bar split-bar--machine"></span><span class="split-val">+38%</span></li>
+            <li style="--v: 1"><span class="split-name">GPT-4 + training</span><span class="split-bar split-bar--machine"></span><span class="split-val">+42.5%</span></li>
+          </ul>
+        </div>
+        <div class="split-panel">
+          <p class="split-kicker">Just outside it</p>
+          <p class="split-number">−19 points</p>
+          <p class="split-label">In the share who reached the right answer, on a task GPT-4 was set up to get wrong</p>
+          <ul class="split-bars" aria-label="Share of consultants who reached the correct answer">
+            <li style="--v: 0.845"><span class="split-name">No AI</span><span class="split-bar"></span><span class="split-val">84.5%</span></li>
+            <li style="--v: 0.706"><span class="split-name">GPT-4</span><span class="split-bar split-bar--machine"></span><span class="split-val">70.6%</span></li>
+            <li style="--v: 0.6"><span class="split-name">GPT-4 + training</span><span class="split-bar split-bar--machine"></span><span class="split-val">60.0%</span></li>
+          </ul>
+        </div>
+      </div>
+      <figcaption>
+        Left: average quality relative to consultants without AI, with bars scaled to the best group. Right: share correct,
+        with bars on a 0–100% scale. “Training” was a short overview of how to prompt GPT-4. The −19 points averages the two
+        AI groups.<span data-cite="dellacqua"></span>
+      </figcaption>
+    </figure>
+  </div>
+
+  <div class="measure prose">
+    <p>
+      The tool didn’t just fail to help. It made skilled people worse, on a task that seemed no harder than the ones where it
+      helped. And the group given extra training in using GPT-4 gained the most inside the frontier and lost the most
+      outside it.
+    </p>
+
+    <div class="poll" data-poll="metr">
+      <p class="poll-q" id="poll-metr-q">
+        A harder case. Experienced software developers used AI tools on their own large projects, which they had worked on
+        for about five years. With AI allowed, how did their speed change?
+      </p>
+      <div class="poll-options" role="group" aria-labelledby="poll-metr-q">
+        <button type="button" class="choice poll-choice" data-value="much-faster">Much faster</button>
+        <button type="button" class="choice poll-choice" data-value="bit-faster">A little faster</button>
+        <button type="button" class="choice poll-choice" data-value="same">No change</button>
+        <button type="button" class="choice poll-choice" data-value="slower" data-correct>Slower</button>
+      </div>
+      <div class="poll-reveal js-hidden">
+        <p>
+          <strong>They were slower.</strong> Tasks took 19% longer when AI was allowed. Before the study the developers
+          expected AI to cut their time by 24%, and afterwards they still believed it had cut their time by 20%. Experts in
+          economics and machine learning had predicted savings of 38% to 39%.<span data-cite="metr-rct"></span>
+        </p>
+      </div>
+    </div>
+
+    <p>
+      Elsewhere the same kind of tool shines. In a study of 5,172 customer-support agents, an AI assistant raised the number of
+      issues resolved per hour by 15% on average. The least experienced agents gained the most; the most experienced saw small
+      gains in speed and small declines in quality.<span data-cite="brynjolfsson-2023"></span>
+    </p>
+    <p>
+      Notice what happened to the developers’ own judgment. They felt faster while being slower: confident, and wrong. The
+      frontier is hard to see even from inside it. That is why trust has to be set task by task, and checked against results
+      rather than against how the work feels.
+    </p>
+
+    <h3>Why the frontier is jagged</h3>
+    <p>
+      <strong>It learned from text, not from the world.</strong> Tasks that appear in text millions of times with a clear
+      pattern to imitate, such as emails, summaries, common code and textbook questions, sit well inside the frontier. Tasks
+      that need perception, exact counting or a check against reality sit outside it.
+    </p>
+    <p>
+      <strong>It reads in chunks.</strong> As Chapter 1 showed, models see pieces of words, not letters, so “how many r’s
+      are in strawberry?” asks about something the model never directly sees.<span data-cite="fu-2024"></span> Reading a
+      clock means locating two hands precisely and combining them, which models still get wrong surprisingly often.<span
+        data-cite="saxena-2025"
+      ></span>
+    </p>
+    <p>
+      <strong>It has no sense of its limits, and no calendar.</strong> It doesn’t know what it doesn’t know (Chapter 2), and
+      without a search tool it knows nothing after its training data ends.<span data-cite="gpt4-report"></span>
+    </p>
+    <p>
+      <strong>The task includes you.</strong> In a 2026 study of 1,298 people, models tested alone named the right condition
+      in 94.9% of written medical scenarios. People using the same models found it in under 34.5% of cases, no better than
+      people using whatever sources they normally would.<span data-cite="bean-2026"></span> The knowledge was there. It got
+      lost in the conversation.
+    </p>
+    <p>
+      The frontier also moves, unevenly.
+      <span data-timely="jagged-imo-clocks" data-timely-mode="claim"></span>
+    </p>
+  </div>
+
+  <details class="deeper measure">
+    <summary><span class="summary-title">Go deeper</span><span>Centaurs, cyborgs, and how the tasks were chosen</span></summary>
+    <div class="deeper-body">
+      <h4>Two ways to work at the frontier</h4>
+      <p>
+        The consulting study saw two successful patterns. “Centaurs” divided the work, handing the AI the parts it is good at
+        (such as drafting) and keeping the rest (such as analysis and the final recommendation). “Cyborgs” wove the AI into
+        every step, working with it sentence by sentence.<span data-cite="dellacqua"></span> Both approaches depend on knowing
+        where the frontier is for the task in front of you.
+      </p>
+      <h4>Why test scores overstate usefulness</h4>
+      <p>
+        Benchmarks measure clean, self-contained problems with a known answer. Real work is messier: context lives in people’s
+        heads, requirements shift, and quality is judged by standards nobody wrote down. The developer study is a reminder
+        that a model can be strong on coding tests and still slow down experts working in a codebase they know deeply.<span
+          data-cite="metr-rct"
+        ></span>
+      </p>
+      <h4>How these twelve tasks were chosen</h4>
+      <p>
+        Each task needed a primary source and a pattern that has held across model generations. Two candidates were dropped in
+        research: AI-text detectors being biased against non-native writers (the evidence has since become mixed) and
+        multi-digit multiplication (current models often call a calculator, so the result depends on the product, not the
+        model). Specific percentages here come from studies of particular models and will date; the direction of each verdict
+        is what to take away.
+      </p>
+    </div>
+  </details>
+
+  <div class="measure" data-sources-list></div>
+</section>

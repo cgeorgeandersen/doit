@@ -70,6 +70,7 @@ export const SOURCES: Record<string, Source> = {
     publisher: 'arXiv:2303.08774',
     date: '2023',
     url: 'https://arxiv.org/abs/2303.08774',
+    note: 'Calibration: Figure 8 reports an expected calibration error of 0.007 for the pre-trained model and 0.074 after post-training, on a subset of the MMLU benchmark.',
   },
   llama3: {
     by: 'Meta',
@@ -224,7 +225,7 @@ export const SOURCES: Record<string, Source> = {
     title: 'Mata v. Avianca, Inc., No. 1:22-cv-01461 (S.D.N.Y.), Opinion and Order on Sanctions',
     publisher: 'U.S. District Court for the Southern District of New York',
     date: 'June 22, 2023',
-    url: 'https://www.courtlistener.com/docket/63107798/mata-v-avianca-inc/',
+    url: 'https://www.courtlistener.com/docket/63107798/54/mata-v-avianca-inc/',
   },
   // Chapter 2 quiz
   'noaa-pacific': {

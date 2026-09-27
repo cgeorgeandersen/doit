@@ -1,1 +1,116 @@
-<!-- ch4-trustmap -->
+<section
+  class="chapter"
+  id="trust-map"
+  data-chapter
+  data-nav-label="The Trust Map"
+  data-nav-num="04"
+  data-sources="bean-2026 mata-avianca shuster-2021 kadavath-2022 magesh-2024 sharma-2023 dhuliawala-2023"
+>
+  <div class="measure prose">
+    <p class="eyebrow">Chapter 4</p>
+    <h2 class="chapter-title">The Trust Map</h2>
+    <p class="dek">Two questions that tell you when to rely on AI, when to check it, and when to keep the work yourself.</p>
+
+    <aside class="analogy" aria-label="Analogy">
+      <span class="eyebrow">Think of it this way</span>
+      <p>
+        Think about how you use a GPS. On your daily commute you half ignore it. In a strange city you follow it, glancing at
+        the street signs. You wouldn’t follow it onto a frozen lake. The question is never just “is the GPS good?” It is what
+        happens if it’s wrong, and whether you would notice.
+      </p>
+    </aside>
+
+    <p>
+      The first three chapters showed a machine that is fluent, often right, and wrong in ways its tone won’t reveal. So
+      “Can I trust AI?” is the wrong question. Ask two better ones about the task in front of you:
+    </p>
+    <ol class="reasons two-q">
+      <li>
+        <strong>How easy is it for you to check?</strong> Can you tell a good answer from a bad one, quickly, yourself?
+      </li>
+      <li><strong>How bad is a mistake?</strong> If a wrong answer slips through, who pays, and how much?</li>
+    </ol>
+    <p>
+      Place twelve everyday tasks on the map. Drag them, or select one and pick a spot. There are no right answers here, only
+      reasons. When you’re done, compare your map with ours.
+    </p>
+  </div>
+
+  <div class="wide">
+    <div class="trustmap" id="trustmap">
+      <p class="small muted">Loading the map…</p>
+    </div>
+  </div>
+
+  <div class="measure prose">
+    <p class="pull">Use AI where checking is cheaper than doing.</p>
+    <p>
+      The right side of the map is where checking is cheap. You were in the meeting. You can test the formula on three rows.
+      You can look up the case. There, AI turns hours into minutes, and a quick check catches its mistakes.
+    </p>
+    <p>
+      On the left, checking costs as much as doing the work, like reading the whole contract, or it is simply beyond you, like
+      judging a diagnosis. The speed there is an illusion: you are accepting an answer you can’t evaluate. That is where to
+      keep the work, or bring in someone who can check it.
+    </p>
+    <p>
+      The court that fined the lawyers in Chapter 2 made the same distinction. “There is nothing inherently improper about
+      using a reliable artificial intelligence tool for assistance,” the judge wrote. “But existing rules impose a gatekeeping
+      role on attorneys to ensure the accuracy of their filings.”<span data-cite="mata-avianca"></span> Looking up six cases
+      would have taken minutes.
+    </p>
+
+    <h3>The check has its own trap</h3>
+    <p>
+      People who work alongside automated aids tend to accept what the aid says, and to miss what it leaves out. Researchers
+      call this automation bias. A review of decades of studies found it in experts as well as beginners, and found that
+      training or instructions alone did not prevent it.<span data-cite="parasuraman-2010"></span>
+    </p>
+    <p>
+      A 2025 survey of 319 knowledge workers found the same pull with AI. The more people trusted the AI, the less critical
+      thinking they reported doing. The more confident they were in their own skill at the task, the more they did.<span
+        data-cite="lee-2025"
+      ></span>
+      So make checking a habit you do by default, not a mood you wait for.
+    </p>
+  </div>
+
+  <div class="wide">
+    <section class="tips" aria-labelledby="tips-title">
+      <h3 class="tips-title" id="tips-title">How to work with it</h3>
+      <ol class="tips-list" id="tips-list"></ol>
+    </section>
+  </div>
+
+  <details class="deeper measure">
+    <summary><span class="summary-title">Go deeper</span><span>The arithmetic behind the map</span></summary>
+    <div class="deeper-body">
+      <h4>An expected-cost rule</h4>
+      <p>
+        The map is a picture of a simple calculation. Using AI on a task pays off when the time it saves is bigger than the
+        time you spend checking, plus the expected cost of the errors your check misses:
+      </p>
+      <p class="formula">use AI if   time saved  >  time checking  +  P(error gets past you) × cost of that error</p>
+      <p>
+        The horizontal axis is about the first two terms and the chance an error gets past you: a task that is easy to check
+        makes checking quick and misses rare. The vertical axis is the cost of an error. Top left is where both work against
+        you: checking is slow or unreliable, and a miss is expensive.
+      </p>
+      <h4>The map is personal</h4>
+      <p>
+        “Easy to check” means easy for you. A statistician can check an AI’s explanation of a statistical idea in seconds; a
+        beginner cannot, which is why a learning task sits further left than you might expect. Stakes are personal too. A menu
+        translation is a low-stakes adventure, unless you have a severe allergy.
+      </p>
+      <h4>Why medicine is the hard corner</h4>
+      <p>
+        In the 2026 medical study from Chapter 3, the models alone usually named the right condition, but people using them
+        did not do better than people using their usual sources.<span data-cite="bean-2026"></span> Symptom-checking is hard to
+        verify for a layperson and costly to get wrong, which puts it firmly top left: use it, if at all, to prepare questions
+        for a professional.
+      </p>
+    </div>
+  </details>
+
+  <div class="measure" data-sources-list></div>
+</section>

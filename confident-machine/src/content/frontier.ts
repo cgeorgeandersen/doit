@@ -41,7 +41,7 @@ export const FRONTIER: FrontierCard[] = [
   },
   {
     id: 'say-unsure',
-    task: 'Say "I don’t know" when it doesn’t know',
+    task: 'Say “I don’t know” when it doesn’t know',
     verdict: 'struggles',
     reason: 'Training and most tests reward a confident guess over an admission of doubt. On one test that penalizes wrong answers, hallucination rates ranged from 22% to 94%.',
     sources: ['kalai-2025', 'timely:hallucination-rates'],
@@ -88,7 +88,7 @@ export const FRONTIER: FrontierCard[] = [
     id: 'symptoms',
     task: 'Help a person work out what’s wrong from their symptoms',
     verdict: 'struggles',
-    reason: 'Alone, models named the right condition in 94.9% of written cases. People using the same models found it in under 34.5%, no better than people using search.',
+    reason: 'Tested alone, models named the right condition in 94.9% of written cases. People using the same models found it in under 34.5%, no better than people using whatever sources they would normally use.',
     caveat: 'The failure is in the conversation: what people tell the model, and what they take from its answer.',
     sources: ['bean-2026'],
   },

@@ -18,7 +18,7 @@ export function initNavigator(host: HTMLElement): void {
   const links = chapters.map((ch) =>
     h(
       'a',
-      { href: `#${ch.id}`, 'data-target': ch.id },
+      { href: `#${ch.id}`, 'data-target': ch.id, title: ch.dataset.navLabel ?? '' },
       h('span', { class: 'nav-num', 'aria-hidden': 'true' }, ch.dataset.navNum ?? ''),
       h('span', { class: 'nav-name' }, ch.dataset.navLabel ?? ''),
     ),
