@@ -1,6 +1,6 @@
 {
   "meta": {
-    "description": "Every time-sensitive claim in The Confident Machine lives here, so the piece can be updated without touching code. Each entry carries its source and two dates: asOf (the date the source's information describes or was published) and lastChecked (the date someone last verified the claim against the source). Run `npm run check:facts` after editing.",
+    "description": "Every time-sensitive claim in The Confident Machine lives here, so the piece can be updated without touching code. Each entry carries its source and two dates: asOf (the date the source’s information describes or was published) and lastChecked (the date someone last verified the claim against the source). Run `npm run check:facts` after editing.",
     "lastReviewed": "2026-09-27",
     "staleAfterDays": 120
   },
@@ -13,7 +13,7 @@
       "sourceUrl": "https://metr.org/time-horizons/",
       "asOf": "2026-05-08",
       "lastChecked": "2026-09-27",
-      "note": "Tasks are self-contained software, machine-learning and cybersecurity problems with clear success criteria. 'Time horizon' measures how long the task takes a skilled person, not how long the AI works. METR's fitted doubling time since 2023 is 128.7 days (95% CI 104–158); its figures above 16 hours are flagged as unreliable.",
+      "note": "Tasks are self-contained software, machine-learning and cybersecurity problems with clear success criteria. ‘Time horizon’ measures how long the task takes a skilled person, not how long the AI works. METR’s fitted doubling time since 2023 is 128.7 days (95% CI 104–158); its figures above 16 hours are flagged as unreliable.",
       "data": {
         "doublingDaysSince2023": 128.7,
         "reliableLimitMinutes": 960,
@@ -132,12 +132,12 @@
     {
       "id": "price-per-token",
       "section": "cost",
-      "claim": "The cheapest model that matched GPT-3.5 on a general-knowledge test (MMLU) fell from $20 to $0.07 per million tokens between November 2022 and October 2024, about 280 times cheaper. GPT-4-level performance fell from $37.50 to $0.18 by February 2025.",
+      "claim": "The cheapest model that matched GPT-3.5 on a general-knowledge test (MMLU) fell from $20 to $0.07 per million tokens between November 2022 and October 2024, more than 280 times cheaper. GPT-4-level performance fell from $37.50 to $0.18 by February 2025.",
       "sourceName": "Epoch AI, LLM inference prices have fallen rapidly but unequally across tasks",
       "sourceUrl": "https://epoch.ai/data-insights/llm-inference-price-trends",
       "asOf": "2025-03-12",
       "lastChecked": "2026-09-27",
-      "note": "Prices are Epoch's 3:1 blend of input and output token prices, for the cheapest model at or above each benchmark threshold. Reasoning models are excluded. Epoch's September 2026 update, below, extends the trend.",
+      "note": "Prices are Epoch’s 3:1 blend of input and output token prices, for the cheapest model at or above each benchmark threshold. Reasoning models are excluded. Epoch’s September 2026 update, below, extends the trend.",
       "data": {
         "unit": "US dollars per million tokens",
         "series": [
@@ -259,7 +259,7 @@
     {
       "id": "summary-hallucination",
       "section": "capabilities",
-      "claim": "Even when summarizing a document placed in front of them, the 15 best models on Vectara's leaderboard added unsupported claims in 1.8% to 5.4% of summaries.",
+      "claim": "Even when summarizing a document placed in front of them, the 15 best models on Vectara’s leaderboard added unsupported claims in 1.8% to 5.4% of summaries.",
       "sourceName": "Stanford HAI, AI Index Report 2026 (citing the Vectara HHEM leaderboard)",
       "sourceUrl": "https://hai.stanford.edu/ai-index/2026-ai-index-report",
       "asOf": "2026-04-13",
@@ -278,8 +278,8 @@
     {
       "id": "agent-deletes-database",
       "section": "agents",
-      "claim": "In July 2025, an AI coding agent deleted a company's live database during an explicit code freeze. It then told its user the deletion could not be rolled back. It could.",
-      "sourceName": "The Register, Vibe coding service Replit deleted user's production database",
+      "claim": "In July 2025, an AI coding agent deleted a company’s live database during an explicit code freeze. It then told its user the deletion could not be rolled back. It could.",
+      "sourceName": "The Register, Vibe coding service Replit deleted user’s production database",
       "sourceUrl": "https://www.theregister.com/2025/07/21/replit_saastr_vibe_coding_incident/",
       "asOf": "2025-07-21",
       "lastChecked": "2026-09-27"
@@ -287,7 +287,7 @@
     {
       "id": "owasp-agents",
       "section": "agents",
-      "claim": "Security researchers rank prompt injection, instructions hidden in content an AI reads, as the top risk for AI applications. They warn separately about 'excessive agency': giving a system more functions, permissions or autonomy than its job needs.",
+      "claim": "Security researchers rank prompt injection, instructions hidden in content an AI reads, as the top risk for AI applications. They warn separately about ‘excessive agency’: giving a system more functions, permissions or autonomy than its job needs.",
       "sourceName": "OWASP Top 10 for LLM Applications 2025 (LLM01, LLM06)",
       "sourceUrl": "https://genai.owasp.org/llmrisk/llm01-prompt-injection/",
       "asOf": "2025-04-17",
@@ -362,7 +362,7 @@
     {
       "id": "nyc-ll144",
       "section": "regulation",
-      "claim": "Since July 2023, New York City has required employers that use automated hiring tools to commission yearly bias audits and publish each group's selection rate and impact ratio.",
+      "claim": "Since July 2023, New York City has required employers that use automated hiring tools to commission yearly bias audits and publish each group’s selection rate and impact ratio.",
       "sourceName": "NYC Department of Consumer and Worker Protection, Automated Employment Decision Tools",
       "sourceUrl": "https://www.nyc.gov/site/dca/about/automated-employment-decision-tools.page",
       "asOf": "2023-07-05",
@@ -371,8 +371,8 @@
     {
       "id": "four-fifths-status",
       "section": "regulation",
-      "claim": "The 'four-fifths rule' comes from 1978 federal hiring guidelines. In June 2026 the Justice Department called those guidelines unlawful, and the federal personnel office removed them from its hiring rules in July 2026. The text remained in the Code of Federal Regulations as of September 2026.",
-      "sourceName": "Federal News Network, OPM drops 'disparate impact' guidelines from federal hiring regulations; eCFR 29 CFR 1607.4(D)",
+      "claim": "The ‘four-fifths rule’ comes from 1978 federal hiring guidelines. In June 2026 the Justice Department called those guidelines unlawful, and the federal personnel office removed them from its hiring rules in July 2026. The text remained in the Code of Federal Regulations as of September 2026.",
+      "sourceName": "Federal News Network, OPM drops ‘disparate impact’ guidelines from federal hiring regulations; eCFR 29 CFR 1607.4(D)",
       "sourceUrl": "https://federalnewsnetwork.com/hiring-retention/2026/08/opm-drops-disparate-impact-guidelines-from-federal-hiring-regulations/",
       "asOf": "2026-08-04",
       "lastChecked": "2026-09-27",
@@ -436,7 +436,7 @@
     {
       "id": "jobs-no-footprint",
       "section": "work",
-      "claim": "Yale's Budget Lab finds no clear AI footprint in the overall labor market yet: the mix of occupations is not shifting in ways that line up with AI, and measures of AI use are unrelated to changes in employment.",
+      "claim": "Yale’s Budget Lab finds no clear AI footprint in the overall labor market yet: the mix of occupations is not shifting in ways that line up with AI, and measures of AI use are unrelated to changes in employment.",
       "sourceName": "The Budget Lab at Yale, Tracking the Impact of AI on the Labor Market",
       "sourceUrl": "https://budgetlab.yale.edu/research/tracking-impact-ai-labor-market",
       "asOf": "2026-09-15",
@@ -495,7 +495,7 @@
     }
   ],
   "halfLife": {
-    "description": "Claims about AI that were true when published. 'overtakenOn' is the date of the first source we cite that records the change, so real lifespans were often shorter.",
+    "description": "Claims about AI that were true when published. ‘overtakenOn’ is the date of the first source we cite that records the change, so real lifespans were often shorter.",
     "claims": [
       {
         "id": "hl-cost",
@@ -551,7 +551,7 @@
       },
       {
         "id": "hl-frontiermath",
-        "claim": "Top AI models solve under 2% of FrontierMath's research-level problems.",
+        "claim": "Top AI models solve under 2% of FrontierMath’s research-level problems.",
         "statedOn": "2024-11-07",
         "statedBy": "FrontierMath (Glazer et al.)",
         "statedUrl": "https://arxiv.org/abs/2411.04872",
@@ -564,9 +564,9 @@
       },
       {
         "id": "hl-hle",
-        "claim": "Frontier models score under 10% on Humanity's Last Exam.",
+        "claim": "Frontier models score under 10% on Humanity’s Last Exam.",
         "statedOn": "2025-01-24",
-        "statedBy": "Humanity's Last Exam (Phan et al.)",
+        "statedBy": "Humanity’s Last Exam (Phan et al.)",
         "statedUrl": "https://arxiv.org/abs/2501.14249",
         "status": "overtaken",
         "overtakenOn": "2026-04-13",
@@ -590,7 +590,7 @@
       },
       {
         "id": "hl-detectors",
-        "claim": "AI-text detectors wrongly flag non-native English writers' essays as AI-generated.",
+        "claim": "AI-text detectors wrongly flag non-native English writers’ essays as AI-generated.",
         "statedOn": "2023-07-10",
         "statedBy": "Liang et al., Patterns",
         "statedUrl": "https://arxiv.org/abs/2304.02819",
@@ -603,7 +603,7 @@
       },
       {
         "id": "hl-eu-date",
-        "claim": "The EU's rules for high-risk AI, including hiring tools, apply from August 2, 2026.",
+        "claim": "The EU’s rules for high-risk AI, including hiring tools, apply from August 2, 2026.",
         "statedOn": "2024-08-01",
         "statedBy": "EU AI Act",
         "statedUrl": "https://digital-strategy.ec.europa.eu/en/news/ai-omnibus-enters-force",
@@ -616,7 +616,7 @@
       },
       {
         "id": "hl-hallucinate",
-        "claim": "Even the best language models 'hallucinate' facts.",
+        "claim": "Even the best language models ‘hallucinate’ facts.",
         "statedOn": "2023-03-14",
         "statedBy": "OpenAI, GPT-4 Technical Report",
         "statedUrl": "https://arxiv.org/abs/2303.08774",

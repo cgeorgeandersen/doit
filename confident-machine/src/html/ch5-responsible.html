@@ -1,1 +1,207 @@
-<!-- ch5-responsible -->
+<section
+  class="chapter"
+  id="when-trust-scales"
+  data-chapter
+  data-nav-label="When Trust Scales"
+  data-nav-num="05"
+  data-sources="samsung-2023 moffatt-cbc moffatt-decision parasuraman-2010 reg-b cjeu-2025"
+>
+  <div class="measure prose">
+    <p class="eyebrow">Chapter 5</p>
+    <h2 class="chapter-title">When Trust Scales</h2>
+    <p class="dek">
+      When one person trusts a machine too much, one decision goes wrong. When an organization does, thousands do. Here is how
+      bias hides inside a system that never sees it.
+    </p>
+
+    <aside class="analogy" aria-label="Analogy">
+      <span class="eyebrow">Think of it this way</span>
+      <p>
+        Imagine training a new recruiter by having them shadow your team through ten years of hiring decisions, without ever
+        saying which habits to avoid. They would copy everything, including the habits nobody would defend out loud. Now
+        imagine that recruiter reading ten thousand applications a day.
+      </p>
+    </aside>
+
+    <p>
+      Until now this essay has been about you and one answer. When AI is built into a process, such as screening job
+      applicants, answering customers or approving loans, the same judgment is applied to everyone who passes through. A
+      mistake stops being an error and becomes a policy.
+    </p>
+    <p>
+      In 2018 Reuters reported that Amazon had scrapped an experimental tool for rating job applicants. It had been trained
+      on résumés submitted to the company over ten years, most of them from men. The system “penalized resumes that included
+      the word ‘women’s,’ as in ‘women’s chess club captain,’” and downgraded graduates of two all-women’s colleges. Amazon
+      edited the programs to be neutral to those terms, but that was “no guarantee that the machines would not devise other
+      ways of sorting candidates that could prove discriminatory.”<span data-cite="amazon-reuters-2018"></span>
+    </p>
+    <p>
+      That last line is the important one. You can delete the obvious clue and leave the bias in place. Here is how, in a
+      small world where we know exactly what is true.
+    </p>
+  </div>
+
+  <div class="wide">
+    <div class="scrolly" id="bias-scrolly">
+      <div
+        class="scrolly-graphic"
+        tabindex="0"
+        aria-label="The hiring screener. Use the left and right arrow keys, or the Previous and Next buttons, to move between steps."
+      >
+        <div class="scrolly-stage bias-stage" id="bias-stage" data-step="0">
+          <p class="stage-loading small muted">Building the town…</p>
+        </div>
+        <div class="scrolly-controls"></div>
+      </div>
+
+      <div class="scrolly-steps">
+        <section class="step">
+          <div class="step-inner">
+            <h4>1 · A town with a history</h4>
+            <p>
+              Meet 2,000 past applicants to one employer, from two groups we will call A and B. We built this town so that the
+              groups are equally qualified: the same skills-test scores and the same experience, on average.
+            </p>
+            <p>
+              But past hiring managers favoured group A. And because the town’s neighbourhoods reflect its history, most of
+              group B lives in Eastfield and most of group A in Westfield. Everything here is invented; nothing is estimated.
+            </p>
+          </div>
+        </section>
+        <section class="step">
+          <div class="step-inner">
+            <h4>2 · Your prediction</h4>
+            <p>
+              Now we train a screener on those past decisions, the way many real systems are built. It sees each applicant’s
+              skills-test score, years of experience and zip code. It never sees which group anyone belongs to.
+            </p>
+            <p>Then it screens 2,000 new applicants. Will it treat the two groups equally?</p>
+          </div>
+        </section>
+        <section class="step">
+          <div class="step-inner">
+            <h4>3 · What the screener learned</h4>
+            <p>
+              It advances far fewer applicants from group B. It found that living in Eastfield predicted rejection in the past,
+              and learned to count it against people. The zip code stood in for the group it was never shown.
+            </p>
+            <p>
+              The ratio of the two selection rates falls well below four-fifths, the line US hiring guidelines have used since
+              1978 as a sign of possible discrimination.
+            </p>
+          </div>
+        </section>
+        <section class="step">
+          <div class="step-inner">
+            <h4>4 · Remove the proxy</h4>
+            <p>
+              Take the zip code away and retrain. With only qualifications left, which are equal by construction, the gap
+              closes.
+            </p>
+            <p>
+              Notice what else changes: the screener agrees <em>less</em> with the past decisions. It is a worse copy of a
+              biased history, which is exactly the point. Try the switches yourself, including one that hands the screener the
+              group directly.
+            </p>
+          </div>
+        </section>
+        <section class="step">
+          <div class="step-inner">
+            <h4>5 · One applicant</h4>
+            <p>
+              Behind every rate is a person. Here is one applicant the screener rejected while it could see zip codes, and what
+              would have changed the decision.
+            </p>
+            <p>An explanation like this, “what would have to change”, is also how people can challenge a decision.</p>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <div class="measure prose">
+    <h3>The zip code was never the problem</h3>
+    <p>
+      The history was. A model trained to reproduce past decisions learns whatever predicted them, and any feature that
+      correlates with a group, such as an address, a school, a hobby or a turn of phrase, can carry the old pattern forward.
+      Legal scholars have described how this lets a model discriminate without ever seeing a protected characteristic.<span
+        data-cite="barocas-selbst-2016"
+      ></span>
+    </p>
+    <p>
+      It happens outside hiring too. A widely used health-care algorithm predicted patients’ future medical costs as a stand-in
+      for how sick they were. Because less money had been spent on Black patients with the same needs, at a given risk score
+      Black patients were considerably sicker than white patients. Fixing the disparity would have raised the share of Black
+      patients receiving additional help from 17.7% to 46.5%.<span data-cite="obermeyer-2019"></span>
+    </p>
+    <p>
+      Real data rarely has one tidy proxy to delete. It has dozens of weak ones. That is why fairness checks look at outcomes
+      by group, as the screener’s readout does, instead of trusting that sensitive columns were left out. The four-fifths
+      test is one such check: a selection rate for any group below four-fifths of the highest group’s rate “will generally be
+      regarded” as evidence of adverse impact under the 1978 federal guidelines.<span data-cite="ugesp-1607"></span>
+    </p>
+    <p class="timely-note">
+      <span data-timely="four-fifths-status" data-timely-mode="claim"></span>
+      <span data-timely="nyc-ll144" data-timely-mode="claim"></span>
+    </p>
+  </div>
+
+  <div class="measure prose" id="dilemmas">
+    <h3>Three decisions you might actually face</h3>
+    <p>
+      Fairness is one principle. The others show up in more ordinary choices. There is no scored answer to these; each option
+      buys something and risks something. Your choices go into your case file.
+    </p>
+  </div>
+
+  <div class="wide">
+    <div class="dilemmas" id="dilemma-list"></div>
+  </div>
+
+  <div class="measure prose">
+    <h3>What the principles are for</h3>
+    <p>
+      Frameworks from standards bodies and governments list similar principles.<span data-cite="nist-rmf oecd-principles"></span>
+      They can sound abstract. Each one is easier to remember as the mistake it exists to prevent.
+    </p>
+  </div>
+
+  <div class="wide">
+    <dl class="principles" id="principles"></dl>
+  </div>
+
+  <details class="deeper measure">
+    <summary><span class="summary-title">Go deeper</span><span>Inside the screener, and why fairness has no single score</span></summary>
+    <div class="deeper-body">
+      <h4>The screener is logistic regression</h4>
+      <p>
+        Each applicant gets a score: a weighted sum of their features, z = b + w₁·skill + w₂·experience + w₃·Eastfield. The
+        sigmoid function turns the score into a probability of “would have been hired”. Training adjusts the weights, step by
+        step, to make the past decisions as likely as possible (gradient descent on the log loss). The screener then advances
+        the top 30% of the new pool by score.
+      </p>
+      <p class="formula">P(hired) = 1 / (1 + e^(−z))      z = b + Σ wᵢ·xᵢ</p>
+      <p>
+        Features are standardized first, so each weight shows how much a one-standard-deviation change moves the score. The
+        code is in <span class="mono">src/engine/logistic.ts</span>, and the page’s tests check that removing the zip code
+        lifts the ratio above 0.8 in this town.
+      </p>
+      <h4>Fairness has more than one definition</h4>
+      <p>
+        Equal selection rates are one definition of fairness. Others ask that a score mean the same thing in every group, or
+        that error rates be equal. When groups differ in their underlying rates, these goals conflict: except in special cases,
+        no score can satisfy them all at once.<span data-cite="kleinberg-2016 chouldechova-2017"></span> Choosing among them is
+        a value judgment, which is one more reason it should not be left to a model by default.
+      </p>
+      <h4>The limits of this demo</h4>
+      <p>
+        The town is synthetic, and its numbers are invented to make one mechanism visible. The size of the gap depends on how
+        segregated the neighbourhoods are and on the random draw; across the seeds we tested, the ratio with the zip code
+        ranged from about 0.44 to 0.66, and removing it lifted the ratio above 0.8 every time. Real systems are messier, with
+        many correlated features and outcomes that are themselves biased measurements.
+      </p>
+    </div>
+  </details>
+
+  <div class="measure" data-sources-list></div>
+</section>

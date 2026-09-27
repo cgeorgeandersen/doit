@@ -1,1 +1,178 @@
-<!-- ch6-moving -->
+<section
+  class="chapter"
+  id="moving-boundary"
+  data-chapter
+  data-nav-label="The Moving Boundary"
+  data-nav-num="06"
+  data-sources="timely:metr-horizon timely:price-per-token"
+>
+  <div class="measure prose">
+    <p class="eyebrow">Chapter 6</p>
+    <h2 class="chapter-title">The Moving Boundary</h2>
+    <p class="dek">
+      Everything in this essay with a date on it will change. Here is how fast, and how the trust question changes with it.
+    </p>
+
+    <aside class="analogy" aria-label="Analogy">
+      <span class="eyebrow">Think of it this way</span>
+      <p>
+        News about AI is like light from a distant star. By the time it reaches you, the thing it describes has moved. Read
+        every number as a snapshot with a timestamp, and check the timestamp first.
+      </p>
+    </aside>
+
+    <h3>How long it can work on its own</h3>
+    <p>
+      The research group METR measures progress in an unusually concrete unit: how long a task takes a skilled person. It
+      gives AI agents self-contained software problems of many lengths, then finds the length at which the agent succeeds
+      half the time. In early 2023, for GPT-4, that was about four minutes of human work.
+    </p>
+  </div>
+
+  <div class="wide">
+    <figure class="horizon" id="horizon" aria-labelledby="horizon-title">
+      <p class="figure-title" id="horizon-title">Length of task AI agents can finish</p>
+      <p class="figure-sub">Measured in how long the task takes a skilled person. Log scale: each gridline is a multiple.</p>
+      <div class="horizon-guess" id="horizon-guess"></div>
+      <div class="chart horizon-chart" id="horizon-chart"></div>
+      <p class="chart-description" id="horizon-desc" aria-live="polite"></p>
+      <figcaption>
+        Source: METR, Time Horizon 1.1, frontier models at release.<span data-cite="timely:metr-horizon"></span> Solid line:
+        tasks finished half the time. Dashed: four times in five.
+      </figcaption>
+    </figure>
+  </div>
+
+  <div class="measure prose">
+    <p><span data-timely="metr-horizon" data-timely-mode="claim"></span></p>
+    <p>
+      Two cautions keep this honest. These are software tasks with clear success criteria, the kind of work Chapter 3 put
+      well inside the frontier. And “half the time” is a low bar for anything that matters: the dashed line, for tasks
+      finished four times in five, sits far lower. The frontier moves fastest where it was already strong.
+    </p>
+
+    <h3>What it costs</h3>
+    <p>
+      Meanwhile, the price of a given level of ability has collapsed. The chart follows the cheapest model that matched two
+      well-known models, GPT-3.5 and GPT-4, on a standard knowledge test.
+    </p>
+  </div>
+
+  <div class="wide">
+    <figure class="prices" aria-labelledby="prices-title">
+      <p class="figure-title" id="prices-title">Price of matching GPT-3.5 and GPT-4, in US dollars per million tokens</p>
+      <p class="figure-sub">Cheapest model at or above each benchmark score. Log scale. A token is a word or a piece of one.</p>
+      <div class="chart prices-chart" id="prices-chart"></div>
+      <figcaption>Source: Epoch AI.<span data-cite="timely:price-per-token"></span></figcaption>
+    </figure>
+  </div>
+
+  <div class="measure prose">
+    <p><span data-timely="price-per-token" data-timely-mode="claim"></span></p>
+    <p><span data-timely="price-of-thought" data-timely-mode="claim"></span></p>
+    <p>
+      Cheap capability changes who uses AI and how often. It also changes the arithmetic of the trust map: when producing
+      an answer costs almost nothing, checking it becomes most of the cost.
+    </p>
+
+    <h3>From answers to actions</h3>
+    <p>
+      The newest systems don’t just answer. As agents, they click, type, send, buy and delete on your behalf. That changes
+      the trust question.
+    </p>
+  </div>
+
+  <div class="wide">
+    <div class="shift" role="group" aria-label="How the trust question shifts">
+      <div class="shift-col">
+        <p class="shift-k">Chatbot</p>
+        <p class="shift-q">“Is this answer right?”</p>
+        <p class="shift-body">It says something. You decide what to do with it, and a wrong answer can simply be ignored.</p>
+      </div>
+      <div class="shift-arrow" aria-hidden="true">→</div>
+      <div class="shift-col shift-col--agent">
+        <p class="shift-k">Agent</p>
+        <p class="shift-q">“What might it do, and can it be undone?”</p>
+        <p class="shift-body">It acts. Your check has to come before the action, and the cost of a mistake depends on whether it can be reversed.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="measure prose">
+    <p><span data-timely="agents-osworld" data-timely-mode="claim"></span></p>
+    <p>
+      One failure became a parable. <span data-timely="agent-deletes-database" data-timely-mode="claim"></span> The last
+      two sentences are the whole essay in miniature: a confident statement, wrong, from a system with its hands on
+      something real.
+    </p>
+    <p>
+      Agents also add a new risk: <span data-timely="owasp-agents" data-timely-mode="claim"></span> For an agent, add a
+      third question to the trust map: <strong>can the action be undone?</strong> Let it draft, search and propose freely.
+      Make it ask before it sends, pays, deletes or publishes.
+    </p>
+
+    <h3>The rules are moving too</h3>
+    <p>
+      Laws are catching up unevenly, and the dates keep shifting. The European Union’s AI Act shows how.
+    </p>
+  </div>
+
+  <div class="wide">
+    <figure class="regline" aria-labelledby="regline-title">
+      <p class="figure-title" id="regline-title">When the EU AI Act’s rules apply</p>
+      <ol class="regline-list" id="regline-list"></ol>
+      <figcaption>
+        Source: European Commission.<span data-cite="timely:eu-ai-act"></span> Struck-through dates were the original
+        deadlines, moved by a 2026 amendment.
+      </figcaption>
+    </figure>
+  </div>
+
+  <div class="measure prose">
+    <p><span data-timely="eu-ai-act" data-timely-mode="claim"></span></p>
+    <ul class="reg-others">
+      <li><span data-timely="us-federal" data-timely-mode="claim"></span></li>
+      <li><span data-timely="us-states" data-timely-mode="claim"></span></li>
+      <li><span data-timely="colorado" data-timely-mode="claim"></span></li>
+      <li><span data-timely="china-labeling" data-timely-mode="claim"></span></li>
+    </ul>
+
+    <h3>The half-life of a fact</h3>
+    <p>
+      Here are eleven claims about AI, each true when it was published. For each one, decide whether it still holds today.
+      As you answer, its lifeline appears.
+    </p>
+  </div>
+
+  <div class="wide">
+    <div class="halflife" id="halflife"></div>
+  </div>
+
+  <details class="deeper measure">
+    <summary><span class="summary-title">Go deeper</span><span>How these trends are measured, and their limits</span></summary>
+    <div class="deeper-body">
+      <h4>Time horizons</h4>
+      <p>
+        METR times skilled people on each task, runs the AI agent many times, and fits a curve of success against task length.
+        The 50% time horizon is where that curve crosses one half. Its fitted doubling time since 2023 is about 129 days, with
+        a 95% confidence interval of 104 to 158 days. The latest points sit above the 16 hours its current task suite can
+        measure reliably, so treat them as “more than 16 hours”.<span data-cite="timely:metr-horizon"></span>
+      </p>
+      <h4>Prices</h4>
+      <p>
+        Epoch AI blends input and output token prices three to one and tracks the cheapest model above each score, excluding
+        reasoning models, which spend extra tokens thinking. Its broader 2026 analysis warns that models can be tuned to
+        benchmarks, that benchmark scores are not the same as useful work, and that people rarely switch to the cheapest
+        option.<span data-cite="timely:price-of-thought"></span>
+      </p>
+      <h4>How this page keeps its dates honest</h4>
+      <p>
+        Every dated claim on this page lives in one file, with its source, the date it describes and the date it was last
+        checked. A small script flags any claim that hasn’t been checked in 120 days, and the page marks such claims “may be
+        out of date”. The lifelines above use the first source that recorded each change, so real lifespans were often shorter.
+      </p>
+    </div>
+  </details>
+
+  <div class="measure" data-sources-list></div>
+</section>

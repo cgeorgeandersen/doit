@@ -54,7 +54,7 @@ export const DILEMMAS: Dilemma[] = [
         risks: 'Slower today, and someone has to set the tool up.',
       },
     ],
-    lesson: 'The rule is not "never use AI". It is "know where the data goes before it leaves".',
+    lesson: 'The rule is not “never use AI”. It is “know where the data goes before it leaves”.',
     sources: ['samsung-2023'],
   },
   {
