@@ -21,7 +21,7 @@ It is a static site: no backend, no API keys, no tracking, and no network reques
 
 ## Run it
 
-Requires Node 20 or later.
+Requires Node 22 (the version pinned in `package.json` and used by CI and Vercel).
 
 ```bash
 cd confident-machine
@@ -50,9 +50,9 @@ npm run preview    # serves the build locally
 
 The build uses relative asset paths (`base: './'`), so `dist/` works from any path on any static host.
 
-- **Vercel:** import the repository. The root [`vercel.json`](../vercel.json) installs and builds inside `confident-machine/` and serves `confident-machine/dist`. (Alternatively, set the project's Root Directory to `confident-machine` and Vercel detects Vite.)
-- **GitHub Pages:** the workflow in [`.github/workflows/confident-machine-pages.yml`](../.github/workflows/confident-machine-pages.yml) tests, checks fact freshness, builds and deploys on every push to `master` that touches the essay. In the repository settings, set Pages → Source to **GitHub Actions**. Pull requests are built and tested but not deployed.
-- **Anywhere else:** upload the contents of `dist/`.
+- **Vercel (the live site):** import the repository; every push to `master` redeploys. Either Root Directory setting works. With the repository root, the root [`vercel.json`](../vercel.json) builds inside `confident-machine/` and copies the output to `dist/`. With Root Directory set to `confident-machine`, [`confident-machine/vercel.json`](vercel.json) runs the standard Vite build. The commands in both files check where they are running, so neither setting can point `npm ci` at the wrong folder.
+- **Checks:** the workflow in [`.github/workflows/confident-machine-ci.yml`](../.github/workflows/confident-machine-ci.yml) installs, tests, checks fact freshness and builds on every push and pull request that touches the essay. It does not deploy anywhere. This repository's GitHub Pages site (from the `gh-pages` branch) is a different project and is left alone.
+- **Anywhere else:** upload the contents of `dist/` to any static host.
 
 Page weight is about 0.8 MB of HTML, CSS and JavaScript before fonts (about 0.4 MB compressed), with the book text (about 0.8 MB) loaded only when Chapter 1 approaches. Fonts are self-hosted, Latin subsets only.
 

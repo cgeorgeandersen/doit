@@ -472,8 +472,10 @@ Principles:
 **Assumptions**
 
 - **Location in the repo.** The repository root holds an unrelated 2019 iOS project,
-  so the essay lives in `confident-machine/`. Root-level `vercel.json` and a GitHub
-  Pages workflow build from that folder, so it deploys as-is.
+  and its GitHub Pages site (from the `gh-pages` branch) belongs to another project, so
+  the essay lives in `confident-machine/` and is hosted on Vercel. Vercel configs at the
+  root and in `confident-machine/` both work, whichever Root Directory the Vercel
+  project uses. A GitHub Actions workflow runs the tests and build but never deploys.
 - **Authorship.** The text and code were drafted with an AI assistant. The colophon
   says so, which is on theme: every claim links to a source so readers can check it.
 - **"Today" is 2026-09-27**, the research date. Every time-sensitive fact shows its
