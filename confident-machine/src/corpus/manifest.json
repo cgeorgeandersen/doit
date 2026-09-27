@@ -1,0 +1,45 @@
+{
+  "generated": "2026-09-27",
+  "source": "Project Gutenberg (public domain in the USA)",
+  "books": [
+    {
+      "id": "alice",
+      "title": "Alice's Adventures in Wonderland",
+      "author": "Lewis Carroll",
+      "year": 1865,
+      "gutenbergId": 11,
+      "url": "https://www.gutenberg.org/ebooks/11",
+      "unit": "chapter",
+      "unitsKept": 12,
+      "unitsTotal": 12,
+      "words": 26646,
+      "bytes": 149269
+    },
+    {
+      "id": "pride",
+      "title": "Pride and Prejudice",
+      "author": "Jane Austen",
+      "year": 1813,
+      "gutenbergId": 1342,
+      "url": "https://www.gutenberg.org/ebooks/1342",
+      "unit": "chapter",
+      "unitsKept": 34,
+      "unitsTotal": 61,
+      "words": 60396,
+      "bytes": 344076
+    },
+    {
+      "id": "holmes",
+      "title": "The Adventures of Sherlock Holmes",
+      "author": "Arthur Conan Doyle",
+      "year": 1892,
+      "gutenbergId": 1661,
+      "url": "https://www.gutenberg.org/ebooks/1661",
+      "unit": "story",
+      "unitsKept": 7,
+      "unitsTotal": 12,
+      "words": 59197,
+      "bytes": 323130
+    }
+  ]
+}

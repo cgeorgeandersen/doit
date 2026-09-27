@@ -1,0 +1,55 @@
+/* Masthead: the title is the page's one loud typographic moment. */
+
+.masthead {
+  padding-block: clamp(2.5rem, 6vw, 4.5rem) clamp(2rem, 4.5vw, 3.25rem);
+}
+
+.masthead-kicker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.masthead-title {
+  margin-top: 1.1rem;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(3rem, 11.5vw, 7.6rem);
+  line-height: 0.96;
+  letter-spacing: -0.022em;
+  text-wrap: balance;
+  max-width: 11.5ch;
+}
+
+.masthead-underline {
+  text-decoration-line: underline;
+  text-decoration-style: dotted;
+  text-decoration-color: var(--machine);
+  text-decoration-thickness: 0.032em;
+  text-underline-offset: 0.07em;
+  text-decoration-skip-ink: none;
+}
+
+.masthead-dek {
+  margin-top: clamp(1.4rem, 3vw, 2rem);
+  max-width: 30ch;
+  font-size: clamp(1.25rem, 2.6vw, 1.6rem);
+  line-height: 1.35;
+  color: var(--ink-2);
+  text-wrap: pretty;
+}
+
+.masthead-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.4rem;
+  margin: 2rem 0 0;
+  padding: 1rem 0 0;
+  list-style: none;
+  border-top: 1px solid var(--rule);
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}

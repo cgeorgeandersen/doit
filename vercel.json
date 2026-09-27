@@ -1,0 +1,7 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "installCommand": "npm ci --prefix confident-machine",
+  "buildCommand": "npm run build --prefix confident-machine",
+  "outputDirectory": "confident-machine/dist",
+  "framework": null
+}

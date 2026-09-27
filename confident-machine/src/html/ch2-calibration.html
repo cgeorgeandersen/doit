@@ -1,0 +1,180 @@
+<section
+  class="chapter"
+  id="confidently-wrong"
+  data-chapter
+  data-nav-label="Confidently Wrong"
+  data-nav-num="02"
+  data-sources="noaa-pacific geonames-rome geonames-nyc nasa-venus ocd-cleopatra whe-pyramid nasa-apollo11 nasa-jupiter ethw-fax loc-telephone nasa-moon oxford-history britannica-tenochtitlan physics-today-mercury crowther-2015 nasa-milkyway"
+>
+  <div class="measure prose">
+    <p class="eyebrow">Chapter 2</p>
+    <h2 class="chapter-title">Confidently Wrong</h2>
+    <p class="dek">Why the machine sounds just as sure when it’s wrong, and what actually helps.</p>
+
+    <aside class="analogy" aria-label="Analogy">
+      <span class="eyebrow">Think of it this way</span>
+      <p>
+        A weather forecaster who says “70% chance of rain” is doing well if it rains on about 70% of those days. You don’t
+        judge a forecaster by how confident they sound. You judge them by the track record.
+      </p>
+    </aside>
+
+    <p>
+      That match between how sure you are and how often you’re right is called <strong>calibration</strong>. Weather
+      forecasts have been scored this way since 1950.<span data-cite="brier-1950"></span> Before looking at the machine,
+      let’s measure yours.
+    </p>
+    <p>
+      Ten questions, two choices each. Pick an answer, then say how sure you are, from 50% (a coin flip) to 100% (certain).
+      You’ll see each answer as you go.
+    </p>
+  </div>
+
+  <div class="wide quiz-wrap">
+    <div class="quiz" id="quiz" aria-live="off">
+      <p class="small muted">Loading the questions…</p>
+    </div>
+  </div>
+
+  <div class="wide">
+    <figure class="calib-figure" id="calib-figure" aria-labelledby="calib-title">
+      <div class="calib-head">
+        <p class="figure-title" id="calib-title">Your calibration</p>
+        <p class="figure-sub">Each dot groups your answers by how sure you said you were. On the diagonal, confidence matches accuracy.</p>
+      </div>
+      <div class="calib-body">
+        <div class="chart calib-chart" id="calib-chart"></div>
+        <div class="calib-summary" id="calib-summary" aria-live="polite">
+          <p class="small muted">Your curve appears here as you answer.</p>
+        </div>
+      </div>
+    </figure>
+  </div>
+
+  <div class="measure prose">
+    <h3>The machine has a confidence gap too</h3>
+    <p>
+      When OpenAI built GPT-4, it measured this directly. On a multiple-choice test, the raw pre-trained model was “highly
+      calibrated”: its confidence in an answer generally matched its chance of being right. After the extra training that
+      turned it into a helpful assistant, in the report’s words, “the calibration is reduced.” The average gap between its
+      confidence and its accuracy grew from under one percentage point to more than seven.<span
+        data-cite="gpt4-report"
+      ></span>
+    </p>
+    <p>
+      When researchers ask models to state their confidence in words, the models tend to be overconfident, much like
+      people.<span data-cite="xiong-2024"></span> And people take the bait. In one study, readers overestimated how often a
+      model’s answers were right, and longer explanations raised their confidence even when the extra length added no
+      accuracy.<span data-cite="steyvers-2025"></span>
+    </p>
+    <p class="pull">The tone of an answer tells you nothing about whether it is right.</p>
+
+    <h3>Why the machine makes things up</h3>
+    <p>“Hallucination” sounds mysterious. The mechanics are not. Three forces push the same way.</p>
+    <ol class="reasons">
+      <li>
+        <strong>It predicts; it doesn’t look up.</strong> As Chapter 1 showed, the model produces likely text. For facts that
+        were rare in its training data, such as an obscure person’s birthday, there is no reliable pattern to follow, so it
+        fills the gap with something that fits.<span data-cite="kalai-2025"></span>
+      </li>
+      <li>
+        <strong>Tests reward bluffing.</strong> Most benchmarks score a wrong answer and “I don’t know” the same: zero. On a
+        test like that, a guess can only help, so a model trained to score well learns to guess.<span
+          data-cite="kalai-2025"
+        ></span>
+      </li>
+      <li>
+        <strong>People reward confidence.</strong> Assistants are tuned on human ratings, and raters tend to prefer answers
+        that sound sure and agree with them, sometimes even over correct ones.<span data-cite="sharma-2023"></span>
+      </li>
+    </ol>
+  </div>
+
+  <div class="wide">
+    <figure class="grading" id="grading" aria-labelledby="grading-title">
+      <p class="figure-title" id="grading-title">Grade the machine</p>
+      <p class="figure-sub">
+        An illustration: a model knows the answers to 60% of the questions on a four-option test. On the rest it can guess
+        (a 1-in-4 chance of being right) or say “I don’t know”. Choose how much a wrong answer costs.
+      </p>
+      <div class="grading-body" id="grading-body"></div>
+    </figure>
+  </div>
+
+  <div class="measure prose">
+    <p>
+      That is the whole incentive problem in one slider. When a test does charge for wrong answers, the differences between
+      models are stark. <span data-timely="hallucination-rates" data-timely-mode="claim"></span>
+    </p>
+
+    <h3>What actually reduces it</h3>
+    <p>
+      <strong>Give it the source.</strong> Answering from memory is a closed-book exam. Paste in the document, or use a tool
+      that retrieves sources, and the job changes from recalling to reading: the right words are sitting in the prompt, and
+      the likeliest continuation is to use them. Retrieval measurably reduces hallucination.<span
+        data-cite="shuster-2021 lewis-2020"
+      ></span>
+      It does not remove it. Legal research tools built this way still made things up 17% to 33% of the time in a 2024
+      test.<span data-cite="magesh-2024"></span> And even with the document in front of them,
+      <span data-timely="summary-hallucination" data-timely-mode="stamp"
+        >the 15 best models on one leaderboard added unsupported claims to 1.8% to 5.4% of their summaries.</span
+      >
+    </p>
+    <p>
+      <strong>Ask for citations, then open them.</strong> A citation doesn’t make an answer true. It makes the answer cheap
+      to check, which matters because the cost of not checking is now well documented. In 2023 a New York court fined two
+      lawyers and their firm $5,000 over a brief that cited six cases ChatGPT had invented.<span
+        data-cite="mata-avianca"
+      ></span>
+      Since then, <span data-timely="court-hallucinations" data-timely-mode="claim"></span>
+    </p>
+    <p>
+      <strong>Make it check itself, separately.</strong> In one method the model drafts an answer, writes questions that
+      would verify it, answers those questions on their own, and then revises. Keeping the check apart from the draft stops
+      the draft from steering the check, and it reduced hallucinations across several tasks.<span
+        data-cite="dhuliawala-2023"
+      ></span>
+    </p>
+    <p>
+      <strong>Let “I don’t know” win.</strong> The researchers who described the bluffing incentive propose a direct fix:
+      tell the model what a wrong answer costs, and grade it that way.<span data-cite="kalai-2025"></span> You can do a
+      version of this yourself by saying, in your request, that “I’m not sure” is an acceptable answer.
+    </p>
+  </div>
+
+  <details class="deeper measure">
+    <summary><span class="summary-title">Go deeper</span><span>How your score works, and its limits</span></summary>
+    <div class="deeper-body">
+      <h4>The calibration curve and the Brier score</h4>
+      <p>
+        Your answers are grouped into five bins by stated confidence (50–59%, 60–69% and so on). Each dot sits at the average
+        confidence of a bin and the share of that bin you got right. The Brier score is the average squared gap between your
+        stated probability and what happened (1 if right, 0 if wrong): 0 is perfect, and always saying 50% scores 0.25.<span
+          data-cite="brier-1950"
+        ></span>
+      </p>
+      <h4>Why ten questions is a snapshot, not a verdict</h4>
+      <p>
+        With ten answers, each dot rests on a handful of questions, so treat the curve as a hint. Calibration also depends on
+        the questions. People tend to be overconfident on hard questions and underconfident on easy ones, a pattern called the
+        hard–easy effect.<span data-cite="lichtenstein-1977"></span> These questions deliberately include several surprises,
+        so they lean hard.
+      </p>
+      <h4>Machines can be calibrated, under the right conditions</h4>
+      <p>
+        Large pre-trained models turn out to be well calibrated on multiple-choice questions when the question is posed in the
+        right format, and they can estimate the probability that they know an answer.<span data-cite="kadavath-2022"></span>
+        The catch is that this internal signal usually isn’t shown to you, and the tone of the final answer doesn’t carry it.
+      </p>
+      <h4>The size of errors matters too</h4>
+      <p>
+        Calibration asks how often you are wrong, not how badly. On one 2026 test, the best model read analog clocks correctly
+        about half the time, and when it was wrong, its median error was one to three hours; for people it was three minutes.<span
+          data-cite="timely:jagged-imo-clocks"
+        ></span>
+      </p>
+    </div>
+  </details>
+
+  <div class="measure" data-sources-list></div>
+</section>
