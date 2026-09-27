@@ -17,7 +17,7 @@ Readers don't just read about this; they test it on themselves.
 
 Every factual claim links to a primary source. Time-sensitive claims carry a "Checked" date and live in one file, [`src/content/timely.json`](src/content/timely.json), so the essay can be kept current. Design rationale, research decisions and assumptions are in [`DESIGN.md`](DESIGN.md).
 
-It is a static site: no backend, no API keys, no tracking, and no network requests at runtime. Both models are trained in the reader's browser. The reader's answers are kept only in their browser (`localStorage`).
+It is a static site: no backend, no API keys, and no third-party requests. Both models are trained in the reader's browser, and the reader's answers are kept only in their browser (`localStorage`). The one thing that leaves the browser is an anonymous page-view count, sent by [Vercel Web Analytics](https://vercel.com/docs/analytics/privacy-policy) on production builds only: page address, referrer, rough location, and browser and device type, with no third-party cookies and never anything the reader types or chooses. The colophon says the same to readers.
 
 ## Run it
 
@@ -50,7 +50,7 @@ npm run preview    # serves the build locally
 
 The build uses relative asset paths (`base: './'`), so `dist/` works from any path on any static host.
 
-- **Vercel (the live site):** import the repository; every push to `master` redeploys. Either Root Directory setting works. With the repository root, the root [`vercel.json`](../vercel.json) builds inside `confident-machine/` and copies the output to `dist/`. With Root Directory set to `confident-machine`, [`confident-machine/vercel.json`](vercel.json) runs the standard Vite build. The commands in both files check where they are running, so neither setting can point `npm ci` at the wrong folder.
+- **Vercel (the live site):** import the repository; every push to `master` redeploys. To see visitor numbers, turn on **Analytics** in the Vercel project (Analytics tab → Enable); until then the page-view script simply isn't served and nothing is counted. Either Root Directory setting works. With the repository root, the root [`vercel.json`](../vercel.json) builds inside `confident-machine/` and copies the output to `dist/`. With Root Directory set to `confident-machine`, [`confident-machine/vercel.json`](vercel.json) runs the standard Vite build. The commands in both files check where they are running, so neither setting can point `npm ci` at the wrong folder.
 - **Checks:** the workflow in [`.github/workflows/confident-machine-ci.yml`](../.github/workflows/confident-machine-ci.yml) installs, tests, checks fact freshness and builds on every push and pull request that touches the essay. It does not deploy anywhere. This repository's GitHub Pages site (from the `gh-pages` branch) is a different project and is left alone.
 - **Anywhere else:** upload the contents of `dist/` to any static host.
 
