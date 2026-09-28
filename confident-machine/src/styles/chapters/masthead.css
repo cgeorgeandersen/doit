@@ -4,10 +4,23 @@
   padding-block: clamp(2.5rem, 6vw, 4.5rem) clamp(2rem, 4.5vw, 3.25rem);
 }
 
+/* Each item draws the dot before it. The kicker is pulled left by one dot's
+   width and that strip is clipped, so at any screen width no line starts or
+   ends with a stray dot. */
 .masthead-kicker {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  row-gap: 0.35rem;
+  margin-left: -1.6em;
+  clip-path: inset(0 0 0 1.6em);
+}
+
+.masthead-kicker > span::before {
+  content: '·';
+  content: '·' / '';
+  display: inline-block;
+  width: 1.6em;
+  text-align: center;
 }
 
 .masthead-title {
