@@ -23,6 +23,15 @@ function explain(missing: string, invalid = missing) {
 
 const DATE = 'a date written like 2026-09-29';
 
+/**
+ * A calendar date. YAML already turns 2026-09-29 into a Date; quoted text is
+ * parsed here. (z.coerce.date would turn a missing date into "Invalid Date",
+ * so the error would say "Not valid" instead of "Required".)
+ */
+function date(hint = DATE) {
+  return z.preprocess((value) => (typeof value === 'string' ? new Date(value) : value), z.date(explain(hint)));
+}
+
 const draft = z.boolean(explain('true or false')).default(false);
 
 const projects = defineCollection({
@@ -36,7 +45,7 @@ const projects = defineCollection({
           .max(160, 'Too long: keep the summary to one line, under 160 characters')
           .transform(typeset),
         status: z.enum(PROJECT_STATUSES, explain('live, in progress, or archived', 'use exactly one of: live, in progress, archived')),
-        date: z.coerce.date(explain(DATE)),
+        date: date(),
         tags: z.array(z.string(), explain('a list like [ai-literacy, interactive]')).default([]),
         cover: image().optional(),
         coverAlt: z.string(explain('a short description of the cover image')).optional(),
@@ -64,8 +73,8 @@ const frameworks = defineCollection({
       .string(explain('the idea in one line, under 200 characters'))
       .max(200, 'Too long: keep the thesis to one line, under 200 characters')
       .transform(typeset),
-    date: z.coerce.date(explain(DATE)),
-    lastReviewed: z.coerce.date(explain(`${DATE}: the last time you re-read and stood behind this framework`)),
+    date: date(),
+    lastReviewed: date(`${DATE}: the last time you re-read and stood behind this framework`),
     relatedProjects: z.array(reference('projects'), explain('a list of project file names like [the-confident-machine]')).default([]),
     kind: z.enum(['philosophy', 'method'], explain('method or philosophy', 'use method or philosophy')).default('method'),
     question: z.string(explain('the question this framework answers, e.g. “Where does AI fit in the work?”')).transform(typeset).optional(),
@@ -78,10 +87,10 @@ const writing = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/writing' }),
   schema: z.object({
     title: z.string(explain('the post’s title')).min(1, 'Required: the post’s title').transform(typeset),
-    date: z.coerce.date(explain(DATE)),
+    date: date(),
     summary: z.string(explain('one or two sentences describing the post')).transform(typeset),
     tags: z.array(z.string(), explain('a list like [ai-strategy, governance]')).default([]),
-    lastReviewed: z.coerce.date(explain(DATE)).optional(),
+    lastReviewed: date().optional(),
     draft,
   }),
 });
