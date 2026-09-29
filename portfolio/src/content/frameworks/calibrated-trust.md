@@ -18,10 +18,10 @@ Calibrated trust means trusting a tool exactly as far as its track record justif
 - **How easy is it for *you* to check the output?**
 - **How bad would a mistake be?**
 
-|  | Easy for you to check | Hard for you to check |
+| If a mistake is… | …and it's easy for you to check | …and it's hard for you to check |
 | --- | --- | --- |
-| **A mistake is minor** | Delegate freely | Use it for ideas only |
-| **A mistake is costly** | Use it, then verify | Keep it human, or add expert review |
+| **Minor** | Delegate freely | Use it for ideas only |
+| **Costly** | Use it, then verify | Keep it human, or add expert review |
 
 The rule underneath: **use AI where checking is cheaper than doing.**
 
