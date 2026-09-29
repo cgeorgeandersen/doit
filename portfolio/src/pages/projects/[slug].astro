@@ -3,6 +3,7 @@
  * One project: what it is, a prominent way to open it, a preview of the live
  * site, the frameworks it puts into practice, and the case study itself.
  */
+import { Image } from 'astro:assets';
 import { render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import FrameworkCard from '../../components/FrameworkCard.astro';
@@ -52,7 +53,7 @@ const jsonLd = {
   jsonLd={jsonLd}
 >
   <article>
-    <header class="wide head">
+    <header class:list={['wide head', { 'head--split': Boolean(liveUrl || cover) }]}>
       <div class="head-text">
         <p class="kicker">
           <span><a href="/projects">Projects</a></span>
@@ -75,10 +76,24 @@ const jsonLd = {
         }
       </div>
       {
-        liveUrl && (
+        liveUrl ? (
           <div class="head-preview">
             <LinkPreview url={liveUrl} title={title} description={summary} image={cover} imageAlt={coverAlt} />
           </div>
+        ) : (
+          cover && (
+            <div class="head-preview">
+              <Image
+                class="cover"
+                src={cover}
+                alt={coverAlt ?? ''}
+                widths={[560, 800, 1100, 1400]}
+                sizes="(min-width: 1100px) 30rem, calc(100vw - 32px)"
+                loading="eager"
+                fetchpriority="high"
+              />
+            </div>
+          )
         )
       }
     </header>
@@ -185,8 +200,19 @@ const jsonLd = {
     color: var(--ink-3);
   }
 
+  /* Without a live site the cover shows on its own, framed like the preview. */
+  .cover {
+    width: 100%;
+    aspect-ratio: 1200 / 630;
+    object-fit: cover;
+    border: 1px solid var(--rule-strong);
+    border-radius: 6px;
+    box-shadow: var(--shadow);
+  }
+
+  /* Two columns only when there's something (preview or cover) to put beside the title. */
   @media (min-width: 1100px) {
-    .head {
+    .head--split {
       grid-template-columns: minmax(0, 1fr) minmax(0, 30rem);
       column-gap: 4rem;
       align-items: center;
