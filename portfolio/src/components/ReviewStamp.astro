@@ -22,32 +22,37 @@ const stale = isDueForReview(date);
 
 <span class:list={['stamp', { 'stamp--stale': stale }]} data-reviewed={isoDate(date)} data-window={SITE.review.staleAfterDays}>
   <span class="stamp-dot" aria-hidden="true"></span>
-  <span>{label} <time datetime={isoDate(date)}>{formatDate(date)}</time></span>
-  <span class="stamp-note" hidden={!stale}>· may be out of date</span>
+  <span class="stamp-text"
+    >{label} <time datetime={isoDate(date)}>{formatDate(date)}</time><span class="stamp-note" hidden={!stale}> · may be out of date</span></span
+  >
 </span>
 
 <style>
+  /* Self-contained: it looks the same wherever it's placed (no inherited caps or tracking). */
   .stamp {
     display: inline-flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.2em 0.45em;
-    padding: 0.1em 0.65em;
+    align-items: flex-start;
+    gap: 0.45em;
+    max-width: 100%;
+    padding: 0.1em 0.7em;
     border: 1px solid var(--rule-strong);
-    border-radius: 999px;
+    border-radius: 1em;
     font-family: var(--font-mono);
     font-size: 0.62rem;
     font-weight: 400;
+    font-style: normal;
     line-height: 1.7;
     letter-spacing: 0.03em;
+    text-transform: none;
     color: var(--ink-3);
-    font-style: normal;
   }
 
+  /* Centered on the first line of text, even when the stamp wraps. */
   .stamp-dot {
     flex: none;
     width: 6px;
     height: 6px;
+    margin-top: calc(0.85em - 3px);
     border-radius: 50%;
     background: var(--accent);
   }

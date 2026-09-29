@@ -1,0 +1,123 @@
+---
+/**
+ * A framework as a method: its numeral and question, title, one-line thesis,
+ * review stamp, and the projects that apply it (derived, never typed twice).
+ */
+import ReviewStamp from './ReviewStamp.astro';
+import type { Framework, Project } from '../lib/content';
+
+interface Props {
+  framework: Framework;
+  number?: string | undefined;
+  projects?: Project[];
+  headingLevel?: 'h2' | 'h3';
+  proofLabel?: string;
+}
+
+const { framework, number, projects = [], headingLevel = 'h3', proofLabel = 'Applied in' } = Astro.props;
+const { title, thesis, question, lastReviewed, draft } = framework.data;
+const Heading = headingLevel;
+---
+
+<article class="framework-card">
+  {
+    (number || question) && (
+      <p class="fw-kicker">
+        {number && <span class="num">{number}</span>}
+        {question && <span>{question}</span>}
+      </p>
+    )
+  }
+  <Heading class="fw-title"><a class="quiet-link" href={`/frameworks/${framework.id}`}>{title}</a></Heading>
+  <p class="fw-thesis">{thesis}</p>
+  <p class="fw-stamp">
+    <ReviewStamp date={lastReviewed} />
+    {draft && <span class="draft">Draft · not published</span>}
+  </p>
+  {
+    projects.length > 0 && (
+      <div class="fw-proof">
+        <p class="label">{proofLabel}</p>
+        <ul>
+          {projects.map((p) => (
+            <li>
+              <a href={`/projects/${p.id}`}>
+                {p.data.title} <span aria-hidden="true">→</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )
+  }
+</article>
+
+<style>
+  .framework-card {
+    display: grid;
+    gap: 0.75rem;
+    align-content: start;
+  }
+
+  .fw-kicker {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem 0.75rem;
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  .num {
+    color: var(--accent-ink);
+  }
+
+  .fw-title {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.55rem, 2.6vw, 1.85rem);
+    line-height: 1.08;
+    letter-spacing: -0.008em;
+  }
+
+  .fw-thesis {
+    color: var(--ink-2);
+    line-height: 1.5;
+  }
+
+  .fw-stamp {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 0.9rem;
+  }
+
+  .draft {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    color: var(--stale-ink);
+  }
+
+  .fw-proof {
+    display: grid;
+    gap: 0.25rem;
+    margin-top: 0.3rem;
+    padding-top: 0.8rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .fw-proof ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .fw-proof a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 32px;
+  }
+</style>

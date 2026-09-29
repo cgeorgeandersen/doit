@@ -1,0 +1,176 @@
+---
+/**
+ * Filter the project list by status and by tag. One choice per group, shown
+ * as pressed buttons, with a live count for screen readers. The choice is
+ * kept in the address (?status=live&tag=workflow) so a filtered view can be
+ * shared. Without JavaScript the controls stay hidden and every project shows.
+ *
+ * Works on any list whose items carry data-status and data-tags attributes.
+ */
+import { PROJECT_STATUSES, STATUS_LABEL, statusSlug, type ProjectStatus } from '../lib/status';
+import { tagSlug } from '../lib/content';
+
+interface Props {
+  statuses: ProjectStatus[];
+  tags: string[];
+  total: number;
+  /** id of the list element to filter */
+  list: string;
+}
+
+const { statuses, tags, total, list } = Astro.props;
+const shownStatuses = PROJECT_STATUSES.filter((s) => statuses.includes(s));
+const noun = (n: number) => (n === 1 ? 'project' : 'projects');
+---
+
+<div class="filters" data-project-filter data-list={list} hidden>
+  <div class="group" role="group" aria-labelledby="filter-status">
+    <span class="label" id="filter-status">Status</span>
+    <button type="button" class="chip" data-key="status" data-value="" aria-pressed="true">All</button>
+    {
+      shownStatuses.map((s) => (
+        <button type="button" class="chip" data-key="status" data-value={statusSlug(s)} aria-pressed="false">
+          {STATUS_LABEL[s]}
+        </button>
+      ))
+    }
+  </div>
+  {
+    tags.length > 0 && (
+      <div class="group" role="group" aria-labelledby="filter-tag">
+        <span class="label" id="filter-tag">Topic</span>
+        <button type="button" class="chip" data-key="tag" data-value="" aria-pressed="true">
+          All
+        </button>
+        {tags.map((t) => (
+          <button type="button" class="chip" data-key="tag" data-value={tagSlug(t)} aria-pressed="false">
+            {t}
+          </button>
+        ))}
+      </div>
+    )
+  }
+  <p class="count" aria-live="polite" data-count>Showing {total} of {total} {noun(total)}</p>
+</div>
+
+<style>
+  .filters {
+    display: grid;
+    gap: 0.9rem;
+    padding-block: 1.2rem;
+    border-block: 1px solid var(--rule);
+  }
+
+  .filters[hidden] {
+    display: none;
+  }
+
+  .group {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.45rem;
+  }
+
+  .group .label {
+    min-width: 4.5rem;
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    min-height: 36px;
+    padding: 0.2rem 0.8rem;
+    border: 1px solid var(--rule-strong);
+    border-radius: 999px;
+    background: transparent;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.02em;
+    color: var(--ink-2);
+    cursor: pointer;
+    transition: border-color 140ms var(--ease), background-color 140ms var(--ease), color 140ms var(--ease);
+  }
+
+  .chip:hover {
+    border-color: var(--ink-3);
+    color: var(--ink);
+  }
+
+  /* Pressed: filled, plus a check mark, so the state never relies on color alone. */
+  .chip[aria-pressed='true'] {
+    border-color: var(--ink);
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .chip[aria-pressed='true']::before {
+    content: '✓';
+    content: '✓' / '';
+  }
+
+  .count {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    color: var(--ink-3);
+  }
+</style>
+
+<script>
+  for (const root of document.querySelectorAll<HTMLElement>('[data-project-filter]')) {
+    const list = document.getElementById(root.dataset.list ?? '');
+    if (!list) continue;
+    const items = [...list.querySelectorAll<HTMLElement>('[data-status]')];
+    const chips = [...root.querySelectorAll<HTMLButtonElement>('button[data-key]')];
+    const count = root.querySelector<HTMLElement>('[data-count]');
+    const empty = document.querySelector<HTMLElement>(`[data-filter-empty="${list.id}"]`);
+    const state: Record<string, string> = { status: '', tag: '' };
+
+    const params = new URLSearchParams(location.search);
+    for (const key of Object.keys(state)) {
+      const wanted = params.get(key) ?? '';
+      if (chips.some((c) => c.dataset.key === key && c.dataset.value === wanted)) state[key] = wanted;
+    }
+
+    const render = (updateUrl: boolean) => {
+      let shown = 0;
+      for (const item of items) {
+        const matches =
+          (!state.status || item.dataset.status === state.status) &&
+          (!state.tag || (item.dataset.tags ?? '').split(' ').includes(state.tag));
+        item.hidden = !matches;
+        if (matches) shown += 1;
+      }
+      for (const chip of chips) {
+        chip.setAttribute('aria-pressed', String(state[chip.dataset.key ?? ''] === chip.dataset.value));
+      }
+      if (count) count.textContent = `Showing ${shown} of ${items.length} ${items.length === 1 ? 'project' : 'projects'}`;
+      if (empty) empty.hidden = shown > 0;
+      if (updateUrl) {
+        const next = new URLSearchParams();
+        if (state.status) next.set('status', state.status);
+        if (state.tag) next.set('tag', state.tag);
+        const query = next.toString();
+        history.replaceState(null, '', query ? `?${query}` : location.pathname);
+      }
+    };
+
+    for (const chip of chips) {
+      chip.addEventListener('click', () => {
+        state[chip.dataset.key ?? ''] = chip.dataset.value ?? '';
+        render(true);
+      });
+    }
+
+    empty?.querySelector('button')?.addEventListener('click', () => {
+      state.status = '';
+      state.tag = '';
+      render(true);
+      chips[0]?.focus();
+    });
+
+    root.hidden = false;
+    render(false);
+  }
+</script>

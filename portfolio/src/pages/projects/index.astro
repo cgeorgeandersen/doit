@@ -1,0 +1,66 @@
+---
+/** Every published project, filterable by status and topic. */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import ProjectFilter from '../../components/ProjectFilter.astro';
+import { getSite, tagSlug, tagsOf } from '../../lib/content';
+import { statusSlug } from '../../lib/status';
+
+const site = await getSite();
+const { projects } = site;
+const statuses = [...new Set(projects.map((p) => p.data.status))];
+const description = 'Working tools and essays that put the frameworks into practice, each live on its own site.';
+---
+
+<BaseLayout title="Projects" description={description} image="/og/projects.png" imageAlt="Projects by George Andersen">
+  <header class="page-head wide">
+    <p class="kicker"><span>Projects</span></p>
+    <h1 class="page-title">The proof</h1>
+    <p class="dek">{description}</p>
+  </header>
+
+  <div class="wide">
+    <ProjectFilter statuses={statuses} tags={tagsOf(projects)} total={projects.length} list="project-list" />
+    <ul class="list" id="project-list">
+      {
+        projects.map((project) => (
+          <li data-status={statusSlug(project.data.status)} data-tags={project.data.tags.map(tagSlug).join(' ')}>
+            <ProjectCard project={project} frameworks={site.frameworksFor(project)} numberOf={site.numberOf} layout="row" headingLevel="h2" />
+          </li>
+        ))
+      }
+    </ul>
+    <p class="empty" data-filter-empty="project-list" hidden>
+      No projects match both filters. <button type="button" class="btn">Show all projects</button>
+    </p>
+  </div>
+</BaseLayout>
+
+<style>
+  .list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .list > li {
+    padding-block: clamp(2rem, 5vw, 3rem);
+  }
+
+  .list > li + li {
+    border-top: 1px solid var(--rule);
+  }
+
+  .empty {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+    padding-block: 2.5rem;
+    color: var(--ink-2);
+  }
+
+  .empty[hidden] {
+    display: none;
+  }
+</style>

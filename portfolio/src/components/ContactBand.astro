@@ -1,0 +1,75 @@
+---
+/** The closing invitation, from site.ts: a heading and whichever contact links are filled in. */
+import { SITE } from '../config/site';
+
+const { heading, linkedin, linkedinLabel, email, cta } = SITE.contact;
+---
+
+<section class="contact" aria-labelledby="contact-title">
+  <div class="wide inner">
+    <p class="label">Contact</p>
+    <h2 id="contact-title" class="heading">{heading}</h2>
+    <ul class="links">
+      {
+        linkedin && (
+          <li>
+            <a class="btn btn--primary" href={linkedin} rel="me">
+              {linkedinLabel} <span class="arrow" aria-hidden="true">↗</span>
+            </a>
+          </li>
+        )
+      }
+      {
+        email && (
+          <li>
+            <a class="btn" href={`mailto:${email}`}>
+              {email}
+            </a>
+          </li>
+        )
+      }
+      {
+        cta && (
+          <li>
+            <a class="btn" href={cta.href}>
+              {cta.label} <span aria-hidden="true">→</span>
+            </a>
+          </li>
+        )
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  /* The footer's top margin supplies the space below. */
+  .contact {
+    margin-top: var(--section);
+    padding-top: var(--section);
+    border-top: 1px solid var(--rule);
+  }
+
+  .inner {
+    display: grid;
+    gap: 1rem;
+    justify-items: start;
+  }
+
+  .heading {
+    max-width: 18ch;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(2rem, 5vw, 3.1rem);
+    line-height: 1.04;
+    letter-spacing: -0.012em;
+  }
+
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin: 0.8rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+</style>

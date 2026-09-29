@@ -1,0 +1,245 @@
+---
+/**
+ * One framework: its question, thesis, review stamp and the essay itself,
+ * with the projects that apply it in the margin (derived from each project's
+ * `frameworks` list, so it can't fall out of date).
+ */
+import { render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ReviewStamp from '../../components/ReviewStamp.astro';
+import StatusPill from '../../components/StatusPill.astro';
+import { SITE } from '../../config/site';
+import { domainOf, getSite, type Framework, type Project } from '../../lib/content';
+import { formatDate, isoDate } from '../../lib/dates';
+
+export async function getStaticPaths() {
+  const site = await getSite();
+  return site.frameworks.map((framework) => ({ params: { slug: framework.id }, props: { framework } }));
+}
+
+interface Props {
+  framework: Framework;
+}
+
+const { framework } = Astro.props;
+const site = await getSite();
+const { title, thesis, question, date, lastReviewed, kind, draft } = framework.data;
+const { Content } = await render(framework);
+const number = site.numberOf(framework);
+const { applied, related } = site.projectsFor(framework);
+const others = site.frameworks.filter((f) => f.id !== framework.id);
+
+const groups: { label: string; projects: Project[] }[] = [
+  { label: 'Applied in', projects: applied },
+  { label: 'Related', projects: related },
+].filter((g) => g.projects.length > 0);
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: title,
+  description: thesis,
+  datePublished: isoDate(date),
+  dateModified: isoDate(lastReviewed),
+  author: { '@type': 'Person', name: SITE.name },
+};
+---
+
+<BaseLayout
+  title={title}
+  description={thesis}
+  image={`/og/frameworks/${framework.id}.png`}
+  imageAlt={`${title}: a framework by ${SITE.name}`}
+  type="article"
+  published={date}
+  modified={lastReviewed}
+  jsonLd={jsonLd}
+>
+  <article>
+    <header class="page-head wide">
+      <p class="kicker">
+        <span><a href="/frameworks">Frameworks</a></span>
+        <span>{number ? `Method ${number}` : kind === 'philosophy' ? 'The philosophy' : 'Framework'}</span>
+        {question && <span>{question}</span>}
+        {draft && <span class="draft">Draft · not published</span>}
+      </p>
+      <h1 class="page-title">{title}</h1>
+      <p class="dek">{thesis}</p>
+      <p class="meta">
+        <ReviewStamp date={lastReviewed} />
+        <span>First published <time datetime={isoDate(date)}>{formatDate(date)}</time></span>
+      </p>
+    </header>
+
+    <div class="detail">
+      <aside class="detail-aside" aria-label="Where this framework is used">
+        {
+          groups.map((group) => (
+            <div class="aside-block">
+              <h2 class="label">{group.label}</h2>
+              <ul class="projects">
+                {group.projects.map((project) => (
+                  <li>
+                    <a class="project" href={`/projects/${project.id}`}>
+                      <span class="project-title">{project.data.title}</span>
+                      <span class="project-meta">
+                        <StatusPill status={project.data.status} />
+                        {project.data.liveUrl && <span>{domainOf(project.data.liveUrl)}</span>}
+                      </span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+        {
+          groups.length === 0 && (
+            <div class="aside-block">
+              <h2 class="label">Applied in</h2>
+              <p class="none">No public project applies this framework yet.</p>
+            </div>
+          )
+        }
+      </aside>
+
+      <div class="detail-main">
+        <div class="prose">
+          <Content />
+        </div>
+      </div>
+    </div>
+
+    {
+      others.length > 0 && (
+        <nav class="wide others" aria-labelledby="others-title">
+          <h2 id="others-title" class="label">
+            Other frameworks
+          </h2>
+          <ul>
+            {others.map((f) => (
+              <li>
+                <a href={`/frameworks/${f.id}`}>
+                  {site.numberOf(f) && <span class="num">{site.numberOf(f)}</span>}
+                  <span class="other-title">{f.data.title}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      )
+    }
+  </article>
+</BaseLayout>
+
+<style>
+  .draft {
+    color: var(--stale-ink);
+  }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem 1.2rem;
+    margin-top: 1.6rem;
+    font-family: var(--font-mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.03em;
+    color: var(--ink-3);
+  }
+
+  .projects {
+    display: grid;
+    gap: 0.4rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .project {
+    display: grid;
+    gap: 0.3rem;
+    padding: 0.8rem 0.95rem;
+    border: 1px solid var(--rule-strong);
+    border-radius: var(--radius);
+    text-decoration: none;
+    transition: border-color 140ms var(--ease);
+  }
+
+  .project:hover {
+    border-color: var(--ink-3);
+  }
+
+  .project-title {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    line-height: 1.15;
+  }
+
+  .project-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem 0.9rem;
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  .none {
+    font-size: 0.9rem;
+    color: var(--ink-3);
+  }
+
+  .others {
+    display: grid;
+    gap: 0.9rem;
+    margin-top: var(--section);
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .others ul {
+    display: grid;
+    gap: 0.2rem 2rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .others a {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.7rem;
+    min-height: 40px;
+    padding-block: 0.3rem;
+    text-decoration: none;
+  }
+
+  .num {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--accent-ink);
+  }
+
+  .other-title {
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+    line-height: 1.2;
+  }
+
+  .others a:hover .other-title {
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+  }
+
+  @media (min-width: 720px) {
+    .others ul {
+      grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+    }
+  }
+</style>

@@ -30,7 +30,8 @@
   --shadow: 0 1px 2px rgb(25 26 28 / 0.05), 0 10px 30px rgb(25 26 28 / 0.07);
   --focus: var(--accent-ink);
 
-  --font-display: 'Bodoni Moda Variable', 'Bodoni Moda', 'Didot', 'Bodoni 72', 'Libre Bodoni', Georgia, serif;
+  /* 'Display Dashes' supplies only hyphens and dashes (see BaseLayout); Bodoni's are invisible hairlines. */
+  --font-display: 'Display Dashes', 'Bodoni Moda Variable', 'Bodoni Moda', 'Didot', 'Bodoni 72', 'Libre Bodoni', Georgia, serif;
   --font-text: 'Newsreader Variable', 'Newsreader', 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
 

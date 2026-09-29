@@ -1,26 +1,360 @@
 ---
+/**
+ * Home: the thesis, the methods ("How I think") with the projects that prove
+ * each one, the featured projects with the methods each puts into practice,
+ * a short bio, recent writing and contact. Everything below the thesis is
+ * derived from the content, so new Markdown files show up here on their own.
+ */
 import BaseLayout from '../layouts/BaseLayout.astro';
+import ContactBand from '../components/ContactBand.astro';
+import FrameworkCard from '../components/FrameworkCard.astro';
+import PostList from '../components/PostList.astro';
+import ProjectCard from '../components/ProjectCard.astro';
 import ReviewStamp from '../components/ReviewStamp.astro';
-import StatusPill from '../components/StatusPill.astro';
 import { SITE } from '../config/site';
+import { getSite, reviewedSince } from '../lib/content';
+
+const site = await getSite();
+const { philosophy, methods, projects, posts } = site;
+
+const featured = projects.filter((p) => p.data.featured);
+const proof = featured.length > 0 ? featured : projects.slice(0, 2);
+const liveCount = projects.filter((p) => p.data.status === 'live').length;
+const since = reviewedSince(site.frameworks);
+const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
+
+// Split the headline around the emphasized word, which gets the essay's dotted underline.
+const { headline, emphasis } = SITE.thesis;
+const at = emphasis ? headline.indexOf(emphasis) : -1;
+const [before, after] = at >= 0 ? [headline.slice(0, at), headline.slice(at + emphasis.length)] : [headline, ''];
+
+const personLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: SITE.name,
+  jobTitle: SITE.role,
+  description: SITE.description,
+  url: Astro.site?.href,
+  sameAs: [SITE.contact.linkedin].filter(Boolean),
+};
 ---
-<BaseLayout>
-  <div class="wide" style="padding-block: 3rem;">
-    <p class="kicker">{SITE.kicker.map((k) => <span>{k}</span>)}</p>
-    <h1 class="page-title">Make AI <span style="text-decoration: underline dotted var(--accent); text-underline-offset: 0.07em; text-decoration-thickness: 0.032em;">boring.</span></h1>
-    <p class="dek" style="margin-top: 1.2rem; max-width: 32ch;">{SITE.thesis.dek}</p>
-    <p style="margin-top: 1.5rem; display: flex; gap: 0.6rem; flex-wrap: wrap;">
-      <ReviewStamp date={new Date('2026-09-29')} />
-      <ReviewStamp date={new Date('2026-01-10')} />
-    </p>
-    <p class="label" style="margin-top: 1.5rem; display: flex; gap: 1.2rem;"><StatusPill status="live" /><StatusPill status="in progress" /><StatusPill status="archived" /></p>
-    <p style="margin-top: 1.5rem; display: flex; gap: 0.8rem; flex-wrap: wrap;"><a class="btn btn--primary" href="#">Open the project <span class="arrow" aria-hidden="true">↗</span></a><a class="btn" href="#">Secondary</a> <a class="more" href="#">Read the case study →</a></p>
-    <div class="prose measure" style="margin: 3rem 0 0;">
-      <h2>The problem</h2>
-      <p>AI sounds sure even when it's wrong. <a href="#">A link in the body</a>, some <em>italic emphasis</em> and <strong>bold text</strong>.</p>
-      <blockquote><p>Fluency isn't truth.</p></blockquote>
-      <h3>A third-level heading</h3>
-      <ul><li>First point</li><li>Second point</li></ul>
+
+<BaseLayout jsonLd={personLd}>
+  <section class="hero wide" aria-labelledby="hero-title">
+    <p class="kicker">{SITE.kicker.map((item) => <span>{item}</span>)}</p>
+    <div class="hero-grid">
+      <h1 id="hero-title" class="hero-title">
+        {before}{at >= 0 && <span class="emphasis">{emphasis}</span>}{after}
+      </h1>
+      <div class="hero-side">
+        <p class="dek hero-dek">{SITE.thesis.dek}</p>
+        {
+          philosophy && (
+            <p class="hero-link">
+              <a class="more" href={`/frameworks/${philosophy.id}`}>
+                {SITE.thesis.linkLabel} <span aria-hidden="true">→</span>
+              </a>
+            </p>
+          )
+        }
+      </div>
     </div>
-  </div>
+    <ul class="hero-meta" aria-label="At a glance">
+      <li>{plural(methods.length, 'method', 'methods')}</li>
+      <li>{plural(liveCount, 'live project', 'live projects')}</li>
+      {
+        since && (
+          <li>
+            <ReviewStamp date={since} label="Frameworks reviewed since" />
+          </li>
+        )
+      }
+    </ul>
+  </section>
+
+  {
+    methods.length > 0 && (
+      <section class="section" aria-labelledby="methods-title">
+        <div class="wide">
+          <header class="section-head">
+            <h2 id="methods-title" class="section-title">
+              {SITE.home.methodsHeading}
+            </h2>
+            <p>{SITE.home.methodsIntro}</p>
+          </header>
+          <ol class="methods">
+            {methods.map((framework) => (
+              <li>
+                <FrameworkCard framework={framework} number={site.numberOf(framework)} projects={site.projectsFor(framework).applied} />
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+    )
+  }
+
+  {
+    proof.length > 0 && (
+      <section class="section" aria-labelledby="proof-title">
+        <div class="wide">
+          <header class="section-head section-head--split">
+            <h2 id="proof-title" class="section-title">
+              {SITE.home.proofHeading}
+            </h2>
+            <p>{SITE.home.proofIntro}</p>
+            {projects.length > proof.length && (
+              <p>
+                <a class="more" href="/projects">
+                  All {projects.length} projects <span aria-hidden="true">→</span>
+                </a>
+              </p>
+            )}
+          </header>
+          <div class="proof">
+            {proof.map((project) => (
+              <ProjectCard project={project} frameworks={site.frameworksFor(project)} numberOf={site.numberOf} />
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <section class="section" aria-labelledby="about-title">
+    <div class="wide about">
+      <h2 id="about-title" class="label">About</h2>
+      <div class="about-body">
+        <ol class="path" aria-label="Career path">
+          {SITE.bio.path.map((step) => <li>{step}</li>)}
+        </ol>
+        <p class="about-text">{SITE.bio.text}</p>
+        <p>
+          <a class="more" href="/about">{SITE.bio.linkLabel} <span aria-hidden="true">→</span></a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  {
+    posts.length > 0 && (
+      <section class="section" aria-labelledby="writing-title">
+        <div class="wide about">
+          <h2 id="writing-title" class="label">
+            {SITE.home.writingHeading}
+          </h2>
+          <div>
+            <PostList posts={posts.slice(0, 3)} headingLevel="h3" compact />
+            <p class="all-writing">
+              <a class="more" href="/writing">
+                All writing <span aria-hidden="true">→</span>
+              </a>
+            </p>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <ContactBand />
 </BaseLayout>
+
+<style>
+  .hero {
+    padding-block: clamp(2.75rem, 8vw, 5.5rem) clamp(2.5rem, 6vw, 4rem);
+  }
+
+  .hero-grid {
+    display: grid;
+    gap: clamp(1.4rem, 3vw, 2rem);
+    margin-top: 1.1rem;
+  }
+
+  /* 3.9em fits "Make AI" (3.6em) but not the whole line, so the headline
+     always breaks into two big lines. Keep the headline this short. */
+  .hero-title {
+    max-width: 3.9em;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(3.6rem, 22vw, 8.4rem);
+    line-height: 0.94;
+    letter-spacing: -0.024em;
+  }
+
+  /* Wide screens: the dek sits beside the headline, on its last line. */
+  @media (min-width: 1100px) {
+    .hero-grid {
+      grid-template-columns: auto minmax(0, 26rem);
+      justify-content: space-between;
+      align-items: end;
+      column-gap: 4rem;
+    }
+
+    .hero-title {
+      font-size: clamp(6rem, 11.5vw, 8.4rem);
+    }
+
+    .hero-side {
+      padding-bottom: 1.1rem;
+    }
+  }
+
+  .emphasis {
+    text-decoration-line: underline;
+    text-decoration-style: dotted;
+    text-decoration-color: var(--accent);
+    text-decoration-thickness: 0.032em;
+    text-underline-offset: 0.08em;
+    text-decoration-skip-ink: none;
+  }
+
+  .hero-dek {
+    max-width: 31ch;
+    font-size: clamp(1.25rem, 2.6vw, 1.5rem);
+    line-height: 1.4;
+  }
+
+  @media (min-width: 1100px) {
+    .hero-dek {
+      max-width: none;
+      font-size: 1.3rem;
+    }
+  }
+
+  .hero-link {
+    margin-top: 1.3rem;
+  }
+
+  .hero-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem 1.6rem;
+    margin: clamp(2rem, 5vw, 3rem) 0 0;
+    padding: 1rem 0 0;
+    list-style: none;
+    border-top: 1px solid var(--rule);
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  /* One quiet entrance, off when the reader prefers reduced motion. The
+     headline only moves (it never starts invisible), so it paints at once. */
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-title {
+      animation: settle 700ms var(--ease) both;
+    }
+
+    .hero-dek,
+    .hero-link,
+    .hero-meta {
+      animation: rise 700ms var(--ease) both;
+      animation-delay: 120ms;
+    }
+
+    .hero-meta {
+      animation-delay: 220ms;
+    }
+
+    @keyframes settle {
+      from {
+        transform: translateY(0.06em);
+      }
+    }
+
+    @keyframes rise {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+    }
+  }
+
+  .methods {
+    display: grid;
+    gap: 2.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .methods > li {
+    padding-top: 1.2rem;
+    border-top: 1px solid var(--ink);
+  }
+
+  @media (min-width: 900px) {
+    .methods {
+      grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+      gap: 0 clamp(1.5rem, 3vw, 2.75rem);
+    }
+  }
+
+  .section-head--split p:last-child {
+    margin-top: 0.2rem;
+  }
+
+  .proof {
+    display: grid;
+    gap: 3.5rem;
+  }
+
+  @media (min-width: 900px) {
+    .proof {
+      grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+      gap: 3rem clamp(2rem, 4vw, 3.5rem);
+    }
+  }
+
+  .about {
+    display: grid;
+    gap: 1.2rem 2rem;
+  }
+
+  .about-body {
+    display: grid;
+    gap: 1.1rem;
+    max-width: 40rem;
+  }
+
+  .path {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+
+  .path > li + li::before {
+    content: '→';
+    content: '→' / '';
+    padding-inline: 0.7em;
+    color: var(--accent-ink);
+  }
+
+  .about-text {
+    font-size: var(--step-1);
+    line-height: 1.5;
+  }
+
+  .all-writing {
+    margin-top: 1rem;
+  }
+
+  @media (min-width: 900px) {
+    .about {
+      grid-template-columns: 12rem minmax(0, 1fr);
+    }
+  }
+</style>

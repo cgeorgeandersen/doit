@@ -48,6 +48,15 @@ const {
 
 // Vercel Web Analytics only in builds on Vercel, where its script is served from this site's own domain.
 const onVercel = process.env.VERCEL === '1';
+
+/*
+ * Bodoni Moda draws hyphens and dashes as ~0.2px hairlines, which vanish on
+ * screen ("Risk-Tiered" reads as "Risk Tiered"). This face covers only the
+ * dash characters and borrows them from Newsreader (the same file the body
+ * text already loads); it comes first in --font-display, so headings keep
+ * Bodoni for everything else.
+ */
+const dashFace = `@font-face{font-family:'Display Dashes';font-style:normal;font-weight:200 800;font-display:swap;src:url(${newsreaderUrl}) format('woff2-variations');unicode-range:U+002D,U+2010-2015,U+2212}`;
 ---
 
 <!doctype html>
@@ -63,6 +72,7 @@ const onVercel = process.env.VERCEL === '1';
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="preload" href={bodoniUrl} as="font" type="font/woff2" crossorigin />
     <link rel="preload" href={newsreaderUrl} as="font" type="font/woff2" crossorigin />
+    <style is:inline set:html={dashFace} />
     <script is:inline>
       (function () {
         var root = document.documentElement;

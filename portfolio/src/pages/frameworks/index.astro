@@ -1,0 +1,133 @@
+---
+/** The philosophy, then the numbered methods, each with the projects that apply it. */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import FrameworkCard from '../../components/FrameworkCard.astro';
+import ReviewStamp from '../../components/ReviewStamp.astro';
+import { SITE } from '../../config/site';
+import { getSite } from '../../lib/content';
+
+const site = await getSite();
+const { philosophy, methods } = site;
+const description = 'The methods I use to get AI into production: what to do first, where it fits in the work, and how far to trust it.';
+---
+
+<BaseLayout title="Frameworks" description={description} image="/og/frameworks.png" imageAlt="Frameworks by George Andersen">
+  <header class="page-head wide">
+    <p class="kicker"><span>Frameworks</span></p>
+    <h1 class="page-title">How I think</h1>
+    <p class="dek">{description}</p>
+  </header>
+
+  {
+    philosophy && (
+      <section class="wide philosophy" aria-labelledby="philosophy-title">
+        <p class="label">The philosophy</p>
+        <h2 id="philosophy-title" class="philosophy-title">
+          <a class="quiet-link" href={`/frameworks/${philosophy.id}`}>
+            {philosophy.data.title}
+          </a>
+        </h2>
+        <p class="philosophy-thesis">{philosophy.data.thesis}</p>
+        <p class="philosophy-meta">
+          <ReviewStamp date={philosophy.data.lastReviewed} />
+          <a class="more" href={`/frameworks/${philosophy.id}`}>
+            Read the philosophy <span aria-hidden="true">→</span>
+          </a>
+        </p>
+      </section>
+    )
+  }
+
+  {
+    methods.length > 0 && (
+      <section class="wide" aria-labelledby="methods-title">
+        <div class="section-head methods-head">
+          <h2 id="methods-title" class="label">
+            The methods
+          </h2>
+          <p>{SITE.home.methodsIntro}</p>
+        </div>
+        <ol class="methods">
+          {methods.map((framework) => {
+            const { applied, related } = site.projectsFor(framework);
+            return (
+              <li>
+                <FrameworkCard framework={framework} number={site.numberOf(framework)} projects={[...applied, ...related]} headingLevel="h3" />
+              </li>
+            );
+          })}
+        </ol>
+      </section>
+    )
+  }
+
+  <p class="wide review-note">
+    I re-read every framework at least every {Math.round(SITE.review.staleAfterDays / 30)} months. When one is overdue, its stamp turns amber.
+  </p>
+</BaseLayout>
+
+<style>
+  .philosophy {
+    display: grid;
+    gap: 0.9rem;
+    padding: clamp(1.6rem, 4vw, 2.6rem);
+    border: 1px solid var(--rule-strong);
+    border-radius: var(--radius);
+    background: var(--paper-2);
+  }
+
+  .philosophy-title {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(2.2rem, 6vw, 3.6rem);
+    line-height: 1;
+    letter-spacing: -0.015em;
+  }
+
+  .philosophy-thesis {
+    max-width: 32ch;
+    font-size: clamp(1.2rem, 2.4vw, 1.45rem);
+    line-height: 1.4;
+    color: var(--ink-2);
+  }
+
+  .philosophy-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.8rem 1.6rem;
+    margin-top: 0.4rem;
+  }
+
+  .methods-head {
+    margin-top: clamp(3rem, 7vw, 4.5rem);
+    margin-bottom: 1.5rem;
+  }
+
+  .methods {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .methods > li {
+    padding-block: 2rem;
+    border-top: 1px solid var(--ink);
+  }
+
+  @media (min-width: 900px) {
+    .methods {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+      column-gap: clamp(1.5rem, 3vw, 2.75rem);
+    }
+  }
+
+  .review-note {
+    margin-top: 2rem;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    line-height: 1.6;
+    color: var(--ink-3);
+  }
+</style>

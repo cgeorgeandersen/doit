@@ -216,6 +216,87 @@ a:hover {
   white-space: nowrap;
 }
 
+/* ---------- Page scaffolding ---------- */
+
+.page-head {
+  padding-block: clamp(2.5rem, 7vw, 4.75rem) clamp(1.75rem, 4vw, 3rem);
+}
+
+.page-head .dek {
+  margin-top: 1.1rem;
+  max-width: 36ch;
+}
+
+.kicker a {
+  text-decoration-color: var(--rule-strong);
+}
+
+.kicker a:hover {
+  color: var(--ink);
+  text-decoration-color: var(--accent);
+}
+
+.section-head {
+  display: grid;
+  gap: 0.75rem;
+  margin-bottom: clamp(2rem, 5vw, 3.25rem);
+}
+
+.section-head p {
+  max-width: 40rem;
+  color: var(--ink-2);
+}
+
+/*
+ * Detail pages: the text in a reading column, with a margin column beside it
+ * on wide screens (frameworks put into practice, projects that apply a
+ * framework). On phones the margin column comes first, so the theory → proof
+ * link is never buried below the essay.
+ */
+.detail {
+  display: grid;
+  gap: 2.5rem;
+  width: min(var(--wide), 100% - 2 * var(--gutter));
+  margin-inline: auto;
+}
+
+.detail-main {
+  min-width: 0;
+  max-width: var(--measure);
+}
+
+@media (min-width: 1100px) {
+  .detail {
+    grid-template-columns: minmax(0, var(--measure)) minmax(15rem, 19rem);
+    justify-content: space-between;
+    column-gap: 4rem;
+    align-items: start;
+  }
+
+  .detail-main {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .detail-aside {
+    grid-column: 2;
+    grid-row: 1;
+    position: sticky;
+    top: 2rem;
+  }
+}
+
+.aside-block + .aside-block {
+  margin-top: 2rem;
+}
+
+.aside-block > .label {
+  display: block;
+  margin-bottom: 0.9rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--rule-strong);
+}
+
 /* ---------- Prose: rendered Markdown ---------- */
 
 .prose > * + * {

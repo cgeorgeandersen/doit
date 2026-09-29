@@ -1,0 +1,72 @@
+---
+/**
+ * Standalone pages from src/content/pages/: about.md is /about, and a future
+ * work-with-me.md becomes /work-with-me with no code changes. Add it to the
+ * navigation in src/config/site.ts.
+ */
+import { render } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ContactBand from '../components/ContactBand.astro';
+import { SITE } from '../config/site';
+import { getSite, type Page } from '../lib/content';
+
+export async function getStaticPaths() {
+  const site = await getSite();
+  return site.pages.map((page) => ({ params: { page: page.id }, props: { page } }));
+}
+
+interface Props {
+  page: Page;
+}
+
+const { page } = Astro.props;
+const { title, description, draft } = page.data;
+const { Content } = await render(page);
+
+const jsonLd =
+  page.id === 'about'
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'ProfilePage',
+        mainEntity: {
+          '@type': 'Person',
+          name: SITE.name,
+          jobTitle: SITE.role,
+          sameAs: [SITE.contact.linkedin].filter(Boolean),
+        },
+      }
+    : undefined;
+---
+
+<BaseLayout title={title} description={description} image={`/og/pages/${page.id}.png`} imageAlt={`${title} · ${SITE.name}`} jsonLd={jsonLd}>
+  <article>
+    <header class="page-head measure">
+      <p class="kicker">
+        <span>{SITE.name}</span>
+        {draft && <span class="draft">Draft · not published</span>}
+      </p>
+      <h1 class="page-title">{title}</h1>
+      <p class="dek">{description}</p>
+    </header>
+    <div class="measure prose page-body">
+      <Content />
+    </div>
+  </article>
+  <ContactBand />
+</BaseLayout>
+
+<style>
+  .draft {
+    color: var(--stale-ink);
+  }
+
+  .page-body {
+    margin-bottom: 1rem;
+  }
+
+  /* The opening line of a page reads as a lede. */
+  .page-body > :global(p:first-child) {
+    font-size: var(--step-1);
+    line-height: 1.5;
+  }
+</style>
