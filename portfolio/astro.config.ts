@@ -1,6 +1,18 @@
 import { defineConfig } from 'astro/config';
+import { satteri } from '@astrojs/markdown-satteri';
 import sitemap from '@astrojs/sitemap';
 import { SITE } from './src/config/site';
+
+/**
+ * Drop HTML comments from Markdown content, so editing notes such as
+ * "<!-- George: add … -->" never reach the published page source.
+ */
+const stripHtmlComments = {
+  name: 'strip-html-comments',
+  html(node: { value: string }, ctx: { removeNode(node: unknown): void }) {
+    if (/^\s*<!--[\s\S]*-->\s*$/.test(node.value)) ctx.removeNode(node);
+  },
+};
 
 /**
  * The site's public address, used for canonical links, the sitemap, RSS and
@@ -18,6 +30,9 @@ function siteUrl(): string {
 export default defineConfig({
   site: siteUrl(),
   trailingSlash: 'never',
+  markdown: {
+    processor: satteri({ mdastPlugins: [stripHtmlComments] }),
+  },
   integrations: [
     sitemap({
       filter: (page) => !page.includes('/404'),

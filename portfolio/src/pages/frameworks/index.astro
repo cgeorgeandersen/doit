@@ -8,13 +8,13 @@ import { getSite } from '../../lib/content';
 
 const site = await getSite();
 const { philosophy, methods } = site;
-const description = 'The methods I use to get AI into production: what to do first, where it fits in the work, and how far to trust it.';
+const { title, description } = SITE.sections.frameworks;
 ---
 
-<BaseLayout title="Frameworks" description={description} image="/og/frameworks.png" imageAlt="Frameworks by George Andersen">
+<BaseLayout title="Frameworks" description={description} image="/og/frameworks.png" imageAlt={`Frameworks by ${SITE.name}`}>
   <header class="page-head wide">
     <p class="kicker"><span>Frameworks</span></p>
-    <h1 class="page-title">How I think</h1>
+    <h1 class="page-title">{title}</h1>
     <p class="dek">{description}</p>
   </header>
 

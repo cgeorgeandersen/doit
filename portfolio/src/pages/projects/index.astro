@@ -3,19 +3,20 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
 import ProjectFilter from '../../components/ProjectFilter.astro';
+import { SITE } from '../../config/site';
 import { getSite, tagSlug, tagsOf } from '../../lib/content';
 import { statusSlug } from '../../lib/status';
 
 const site = await getSite();
 const { projects } = site;
 const statuses = [...new Set(projects.map((p) => p.data.status))];
-const description = 'Working tools and essays that put the frameworks into practice, each live on its own site.';
+const { title, description } = SITE.sections.projects;
 ---
 
-<BaseLayout title="Projects" description={description} image="/og/projects.png" imageAlt="Projects by George Andersen">
+<BaseLayout title="Projects" description={description} image="/og/projects.png" imageAlt={`Projects by ${SITE.name}`}>
   <header class="page-head wide">
     <p class="kicker"><span>Projects</span></p>
-    <h1 class="page-title">The proof</h1>
+    <h1 class="page-title">{title}</h1>
     <p class="dek">{description}</p>
   </header>
 

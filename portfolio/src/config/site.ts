@@ -52,6 +52,22 @@ export const SITE = {
     writingHeading: 'Latest writing',
   },
 
+  /** Titles and one-line descriptions of the section pages (also used on their share images). */
+  sections: {
+    projects: {
+      title: 'The proof',
+      description: 'Working tools and essays that put the frameworks into practice, each live on its own site.',
+    },
+    frameworks: {
+      title: 'How I think',
+      description: 'The methods I use to get AI into production: what to do first, where it fits in the work, and how far to trust it.',
+    },
+    writing: {
+      title: 'Writing',
+      description: 'Notes on getting AI into production, and on keeping the thinking current.',
+    },
+  },
+
   /** The short bio on the home page. The full story is src/content/pages/about.md. */
   bio: {
     path: ['Journalism & video', 'Analytics', 'AI strategy & governance'],
