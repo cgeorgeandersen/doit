@@ -1,0 +1,48 @@
+---
+/**
+ * A project's status as a shape plus a word, so color never carries the
+ * meaning alone: ● live, ◐ in progress, ○ archived.
+ */
+import { STATUS_LABEL, statusSlug, type ProjectStatus } from '../lib/status';
+
+interface Props {
+  status: ProjectStatus;
+}
+
+const { status } = Astro.props;
+---
+
+<span class={`status status--${statusSlug(status)}`}><span class="status-mark" aria-hidden="true"></span>{STATUS_LABEL[status]}</span>
+
+<style>
+  .status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+  }
+
+  .status-mark {
+    flex: none;
+    width: 0.62em;
+    height: 0.62em;
+    border-radius: 50%;
+    border: 1.5px solid currentColor;
+  }
+
+  .status--live {
+    color: var(--accent-ink);
+  }
+
+  .status--live .status-mark {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .status--in-progress .status-mark {
+    background: linear-gradient(90deg, currentColor 50%, transparent 50%);
+  }
+
+  .status--archived .status-mark {
+    background: transparent;
+  }
+</style>

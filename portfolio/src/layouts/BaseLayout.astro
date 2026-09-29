@@ -1,0 +1,103 @@
+---
+/**
+ * The page shell every route uses: fonts, tokens and global styles, head
+ * metadata, the pre-paint theme script, header, footer and analytics.
+ */
+import '@fontsource-variable/bodoni-moda/opsz.css';
+import '@fontsource-variable/bodoni-moda/wght-italic.css';
+import '@fontsource-variable/newsreader/wght.css';
+import '@fontsource-variable/newsreader/wght-italic.css';
+import '@fontsource/ibm-plex-mono/400.css';
+import '@fontsource/ibm-plex-mono/500.css';
+import '../styles/tokens.css';
+import '../styles/global.css';
+
+import bodoniUrl from '@fontsource-variable/bodoni-moda/files/bodoni-moda-latin-opsz-normal.woff2?url';
+import newsreaderUrl from '@fontsource-variable/newsreader/files/newsreader-latin-wght-normal.woff2?url';
+import Analytics from '@vercel/analytics/astro';
+import Seo from '../components/Seo.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import { SITE } from '../config/site';
+
+interface Props {
+  /** The page's own title; the layout adds " · George Andersen". Omit on the home page. */
+  title?: string | undefined;
+  description?: string | undefined;
+  /** Path of the page's share image; see src/pages/og/. */
+  image?: string;
+  imageAlt?: string;
+  type?: 'website' | 'article';
+  published?: Date | undefined;
+  modified?: Date | undefined;
+  noindex?: boolean;
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[] | undefined;
+}
+
+const {
+  title,
+  description,
+  image = '/og/site.png',
+  imageAlt = `${SITE.name}: ${SITE.thesis.headline}`,
+  type = 'website',
+  published,
+  modified,
+  noindex = false,
+  jsonLd,
+} = Astro.props;
+
+// Vercel Web Analytics only in builds on Vercel, where its script is served from this site's own domain.
+const onVercel = process.env.VERCEL === '1';
+---
+
+<!doctype html>
+<html lang={SITE.lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#faf9f5" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#141413" />
+    <meta name="author" content={SITE.name} />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preload" href={bodoniUrl} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={newsreaderUrl} as="font" type="font/woff2" crossorigin />
+    <script is:inline>
+      (function () {
+        var root = document.documentElement;
+        root.classList.add('js');
+        try {
+          var t = localStorage.getItem('ga-theme');
+          if (t === 'light' || t === 'dark') root.setAttribute('data-theme', t);
+        } catch (e) {}
+      })();
+    </script>
+    <Seo
+      title={title}
+      description={description}
+      image={image}
+      imageAlt={imageAlt}
+      type={type}
+      published={published}
+      modified={modified}
+      noindex={noindex}
+      jsonLd={jsonLd}
+    />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <SiteHeader />
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <SiteFooter />
+    {onVercel && <Analytics />}
+  </body>
+</html>
+
+<style>
+  main:focus {
+    outline: none;
+  }
+</style>

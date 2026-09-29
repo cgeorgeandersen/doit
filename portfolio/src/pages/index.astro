@@ -1,4 +1,26 @@
 ---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ReviewStamp from '../components/ReviewStamp.astro';
+import StatusPill from '../components/StatusPill.astro';
 import { SITE } from '../config/site';
 ---
-<html lang={SITE.lang}><head><meta charset="utf-8" /><title>{SITE.name}</title></head><body><h1>{SITE.thesis.headline}</h1></body></html>
+<BaseLayout>
+  <div class="wide" style="padding-block: 3rem;">
+    <p class="kicker">{SITE.kicker.map((k) => <span>{k}</span>)}</p>
+    <h1 class="page-title">Make AI <span style="text-decoration: underline dotted var(--accent); text-underline-offset: 0.07em; text-decoration-thickness: 0.032em;">boring.</span></h1>
+    <p class="dek" style="margin-top: 1.2rem; max-width: 32ch;">{SITE.thesis.dek}</p>
+    <p style="margin-top: 1.5rem; display: flex; gap: 0.6rem; flex-wrap: wrap;">
+      <ReviewStamp date={new Date('2026-09-29')} />
+      <ReviewStamp date={new Date('2026-01-10')} />
+    </p>
+    <p class="label" style="margin-top: 1.5rem; display: flex; gap: 1.2rem;"><StatusPill status="live" /><StatusPill status="in progress" /><StatusPill status="archived" /></p>
+    <p style="margin-top: 1.5rem; display: flex; gap: 0.8rem; flex-wrap: wrap;"><a class="btn btn--primary" href="#">Open the project <span class="arrow" aria-hidden="true">↗</span></a><a class="btn" href="#">Secondary</a> <a class="more" href="#">Read the case study →</a></p>
+    <div class="prose measure" style="margin: 3rem 0 0;">
+      <h2>The problem</h2>
+      <p>AI sounds sure even when it's wrong. <a href="#">A link in the body</a>, some <em>italic emphasis</em> and <strong>bold text</strong>.</p>
+      <blockquote><p>Fluency isn't truth.</p></blockquote>
+      <h3>A third-level heading</h3>
+      <ul><li>First point</li><li>Second point</li></ul>
+    </div>
+  </div>
+</BaseLayout>

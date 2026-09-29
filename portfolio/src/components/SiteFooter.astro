@@ -1,0 +1,97 @@
+---
+/** Footer: name, LinkedIn, RSS, the one-line privacy note and the build credit, all from site.ts. */
+import { SITE } from '../config/site';
+
+const thisYear = new Date().getUTCFullYear();
+---
+
+<footer class="site-footer">
+  <div class="wide inner">
+    <p class="name">© {thisYear} {SITE.name}</p>
+    <ul class="links">
+      {
+        SITE.contact.linkedin && (
+          <li>
+            <a href={SITE.contact.linkedin} rel="me">
+              LinkedIn
+            </a>
+          </li>
+        )
+      }
+      {
+        SITE.contact.email && (
+          <li>
+            <a href={`mailto:${SITE.contact.email}`}>Email</a>
+          </li>
+        )
+      }
+      <li><a href="/rss.xml">RSS</a></li>
+    </ul>
+    <p class="note">
+      {SITE.footer.privacy}
+      {' '}<a href={SITE.footer.privacyUrl}>How it works</a>
+    </p>
+    {SITE.footer.credit && <p class="note">{SITE.footer.credit}</p>}
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: var(--section);
+    border-top: 1px solid var(--rule);
+    padding-block: 2rem 2.6rem;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    line-height: 1.7;
+    letter-spacing: 0.02em;
+    color: var(--ink-3);
+  }
+
+  .inner {
+    display: grid;
+    gap: 0.6rem 2rem;
+  }
+
+  .name {
+    color: var(--ink-2);
+  }
+
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 1.2rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--ink-2);
+  }
+
+  .note a {
+    color: var(--ink-2);
+  }
+
+  @media (min-width: 720px) {
+    .inner {
+      grid-template-columns: auto 1fr;
+      align-items: baseline;
+    }
+
+    .links {
+      justify-content: flex-end;
+    }
+
+    .links a {
+      min-height: 28px;
+    }
+
+    .note {
+      grid-column: 1 / -1;
+    }
+  }
+</style>
