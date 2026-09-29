@@ -1,0 +1,91 @@
+/**
+ * Every piece of site-wide text lives here: name, role, the home page thesis,
+ * the short bio, navigation, contact and footer notes. Change the words here,
+ * never inside components or pages.
+ *
+ * Content (projects, frameworks, writing, and pages such as About) lives in
+ * Markdown files under src/content/. See HOW-TO-ADD-CONTENT.md.
+ */
+
+export interface NavItem {
+  label: string;
+  href: string;
+}
+
+export const SITE = {
+  name: 'George Andersen',
+
+  /**
+   * The site's address, e.g. 'https://georgeandersen.com'. Leave it empty until
+   * you connect a domain: builds on Vercel then use the project's production
+   * domain automatically, so links, the sitemap, RSS and share images stay right.
+   */
+  url: '',
+
+  /** How the site describes you: header, page titles, share images. */
+  role: 'Analytics & AI leader',
+
+  /** The small line above the home page headline, shown with dots between items. */
+  kicker: ['Analytics & AI leader', 'Strategy', 'Governance'],
+
+  /** Used when a page has no description of its own (and by search engines for the home page). */
+  description:
+    'Analytics and AI leader George Andersen on making AI boring: methods for getting AI into production, and live projects that prove them.',
+
+  lang: 'en',
+  locale: 'en-US',
+
+  /** The home page's opening. `emphasis` is the word that gets the dotted underline. */
+  thesis: {
+    headline: 'Make AI boring.',
+    emphasis: 'boring',
+    dek: 'Real value comes from AI that’s in production, measured, and trusted exactly as far as it’s reliable. These are the methods I use to get there, and the work that proves them.',
+    linkLabel: 'Read the philosophy',
+  },
+
+  home: {
+    methodsHeading: 'How I think',
+    methodsIntro:
+      'Make AI boring is the philosophy. Three methods put it to work at three altitudes: the portfolio, the workflow, and the single decision.',
+    proofHeading: 'The proof',
+    proofIntro: 'Frameworks are claims until something ships. Each project below puts at least one of them into practice.',
+    writingHeading: 'Latest writing',
+  },
+
+  /** The short bio on the home page. The full story is src/content/pages/about.md. */
+  bio: {
+    path: ['Journalism & video', 'Analytics', 'AI strategy & governance'],
+    text: 'I started in journalism and video, where the job was making complicated things clear to people with no time to spare. Analytics taught me to make numbers answer to decisions. Now I lead AI strategy and governance with the same aim: put AI where it fits, measure what it does, and trust it no further than it has earned.',
+    linkLabel: 'More about my path',
+  },
+
+  /** Top navigation, in order. Add { label: 'Work with me', href: '/work-with-me' } when that page exists. */
+  nav: [
+    { label: 'Projects', href: '/projects' },
+    { label: 'Frameworks', href: '/frameworks' },
+    { label: 'Writing', href: '/writing' },
+    { label: 'About', href: '/about' },
+  ] satisfies NavItem[],
+
+  contact: {
+    heading: 'Let’s talk about getting AI into production.',
+    linkedin: 'https://www.linkedin.com/in/cgeorgeandersen/',
+    linkedinLabel: 'Message me on LinkedIn',
+    /** Leave empty to keep your email off the site. */
+    email: '',
+    /** An optional button beside the contact links, e.g. { label: 'Work with me', href: '/work-with-me' }. */
+    cta: null as NavItem | null,
+  },
+
+  footer: {
+    privacy: 'No cookies. Page views are counted anonymously by Vercel Web Analytics.',
+    privacyUrl: 'https://vercel.com/docs/analytics/privacy-policy',
+    /** Delete this line (set it to '') to remove the credit. */
+    credit: 'Built with an AI assistant, directed and edited by me.',
+  },
+
+  /** Frameworks and writing show when they were last reviewed; after this many days the stamp turns amber. */
+  review: {
+    staleAfterDays: 180,
+  },
+};
