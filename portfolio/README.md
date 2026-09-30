@@ -28,4 +28,4 @@ Every push to `master` redeploys. The GitHub workflow in `.github/workflows/port
 
 ## Credits
 
-Fonts: Bodoni Moda, Newsreader and IBM Plex Mono (SIL Open Font License), self-hosted via Fontsource. Designed and built with an AI assistant, directed and edited by George Andersen.
+Fonts: Bricolage Grotesque and Instrument Sans (SIL Open Font License), self-hosted via Fontsource. Designed and built with an AI assistant, directed and edited by George Andersen.

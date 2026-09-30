@@ -110,9 +110,20 @@ Optionally add `lastReviewed: 2026-12-01` when you revisit a post; its stamp sho
 
 2. In `src/config/site.ts`, add `{ label: 'Work with me', href: '/work-with-me' }` to `nav`. To add a button to the contact section too, set `cta: { label: 'Work with me', href: '/work-with-me' }`.
 
+A page can also show a photo beside its title, as the About page does. Put the image in `src/assets/` and add two lines to the top section (the second describes the photo for screen readers; the build stops if it's missing):
+
+```markdown
+image: ../../assets/george-andersen.jpg
+imageAlt: "George Andersen"
+```
+
+## Change your photo
+
+Your headshot is `src/assets/george-andersen.jpg`. It appears on the home page and the About page. To change it, replace that file with a new photo of the same name (a square crop, at least 800 pixels wide, looks sharpest). The site shows it in black and white, so any color photo works.
+
 ## Change site-wide text
 
-Your name, role, the home page headline and introduction, section titles, the short bio, the LinkedIn link, the footer notes and the 180-day review window are all in **`src/config/site.ts`**. Change the words between the quotes and save. When you connect a domain, set `url` there (for example `'https://georgeandersen.com'`).
+Your name, role, the home page headline and introduction, section titles, the short bio (and the photo's description), the LinkedIn link, the footer notes and the 180-day review window are all in **`src/config/site.ts`**. Change the words between the quotes and save. When you connect a domain, set `url` there (for example `'https://georgeandersen.com'`).
 
 ## Notes to yourself
 

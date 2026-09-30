@@ -46,7 +46,7 @@ Four collections (`src/content.config.ts`), each a folder of `.md` files; the fi
 | `projects` | `title`, `summary` (≤160), `status` (`live` / `in progress` / `archived`), `date` | `tags`, `cover` + `coverAlt`, `liveUrl` (required if live), `frameworks` (references), `featured`, `order` (default 100), `draft` |
 | `frameworks` | `title`, `thesis` (≤200), `date`, `lastReviewed` | `relatedProjects`, `kind` (`method` / `philosophy`), `question`, `order`, `draft` |
 | `writing` | `title`, `date`, `summary` | `tags`, `lastReviewed`, `draft` |
-| `pages` | `title`, `description` | `draft` |
+| `pages` | `title`, `description` | `image` + `imageAlt` (a photo beside the title), `draft` |
 
 Rules that matter:
 
@@ -66,33 +66,42 @@ Rules that matter:
 - **Page:** `src/content/pages/<slug>.md`, then a `nav` entry in `site.ts` (and optionally `contact.cta`).
 - **A new content type** (rare): add a collection with `explain()` messages, load it in `getSite()`, add index/detail pages, add share-image cards in `src/pages/og/[...route].png.ts`, add it to RSS if it's dated, and document it in both guides.
 
-## Design system
+## Design system: "Studio"
 
-The site deliberately shares The Confident Machine's design language (`../confident-machine/DESIGN.md` §5, `../confident-machine/src/styles/tokens.css`): editorial, literate, a research publication rather than a template.
+Clean and modern with a controlled burst of color: a white page, near-black type, and four framework colors that do real work (they tell you which framework you're looking at). Business-first, not a template: no stock gradients, no illustrations, no shadows everywhere.
 
 **Palette** (`src/styles/tokens.css`; dark values redefined twice, for the OS setting and for `data-theme="dark"`, so the toggle wins both ways):
 
 | Token | Light | Dark | Use |
 | --- | --- | --- | --- |
-| `--paper` / `--paper-2` / `--paper-3` | `#faf9f5` / `#f1efe8` / `#e7e4db` | `#141413` / `#1c1c1a` / `#262623` | page / cards / wells |
-| `--ink` / `--ink-2` / `--ink-3` | `#191a1c` / `#45464b` / `#6a6b70` | `#e6e4dc` / `#b3b1a8` / `#8a8880` | text / secondary / metadata (≥4.6:1 on cards) |
-| `--rule` / `--rule-strong` | `#dedbd2` / `#c5c1b6` | `#2c2c29` / `#403f3a` | hairlines |
-| `--accent` / `--accent-ink` | `#08856a` / `#16674f` | `#33a987` / `#61c8a4` | **the one accent (jade)**: link underlines, dots, numerals, focus ring |
+| `--paper` / `--paper-2` / `--paper-3` | `#ffffff` / `#f4f5f7` / `#e9ebef` | `#0e1014` / `#171a20` / `#20242b` | page / cards / wells |
+| `--ink` / `--ink-2` / `--ink-3` | `#111318` / `#3e4450` / `#5c6370` | `#eef0f4` / `#b9bfca` / `#8e95a3` | text / secondary / metadata |
+| `--rule` / `--rule-strong` | `#e2e5ea` / `#c9ced6` | `#262a33` / `#3a404b` | hairlines, card borders |
+| `--fw-0` (violet) | `#6b45f0` | `#9d80ff` | the philosophy (Make AI Boring) |
+| `--fw-1` (cobalt) | `#2759f5` | `#6e8fff` | method 01, 04, 07…; also `--accent` (links, focus ring) |
+| `--fw-2` (coral) | `#f2553a` | `#ff7a62` | method 02, 05… |
+| `--fw-3` (teal) | `#0fa08e` | `#2ccdb8` | method 03, 06… |
+| `--fw-N-ink` | darker / lighter twins | | the same colors when used as **text** (AA on paper) |
+| `--fresh` | `#0a7568` | `#2ccdb8` | the review stamp's "current" dot |
 | `--stale` / `--stale-ink` | `#ad721c` / `#7b510d` | `#c3862e` / `#deae62` | **amber, reserved for "may be out of date"** |
 
-- **One accent.** Jade is the only decorative color. Amber appears only on overdue review stamps (and draft labels in dev); using it anywhere else would drain the warning of meaning.
-- **Color never carries meaning alone:** stamps pair the dot with words; status pills use ● / ◐ / ○ plus a label; pressed filter chips are filled and carry a ✓.
-- All text tokens pass WCAG AA on both surfaces in both themes. Re-check contrast if you change a token.
+- **Framework colors are assigned, not chosen.** `getSite().colorOf(framework)` returns the slot: 0 for the philosophy, then methods cycle 1 → 2 → 3 by their order. Put `data-fw={colorOf(f)}` on an element and use `var(--fw)` (marks) / `var(--fw-ink)` (text) inside it. A new framework gets its color automatically; never hard-code one.
+- **The four-color stripe** (violet / cobalt / coral / teal, equal quarters) is the signature: under "boring." in the hero, under the headshot, on share images. The **four-dot mark** (two by two) is the logo in the header, favicon and share-image kicker.
+- **Amber stays reserved.** It appears only on overdue review stamps (and draft labels in dev); using it elsewhere drains the warning of meaning. That's why coral, not orange, is a framework color.
+- **Color never carries meaning alone:** framework colors always sit beside the framework's number or name; stamps pair the dot with words; status pills use ● / ◐ / ○ plus a label; pressed filter chips are filled and carry a ✓.
+- All text tokens pass WCAG AA on both surfaces in both themes. Re-check contrast if you change a token (use the `-ink` variant for colored text).
 
-**Type:** Bodoni Moda (variable, optical sizes) for display only, never below ~1.25rem; Newsreader for text (19px phones / 20px desktop, 1.6 line height, `--measure: 38rem`); IBM Plex Mono for kickers, labels, dates, stamps, buttons (uppercase + tracking for labels). Fonts are self-hosted from Fontsource and imported in `BaseLayout.astro`; the Bodoni and Newsreader latin files are preloaded. Newsreader uses its weight-only file (58 KB vs 132 KB with the optical-size axis, which sits at its default at body sizes anyway).
+**Type:** Bricolage Grotesque (variable, with an optical-size axis) for headlines at weight 700–800 with tight tracking (about -0.035em; the hero is 800 / -0.045em). Instrument Sans for everything else: body (17px phones / 18px desktop), labels, kickers, dates, stamps and buttons (`--font-label` points to it; labels are uppercase with tracking). Both are self-hosted from Fontsource, imported in `BaseLayout.astro`, and their latin files are preloaded.
 
-**Signature details:** the dotted jade underline (hero "boring", echoing the essay's masthead); the review stamp (`ReviewStamp.astro`), green dot → amber after `review.staleAfterDays` (180), computed at build *and* re-checked in the browser so it stays honest without rebuilds; mono kickers separated by dots (the `.kicker` clip trick prevents a stray leading dot on wrapped lines).
+**The headshot** is `src/assets/george-andersen.jpg`, shown in grayscale on the four-color stripe on the home page's About section and the About page (via the page's `image` field). The color comes from the stripe, not the photo, so any photo fits. The current file is 400px; a larger square original would render sharper on high-density screens.
 
-**Layout:** `.wide` (68rem) for page structure, `.measure` (38rem) for reading; detail pages use `.detail` (text column + a margin column on ≥1100px; margin column first on phones). 16px minimum gutters; nothing may scroll sideways at 320px.
+**Signature details:** the four-color stripe; framework cards with a colored top band and a tinted number pill; the review stamp (`ReviewStamp.astro`), teal dot → amber after `review.staleAfterDays` (180), computed at build *and* re-checked in the browser so it stays honest without rebuilds; kickers separated by dots (the `.kicker` clip trick prevents a stray leading dot on wrapped lines).
+
+**Layout:** `.wide` (70rem) for page structure, `.measure` (38rem) for reading; detail pages use `.detail` (text column + a margin column on ≥1100px; margin column first on phones). 16px minimum gutters; nothing may scroll sideways at 320px. Corners: `--radius` 12px, cards 16px, buttons 10px.
 
 **Motion:** one entrance on the home hero, hover transitions, all disabled under `prefers-reduced-motion`. The hero headline only moves, never starts invisible (it's the LCP element).
 
-**Never:** stock gradients, hero illustrations, emoji, a second accent, SaaS-style cards with drop shadows everywhere.
+**Never:** stock gradients (the stripe is hard-edged, not a gradient blend), hero illustrations, emoji, a fifth decorative color, drop shadows everywhere.
 
 ## Conventions
 
@@ -108,8 +117,7 @@ The site deliberately shares The Confident Machine's design language (`../confid
 - **Astro 7:** import `z` from `astro/zod` (Zod 4; `z` from `astro:content` is deprecated); `defineCollection`/`reference`/`render` from `astro:content`; loaders from `astro/loaders`; config in `src/content.config.ts`.
 - **TypeScript is pinned to 6.** `@astrojs/check` does not support TypeScript 7 yet.
 - **Markdown plugins:** Astro 7's default processor is Sätteri, not unified/remark. `markdown.remarkPlugins`/`rehypePlugins` are ignored. Plugins go in `satteri({ mdastPlugins, hastPlugins })` in `astro.config.ts` (see `stripHtmlComments`, which keeps `<!-- notes -->` out of the published HTML).
-- **Bodoni Moda's hyphens and dashes are ~0.2px hairlines** at every optical size, so they vanish on screen. `BaseLayout.astro` declares a `Display Dashes` face (Newsreader's file, `unicode-range` limited to dashes) placed first in `--font-display`. Don't remove it. Share images do the same by setting dashes in Newsreader.
-- **Satori** (share images): every `div` with more than one child needs `display: flex`, and an element with no children must have `children: undefined` (satori treats `[]` as "several children"). It can't read woff2 or variable fonts: that's why `src/og-fonts/` exists (regenerate with `scripts/make-og-fonts.py` if the fonts change). Dotted `border` isn't supported; dotted `textDecoration` is.
+- **Satori** (share images): every `div` with more than one child needs `display: flex`, and an element with no children must have `children: undefined` (satori treats `[]` as "several children"). It can't read woff2 or variable fonts: that's why `src/og-fonts/` exists (regenerate with `scripts/make-og-fonts.py` if the fonts change). Dotted `border` isn't supported; dotted `textDecoration` is. The stripe and mark are built from flex boxes (`stripe()`, `mark()` in `og.ts`).
 - **Share-image covers** are read from `image().fsPath`, which Astro sets during the build.
 - **Site URL:** `site.ts` `url` → else `VERCEL_PROJECT_PRODUCTION_URL` → else `http://localhost:4321`. Canonicals, OG image URLs, RSS, robots and the sitemap all follow it.
 - **Analytics** (`@vercel/analytics/astro`) renders only when `VERCEL=1`, so local builds and Lighthouse runs don't request a script that 404s off Vercel.
