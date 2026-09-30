@@ -73,6 +73,8 @@ export const SITE = {
     path: ['Journalism & video', 'Analytics', 'AI strategy & governance'],
     text: 'I started in journalism and video, where the job was making complicated things clear to people with no time to spare. Analytics taught me to make numbers answer to decisions. Now I lead AI strategy and governance with the same aim: put AI where it fits, measure what it does, and trust it no further than it has earned.',
     linkLabel: 'More about my path',
+    /** Your headshot is src/assets/george-andersen.jpg: replace that file to change it everywhere. */
+    portraitAlt: 'George Andersen',
   },
 
   /** Top navigation, in order. Add { label: 'Work with me', href: '/work-with-me' } when that page exists. */

@@ -1,6 +1,8 @@
 ---
 title: "About"
 description: "From journalism and video to analytics to AI strategy and governance, with one thread running through it: making complex things clear."
+image: ../../assets/george-andersen.jpg
+imageAlt: "George Andersen"
 ---
 
 I've had three careers that turned out to be one.

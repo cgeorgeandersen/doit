@@ -4,6 +4,7 @@
  * work-with-me.md becomes /work-with-me with no code changes. Add it to the
  * navigation in src/config/site.ts.
  */
+import { Image } from 'astro:assets';
 import { render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ContactBand from '../components/ContactBand.astro';
@@ -20,7 +21,7 @@ interface Props {
 }
 
 const { page } = Astro.props;
-const { title, description, draft } = page.data;
+const { title, description, image, imageAlt, draft } = page.data;
 const { Content } = await render(page);
 
 const jsonLd =
@@ -40,13 +41,22 @@ const jsonLd =
 
 <BaseLayout title={title} description={description} image={`/og/pages/${page.id}.png`} imageAlt={`${title} · ${SITE.name}`} jsonLd={jsonLd}>
   <article>
-    <header class="page-head measure">
-      <p class="kicker">
-        <span>{SITE.name}</span>
-        {draft && <span class="draft">Draft · not published</span>}
-      </p>
-      <h1 class="page-title">{title}</h1>
-      <p class="dek">{description}</p>
+    <header class:list={['page-head measure', { 'has-image': image }]}>
+      {
+        image && (
+          <figure class="page-image">
+            <Image src={image} alt={imageAlt ?? ''} widths={[240, 400]} sizes="(min-width: 720px) 10rem, 7.5rem" loading="eager" />
+          </figure>
+        )
+      }
+      <div class="head-text">
+        <p class="kicker">
+          <span>{SITE.name}</span>
+          {draft && <span class="draft">Draft · not published</span>}
+        </p>
+        <h1 class="page-title">{title}</h1>
+        <p class="dek">{description}</p>
+      </div>
     </header>
     <div class="measure prose page-body">
       <Content />
@@ -62,6 +72,40 @@ const jsonLd =
 
   .page-body {
     margin-bottom: 1rem;
+  }
+
+  .has-image {
+    display: grid;
+    gap: 1.6rem;
+  }
+
+  /* A page image (the About headshot) sits on the site's four-color stripe. */
+  .page-image {
+    width: 7.5rem;
+    margin: 0;
+    padding-bottom: 5px;
+    background: linear-gradient(90deg, var(--fw-0) 0 25%, var(--fw-1) 25% 50%, var(--fw-2) 50% 75%, var(--fw-3) 75% 100%)
+      no-repeat 0 100% / 100% 5px;
+  }
+
+  .page-image :global(img) {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 14px 14px 0 0;
+    filter: grayscale(1);
+  }
+
+  @media (min-width: 720px) {
+    .has-image {
+      grid-template-columns: 10rem minmax(0, 1fr);
+      align-items: end;
+      column-gap: 2rem;
+    }
+
+    .page-image {
+      width: 10rem;
+    }
   }
 
   /* The opening line of a page reads as a lede. */

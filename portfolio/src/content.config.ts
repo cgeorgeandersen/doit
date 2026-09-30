@@ -97,11 +97,20 @@ const writing = defineCollection({
 
 const pages = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/pages' }),
-  schema: z.object({
-    title: z.string(explain('the page’s title')).min(1, 'Required: the page’s title').transform(typeset),
-    description: z.string(explain('one sentence for search engines and link previews')).transform(typeset),
-    draft,
-  }),
+  schema: ({ image }) =>
+    z
+      .object({
+        title: z.string(explain('the page’s title')).min(1, 'Required: the page’s title').transform(typeset),
+        description: z.string(explain('one sentence for search engines and link previews')).transform(typeset),
+        image: image().optional(),
+        imageAlt: z.string(explain('a short description of the image')).optional(),
+        draft,
+      })
+      .superRefine((data, ctx) => {
+        if (data.image && !data.imageAlt?.trim()) {
+          ctx.addIssue({ code: 'custom', path: ['imageAlt'], message: 'Required when there is an image: a short description of it for people using screen readers' });
+        }
+      }),
 });
 
 export const collections = { projects, frameworks, writing, pages };
