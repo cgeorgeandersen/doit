@@ -5,5 +5,17 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "trailingSlash": false,
-  "ignoreCommand": "git diff --quiet HEAD^ HEAD -- ."
+  "ignoreCommand": "git diff --quiet HEAD^ HEAD -- .",
+  "redirects": [
+    {
+      "source": "/frameworks/make-ai-boring",
+      "destination": "/frameworks/ai-should-be-boring",
+      "permanent": true
+    },
+    {
+      "source": "/og/frameworks/make-ai-boring.png",
+      "destination": "/og/frameworks/ai-should-be-boring.png",
+      "permanent": true
+    }
+  ]
 }

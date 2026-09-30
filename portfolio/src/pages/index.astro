@@ -304,21 +304,6 @@ const personLd = {
     .photo :global(img) {
       border-radius: 18px 18px 0 0;
     }
-
-    .hero-title {
-      font-size: clamp(4rem, 11vw, 6rem);
-    }
-  }
-
-  /* 3.9em fits "Make AI" (3.6em) but not the whole line, so the headline
-     always breaks into two big lines. Keep the headline this short. */
-  .hero-title {
-    max-width: 3.9em;
-    font-family: var(--font-display);
-    font-weight: 800;
-    font-size: clamp(3.6rem, 22vw, 8.4rem);
-    line-height: 0.94;
-    letter-spacing: -0.045em;
   }
 
   /* Wide screens: the photo becomes a card that stands as tall as the headline. */
@@ -327,9 +312,32 @@ const personLd = {
       grid-template-columns: minmax(0, 1fr) 15rem;
       column-gap: 5rem;
     }
+  }
 
+  /*
+   * Two big lines at every width: "AI should / be boring." The longer line is
+   * about 4.2em wide and "AI should be" about 4.9em, so a 4.5em box breaks it
+   * there. Each size keeps that box inside the text column beside the photo.
+   * A new headline needs re-measuring; keep it to two short lines.
+   */
+  .hero-title {
+    max-width: 4.5em;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(3.2rem, 20vw, 5.4rem);
+    line-height: 0.94;
+    letter-spacing: -0.045em;
+  }
+
+  @media (min-width: 720px) {
     .hero-title {
-      font-size: clamp(6rem, 10vw, 8rem);
+      font-size: clamp(3.6rem, 10vw, 6.2rem);
+    }
+  }
+
+  @media (min-width: 1100px) {
+    .hero-title {
+      font-size: clamp(6rem, 9vw, 8rem);
     }
   }
 

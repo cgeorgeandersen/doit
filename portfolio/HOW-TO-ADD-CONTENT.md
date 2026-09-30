@@ -89,7 +89,7 @@ failureModes:
 - **failureModes** is required: every framework says how it can fail. They appear at the end of its page as the "Failure modes" safety sheet, each split into the risk and the precaution. Add as many as you need; each one starts with `  - name:`, and the lines under it are indented to match.
 - **order** sets its place and its number (1, 2, 3…) on the home page and /frameworks.
 - **Its element tile** (like **Ct** for Calibrated Trust) is made from the first letters of the title's first two words, skipping "AI". To choose your own, add `symbol: "Ts"`: one capital letter, then an optional lowercase one. Two frameworks can't share a symbol; the build says so if they would.
-- **reaction** (optional) shows a formula under the thesis, like the one on Make AI Boring:
+- **reaction** (optional) shows a formula under the thesis, like the one on AI Should Be Boring:
 
   ```markdown
   reaction:
