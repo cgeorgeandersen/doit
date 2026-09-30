@@ -5,6 +5,19 @@ question: "What should we do first?"
 date: 2026-09-29
 lastReviewed: 2026-09-29
 order: 1
+failureModes:
+  - name: "Tiers blur"
+    risk: "An “internal” tool that summarizes customer emails is handling customer data."
+    precaution: "Classify an initiative by the data it touches and the actions it takes, not by who uses it."
+  - name: "It can be too slow"
+    risk: "When the competitive stakes are high, climbing every tier in order can take too long."
+    precaution: "Consider a tightly scoped customer-facing pilot with extra safeguards."
+  - name: "Low risk isn't the same as high value"
+    risk: "A portfolio of safe internal tools can deliver very little."
+    precaution: "Keep at least one initiative in each tier aimed at a real business outcome."
+  - name: "The security pause needs a fast lane"
+    risk: "If review takes months, it becomes the bottleneck the tiers were meant to remove."
+    precaution: "Give reviews a turnaround time, and staff them to meet it."
 ---
 
 ## The idea
@@ -27,10 +40,3 @@ One hard rule cuts across every tier. **Anything that takes automated action on 
 - **Proportionate governance keeps low-risk work fast.** When everything goes through the same heavy review, people route around it. Tiers let you say yes quickly to most things and slow down only where it matters.
 - **It prices in the tail.** A single return figure averages away rare, severe failures: a leaked record, or a wrong answer given to thousands of customers. Tiers make the tail visible before it happens.
 - **The hard rule protects what you can't take back:** customer trust, and data that has left your control.
-
-## Where it breaks down
-
-- **Tiers blur.** An "internal" tool that summarizes customer emails is handling customer data. Classify an initiative by the data it touches and the actions it takes, not by who uses it.
-- **It can be too slow.** When the competitive stakes are high, a tightly scoped customer-facing pilot with extra safeguards can beat climbing every tier in order.
-- **Low risk isn't the same as high value.** A portfolio of safe internal tools can deliver very little. Keep at least one initiative in each tier aimed at a real business outcome.
-- **The security pause needs a fast lane.** If review takes months, it becomes the bottleneck the tiers were meant to remove. Give reviews a turnaround time, and staff them to meet it.

@@ -10,12 +10,12 @@ import { statusSlug } from '../../lib/status';
 const site = await getSite();
 const { projects } = site;
 const statuses = [...new Set(projects.map((p) => p.data.status))];
-const { title, description } = SITE.sections.projects;
+const { label, title, description } = SITE.sections.projects;
 ---
 
-<BaseLayout title="Projects" description={description} image="/og/projects.png" imageAlt={`Projects by ${SITE.name}`}>
+<BaseLayout title={label} description={description} image="/og/projects.png" imageAlt={`${label} by ${SITE.name}`}>
   <header class="page-head wide">
-    <p class="kicker"><span>Projects</span></p>
+    <p class="kicker"><span>{label}</span></p>
     <h1 class="page-title">{title}</h1>
     <p class="dek">{description}</p>
   </header>
@@ -26,7 +26,7 @@ const { title, description } = SITE.sections.projects;
       {
         projects.map((project) => (
           <li data-status={statusSlug(project.data.status)} data-tags={project.data.tags.map(tagSlug).join(' ')}>
-            <ProjectCard project={project} frameworks={site.frameworksFor(project)} numberOf={site.numberOf} colorOf={site.colorOf} layout="row" headingLevel="h2" />
+            <ProjectCard project={project} frameworks={site.frameworksFor(project)} elementOf={site.elementOf} colorOf={site.colorOf} layout="row" headingLevel="h2" />
           </li>
         ))
       }

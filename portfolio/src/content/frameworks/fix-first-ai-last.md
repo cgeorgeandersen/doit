@@ -5,6 +5,19 @@ question: "Where does AI fit in the work?"
 date: 2026-09-29
 lastReviewed: 2026-09-29
 order: 2
+failureModes:
+  - name: "Some fixes aren't yours to make"
+    risk: "Ending a wait for sign-off may take someone else's authority."
+    precaution: "Map it anyway: the map makes the cost visible to the person who can fix it."
+  - name: "Steps are rarely pure"
+    risk: "One step can be part chasing, part writing, so it doesn't fit one label."
+    precaution: "Label the dominant part, and split the step when the mix matters."
+  - name: "The line between rules and AI moves"
+    risk: "As AI gets more reliable and cheaper, some reading-and-writing steps become safe to automate end to end, and old answers go stale."
+    precaution: "Run the questions again when the tools change."
+  - name: "“AI last” can be read too literally"
+    risk: "It's about who does the work, not who helps find the fix. Ruling AI out of the diagnosis wastes a useful tool."
+    precaution: "Use AI to spot the pattern behind a process problem, such as summarizing a month of requests to find the detail that's always missing."
 ---
 
 ## The idea
@@ -30,10 +43,3 @@ The order is the point. Each answer is cheaper and more predictable than the one
 Think of a road that jams every morning because a traffic light is broken. A faster car doesn't help; fixing the light does. AI applied to a broken process just automates the jam.
 
 Going in this order also gives a concrete answer to the question people actually ask, "what happens to my job?" The chasing and the copying go away. The judgment stays, and gets more time.
-
-## Where it breaks down
-
-- **Some fixes aren't yours to make.** Ending a wait for sign-off may take someone else's authority. The map still helps: it makes the cost visible to the person who can fix it.
-- **Steps are rarely pure.** One step can be part chasing, part writing. Label the dominant part, and split the step when the mix matters.
-- **The line between rules and AI moves.** As AI gets more reliable and cheaper, some reading-and-writing steps become safe to automate end to end. Run the questions again when the tools change.
-- **"AI last" is about who does the work, not who helps find the fix.** AI can be useful for spotting the pattern behind a process problem, such as summarizing a month of requests to find the detail that's always missing.

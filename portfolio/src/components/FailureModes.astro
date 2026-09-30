@@ -1,0 +1,138 @@
+---
+/**
+ * A framework's safety sheet: how it can fail, each failure split into the risk
+ * and the precaution, from the framework's `failureModes` field. The hazard
+ * label is coral with a diamond and a word, so it's never mistaken for a
+ * framework color, and amber stays reserved for out-of-date content.
+ */
+import type { Framework } from '../lib/content';
+
+interface Props {
+  modes: Framework['data']['failureModes'];
+}
+
+const { modes } = Astro.props;
+---
+
+<section class="failure-modes" aria-labelledby="failure-modes-title">
+  <div class="fm-head">
+    <span class="hazard" aria-hidden="true"><span>!</span></span>
+    <h2 id="failure-modes-title">Failure modes</h2>
+  </div>
+  <ul class="fm-list">
+    {
+      modes.map((mode) => (
+        <li class="fm">
+          <h3>{mode.name}</h3>
+          <p class="risk">
+            <span class="key">Risk</span> {mode.risk}
+          </p>
+          <p class="precaution">
+            <span class="key">Precaution</span> {mode.precaution}
+          </p>
+        </li>
+      ))
+    }
+  </ul>
+</section>
+
+<style>
+  .failure-modes {
+    margin-top: 2.8rem;
+  }
+
+  .fm-head {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.2rem;
+  }
+
+  /* A hazard diamond: a square turned 45°, its mark turned back upright. */
+  .hazard {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 2.1rem;
+    height: 2.1rem;
+    margin-inline: 0.3rem;
+    border: 2.5px solid var(--fw-2);
+    border-radius: 4px;
+    transform: rotate(45deg);
+  }
+
+  .hazard span {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.05rem;
+    line-height: 1;
+    color: var(--fw-2-ink);
+    transform: rotate(-45deg);
+  }
+
+  h2 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.5rem, 3.2vw, 1.85rem);
+    line-height: 1.15;
+    letter-spacing: -0.025em;
+  }
+
+  .fm-list {
+    display: grid;
+    gap: 0.8rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .fm {
+    display: grid;
+    gap: 0.65rem 1.4rem;
+    padding: 1.05rem 1.15rem 1.15rem;
+    border-radius: var(--radius);
+    background: var(--paper-2);
+  }
+
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.12rem;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+  }
+
+  .fm p {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: var(--ink-2);
+  }
+
+  .key {
+    display: block;
+    margin-bottom: 0.15rem;
+    font-family: var(--font-label);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .risk .key {
+    color: var(--fw-2-ink);
+  }
+
+  .precaution .key {
+    color: var(--fresh);
+  }
+
+  @media (min-width: 720px) {
+    .fm {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+
+    h3 {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

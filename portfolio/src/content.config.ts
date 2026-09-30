@@ -79,6 +79,31 @@ const frameworks = defineCollection({
     kind: z.enum(['philosophy', 'method'], explain('method or philosophy', 'use method or philosophy')).default('method'),
     question: z.string(explain('the question this framework answers, e.g. “Where does AI fit in the work?”')).transform(typeset).optional(),
     order: z.number(explain('a number; lower numbers come first')).default(100),
+    /** The framework's symbol on its element tile, like Ct. Left out, it's made from the title (see src/lib/content.ts). */
+    symbol: z
+      .string(explain('a symbol like Ct: one capital letter, then an optional lowercase one'))
+      .regex(/^[A-Z][a-z]?$/, 'Not valid: one capital letter, then an optional lowercase one, like Ct')
+      .optional(),
+    /** An optional formula shown under the thesis: inputs joined by +, then → and the result. */
+    reaction: z
+      .object({
+        inputs: z
+          .array(z.string().transform(typeset), explain('a list of two or more ingredients, like ["Clear scope", "Measurement"]'))
+          .min(2, 'Too short: a reaction needs at least two inputs'),
+        output: z.string(explain('what the inputs produce, like "AI you can rely on"')).transform(typeset),
+      }, explain('inputs (a list) and output (one line)'))
+      .optional(),
+    /** How the framework can fail: shown as the Failure modes safety sheet at the end of its page. */
+    failureModes: z
+      .array(
+        z.object({
+          name: z.string(explain('a short name for the failure, like “The map is a snapshot”')).min(1).transform(typeset),
+          risk: z.string(explain('what goes wrong, in a sentence or two')).min(1).transform(typeset),
+          precaution: z.string(explain('what to do about it, in a sentence or two')).min(1).transform(typeset),
+        }),
+        explain('a list of the ways this framework can fail, each with a name, a risk and a precaution'),
+      )
+      .min(1, 'Required: at least one failure mode, with a name, a risk and a precaution'),
     draft,
   }),
 });

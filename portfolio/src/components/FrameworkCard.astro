@@ -1,16 +1,17 @@
 ---
 /**
- * A framework as a method: its numeral and question, title, one-line thesis,
- * review stamp, and the projects that apply it (derived, never typed twice).
- * The card wears its framework's color (a band on top, the numeral's pill),
- * the same color its projects carry.
+ * A framework as a method: its element tile and question, title, one-line
+ * thesis, review stamp, and the projects that apply it (derived, never typed
+ * twice). The card wears its framework's color (a band on top, the tile), the
+ * same color its projects carry.
  */
+import ElementTile from './ElementTile.astro';
 import ReviewStamp from './ReviewStamp.astro';
-import type { Framework, Project } from '../lib/content';
+import type { FrameworkElement, Framework, Project } from '../lib/content';
 
 interface Props {
   framework: Framework;
-  number?: string | undefined;
+  element: FrameworkElement;
   projects?: Project[];
   headingLevel?: 'h2' | 'h3';
   proofLabel?: string;
@@ -18,21 +19,19 @@ interface Props {
   color?: 0 | 1 | 2 | 3;
 }
 
-const { framework, number, projects = [], headingLevel = 'h3', proofLabel = 'Applied in', color = 1 } = Astro.props;
+const { framework, element, projects = [], headingLevel = 'h3', proofLabel = 'Applied in', color = 1 } = Astro.props;
 const { title, thesis, question, lastReviewed, draft } = framework.data;
 const Heading = headingLevel;
 ---
 
 <article class="framework-card" data-fw={color}>
-  {
-    (number || question) && (
-      <p class="fw-kicker">
-        {number && <span class="num">{number}</span>}
-        {question && <span>{question}</span>}
-      </p>
-    )
-  }
-  <Heading class="fw-title"><a class="quiet-link" href={`/frameworks/${framework.id}`}>{title}</a></Heading>
+  <div class="fw-head">
+    <ElementTile element={element} color={color} size="sm" />
+    <div class="fw-head-text">
+      {question && <p class="fw-kicker">{question}</p>}
+      <Heading class="fw-title"><a class="quiet-link" href={`/frameworks/${framework.id}`}>{title}</a></Heading>
+    </div>
+  </div>
   <p class="fw-thesis">{thesis}</p>
   <p class="fw-stamp">
     <ReviewStamp date={lastReviewed} />
@@ -69,28 +68,26 @@ const Heading = headingLevel;
     box-shadow: inset 0 5px 0 var(--fw);
   }
 
-  .fw-kicker {
+  .fw-head {
     display: flex;
-    flex-wrap: wrap;
-    gap: 0.3rem 0.75rem;
-    font-family: var(--font-label);
     align-items: center;
+    gap: 0.9rem;
+  }
+
+  .fw-head-text {
+    display: grid;
+    gap: 0.3rem;
+    min-width: 0;
+  }
+
+  .fw-kicker {
+    font-family: var(--font-label);
     font-size: var(--step--2);
     font-weight: 600;
     letter-spacing: 0.08em;
+    line-height: 1.35;
     text-transform: uppercase;
     color: var(--ink-3);
-  }
-
-  .num {
-    display: inline-grid;
-    place-items: center;
-    min-width: 2rem;
-    padding: 0.1rem 0.5rem;
-    border-radius: 999px;
-    background: color-mix(in srgb, var(--fw) 14%, transparent);
-    color: var(--fw-ink);
-    letter-spacing: 0.02em;
   }
 
   .fw-title {

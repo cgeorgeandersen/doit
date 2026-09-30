@@ -1,6 +1,10 @@
 ---
-/** The philosophy, then the numbered methods, each with the projects that apply it. */
+/**
+ * Every framework as an element in a small periodic table, then the philosophy,
+ * then the numbered methods, each with the projects that apply it.
+ */
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import ElementTile from '../../components/ElementTile.astro';
 import FrameworkCard from '../../components/FrameworkCard.astro';
 import ReviewStamp from '../../components/ReviewStamp.astro';
 import { SITE } from '../../config/site';
@@ -8,14 +12,31 @@ import { getSite } from '../../lib/content';
 
 const site = await getSite();
 const { philosophy, methods } = site;
-const { title, description } = SITE.sections.frameworks;
+const { label, title, description } = SITE.sections.frameworks;
 ---
 
-<BaseLayout title="Frameworks" description={description} image="/og/frameworks.png" imageAlt={`Frameworks by ${SITE.name}`}>
-  <header class="page-head wide">
-    <p class="kicker"><span>Frameworks</span></p>
-    <h1 class="page-title">{title}</h1>
-    <p class="dek">{description}</p>
+<BaseLayout title={label} description={description} image="/og/frameworks.png" imageAlt={`${label} by ${SITE.name}`}>
+  <header class="page-head wide index-head">
+    <div class="index-head-text">
+      <p class="kicker"><span>{label}</span></p>
+      <h1 class="page-title">{title}</h1>
+      <p class="dek">{description}</p>
+    </div>
+    <ul class="table" aria-label="Every framework">
+      {
+        site.frameworks.map((framework) => (
+          <li>
+            <ElementTile
+              element={site.elementOf(framework)}
+              color={site.colorOf(framework)}
+              name={framework.data.title}
+              question={framework.data.question}
+              href={`/frameworks/${framework.id}`}
+            />
+          </li>
+        ))
+      }
+    </ul>
   </header>
 
   {
@@ -52,7 +73,7 @@ const { title, description } = SITE.sections.frameworks;
             const { applied, related } = site.projectsFor(framework);
             return (
               <li>
-                <FrameworkCard framework={framework} number={site.numberOf(framework)} color={site.colorOf(framework)} projects={[...applied, ...related]} headingLevel="h3" />
+                <FrameworkCard framework={framework} element={site.elementOf(framework)} color={site.colorOf(framework)} projects={[...applied, ...related]} headingLevel="h3" />
               </li>
             );
           })}
@@ -67,6 +88,45 @@ const { title, description } = SITE.sections.frameworks;
 </BaseLayout>
 
 <style>
+  /* The table: two by two, like the four-dot mark, beside the title on wide screens. */
+  .index-head {
+    display: grid;
+    gap: 2.2rem;
+  }
+
+  .table {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-rows: 1fr;
+    gap: 0.7rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .table > li {
+    display: grid;
+    min-width: 0;
+  }
+
+  @media (min-width: 720px) {
+    .table {
+      grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
+    }
+  }
+
+  @media (min-width: 1100px) {
+    .index-head {
+      grid-template-columns: minmax(0, 1fr) 24rem;
+      column-gap: 4rem;
+      align-items: center;
+    }
+
+    .table {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
   .philosophy {
     display: grid;
     gap: 0.9rem;

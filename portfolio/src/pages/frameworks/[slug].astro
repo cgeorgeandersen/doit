@@ -1,11 +1,14 @@
 ---
 /**
- * One framework: its question, thesis, review stamp and the essay itself,
- * with the projects that apply it in the margin (derived from each project's
- * `frameworks` list, so it can't fall out of date).
+ * One framework: its element tile, question, thesis, optional formula, review
+ * stamp and the essay itself, then its failure modes. The projects that apply
+ * it sit in the margin (derived from each project's `frameworks` list, so it
+ * can't fall out of date).
  */
 import { render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import ElementTile from '../../components/ElementTile.astro';
+import FailureModes from '../../components/FailureModes.astro';
 import ReviewStamp from '../../components/ReviewStamp.astro';
 import StatusPill from '../../components/StatusPill.astro';
 import { SITE } from '../../config/site';
@@ -23,9 +26,10 @@ interface Props {
 
 const { framework } = Astro.props;
 const site = await getSite();
-const { title, thesis, question, date, lastReviewed, kind, draft } = framework.data;
+const { title, thesis, question, date, lastReviewed, kind, reaction, failureModes, draft } = framework.data;
 const { Content } = await render(framework);
 const number = site.numberOf(framework);
+const color = site.colorOf(framework);
 const { applied, related } = site.projectsFor(framework);
 const others = site.frameworks.filter((f) => f.id !== framework.id);
 
@@ -56,15 +60,39 @@ const jsonLd = {
   jsonLd={jsonLd}
 >
   <article>
-    <header class="page-head wide">
+    <header class="page-head wide fw-head">
       <p class="kicker">
-        <span><a href="/frameworks">Frameworks</a></span>
-        <span class="method" data-fw={site.colorOf(framework)}>{number ? `Method ${number}` : kind === 'philosophy' ? 'The philosophy' : 'Framework'}</span>
-        {question && <span>{question}</span>}
+          <span><a href="/frameworks">{SITE.sections.frameworks.label}</a></span>
+          <span class="method" data-fw={color}>{number ? `Method ${number}` : kind === 'philosophy' ? 'The philosophy' : 'Framework'}</span>
+          {question && <span>{question}</span>}
         {draft && <span class="draft">Draft · not published</span>}
       </p>
       <h1 class="page-title">{title}</h1>
+      <div class="fw-head-tile">
+        <ElementTile element={site.elementOf(framework)} color={color} />
+      </div>
       <p class="dek">{thesis}</p>
+      {
+        reaction && (
+          <p class="reaction">
+            {reaction.inputs.map((input, i) => (
+              <Fragment>
+                {i > 0 && (
+                  <span class="op">
+                    <span aria-hidden="true">+</span>
+                    <span class="visually-hidden">plus</span>
+                  </span>
+                )}
+                <span class="term">{input}</span>
+              </Fragment>
+            ))}
+            <span class="yields">
+              <span aria-hidden="true">→</span>
+              <span class="visually-hidden">gives</span> {reaction.output}
+            </span>
+          </p>
+        )
+      }
       <p class="meta">
         <ReviewStamp date={lastReviewed} />
         <span>First published <time datetime={isoDate(date)}>{formatDate(date)}</time></span>
@@ -107,6 +135,7 @@ const jsonLd = {
         <div class="prose">
           <Content />
         </div>
+        <FailureModes modes={failureModes} />
       </div>
     </div>
 
@@ -118,9 +147,9 @@ const jsonLd = {
           </h2>
           <ul>
             {others.map((f) => (
-              <li data-fw={site.colorOf(f)}>
+              <li>
                 <a href={`/frameworks/${f.id}`}>
-                  {site.numberOf(f) && <span class="num">{site.numberOf(f)}</span>}
+                  <ElementTile element={site.elementOf(f)} color={site.colorOf(f)} size="chip" />
                   <span class="other-title">{f.data.title}</span>
                 </a>
               </li>
@@ -135,6 +164,133 @@ const jsonLd = {
 <style>
   .draft {
     color: var(--stale-ink);
+  }
+
+  /*
+   * The framework's element tile: beside the title on phones (a small tile, so
+   * the headline stays near the top), beside the whole header from 900px.
+   */
+  .fw-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'kicker kicker'
+      'title tile'
+      'dek dek'
+      'reaction reaction'
+      'meta meta';
+    column-gap: 1.2rem;
+  }
+
+  .fw-head > .kicker {
+    grid-area: kicker;
+  }
+
+  .fw-head > .page-title {
+    grid-area: title;
+    align-self: center;
+  }
+
+  .fw-head > .dek {
+    grid-area: dek;
+  }
+
+  .fw-head > .reaction {
+    grid-area: reaction;
+  }
+
+  .fw-head > .meta {
+    grid-area: meta;
+  }
+
+  .fw-head-tile {
+    grid-area: tile;
+    align-self: end;
+    width: 5.2rem;
+    margin-top: 1rem;
+  }
+
+  .fw-head-tile :global(.el) {
+    min-height: 0;
+    aspect-ratio: 1;
+    padding: 0.4rem 0.5rem;
+  }
+
+  .fw-head-tile :global(.el-kind) {
+    display: none;
+  }
+
+  .fw-head-tile :global(.el-symbol) {
+    font-size: 2.2rem;
+  }
+
+  @media (min-width: 900px) {
+    .fw-head {
+      grid-template-columns: minmax(0, 1fr) 11rem;
+      grid-template-areas:
+        'kicker tile'
+        'title tile'
+        'dek tile'
+        'reaction tile'
+        'meta tile';
+      column-gap: 4rem;
+    }
+
+    .fw-head-tile {
+      align-self: center;
+      width: 100%;
+      margin-top: 0;
+    }
+
+    .fw-head-tile :global(.el) {
+      padding: 0.8rem 0.95rem 0.9rem;
+    }
+
+    .fw-head-tile :global(.el-kind) {
+      display: block;
+    }
+
+    .fw-head-tile :global(.el-number) {
+      font-size: 1.05rem;
+    }
+
+    .fw-head-tile :global(.el-symbol) {
+      font-size: 4.6rem;
+    }
+  }
+
+  /* The formula: ingredients joined by +, then what they make. */
+  .reaction {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem 0.7rem;
+    width: fit-content;
+    max-width: 100%;
+    margin-top: 1.4rem;
+    padding: 0.8rem 1.1rem;
+    border-radius: var(--radius);
+    background: var(--paper-2);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.05rem;
+    letter-spacing: -0.01em;
+  }
+
+  .op {
+    font-weight: 500;
+    color: var(--ink-3);
+  }
+
+  .yields {
+    color: var(--accent-ink);
+  }
+
+  /* An opening paragraph before the first heading reads as a lede. */
+  .prose > :global(p:first-child) {
+    font-size: var(--step-1);
+    line-height: 1.5;
+    color: var(--ink);
   }
 
   .meta {
@@ -213,21 +369,14 @@ const jsonLd = {
 
   .others a {
     display: inline-flex;
-    align-items: baseline;
+    align-items: center;
     gap: 0.7rem;
     min-height: 40px;
     padding-block: 0.3rem;
     text-decoration: none;
   }
 
-  .num {
-    font-family: var(--font-label);
-    font-size: 0.8rem;
-    font-weight: 700;
-    color: var(--fw-ink);
-  }
-
-  /* "Method 02" in its framework's color. */
+  /* "Method 2" in its framework's color. */
   .method {
     color: var(--fw-ink);
   }

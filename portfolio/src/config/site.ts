@@ -29,11 +29,8 @@ export const SITE = {
    */
   url: '',
 
-  /** How the site describes you: header, page titles, share images. */
+  /** How the site describes you: under your photo, page titles, share images. */
   role: 'Analytics & AI leader',
-
-  /** The small line above the home page headline, shown with dots between items. */
-  kicker: ['Analytics & AI leader', 'Strategy', 'Governance'],
 
   /** Used when a page has no description of its own (and by search engines for the home page). */
   description:
@@ -42,8 +39,14 @@ export const SITE = {
   lang: 'en',
   locale: 'en-US',
 
-  /** The home page's opening. `emphasis` is the word that gets the dotted underline. */
+  /** The home page's opening. `emphasis` is the word that sits on the four-color stripe. */
   thesis: {
+    /**
+     * The line above the headline. A word in {braces} is shown crossed out (and
+     * skipped by screen readers). Set both to '' to remove the line.
+     */
+    lead: 'AI today is {magic} alchemy.',
+    leadAnswer: 'My job is turning it into chemistry.',
     headline: 'Make AI boring.',
     emphasis: 'boring',
     dek: 'Real value comes from AI that’s in production, measured, and trusted exactly as far as it’s reliable. These are the methods I use to get there, and the work that proves them.',
@@ -56,22 +59,29 @@ export const SITE = {
       'Make AI boring is the philosophy. Three methods put it to work at three altitudes: the portfolio, the workflow, and the single decision.',
     proofHeading: 'The proof',
     proofIntro: 'Frameworks are claims until something ships. Each project below puts at least one of them into practice.',
-    writingHeading: 'Latest writing',
+    writingHeading: 'Latest lab notes',
+    writingLink: 'All lab notes',
   },
 
-  /** Titles and one-line descriptions of the section pages (also used on their share images). */
+  /**
+   * The section pages: `label` is the section's short name (page kickers, the
+   * browser tab, share images), `title` its headline and `description` its intro.
+   */
   sections: {
     projects: {
+      label: 'Projects',
       title: 'The proof',
       description: 'Working tools and essays that put the frameworks into practice, each live on its own site.',
     },
     frameworks: {
+      label: 'Frameworks',
       title: 'How I think',
       description: 'The methods I use to get AI into production: what to do first, where it fits in the work, and how far to trust it.',
     },
     writing: {
-      title: 'Writing',
-      description: 'Notes on getting AI into production, and on keeping the thinking current.',
+      label: 'Lab notes',
+      title: 'Lab notes',
+      description: 'Working notes on getting AI into production, numbered and dated like a lab notebook.',
     },
   },
 
@@ -85,8 +95,7 @@ export const SITE = {
     /**
      * The through-line diagram beside the bio, top to bottom. `made` finishes the
      * sentence "making complex things clear meant…". Mark where you started with
-     * `origin: true`: it's drawn smaller and muted. The other stages also form the
-     * line under your photo at the top of the home page.
+     * `origin: true`: it's drawn smaller and muted.
      */
     path: [
       { label: 'Journalism degree', made: 'a story', origin: true },
@@ -100,7 +109,7 @@ export const SITE = {
   nav: [
     { label: 'Projects', href: '/projects' },
     { label: 'Frameworks', href: '/frameworks' },
-    { label: 'Writing', href: '/writing' },
+    { label: 'Lab notes', href: '/writing' },
     { label: 'About', href: '/about' },
   ] satisfies NavItem[],
 

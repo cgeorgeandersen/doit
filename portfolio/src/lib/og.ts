@@ -25,6 +25,8 @@ export interface OgCard {
   byline: string;
   /** Absolute path of a cover image to show beside the text (projects). */
   image?: string | undefined;
+  /** An element tile to show beside the text (frameworks); `color` is the framework's slot. */
+  element?: { number: number; symbol: string; kind: string; color: 0 | 1 | 2 | 3 } | undefined;
 }
 
 const W = 1200;
@@ -39,6 +41,19 @@ const RULE = '#e2e5ea';
 const FRESH = '#0a7568';
 /** The framework colors (tokens.css --fw-0 … --fw-3): the stripe and the dot mark. */
 const FW = ['#6b45f0', '#2759f5', '#f2553a', '#0fa08e'];
+/** Their text twins (--fw-N-ink), for the element tile's number and symbol. */
+const FW_INK = ['#5733d9', '#1d47cf', '#c23a21', '#0a7568'];
+
+/** A color mixed into white, like the tiles' color-mix(in srgb, var(--fw) 9%, var(--paper)). */
+function tint(hex: string, amount: number): string {
+  const channel = (i: number) => {
+    const value = parseInt(hex.slice(1 + i * 2, 3 + i * 2), 16);
+    return Math.round(255 + (value - 255) * amount)
+      .toString(16)
+      .padStart(2, '0');
+  };
+  return `#${channel(0)}${channel(1)}${channel(2)}`;
+}
 
 type Node = { type: string; props: { style?: Record<string, unknown>; children?: unknown; src?: string; width?: number; height?: number } };
 
@@ -103,13 +118,41 @@ function clip(text: string, max: number): string {
   return text.length <= max ? text : `${text.slice(0, max - 1).replace(/\s+\S*$/, '')}…`;
 }
 
+/** A framework's element tile, as on its page: number, kind, and the symbol. */
+function elementTile(element: NonNullable<OgCard['element']>): Node {
+  const color = FW[element.color]!;
+  const ink = FW_INK[element.color]!;
+  return h(
+    'div',
+    {
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+      flex: 'none',
+      width: 300,
+      height: 300,
+      padding: '26px 30px 30px',
+      borderRadius: 30,
+      border: `4px solid ${color}`,
+      background: tint(color, 0.09),
+    },
+    h(
+      'div',
+      { display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' },
+      h('span', { fontFamily: 'Instrument Sans', fontWeight: 600, fontSize: 34, color: ink }, String(element.number)),
+      h('span', { fontFamily: 'Instrument Sans', fontWeight: 600, fontSize: 20, letterSpacing: 2, textTransform: 'uppercase', color: INK_3 }, element.kind),
+    ),
+    h('div', { display: 'flex', fontFamily: 'Bricolage Grotesque', fontWeight: 800, fontSize: 150, lineHeight: 1, letterSpacing: -5, color: ink }, element.symbol),
+  );
+}
+
 async function coverDataUrl(path: string): Promise<string> {
   const png = await sharp(path).resize(880, 462, { fit: 'cover', position: 'top' }).png().toBuffer();
   return `data:image/png;base64,${png.toString('base64')}`;
 }
 
 export async function renderCard(card: OgCard): Promise<Buffer> {
-  const narrow = Boolean(card.image);
+  const narrow = Boolean(card.image || card.element);
   const size = titleSize(card.title, narrow);
 
   const text = h(
@@ -130,7 +173,8 @@ export async function renderCard(card: OgCard): Promise<Buffer> {
         },
       }
     : null;
-  const middle = h('div', { display: 'flex', alignItems: 'center', gap: 48, flex: 1 }, text, cover);
+  const aside = cover ?? (card.element ? elementTile(card.element) : null);
+  const middle = h('div', { display: 'flex', alignItems: 'center', gap: 48, flex: 1 }, text, aside);
 
   const tree = h(
     'div',

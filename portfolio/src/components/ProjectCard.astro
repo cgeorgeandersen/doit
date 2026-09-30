@@ -1,24 +1,25 @@
 ---
 /**
  * A project as proof: status, title, summary, the frameworks it puts into
- * practice (numbered like the methods on the home page), and two ways in.
+ * practice (each with its element symbol, like a formula), and two ways in.
  * `stack` puts the cover on top (home); `row` puts it beside the text (/projects).
  */
 import { Image } from 'astro:assets';
+import ElementTile from './ElementTile.astro';
 import StatusPill from './StatusPill.astro';
-import { domainOf, type Framework, type Project } from '../lib/content';
+import { domainOf, type FrameworkElement, type Framework, type Project } from '../lib/content';
 import { year } from '../lib/dates';
 
 interface Props {
   project: Project;
   frameworks: Framework[];
-  numberOf: (framework: Framework) => string | undefined;
+  elementOf: (framework: Framework) => FrameworkElement;
   colorOf: (framework: Framework) => 0 | 1 | 2 | 3;
   layout?: 'stack' | 'row';
   headingLevel?: 'h2' | 'h3';
 }
 
-const { project, frameworks, numberOf, colorOf, layout = 'stack', headingLevel = 'h3' } = Astro.props;
+const { project, frameworks, elementOf, colorOf, layout = 'stack', headingLevel = 'h3' } = Astro.props;
 const { title, summary, status, date, cover, liveUrl, draft } = project.data;
 const Heading = headingLevel;
 const href = `/projects/${project.id}`;
@@ -47,9 +48,9 @@ const sizes = layout === 'row' ? '(min-width: 900px) 24rem, calc(100vw - 32px)' 
           <p class="label">Puts into practice</p>
           <ul>
             {frameworks.map((f) => (
-              <li data-fw={colorOf(f)}>
+              <li>
                 <a href={`/frameworks/${f.id}`}>
-                  {numberOf(f) && <span class="num">{numberOf(f)}</span>}
+                  <ElementTile element={elementOf(f)} color={colorOf(f)} size="chip" />
                   <span class="name">{f.data.title}</span>
                 </a>
               </li>
@@ -139,8 +140,9 @@ const sizes = layout === 'row' ? '(min-width: 900px) 24rem, calc(100vw - 32px)' 
   .practice a {
     display: inline-flex;
     align-items: center;
-    gap: 0.5em;
+    gap: 0.55em;
     min-height: 32px;
+    font-weight: 600;
     text-decoration: none;
   }
 
@@ -153,23 +155,6 @@ const sizes = layout === 'row' ? '(min-width: 900px) 24rem, calc(100vw - 32px)' 
 
   .practice a:hover .name {
     text-decoration-thickness: 2px;
-  }
-
-  /* The framework's color dot, then its numeral in that color. */
-  .practice a::before {
-    content: '';
-    flex: none;
-    width: 0.62rem;
-    height: 0.62rem;
-    border-radius: 50%;
-    background: var(--fw);
-  }
-
-  .num {
-    font-family: var(--font-label);
-    font-size: 0.8rem;
-    font-weight: 700;
-    color: var(--fw-ink);
   }
 
   .actions {
