@@ -119,7 +119,7 @@ imageAlt: "George Andersen"
 
 ## Change your photo
 
-Your headshot is `src/assets/george-andersen.jpg`. It appears on the home page and the About page. To change it, replace that file with a new photo of the same name (a square crop, at least 800 pixels wide, looks sharpest). The site shows it in black and white, so any color photo works.
+Your headshot is `src/assets/george-andersen.jpg`. It appears at the top of the home page, beside the headline, and on the About page. To change it, replace that file with a new photo of the same name (a square crop, at least 800 pixels wide, looks sharpest). The site shows it in black and white, so any color photo works.
 
 ## Change site-wide text
 

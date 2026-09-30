@@ -43,12 +43,12 @@ const personLd = {
 
 <BaseLayout jsonLd={personLd}>
   <section class="hero wide" aria-labelledby="hero-title">
-    <p class="kicker">{SITE.kicker.map((item) => <span>{item}</span>)}</p>
     <div class="hero-grid">
-      <h1 id="hero-title" class="hero-title">
-        {before}{at >= 0 && <span class="emphasis">{emphasis}</span>}{after}
-      </h1>
-      <div class="hero-side">
+      <div class="hero-text">
+        <p class="kicker">{SITE.kicker.map((item) => <span>{item}</span>)}</p>
+        <h1 id="hero-title" class="hero-title">
+          {before}{at >= 0 && <span class="emphasis">{emphasis}</span>}{after}
+        </h1>
         <p class="dek hero-dek">{SITE.thesis.dek}</p>
         {
           philosophy && (
@@ -60,6 +60,21 @@ const personLd = {
           )
         }
       </div>
+      <figure class="hero-portrait">
+        <div class="photo">
+          <Image
+            src={portrait}
+            alt={SITE.bio.portraitAlt}
+            widths={[240, 400]}
+            sizes="(min-width: 1100px) 15rem, (min-width: 720px) 11rem, 5rem"
+            loading="eager"
+          />
+        </div>
+        <figcaption>
+          <span class="who">{SITE.name}</span>
+          <span class="path-line">{SITE.bio.path.join(' → ')}</span>
+        </figcaption>
+      </figure>
     </div>
     <ul class="hero-meta" aria-label="At a glance">
       <li>{plural(methods.length, 'method', 'methods')}</li>
@@ -124,10 +139,7 @@ const personLd = {
   }
 
   <section class="section" aria-labelledby="about-title">
-    <div class="wide about">
-      <figure class="portrait">
-        <Image src={portrait} alt={SITE.bio.portraitAlt} widths={[240, 400]} sizes="(min-width: 900px) 12rem, 9rem" loading="lazy" />
-      </figure>
+    <div class="wide">
       <div class="about-body">
         <h2 id="about-title" class="label">About</h2>
         <ol class="path" aria-label="Career path">
@@ -144,7 +156,7 @@ const personLd = {
   {
     posts.length > 0 && (
       <section class="section" aria-labelledby="writing-title">
-        <div class="wide about">
+        <div class="wide">
           <h2 id="writing-title" class="label">
             {SITE.home.writingHeading}
           </h2>
@@ -169,10 +181,95 @@ const personLd = {
     padding-block: clamp(2.75rem, 8vw, 5.5rem) clamp(2.5rem, 6vw, 4rem);
   }
 
+  /* Phones: the photo is a compact byline above the headline. From 720px it
+     moves to the right of the text, and on wide screens it becomes a card. The
+     text comes first in the source, so screen readers meet the headline first. */
   .hero-grid {
     display: grid;
-    gap: clamp(1.4rem, 3vw, 2rem);
-    margin-top: 1.1rem;
+    grid-template-areas: 'photo' 'text';
+    gap: 1.6rem;
+  }
+
+  .hero-text {
+    grid-area: text;
+    min-width: 0;
+  }
+
+  .hero-text .kicker {
+    margin-bottom: 1.1rem;
+  }
+
+  .hero-portrait {
+    grid-area: photo;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 0;
+  }
+
+  .photo {
+    flex: none;
+    width: 5rem;
+    padding-bottom: 4px;
+    background: linear-gradient(90deg, var(--fw-0) 0 25%, var(--fw-1) 25% 50%, var(--fw-2) 50% 75%, var(--fw-3) 75% 100%)
+      no-repeat 0 100% / 100% 4px;
+  }
+
+  .photo :global(img) {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 12px 12px 0 0;
+    filter: grayscale(1);
+  }
+
+  figcaption {
+    display: grid;
+    gap: 0.2rem;
+  }
+
+  .who {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.15rem;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+  }
+
+  .path-line {
+    font-size: 0.82rem;
+    line-height: 1.4;
+    color: var(--ink-3);
+  }
+
+  @media (min-width: 720px) {
+    .hero-grid {
+      grid-template-areas: 'text photo';
+      grid-template-columns: minmax(0, 1fr) 11rem;
+      align-items: end;
+      column-gap: 3rem;
+    }
+
+    .hero-portrait {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.9rem;
+    }
+
+    .photo {
+      width: 100%;
+      padding-bottom: 6px;
+      background-size: 100% 6px;
+    }
+
+    .photo :global(img) {
+      border-radius: 18px 18px 0 0;
+    }
+
+    .hero-title {
+      font-size: clamp(4rem, 11vw, 6rem);
+    }
   }
 
   /* 3.9em fits "Make AI" (3.6em) but not the whole line, so the headline
@@ -186,21 +283,15 @@ const personLd = {
     letter-spacing: -0.045em;
   }
 
-  /* Wide screens: the dek sits beside the headline, on its last line. */
+  /* Wide screens: the photo becomes a card that stands as tall as the headline. */
   @media (min-width: 1100px) {
     .hero-grid {
-      grid-template-columns: auto minmax(0, 26rem);
-      justify-content: space-between;
-      align-items: end;
-      column-gap: 4rem;
+      grid-template-columns: minmax(0, 1fr) 15rem;
+      column-gap: 5rem;
     }
 
     .hero-title {
-      font-size: clamp(6rem, 11.5vw, 8.4rem);
-    }
-
-    .hero-side {
-      padding-bottom: 1.1rem;
+      font-size: clamp(6rem, 10vw, 8rem);
     }
   }
 
@@ -212,15 +303,16 @@ const personLd = {
   }
 
   .hero-dek {
-    max-width: 31ch;
+    max-width: 34ch;
+    margin-top: clamp(1.8rem, 3.5vw, 2.2rem);
     font-size: clamp(1.25rem, 2.6vw, 1.5rem);
     line-height: 1.4;
   }
 
   @media (min-width: 1100px) {
     .hero-dek {
-      max-width: none;
-      font-size: 1.3rem;
+      max-width: 40ch;
+      font-size: 1.35rem;
     }
   }
 
@@ -254,6 +346,7 @@ const personLd = {
 
     .hero-dek,
     .hero-link,
+    .hero-portrait,
     .hero-meta {
       animation: rise 700ms var(--ease) both;
       animation-delay: 120ms;
@@ -312,28 +405,6 @@ const personLd = {
     }
   }
 
-  .about {
-    display: grid;
-    gap: 1.6rem 3rem;
-    align-items: start;
-  }
-
-  .portrait {
-    width: 9rem;
-    margin: 0;
-    padding-bottom: 6px;
-    background: linear-gradient(90deg, var(--fw-0) 0 25%, var(--fw-1) 25% 50%, var(--fw-2) 50% 75%, var(--fw-3) 75% 100%)
-      no-repeat 0 100% / 100% 6px;
-  }
-
-  .portrait :global(img) {
-    width: 100%;
-    aspect-ratio: 1;
-    object-fit: cover;
-    border-radius: 16px 16px 0 0;
-    filter: grayscale(1);
-  }
-
   .about-body {
     display: grid;
     gap: 1.1rem;
@@ -371,13 +442,4 @@ const personLd = {
     margin-top: 1rem;
   }
 
-  @media (min-width: 900px) {
-    .about {
-      grid-template-columns: 12rem minmax(0, 1fr);
-    }
-
-    .portrait {
-      width: 12rem;
-    }
-  }
 </style>
