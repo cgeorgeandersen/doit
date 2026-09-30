@@ -19,12 +19,16 @@ npm run check:reviews   # which frameworks and posts are due for review
 
 ## Deploy on Vercel
 
-1. In Vercel, **Add New → Project**, import this repository, and set **Root Directory** to `portfolio`. Vercel reads [`vercel.json`](vercel.json) and detects Astro. Deploy.
-2. **Analytics → Enable** in the project, then redeploy once. Page views are counted without cookies; the footer says so.
-3. **Settings → Domains:** add your domain. Until you also set `url` in `src/config/site.ts`, the site uses the project's production domain for its links, sitemap, feed and share images automatically.
-4. Optional: in **Settings → Git**, turn on skipping deployments when nothing in the root directory changed, so edits to the other sites in this repository don't rebuild this one.
+This site is its own Vercel project, next to the two others in this repository (What Do I Actually Do? and The Confident Machine). Setting it up takes about two minutes, once:
 
-Every push to `master` redeploys. The GitHub workflow in `.github/workflows/portfolio-ci.yml` checks and builds on every push and pull request that touches `portfolio/`; it doesn't deploy.
+1. In Vercel, **Add New → Project** and import this repository (`cgeorgeandersen/doit`) again. Importing the same repository a second time is expected: each site is a separate project.
+2. Next to **Root Directory**, click **Edit** and choose `portfolio`. Vercel then reads [`vercel.json`](vercel.json) and detects Astro, so leave the build settings as they are. Name the project (for example `george-andersen`) and **Deploy**.
+3. **Analytics → Enable** in the new project, then redeploy once. Page views are counted without cookies; the footer says so.
+4. **Settings → Domains:** add your domain. Until you also set `url` in `src/config/site.ts`, the site uses the project's production domain for its links, sitemap, feed and share images automatically.
+
+After that, every push to `master` that changes something in `portfolio/` redeploys it. Pushes that only touch the other sites skip this project's build: the `ignoreCommand` in `vercel.json` asks git whether anything in this folder changed.
+
+The GitHub workflow in `.github/workflows/portfolio-ci.yml` checks and builds on every push and pull request that touches `portfolio/`; it doesn't deploy.
 
 ## Credits
 
