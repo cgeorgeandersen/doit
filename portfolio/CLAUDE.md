@@ -22,7 +22,7 @@ portfolio/
   src/config/site.ts       ALL site-wide text (name, role, thesis, section titles, bio, nav, contact, footer, review window)
   src/content.config.ts    Zod schemas for projects, frameworks, writing, pages
   src/content/             the Markdown content (one file per item; project covers sit next to their .md)
-  src/lib/content.ts       getSite(): loads, filters drafts, sorts, derives links, checks links
+  src/lib/content.ts       getSite(): loads, filters drafts, sorts, derives links, numbers and symbols, checks links
   src/lib/dates.ts         UTC-safe formatting and the review-window test
   src/lib/status.ts        project statuses (shared by schema, pill, filter)
   src/lib/typeset.ts       curly quotes for frontmatter text
@@ -31,7 +31,8 @@ portfolio/
   src/styles/              tokens.css (palette, type, spacing) and global.css (base, prose, layout)
   src/layouts/BaseLayout.astro   head, fonts, theme pre-paint, header, footer, analytics
   src/components/          SiteHeader, SiteFooter, ThemeToggle, ReviewStamp, StatusPill, ProjectCard,
-                           FrameworkCard, LinkPreview, ProjectFilter, PostList, ContactBand, ThroughLine, Seo
+                           FrameworkCard, ElementTile, FailureModes, LinkPreview, ProjectFilter, PostList,
+                           ContactBand, ThroughLine, Seo
   src/pages/               index, 404, [page] (About etc.), projects/, frameworks/, writing/,
                            rss.xml.ts, robots.txt.ts, og/[...route].png.ts
   scripts/                 check-reviews.mjs, make-og-fonts.py (one-time)
@@ -44,14 +45,15 @@ Four collections (`src/content.config.ts`), each a folder of `.md` files; the fi
 | Collection | Required fields | Optional fields |
 | --- | --- | --- |
 | `projects` | `title`, `summary` (≤160), `status` (`live` / `in progress` / `archived`), `date` | `tags`, `cover` + `coverAlt`, `liveUrl` (required if live), `frameworks` (references), `featured`, `order` (default 100), `draft` |
-| `frameworks` | `title`, `thesis` (≤200), `date`, `lastReviewed` | `relatedProjects`, `kind` (`method` / `philosophy`), `question`, `order`, `draft` |
-| `writing` | `title`, `date`, `summary` | `tags`, `lastReviewed`, `draft` |
+| `frameworks` | `title`, `thesis` (≤200), `date`, `lastReviewed`, `failureModes` (≥1 × `name` / `risk` / `precaution`) | `relatedProjects`, `kind` (`method` / `philosophy`), `question`, `order`, `symbol` (`Ct`), `reaction` (`inputs` ≥2, `output`), `draft` |
+| `writing` (shown as "Lab notes") | `title`, `date`, `summary` | `tags`, `lastReviewed`, `draft` |
 | `pages` | `title`, `description` | `image` + `imageAlt` (a photo beside the title), `draft` |
 
 Rules that matter:
 
 - **The project ↔ framework link is stored once, on the project** (`frameworks: [...]`). A framework's "Applied in" list is derived in `getSite().projectsFor()`. Never add a second, hand-maintained list; `relatedProjects` exists only for projects that are related without formally applying the framework, shown separately as "Related".
-- **Numbering:** frameworks with `kind: method` are numbered 01, 02… by `order`. The one with `kind: philosophy` (Make AI Boring) frames the others and is linked from the home hero.
+- **Numbering:** frameworks with `kind: method` are numbered 1, 2… by `order`; the one with `kind: philosophy` (Make AI Boring) is element 0, frames the others and is linked from the home hero. `getSite().elementOf()` gives a framework's number, kind and symbol; `symbolOf()` makes the symbol from the title (first letters of the first two words, skipping "AI" and small words) unless the file sets `symbol`. `checkSymbols()` fails the build if two frameworks would share one.
+- **Lab notes** are the `writing` collection under another name: the URL stays `/writing`, the words come from `SITE.sections.writing` and `nav`. `getSite().entryOf()` numbers them 001, 002… from the oldest, so backdating a post renumbers the ones after it.
 - **Always read content through `getSite()`**, not `getCollection()` directly: it drops drafts in builds, sorts, and runs the link checks.
 - **Link checks:** Astro 7 only logs a misspelled `reference()` and exits 0. `checkLinks()` in `src/lib/content.ts` throws instead, naming the file and suggesting the closest id. Keep it.
 - **Error messages are part of the UX.** Every schema field uses `explain()` so a missing field reads "summary: Required: one line describing the project, under 160 characters". Keep new fields to the same standard.
@@ -60,9 +62,9 @@ Rules that matter:
 
 ### Adding each type (the owner's templates are in HOW-TO-ADD-CONTENT.md)
 
-- **Project:** `src/content/projects/<slug>.md` (+ optional `<slug>.png` cover next to it). Link frameworks by file name.
-- **Framework:** `src/content/frameworks/<slug>.md` with the three body sections: The idea / Why it works / Where it breaks down. If the number of methods changes, update `home.methodsIntro` in `site.ts` (it says "Three methods").
-- **Post:** `src/content/writing/<slug>.md`.
+- **Project:** `src/content/projects/<slug>.md` (+ optional `<slug>.png` cover next to it). Link frameworks by file name. The body is an experiment write-up with four `##` sections, numbered by CSS on the project page: Hypothesis (its first paragraph is the claim, set as a lede) / Method / Result / What I'd change.
+- **Framework:** `src/content/frameworks/<slug>.md` with two body sections, The idea / Why it works, and its failure modes in frontmatter (rendered by `FailureModes.astro` after the body). An opening paragraph before the first heading is set as a lede (Make AI Boring uses this for the alchemy history). If the number of methods changes, update `home.methodsIntro` in `site.ts` (it says "Three methods").
+- **Lab note:** `src/content/writing/<slug>.md`.
 - **Page:** `src/content/pages/<slug>.md`, then a `nav` entry in `site.ts` (and optionally `contact.cta`).
 - **A new content type** (rare): add a collection with `explain()` messages, load it in `getSite()`, add index/detail pages, add share-image cards in `src/pages/og/[...route].png.ts`, add it to RSS if it's dated, and document it in both guides.
 
@@ -78,9 +80,9 @@ Clean and modern with a controlled burst of color: a white page, near-black type
 | `--ink` / `--ink-2` / `--ink-3` | `#111318` / `#3e4450` / `#5c6370` | `#eef0f4` / `#b9bfca` / `#8e95a3` | text / secondary / metadata |
 | `--rule` / `--rule-strong` | `#e2e5ea` / `#c9ced6` | `#262a33` / `#3a404b` | hairlines, card borders |
 | `--fw-0` (violet) | `#6b45f0` | `#9d80ff` | the philosophy (Make AI Boring) |
-| `--fw-1` (cobalt) | `#2759f5` | `#6e8fff` | method 01, 04, 07…; also `--accent` (links, focus ring) |
-| `--fw-2` (coral) | `#f2553a` | `#ff7a62` | method 02, 05… |
-| `--fw-3` (teal) | `#0fa08e` | `#2ccdb8` | method 03, 06… |
+| `--fw-1` (cobalt) | `#2759f5` | `#6e8fff` | method 1, 4, 7…; also `--accent` (links, focus ring) |
+| `--fw-2` (coral) | `#f2553a` | `#ff7a62` | method 2, 5…; also the hazard label on Failure modes |
+| `--fw-3` (teal) | `#0fa08e` | `#2ccdb8` | method 3, 6… |
 | `--fw-N-ink` | darker / lighter twins | | the same colors when used as **text** (AA on paper) |
 | `--fresh` | `#0a7568` | `#2ccdb8` | the review stamp's "current" dot |
 | `--stale` / `--stale-ink` | `#ad721c` / `#7b510d` | `#c3862e` / `#deae62` | **amber, reserved for "may be out of date"** |
@@ -88,20 +90,29 @@ Clean and modern with a controlled burst of color: a white page, near-black type
 - **Framework colors are assigned, not chosen.** `getSite().colorOf(framework)` returns the slot: 0 for the philosophy, then methods cycle 1 → 2 → 3 by their order. Put `data-fw={colorOf(f)}` on an element and use `var(--fw)` (marks) / `var(--fw-ink)` (text) inside it. A new framework gets its color automatically; never hard-code one.
 - **The four-color stripe** (violet / cobalt / coral / teal, equal quarters) is the signature: under "boring." in the hero, under the headshot, on share images. The **four-dot mark** (two by two) is the logo in the header, favicon and share-image kicker.
 - **Amber stays reserved.** It appears only on overdue review stamps (and draft labels in dev); using it elsewhere drains the warning of meaning. That's why coral, not orange, is a framework color.
-- **Color never carries meaning alone:** framework colors always sit beside the framework's number or name; stamps pair the dot with words; status pills use ● / ◐ / ○ plus a label; pressed filter chips are filled and carry a ✓.
+- **Color never carries meaning alone:** framework colors always sit beside the framework's symbol, number or name; stamps pair the dot with words; status pills use ● / ◐ / ○ plus a label; pressed filter chips are filled and carry a ✓. The one reuse is coral for hazards: the Failure modes label is always the diamond, the "!" and the words, so it can't be read as framework 2.
+- **Colored text and fills use the `-ink` twins.** The symbol chips are white-on-`--fw-N-ink` (the bright `--fw-N` fails AA behind small white text).
 - All text tokens pass WCAG AA on both surfaces in both themes. Re-check contrast if you change a token (use the `-ink` variant for colored text).
 
 **Type:** Bricolage Grotesque (variable, with an optical-size axis) for headlines at weight 700–800 with tight tracking (about -0.035em; the hero is 800 / -0.045em). Instrument Sans for everything else: body (17px phones / 18px desktop), labels, kickers, dates, stamps and buttons (`--font-label` points to it; labels are uppercase with tracking). Both are self-hosted from Fontsource, imported in `BaseLayout.astro`, and their latin files are preloaded.
 
 **The headshot** is `src/assets/george-andersen.jpg`, shown in grayscale on the four-color stripe in the home hero (a card beside the headline from 720px, a compact byline above it on phones, so it's always above the fold) and on the About page (via the page's `image` field). It appears once per page. The color comes from the stripe, not the photo, so any photo fits. The current file is 400px; a larger square original would render sharper on high-density screens.
 
-**Signature details:** the four-color stripe; the through-line diagram beside the home bio (`ThroughLine.astro`, words from `bio.path` in `site.ts`: the `origin` stage is drawn muted, the last stage carries the accent, and the non-origin stages also form the line under the hero photo); framework cards with a colored top band and a tinted number pill; the review stamp (`ReviewStamp.astro`), teal dot → amber after `review.staleAfterDays` (180), computed at build *and* re-checked in the browser so it stays honest without rebuilds; kickers separated by dots (the `.kicker` clip trick prevents a stray leading dot on wrapped lines).
+**Signature details:** the four-color stripe; the through-line diagram beside the home bio (`ThroughLine.astro`, words from `bio.path` in `site.ts`: the `origin` stage is drawn muted, the last stage carries the accent); framework cards with a colored top band and a small element tile; the review stamp (`ReviewStamp.astro`), teal dot → amber after `review.staleAfterDays` (180), computed at build *and* re-checked in the browser so it stays honest without rebuilds; kickers separated by dots (the `.kicker` clip trick prevents a stray leading dot on wrapped lines).
+
+**The lab theme ("from alchemy to chemistry").** The site's metaphor: AI today is alchemy (impressive once, hard to repeat, occasionally explosive), and making it boring is the move to chemistry (method, measurement, records). It lives in the words and the structure, never in pictures:
+
+- the line above the home headline (`thesis.lead` / `leadAnswer` in `site.ts`; a `{word}` in braces is struck through and hidden from screen readers) and the history that opens the Make AI Boring page;
+- frameworks as elements (`ElementTile.astro`: `chip` beside names, `sm` on cards, `lg` in the table on /frameworks, on each framework page and on its share image), with an optional `reaction` formula under the thesis;
+- projects written up as experiments, frameworks ending in a Failure modes safety sheet, and posts as numbered lab notes.
+
+Keep it that way: no beakers, flasks, smoke, explosions or other clip art; no parchment, gold or "magic" styling (except the struck-out word); and don't rename the plain sections (Projects, Frameworks, About). One well-placed metaphor is intriguing; a costume isn't. Every lab element must also make the content clearer: a testable hypothesis, a precaution per risk, a dated entry.
 
 **Layout:** `.wide` (70rem) for page structure, `.measure` (38rem) for reading; detail pages use `.detail` (text column + a margin column on ≥1100px; margin column first on phones). 16px minimum gutters; nothing may scroll sideways at 320px. Corners: `--radius` 12px, cards 16px, buttons 10px.
 
 **Motion:** one entrance on the home hero, hover transitions, all disabled under `prefers-reduced-motion`. The hero headline only moves, never starts invisible (it's the LCP element).
 
-**Never:** stock gradients (the stripe is hard-edged, not a gradient blend), hero illustrations, emoji, a fifth decorative color, drop shadows everywhere.
+**Never:** stock gradients (the stripe is hard-edged, not a gradient blend), hero illustrations, laboratory clip art, emoji, a fifth decorative color, drop shadows everywhere.
 
 ## Conventions
 
