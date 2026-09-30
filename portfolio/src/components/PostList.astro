@@ -1,16 +1,18 @@
 ---
-/** A dated list of posts: date, title, summary and review stamp. */
+/** Lab notes, like a notebook: entry number, date, title, summary and review stamp. */
 import ReviewStamp from './ReviewStamp.astro';
 import { reviewedOn, type Post } from '../lib/content';
 import { formatDate, isoDate } from '../lib/dates';
 
 interface Props {
   posts: Post[];
+  /** Entry numbers from getSite().entryOf(). */
+  entryOf: (post: Post) => string;
   headingLevel?: 'h2' | 'h3';
   compact?: boolean;
 }
 
-const { posts, headingLevel = 'h2', compact = false } = Astro.props;
+const { posts, entryOf, headingLevel = 'h2', compact = false } = Astro.props;
 const Heading = headingLevel;
 ---
 
@@ -20,8 +22,9 @@ const Heading = headingLevel;
       <li>
         <article class="post">
           <p class="date">
+            <span class="entry">Entry {entryOf(post)}</span>
             <time datetime={isoDate(post.data.date)}>{formatDate(post.data.date)}</time>
-            {post.data.draft && <span class="draft"> · Draft · not published</span>}
+            {post.data.draft && <span class="draft">Draft · not published</span>}
           </p>
           <div class="text">
             <Heading class="title">
@@ -60,11 +63,29 @@ const Heading = headingLevel;
   }
 
   .date {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.1rem 0.8rem;
+    align-content: start;
     font-family: var(--font-label);
     font-size: 0.74rem;
     letter-spacing: 0.04em;
     color: var(--ink-3);
     padding-top: 0.35rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .entry {
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+
+  @media (min-width: 720px) {
+    .date {
+      flex-direction: column;
+    }
   }
 
   .draft {

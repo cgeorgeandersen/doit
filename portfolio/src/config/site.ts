@@ -12,6 +12,13 @@ export interface NavItem {
   href: string;
 }
 
+/** One step in the career diagram on the home page (see `bio.path`). */
+export interface PathStage {
+  label: string;
+  made: string;
+  origin?: boolean;
+}
+
 export const SITE = {
   name: 'George Andersen',
 
@@ -22,11 +29,8 @@ export const SITE = {
    */
   url: '',
 
-  /** How the site describes you: header, page titles, share images. */
+  /** How the site describes you: under your photo, page titles, share images. */
   role: 'Analytics & AI leader',
-
-  /** The small line above the home page headline, shown with dots between items. */
-  kicker: ['Analytics & AI leader', 'Strategy', 'Governance'],
 
   /** Used when a page has no description of its own (and by search engines for the home page). */
   description:
@@ -35,8 +39,14 @@ export const SITE = {
   lang: 'en',
   locale: 'en-US',
 
-  /** The home page's opening. `emphasis` is the word that gets the dotted underline. */
+  /** The home page's opening. `emphasis` is the word that sits on the four-color stripe. */
   thesis: {
+    /**
+     * The line above the headline. A word in {braces} is shown crossed out (and
+     * skipped by screen readers). Set both to '' to remove the line.
+     */
+    lead: 'AI today is {magic} alchemy.',
+    leadAnswer: 'My job is turning it into chemistry.',
     headline: 'Make AI boring.',
     emphasis: 'boring',
     dek: 'Real value comes from AI that’s in production, measured, and trusted exactly as far as it’s reliable. These are the methods I use to get there, and the work that proves them.',
@@ -49,39 +59,57 @@ export const SITE = {
       'Make AI boring is the philosophy. Three methods put it to work at three altitudes: the portfolio, the workflow, and the single decision.',
     proofHeading: 'The proof',
     proofIntro: 'Frameworks are claims until something ships. Each project below puts at least one of them into practice.',
-    writingHeading: 'Latest writing',
+    writingHeading: 'Latest lab notes',
+    writingLink: 'All lab notes',
   },
 
-  /** Titles and one-line descriptions of the section pages (also used on their share images). */
+  /**
+   * The section pages: `label` is the section's short name (page kickers, the
+   * browser tab, share images), `title` its headline and `description` its intro.
+   */
   sections: {
     projects: {
+      label: 'Projects',
       title: 'The proof',
       description: 'Working tools and essays that put the frameworks into practice, each live on its own site.',
     },
     frameworks: {
+      label: 'Frameworks',
       title: 'How I think',
       description: 'The methods I use to get AI into production: what to do first, where it fits in the work, and how far to trust it.',
     },
     writing: {
-      title: 'Writing',
-      description: 'Notes on getting AI into production, and on keeping the thinking current.',
+      label: 'Lab notes',
+      title: 'Lab notes',
+      description: 'Working notes on getting AI into production, numbered and dated like a lab notebook.',
     },
   },
 
   /** The short bio on the home page. The full story is src/content/pages/about.md. */
   bio: {
-    path: ['Journalism & video', 'Analytics', 'AI strategy & governance'],
-    text: 'I started in journalism and video, where the job was making complicated things clear to people with no time to spare. Analytics taught me to make numbers answer to decisions. Now I lead AI strategy and governance with the same aim: put AI where it fits, measure what it does, and trust it no further than it has earned.',
+    text: 'Today I lead AI enablement for a large commercial organization: finding where AI fits, guiding it through governance, and reporting what it actually delivers. I got here through analytics, turning marketing and commerce data into decisions teams could act on. The habit underneath it all started with a journalism degree: make complicated things clear to people with no time to spare.',
     linkLabel: 'More about my path',
     /** Your headshot is src/assets/george-andersen.jpg: replace that file to change it everywhere. */
     portraitAlt: 'George Andersen',
+
+    /**
+     * The through-line diagram beside the bio, top to bottom. `made` finishes the
+     * sentence "making complex things clear meant…". Mark where you started with
+     * `origin: true`: it's drawn smaller and muted.
+     */
+    path: [
+      { label: 'Journalism degree', made: 'a story', origin: true },
+      { label: 'Data & analytics', made: 'a decision' },
+      { label: 'AI strategy & governance', made: 'a system people can trust' },
+    ] satisfies PathStage[],
+    throughLine: 'One job throughout: making complex things clear.',
   },
 
   /** Top navigation, in order. Add { label: 'Work with me', href: '/work-with-me' } when that page exists. */
   nav: [
     { label: 'Projects', href: '/projects' },
     { label: 'Frameworks', href: '/frameworks' },
-    { label: 'Writing', href: '/writing' },
+    { label: 'Lab notes', href: '/writing' },
     { label: 'About', href: '/about' },
   ] satisfies NavItem[],
 

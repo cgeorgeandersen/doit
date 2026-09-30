@@ -1,21 +1,21 @@
 ---
-/** All published posts, newest first. */
+/** All published lab notes, newest first, each with its entry number. */
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PostList from '../../components/PostList.astro';
 import { SITE } from '../../config/site';
 import { getSite } from '../../lib/content';
 
-const { posts } = await getSite();
-const { title, description } = SITE.sections.writing;
+const { posts, entryOf } = await getSite();
+const { label, title, description } = SITE.sections.writing;
 ---
 
-<BaseLayout title="Writing" description={description} image="/og/writing.png" imageAlt={`Writing by ${SITE.name}`}>
+<BaseLayout title={label} description={description} image="/og/writing.png" imageAlt={`${label} by ${SITE.name}`}>
   <header class="page-head wide">
-    <p class="kicker"><span>Writing</span><span><a href="/rss.xml">RSS feed</a></span></p>
+    <p class="kicker"><span>{label}</span><span><a href="/rss.xml">RSS feed</a></span></p>
     <h1 class="page-title">{title}</h1>
     <p class="dek">{description}</p>
   </header>
   <div class="wide">
-    {posts.length > 0 ? <PostList posts={posts} /> : <p class="muted">Nothing published yet.</p>}
+    {posts.length > 0 ? <PostList posts={posts} entryOf={entryOf} /> : <p class="muted">Nothing published yet.</p>}
   </div>
 </BaseLayout>

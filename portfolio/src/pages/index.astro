@@ -13,6 +13,7 @@ import FrameworkCard from '../components/FrameworkCard.astro';
 import PostList from '../components/PostList.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import ReviewStamp from '../components/ReviewStamp.astro';
+import ThroughLine from '../components/ThroughLine.astro';
 import { SITE } from '../config/site';
 import { getSite, reviewedSince } from '../lib/content';
 
@@ -23,9 +24,11 @@ const featured = projects.filter((p) => p.data.featured);
 const proof = featured.length > 0 ? featured : projects.slice(0, 2);
 const liveCount = projects.filter((p) => p.data.status === 'live').length;
 const since = reviewedSince(site.frameworks);
+// The line above the headline: {braced} words are crossed out, so they sit at the odd positions.
+const leadParts = SITE.thesis.lead ? SITE.thesis.lead.split(/\{([^}]*)\}/) : [];
 const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
 
-// Split the headline around the emphasized word, which gets the essay's dotted underline.
+// Split the headline around the emphasized word, which sits on the four-color stripe.
 const { headline, emphasis } = SITE.thesis;
 const at = emphasis ? headline.indexOf(emphasis) : -1;
 const [before, after] = at >= 0 ? [headline.slice(0, at), headline.slice(at + emphasis.length)] : [headline, ''];
@@ -45,7 +48,21 @@ const personLd = {
   <section class="hero wide" aria-labelledby="hero-title">
     <div class="hero-grid">
       <div class="hero-text">
-        <p class="kicker">{SITE.kicker.map((item) => <span>{item}</span>)}</p>
+        {
+          leadParts.length > 0 && (
+            <p class="hero-lead">
+              <span>{leadParts.map((part, i) => (i % 2 === 1 ? <s aria-hidden="true">{part}</s> : part))}</span>
+              {SITE.thesis.leadAnswer && (
+                <span class="lead-answer">
+                  <span class="lead-arrow" aria-hidden="true">
+                    →
+                  </span>{' '}
+                  {SITE.thesis.leadAnswer}
+                </span>
+              )}
+            </p>
+          )
+        }
         <h1 id="hero-title" class="hero-title">
           {before}{at >= 0 && <span class="emphasis">{emphasis}</span>}{after}
         </h1>
@@ -72,7 +89,7 @@ const personLd = {
         </div>
         <figcaption>
           <span class="who">{SITE.name}</span>
-          <span class="path-line">{SITE.bio.path.join(' → ')}</span>
+          <span class="role">{SITE.role}</span>
         </figcaption>
       </figure>
     </div>
@@ -102,7 +119,7 @@ const personLd = {
           <ol class="methods">
             {methods.map((framework) => (
               <li>
-                <FrameworkCard framework={framework} number={site.numberOf(framework)} color={site.colorOf(framework)} projects={site.projectsFor(framework).applied} />
+                <FrameworkCard framework={framework} element={site.elementOf(framework)} color={site.colorOf(framework)} projects={site.projectsFor(framework).applied} />
               </li>
             ))}
           </ol>
@@ -130,7 +147,7 @@ const personLd = {
           </header>
           <div class="proof">
             {proof.map((project) => (
-              <ProjectCard project={project} frameworks={site.frameworksFor(project)} numberOf={site.numberOf} colorOf={site.colorOf} />
+              <ProjectCard project={project} frameworks={site.frameworksFor(project)} elementOf={site.elementOf} colorOf={site.colorOf} />
             ))}
           </div>
         </div>
@@ -139,17 +156,15 @@ const personLd = {
   }
 
   <section class="section" aria-labelledby="about-title">
-    <div class="wide">
+    <div class="wide about">
       <div class="about-body">
         <h2 id="about-title" class="label">About</h2>
-        <ol class="path" aria-label="Career path">
-          {SITE.bio.path.map((step) => <li>{step}</li>)}
-        </ol>
         <p class="about-text">{SITE.bio.text}</p>
         <p>
           <a class="more" href="/about">{SITE.bio.linkLabel} <span aria-hidden="true">→</span></a>
         </p>
       </div>
+      <ThroughLine />
     </div>
   </section>
 
@@ -161,10 +176,10 @@ const personLd = {
             {SITE.home.writingHeading}
           </h2>
           <div>
-            <PostList posts={posts.slice(0, 3)} headingLevel="h3" compact />
+            <PostList posts={posts.slice(0, 3)} entryOf={site.entryOf} headingLevel="h3" compact />
             <p class="all-writing">
               <a class="more" href="/writing">
-                All writing <span aria-hidden="true">→</span>
+                {SITE.home.writingLink} <span aria-hidden="true">→</span>
               </a>
             </p>
           </div>
@@ -195,8 +210,31 @@ const personLd = {
     min-width: 0;
   }
 
-  .hero-text .kicker {
-    margin-bottom: 1.1rem;
+  /* "AI today is ~~magic~~ alchemy. → My job is turning it into chemistry." */
+  .hero-lead {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.15rem 0.6rem;
+    max-width: 40rem;
+    margin-bottom: 1.2rem;
+    font-size: clamp(1.02rem, 2.1vw, 1.22rem);
+    line-height: 1.4;
+    color: var(--ink-2);
+  }
+
+  .hero-lead s {
+    color: var(--ink-3);
+    text-decoration-color: var(--fw-2);
+    text-decoration-thickness: 2px;
+  }
+
+  .lead-answer {
+    color: var(--ink);
+  }
+
+  .lead-arrow {
+    font-weight: 600;
+    color: var(--accent-ink);
   }
 
   .hero-portrait {
@@ -237,7 +275,7 @@ const personLd = {
     line-height: 1.15;
   }
 
-  .path-line {
+  .role {
     font-size: 0.82rem;
     line-height: 1.4;
     color: var(--ink-3);
@@ -405,32 +443,23 @@ const personLd = {
     }
   }
 
+  .about {
+    display: grid;
+    gap: 2.5rem;
+    align-items: center;
+  }
+
+  @media (min-width: 900px) {
+    .about {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 24rem);
+      column-gap: clamp(3rem, 7vw, 6rem);
+    }
+  }
+
   .about-body {
     display: grid;
     gap: 1.1rem;
     max-width: 40rem;
-  }
-
-  .path {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.35rem 0;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    font-family: var(--font-label);
-    font-size: 0.74rem;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--ink-2);
-  }
-
-  .path > li + li::before {
-    content: '→';
-    content: '→' / '';
-    padding-inline: 0.7em;
-    color: var(--accent-ink);
   }
 
   .about-text {

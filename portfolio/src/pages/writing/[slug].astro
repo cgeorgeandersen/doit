@@ -1,5 +1,5 @@
 ---
-/** One post: date, title, summary, review stamp, the text and its topics. */
+/** One lab note: entry number, date, title, summary, review stamp, the text and its topics. */
 import { render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ReviewStamp from '../../components/ReviewStamp.astro';
@@ -17,6 +17,7 @@ interface Props {
 }
 
 const { post } = Astro.props;
+const site = await getSite();
 const { title, summary, date, tags, draft } = post.data;
 const { Content } = await render(post);
 const reviewed = reviewedOn(post);
@@ -45,7 +46,8 @@ const jsonLd = {
   <article>
     <header class="page-head measure">
       <p class="kicker">
-        <span><a href="/writing">Writing</a></span>
+        <span><a href="/writing">{SITE.sections.writing.label}</a></span>
+        <span>Entry {site.entryOf(post)}</span>
         <span><time datetime={isoDate(date)}>{formatDate(date)}</time></span>
         {draft && <span class="draft">Draft · not published</span>}
       </p>

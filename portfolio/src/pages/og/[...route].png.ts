@@ -40,7 +40,7 @@ export const getStaticPaths = (async () => {
     ...(['projects', 'frameworks', 'writing'] as const).map((key) => ({
       route: key,
       card: {
-        kicker: [SITE.name, key[0]!.toUpperCase() + key.slice(1)],
+        kicker: [SITE.name, SITE.sections[key].label],
         title: SITE.sections[key].title,
         dek: SITE.sections[key].description,
         byline,
@@ -70,13 +70,14 @@ export const getStaticPaths = (async () => {
           dek: framework.data.thesis,
           note: { text: `Reviewed ${formatDate(framework.data.lastReviewed)}`, dot: true },
           byline,
+          element: { ...site.elementOf(framework), color: site.colorOf(framework) },
         },
       };
     }),
     ...site.posts.map((post) => ({
       route: `writing/${post.id}`,
       card: {
-        kicker: [SITE.name, 'Writing'],
+        kicker: [SITE.name, SITE.sections.writing.label, `Entry ${site.entryOf(post)}`],
         title: post.data.title,
         dek: post.data.summary,
         note: { text: `Reviewed ${formatDate(reviewedOn(post))}`, dot: true },

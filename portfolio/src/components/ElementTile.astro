@@ -1,0 +1,177 @@
+---
+/**
+ * A framework drawn as an element from the periodic table, in its framework
+ * color. Three sizes:
+ *   chip  the symbol alone, beside a framework's name (project cards, lists)
+ *   sm    number and symbol (framework cards)
+ *   lg    number, kind, symbol, and optionally name and question (the table on
+ *         /frameworks, where it's a link, and the head of a framework page)
+ * The symbol is an abbreviation, so screen readers skip it; the name or the
+ * text beside the tile says what it is.
+ */
+import type { FrameworkElement } from '../lib/content';
+
+interface Props {
+  element: FrameworkElement;
+  /** Color slot from getSite().colorOf(). */
+  color: 0 | 1 | 2 | 3;
+  size?: 'chip' | 'sm' | 'lg';
+  name?: string;
+  question?: string | undefined;
+  href?: string;
+}
+
+const { element, color, size = 'lg', name, question, href } = Astro.props;
+const Tag = href ? 'a' : 'span';
+// A tile with no name (and no link) is decoration: the text beside it names the framework.
+const decorative = !name && !href;
+---
+
+<Tag class:list={['el', `el--${size}`, { 'el--link': href }]} data-fw={color} href={href} aria-hidden={decorative ? 'true' : undefined}>
+  {
+    size !== 'chip' && (
+      <span class="el-top">
+        <span class="el-number">{element.number}</span>
+        {size === 'lg' && <span class="el-kind">{element.kind}</span>}
+      </span>
+    )
+  }
+  <span class="el-symbol" aria-hidden="true">{element.symbol}</span>
+  {name && <span class="el-name">{name}</span>}
+  {question && <span class="el-question">{question}</span>}
+</Tag>
+
+<style>
+  .el {
+    display: grid;
+    border: 1.5px solid var(--fw);
+    background: color-mix(in srgb, var(--fw) 9%, var(--paper));
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .el-symbol {
+    font-family: var(--font-display);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: var(--fw-ink);
+  }
+
+  .el-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+
+  .el-number {
+    font-family: var(--font-label);
+    font-weight: 700;
+    color: var(--fw-ink);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* chip: a filled symbol box that sits on a line of text. */
+  .el--chip {
+    place-items: center;
+    min-width: 1.75rem;
+    height: 1.5rem;
+    padding-inline: 0.2rem;
+    border: 0;
+    border-radius: 5px;
+    background: var(--fw-ink);
+  }
+
+  .el--chip .el-symbol {
+    font-size: 0.85rem;
+    letter-spacing: -0.02em;
+    color: var(--paper);
+  }
+
+  /* sm: a small square tile, number over symbol. */
+  .el--sm {
+    flex: none;
+    grid-template-rows: auto 1fr;
+    width: 3.4rem;
+    height: 3.4rem;
+    padding: 0.25rem 0.4rem 0.3rem;
+    border-radius: 9px;
+  }
+
+  .el--sm .el-number {
+    font-size: 0.66rem;
+    line-height: 1.2;
+  }
+
+  .el--sm .el-symbol {
+    align-self: center;
+    font-size: 1.5rem;
+  }
+
+  /* lg: the full tile, as it would sit in the periodic table. */
+  .el--lg {
+    grid-template-rows: auto 1fr auto;
+    gap: 0.35rem;
+    min-height: 9.5rem;
+    padding: 0.7rem 0.8rem 0.8rem;
+    border-radius: 12px;
+  }
+
+  .el--lg .el-number {
+    font-size: 0.9rem;
+  }
+
+  .el-kind {
+    font-family: var(--font-label);
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  .el--lg .el-symbol {
+    align-self: center;
+    font-size: 3.1rem;
+  }
+
+  .el-name {
+    font-weight: 600;
+    font-size: 0.84rem;
+    line-height: 1.25;
+    text-wrap: balance;
+  }
+
+  .el-question {
+    font-size: 0.74rem;
+    line-height: 1.3;
+    color: var(--ink-3);
+  }
+
+  .el--link {
+    transition: transform 160ms var(--ease), box-shadow 160ms var(--ease);
+  }
+
+  .el--link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px -10px var(--fw);
+  }
+
+  .el--link:hover .el-name {
+    text-decoration: underline;
+    text-decoration-color: var(--fw);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.2em;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .el--link {
+      transition: none;
+    }
+
+    .el--link:hover {
+      transform: none;
+    }
+  }
+</style>

@@ -1,7 +1,9 @@
 ---
 /**
  * One project: what it is, a prominent way to open it, a preview of the live
- * site, the frameworks it puts into practice, and the case study itself.
+ * site, the frameworks it puts into practice, and the case study itself,
+ * written up as an experiment (Hypothesis, Method, Result, What I'd change),
+ * with each section numbered.
  */
 import { Image } from 'astro:assets';
 import { render } from 'astro:content';
@@ -56,7 +58,7 @@ const jsonLd = {
     <header class:list={['wide head', { 'head--split': Boolean(liveUrl || cover) }]}>
       <div class="head-text">
         <p class="kicker">
-          <span><a href="/projects">Projects</a></span>
+          <span><a href="/projects">{SITE.sections.projects.label}</a></span>
           <span><StatusPill status={status} /></span>
           <span><time datetime={isoDate(date)}>{formatMonth(date)}</time></span>
           {draft && <span class="draft">Draft · not published</span>}
@@ -108,7 +110,7 @@ const jsonLd = {
               </h2>
               <div class="frameworks">
                 {frameworks.map((framework) => (
-                  <FrameworkCard framework={framework} number={site.numberOf(framework)} color={site.colorOf(framework)} />
+                  <FrameworkCard framework={framework} element={site.elementOf(framework)} color={site.colorOf(framework)} />
                 ))}
               </div>
             </div>
@@ -116,7 +118,7 @@ const jsonLd = {
         )
       }
       <div class="detail-main">
-        <div class="prose">
+        <div class="prose experiment">
           <Content />
         </div>
         {
@@ -222,6 +224,43 @@ const jsonLd = {
   .frameworks {
     display: grid;
     gap: 2rem;
+  }
+
+  /* The write-up as numbered steps: 01 Hypothesis, 02 Method, … */
+  .experiment {
+    counter-reset: step;
+  }
+
+  .experiment > :global(h2) {
+    display: flex;
+    align-items: baseline;
+    gap: 0.7rem;
+    padding-top: 1.4rem;
+    border-top: 1px solid var(--rule);
+    counter-increment: step;
+  }
+
+  .experiment > :global(h2)::before {
+    content: counter(step, decimal-leading-zero);
+    font-family: var(--font-label);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--ink-3);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .experiment > :global(h2:first-child) {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  /* The hypothesis: the claim the project can be wrong about, set as a lede. */
+  .experiment > :global(h2:first-child + p) {
+    font-size: var(--step-1);
+    line-height: 1.45;
+    color: var(--ink);
   }
 
   .tags {

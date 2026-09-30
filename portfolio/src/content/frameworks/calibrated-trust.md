@@ -5,6 +5,19 @@ question: "How far should we trust it?"
 date: 2026-09-29
 lastReviewed: 2026-09-29
 order: 3
+failureModes:
+  - name: "“Easy to check” can be an illusion"
+    risk: "Spot checks miss subtle errors, and people stop checking once a tool seems reliable."
+    precaution: "Design the verification step into the work. Don't assume it will happen."
+  - name: "Novices can't check what they don't know"
+    risk: "The map can push beginners toward “ideas only” for everything. That may be right, but it slows their learning."
+    precaution: "Pair the map with training."
+  - name: "The map is a snapshot"
+    risk: "Reliability changes by task and by model release. A task that's “ideas only” today may be “use, then verify” next year."
+    precaution: "Re-map regularly."
+  - name: "At scale, individual checking stops working"
+    risk: "When one system makes ten thousand decisions a day, its errors become policy."
+    precaution: "Add monitoring and audits, not only a careful user."
 ---
 
 ## The idea
@@ -33,10 +46,3 @@ For agents, systems that act rather than answer, add a third question: **can the
 - **Anyone can apply it in seconds.** "Is checking cheaper than doing?" is an economic test. It doesn't require knowing how the model works.
 - **It's personal on purpose.** The same draft is easy for an expert to check and impossible for a novice. The map asks about *you*.
 - **It scales to organizations.** The quadrants become policy: which tasks run freely, which need review, and which stay with people.
-
-## Where it breaks down
-
-- **"Easy to check" can be an illusion.** Spot checks miss subtle errors, and people stop checking once a tool seems reliable. Verification has to be designed, not assumed.
-- **Novices can't check what they don't know.** The map can push beginners toward "ideas only" for everything. That may be right, but it slows learning, so pair it with training.
-- **The map is a snapshot.** Reliability changes by task and by model release. A task that's "ideas only" today may be "use, then verify" next year. Re-map regularly.
-- **At scale, individual checking stops working.** When one system makes ten thousand decisions a day, its errors become policy. That calls for monitoring and audits, not only a careful user.

@@ -8,7 +8,8 @@
  *
  * It also checks every link. Astro 7 only logs a misspelled reference and
  * carries on, which would quietly drop a link from the site, so a broken link
- * stops the build here with the file, the typo and the likely fix.
+ * stops the build here with the file, the typo and the likely fix. The same
+ * goes for two frameworks that would share an element symbol.
  */
 import { getCollection, type CollectionEntry } from 'astro:content';
 
@@ -17,6 +18,13 @@ export type Framework = CollectionEntry<'frameworks'>;
 export type Post = CollectionEntry<'writing'>;
 export type Page = CollectionEntry<'pages'>;
 
+/** A framework drawn as an element tile: 0 for the philosophy, then 1, 2, … for the methods. */
+export interface FrameworkElement {
+  number: number;
+  symbol: string;
+  kind: 'Philosophy' | 'Method';
+}
+
 export interface Site {
   /** Published projects, by `order` then newest first. */
   projects: Project[];
@@ -24,7 +32,7 @@ export interface Site {
   frameworks: Framework[];
   /** The umbrella framework (kind: philosophy), if there is one. */
   philosophy: Framework | undefined;
-  /** Frameworks with kind: method, in order. These get the numerals 01, 02, … */
+  /** Frameworks with kind: method, in order. These are numbered 1, 2, … */
   methods: Framework[];
   /** Published posts, newest first. */
   posts: Post[];
@@ -34,8 +42,12 @@ export interface Site {
   frameworksFor(project: Project): Framework[];
   /** Projects that name this framework, plus any it lists as related. */
   projectsFor(framework: Framework): { applied: Project[]; related: Project[] };
-  /** "01", "02", … for methods; undefined for the philosophy. */
+  /** "1", "2", … for methods; undefined for the philosophy. */
   numberOf(framework: Framework): string | undefined;
+  /** The framework's element: number, symbol (its own, or made from the title) and kind. */
+  elementOf(framework: Framework): FrameworkElement;
+  /** A lab note's entry number, "001", "002", …, counted from the oldest. */
+  entryOf(post: Post): string;
   /**
    * The framework's color slot for data-fw (see tokens.css): 0 for the
    * philosophy, then 1, 2, 3 for the methods in order, repeating after three.
@@ -91,6 +103,13 @@ async function loadSite(): Promise<Site> {
   const frameworkById = new Map(frameworks.map((f) => [f.id, f]));
   const projectById = new Map(projects.map((p) => [p.id, p]));
   const methods = frameworks.filter((f) => f.data.kind === 'method');
+  checkSymbols(frameworks);
+
+  const oldestFirst = [...posts].reverse();
+  const numberOf = (framework: Framework) => {
+    const index = methods.findIndex((m) => m.id === framework.id);
+    return index < 0 ? undefined : String(index + 1);
+  };
 
   return {
     projects,
@@ -112,10 +131,13 @@ async function loadSite(): Promise<Site> {
         .filter((p) => !applied.includes(p));
       return { applied, related };
     },
-    numberOf: (framework) => {
-      const index = methods.findIndex((m) => m.id === framework.id);
-      return index < 0 ? undefined : String(index + 1).padStart(2, '0');
-    },
+    numberOf,
+    elementOf: (framework) => ({
+      number: Number(numberOf(framework) ?? 0),
+      symbol: symbolOf(framework),
+      kind: framework.data.kind === 'philosophy' ? 'Philosophy' : 'Method',
+    }),
+    entryOf: (post) => String(oldestFirst.findIndex((p) => p.id === post.id) + 1).padStart(3, '0'),
     colorOf: (framework) => {
       const index = methods.findIndex((m) => m.id === framework.id);
       return index < 0 ? 0 : (((index % 3) + 1) as 1 | 2 | 3);
@@ -157,6 +179,53 @@ function brokenLink(entry: Project | Framework, field: string, id: string, colle
   ]
     .filter(isDefined)
     .join('\n');
+}
+
+// ---------- Element symbols ----------
+
+/** Words skipped when making a symbol: "Make AI Boring" is Mb, not Ma. */
+const SYMBOL_SKIP = new Set(['ai', 'a', 'an', 'and', 'the', 'of', 'to', 'for', 'in', 'on']);
+
+function symbolWords(title: string): string[] {
+  const words = title
+    .split(/[\s\-–—,:;/]+/)
+    .map((word) => word.replace(/[^\p{L}\p{N}]/gu, ''))
+    .filter(Boolean);
+  const main = words.filter((word) => !SYMBOL_SKIP.has(word.toLowerCase()));
+  return main.length > 0 ? main : words;
+}
+
+/**
+ * A framework's symbol: its own `symbol`, or the first letters of the first two
+ * words of its title, chemistry-style (Calibrated Trust → Ct).
+ */
+export function symbolOf(framework: Framework): string {
+  if (framework.data.symbol) return framework.data.symbol;
+  const [first = 'X', second] = symbolWords(framework.data.title);
+  const next = second?.[0] ?? first[1] ?? '';
+  return first[0]!.toUpperCase() + next.toLowerCase();
+}
+
+/** Every symbol appears on one tile only, so two frameworks can't share one. */
+function checkSymbols(frameworks: Framework[]): void {
+  const seen = new Map<string, Framework>();
+  for (const framework of frameworks) {
+    const symbol = symbolOf(framework);
+    const other = seen.get(symbol);
+    if (other) {
+      const [first = 'X'] = symbolWords(framework.data.title);
+      const suggestion = first[0]!.toUpperCase() + (first[1] ?? 'x').toLowerCase();
+      throw new Error(
+        [
+          `Two frameworks would share the element symbol "${symbol}":`,
+          `  ${other.filePath ?? other.id}`,
+          `  ${framework.filePath ?? framework.id}`,
+          `Give one of them its own symbol in its top section, for example: symbol: "${suggestion}"`,
+        ].join('\n'),
+      );
+    }
+    seen.set(symbol, framework);
+  }
 }
 
 function checkPageSlugs(pages: Page[]): void {

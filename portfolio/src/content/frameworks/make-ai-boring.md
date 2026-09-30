@@ -6,7 +6,29 @@ question: "What is AI for?"
 date: 2026-09-29
 lastReviewed: 2026-09-29
 order: 0
+reaction:
+  inputs: ["Clear scope", "Measurement", "An owner"]
+  output: "AI you can rely on"
+failureModes:
+  - name: "Exploration needs play"
+    risk: "Before you know what's possible, small, fast, unmeasured experiments are how you find out. Holding them to production standards stops them."
+    precaution: "Make “boring” the standard for what you ship, not for what you try."
+  - name: "Some value is hard to count"
+    risk: "Better decisions, faster learning and fewer bad surprises don't always fit one number. Insisting on a single metric can starve good work."
+    precaution: "Allow a qualitative measure when it fits, as long as it's agreed up front."
+  - name: "“Boring” can become an excuse"
+    risk: "If it turns into “never change anything,” it isn't a philosophy; it's inertia."
+    precaution: "Keep the point in view: reaching production, not avoiding it."
+  - name: "The frontier moves"
+    risk: "What's unreliable today may be dependable next year, so a judgment made once goes stale."
+    precaution: "Remake the judgment regularly. That's why every framework here shows when I last reviewed it."
 ---
+
+Alchemy didn't become chemistry by finding new ingredients. It became chemistry by adopting a method.
+
+For centuries, alchemists worked with the same metals, acids and furnaces that chemists would later use. What changed was the method. In 1661 Robert Boyle argued that claims should be tested by experiment, and a century later Antoine Lavoisier weighed everything before and after a reaction. Same materials, now measured, written down and repeatable.
+
+Most AI work today is still alchemy: impressive once, hard to repeat, and occasionally explosive. Making AI boring is the move to chemistry, and the frameworks on this site are the lab protocols.
 
 ## The idea
 
@@ -28,10 +50,3 @@ Boring is what trust looks like from the outside. People adopt a tool when they 
 Measurement keeps everyone honest. AI is unusually good at looking impressive, because fluent output reads as competent output. A number agreed before the build, such as hours saved, error rate, or time to resolution, is the antidote to a good demo.
 
 And fit-first saves money. The cheapest AI project is the one you didn't need, because a process fix did the job.
-
-## Where it breaks down
-
-- **Exploration needs play.** Before you know what's possible, small, fast, unmeasured experiments are how you find out. "Boring" is the standard for what you ship, not for what you try.
-- **Some value is hard to count.** Better decisions, faster learning and fewer bad surprises don't always fit one number. Insisting on a single metric can starve good work. Sometimes the right measure is qualitative, as long as it's agreed up front.
-- **"Boring" can become an excuse.** If it turns into "never change anything," it isn't a philosophy; it's inertia. The point is to reach production, not to avoid it.
-- **The frontier moves.** What's unreliable today may be dependable next year, so the judgment has to be remade, not frozen. That's why every framework here shows when I last reviewed it.
