@@ -31,7 +31,7 @@ portfolio/
   src/styles/              tokens.css (palette, type, spacing) and global.css (base, prose, layout)
   src/layouts/BaseLayout.astro   head, fonts, theme pre-paint, header, footer, analytics
   src/components/          SiteHeader, SiteFooter, ThemeToggle, ReviewStamp, StatusPill, ProjectCard,
-                           FrameworkCard, LinkPreview, ProjectFilter, PostList, ContactBand, Seo
+                           FrameworkCard, LinkPreview, ProjectFilter, PostList, ContactBand, ThroughLine, Seo
   src/pages/               index, 404, [page] (About etc.), projects/, frameworks/, writing/,
                            rss.xml.ts, robots.txt.ts, og/[...route].png.ts
   scripts/                 check-reviews.mjs, make-og-fonts.py (one-time)
@@ -95,7 +95,7 @@ Clean and modern with a controlled burst of color: a white page, near-black type
 
 **The headshot** is `src/assets/george-andersen.jpg`, shown in grayscale on the four-color stripe in the home hero (a card beside the headline from 720px, a compact byline above it on phones, so it's always above the fold) and on the About page (via the page's `image` field). It appears once per page. The color comes from the stripe, not the photo, so any photo fits. The current file is 400px; a larger square original would render sharper on high-density screens.
 
-**Signature details:** the four-color stripe; framework cards with a colored top band and a tinted number pill; the review stamp (`ReviewStamp.astro`), teal dot → amber after `review.staleAfterDays` (180), computed at build *and* re-checked in the browser so it stays honest without rebuilds; kickers separated by dots (the `.kicker` clip trick prevents a stray leading dot on wrapped lines).
+**Signature details:** the four-color stripe; the through-line diagram beside the home bio (`ThroughLine.astro`, words from `bio.path` in `site.ts`: the `origin` stage is drawn muted, the last stage carries the accent, and the non-origin stages also form the line under the hero photo); framework cards with a colored top band and a tinted number pill; the review stamp (`ReviewStamp.astro`), teal dot → amber after `review.staleAfterDays` (180), computed at build *and* re-checked in the browser so it stays honest without rebuilds; kickers separated by dots (the `.kicker` clip trick prevents a stray leading dot on wrapped lines).
 
 **Layout:** `.wide` (70rem) for page structure, `.measure` (38rem) for reading; detail pages use `.detail` (text column + a margin column on ≥1100px; margin column first on phones). 16px minimum gutters; nothing may scroll sideways at 320px. Corners: `--radius` 12px, cards 16px, buttons 10px.
 

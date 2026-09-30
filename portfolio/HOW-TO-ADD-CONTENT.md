@@ -123,7 +123,7 @@ Your headshot is `src/assets/george-andersen.jpg`. It appears at the top of the 
 
 ## Change site-wide text
 
-Your name, role, the home page headline and introduction, section titles, the short bio (and the photo's description), the LinkedIn link, the footer notes and the 180-day review window are all in **`src/config/site.ts`**. Change the words between the quotes and save. When you connect a domain, set `url` there (for example `'https://georgeandersen.com'`).
+Your name, role, the home page headline and introduction, section titles, the short bio (and the photo's description), the career diagram beside it (`path` and `throughLine`), the LinkedIn link, the footer notes and the 180-day review window are all in **`src/config/site.ts`**. Change the words between the quotes and save. When you connect a domain, set `url` there (for example `'https://georgeandersen.com'`).
 
 ## Notes to yourself
 

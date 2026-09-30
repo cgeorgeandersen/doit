@@ -13,6 +13,7 @@ import FrameworkCard from '../components/FrameworkCard.astro';
 import PostList from '../components/PostList.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import ReviewStamp from '../components/ReviewStamp.astro';
+import ThroughLine from '../components/ThroughLine.astro';
 import { SITE } from '../config/site';
 import { getSite, reviewedSince } from '../lib/content';
 
@@ -23,6 +24,8 @@ const featured = projects.filter((p) => p.data.featured);
 const proof = featured.length > 0 ? featured : projects.slice(0, 2);
 const liveCount = projects.filter((p) => p.data.status === 'live').length;
 const since = reviewedSince(site.frameworks);
+// The line under the hero photo: where George is now, without the starting point.
+const career = SITE.bio.path.filter((stage) => !stage.origin).map((stage) => stage.label).join(' → ');
 const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
 
 // Split the headline around the emphasized word, which gets the essay's dotted underline.
@@ -72,7 +75,7 @@ const personLd = {
         </div>
         <figcaption>
           <span class="who">{SITE.name}</span>
-          <span class="path-line">{SITE.bio.path.join(' → ')}</span>
+          <span class="path-line">{career}</span>
         </figcaption>
       </figure>
     </div>
@@ -139,17 +142,15 @@ const personLd = {
   }
 
   <section class="section" aria-labelledby="about-title">
-    <div class="wide">
+    <div class="wide about">
       <div class="about-body">
         <h2 id="about-title" class="label">About</h2>
-        <ol class="path" aria-label="Career path">
-          {SITE.bio.path.map((step) => <li>{step}</li>)}
-        </ol>
         <p class="about-text">{SITE.bio.text}</p>
         <p>
           <a class="more" href="/about">{SITE.bio.linkLabel} <span aria-hidden="true">→</span></a>
         </p>
       </div>
+      <ThroughLine />
     </div>
   </section>
 
@@ -405,32 +406,23 @@ const personLd = {
     }
   }
 
+  .about {
+    display: grid;
+    gap: 2.5rem;
+    align-items: center;
+  }
+
+  @media (min-width: 900px) {
+    .about {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 24rem);
+      column-gap: clamp(3rem, 7vw, 6rem);
+    }
+  }
+
   .about-body {
     display: grid;
     gap: 1.1rem;
     max-width: 40rem;
-  }
-
-  .path {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.35rem 0;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    font-family: var(--font-label);
-    font-size: 0.74rem;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--ink-2);
-  }
-
-  .path > li + li::before {
-    content: '→';
-    content: '→' / '';
-    padding-inline: 0.7em;
-    color: var(--accent-ink);
   }
 
   .about-text {

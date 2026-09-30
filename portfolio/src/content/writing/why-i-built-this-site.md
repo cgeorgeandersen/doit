@@ -5,7 +5,7 @@ summary: "Frameworks are claims until something ships. This site puts my methods
 tags: [meta]
 ---
 
-For most of my career, my job has been making complicated things clear: first in journalism, then in analytics, and now in AI strategy and governance. This site is the same job, applied to my own work.
+For my whole career, my job has been making complicated things clear: first in analytics, now in AI strategy and governance. This site is the same job, applied to my own work.
 
 It's organized around one idea: **theory, then proof.** The frameworks are how I think about AI: what to do first, where it fits in the work, and how far to trust it. The projects are where I've tested those ideas in public. Each project shows the framework it puts into practice, and each framework lists the projects that apply it. Where a framework doesn't have a public project yet, you can see that too.
 

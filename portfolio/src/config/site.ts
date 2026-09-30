@@ -12,6 +12,13 @@ export interface NavItem {
   href: string;
 }
 
+/** One step in the career diagram on the home page (see `bio.path`). */
+export interface PathStage {
+  label: string;
+  made: string;
+  origin?: boolean;
+}
+
 export const SITE = {
   name: 'George Andersen',
 
@@ -70,11 +77,23 @@ export const SITE = {
 
   /** The short bio on the home page. The full story is src/content/pages/about.md. */
   bio: {
-    path: ['Journalism & video', 'Analytics', 'AI strategy & governance'],
-    text: 'I started in journalism and video, where the job was making complicated things clear to people with no time to spare. Analytics taught me to make numbers answer to decisions. Now I lead AI strategy and governance with the same aim: put AI where it fits, measure what it does, and trust it no further than it has earned.',
+    text: 'Today I lead AI enablement for a large commercial organization: finding where AI fits, guiding it through governance, and reporting what it actually delivers. I got here through analytics, turning marketing and commerce data into decisions teams could act on. The habit underneath it all started with a journalism degree: make complicated things clear to people with no time to spare.',
     linkLabel: 'More about my path',
     /** Your headshot is src/assets/george-andersen.jpg: replace that file to change it everywhere. */
     portraitAlt: 'George Andersen',
+
+    /**
+     * The through-line diagram beside the bio, top to bottom. `made` finishes the
+     * sentence "making complex things clear meant…". Mark where you started with
+     * `origin: true`: it's drawn smaller and muted. The other stages also form the
+     * line under your photo at the top of the home page.
+     */
+    path: [
+      { label: 'Journalism degree', made: 'a story', origin: true },
+      { label: 'Data & analytics', made: 'a decision' },
+      { label: 'AI strategy & governance', made: 'a system people can trust' },
+    ] satisfies PathStage[],
+    throughLine: 'One job throughout: making complex things clear.',
   },
 
   /** Top navigation, in order. Add { label: 'Work with me', href: '/work-with-me' } when that page exists. */

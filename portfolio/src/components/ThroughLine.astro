@@ -1,0 +1,155 @@
+---
+/**
+ * The career diagram beside the home page bio: each stage and what "making
+ * complex things clear" meant there, joined by one line. The words come from
+ * `bio.path` and `bio.throughLine` in site.ts. The starting point is drawn
+ * small and muted; the latest stage carries the accent.
+ */
+import { SITE } from '../config/site';
+
+const { path, throughLine } = SITE.bio;
+const last = path.length - 1;
+---
+
+<figure class="throughline">
+  <figcaption class="caption">The through-line</figcaption>
+  <ol class="stages">
+    {
+      path.map((stage, i) => (
+        <li class:list={['stage', { origin: stage.origin, now: i === last }]}>
+          <span class="dot" aria-hidden="true" />
+          <span class="where">
+            {stage.origin && <span>Where it started · </span>}
+            {stage.label}
+          </span>
+          <span class="made">{stage.made}</span>
+        </li>
+      ))
+    }
+  </ol>
+  <p class="summary">{throughLine}</p>
+</figure>
+
+<style>
+  .throughline {
+    position: relative;
+    margin: 0;
+    padding: 1.9rem 1.7rem 1.6rem;
+    overflow: hidden;
+    background: var(--paper-2);
+    border-radius: 16px;
+  }
+
+  /* The four-color stripe across the top, as on the headline and the photo. */
+  .throughline::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto;
+    height: 5px;
+    background: linear-gradient(90deg, var(--fw-0) 0 25%, var(--fw-1) 25% 50%, var(--fw-2) 50% 75%, var(--fw-3) 75% 100%);
+  }
+
+  .caption {
+    margin-bottom: 1.4rem;
+    font-family: var(--font-label);
+    font-size: 0.74rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  .stages {
+    display: grid;
+    gap: 1.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* Each stage hangs off one vertical line; the dot sits on it. */
+  .stage {
+    position: relative;
+    display: grid;
+    gap: 0.15rem;
+    padding-left: 2rem;
+  }
+
+  .stage:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: calc(0.5rem - 1px);
+    top: 1.35rem;
+    bottom: -1.5rem;
+    width: 2px;
+    background: var(--rule-strong);
+  }
+
+  .dot {
+    position: absolute;
+    left: 0;
+    top: 0.2rem;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    background: var(--ink);
+  }
+
+  .where {
+    font-family: var(--font-label);
+    font-size: 0.74rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+
+  .made {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.45rem;
+    line-height: 1.15;
+    letter-spacing: -0.025em;
+  }
+
+  /* Where it started: smaller, quieter, a hollow dot. */
+  .origin .dot {
+    top: 0.25rem;
+    left: 0.15rem;
+    width: 0.7rem;
+    height: 0.7rem;
+    background: var(--paper-2);
+    box-shadow: inset 0 0 0 2px var(--ink-3);
+  }
+
+  .origin .where {
+    font-weight: 500;
+    color: var(--ink-3);
+  }
+
+  .origin .made {
+    font-size: 1.1rem;
+    color: var(--ink-2);
+  }
+
+  /* Where it is now: the accent, with a halo. */
+  .now .dot {
+    background: var(--accent);
+    box-shadow: 0 0 0 5px var(--accent-wash);
+  }
+
+  .now .made {
+    color: var(--accent-ink);
+  }
+
+  .summary {
+    margin-top: 1.6rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid var(--rule-strong);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.1rem;
+    line-height: 1.3;
+    letter-spacing: -0.015em;
+  }
+</style>
