@@ -145,7 +145,7 @@ Your headshot is `src/assets/george-andersen.jpg`. It appears at the top of the 
 
 ## Change site-wide text
 
-Your name, role, the line above the home headline ("AI today is {magic} alchemy.", where a word in {braces} is shown crossed out), the headline and introduction, section names and titles, the short bio (and the photo's description), the career diagram beside it (`path` and `throughLine`), the LinkedIn link, the footer notes and the 180-day review window are all in **`src/config/site.ts`**. Change the words between the quotes and save. When you connect a domain, set `url` there (for example `'https://georgeandersen.com'`).
+Your name, role, the line above the home headline ("AI today is {magic} alchemy.", where a word in {braces} is shown crossed out), the headline and introduction, section names and titles, the short bio (and the photo's description), the career diagram beside it (`path` and `throughLine`), the LinkedIn link, the footer notes and the 180-day review window are all in **`src/config/site.ts`**. Change the words between the quotes and save. Your address, `url`, is set to `https://www.georgeandersen.net`; change it only if you move the site to another domain.
 
 ## Notes to yourself
 
