@@ -1,0 +1,100 @@
+---
+/** A dated list of posts: date, title, summary and review stamp. */
+import ReviewStamp from './ReviewStamp.astro';
+import { reviewedOn, type Post } from '../lib/content';
+import { formatDate, isoDate } from '../lib/dates';
+
+interface Props {
+  posts: Post[];
+  headingLevel?: 'h2' | 'h3';
+  compact?: boolean;
+}
+
+const { posts, headingLevel = 'h2', compact = false } = Astro.props;
+const Heading = headingLevel;
+---
+
+<ol class:list={['posts', { compact }]}>
+  {
+    posts.map((post) => (
+      <li>
+        <article class="post">
+          <p class="date">
+            <time datetime={isoDate(post.data.date)}>{formatDate(post.data.date)}</time>
+            {post.data.draft && <span class="draft"> · Draft · not published</span>}
+          </p>
+          <div class="text">
+            <Heading class="title">
+              <a class="quiet-link" href={`/writing/${post.id}`}>
+                {post.data.title}
+              </a>
+            </Heading>
+            {!compact && <p class="summary">{post.data.summary}</p>}
+            {!compact && (
+              <p class="stamp-row">
+                <ReviewStamp date={reviewedOn(post)} />
+              </p>
+            )}
+          </div>
+        </article>
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  .posts {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .posts > li + li {
+    border-top: 1px solid var(--rule);
+  }
+
+  .post {
+    display: grid;
+    gap: 0.4rem 2rem;
+    padding-block: 1.4rem;
+  }
+
+  .date {
+    font-family: var(--font-label);
+    font-size: 0.74rem;
+    letter-spacing: 0.04em;
+    color: var(--ink-3);
+    padding-top: 0.35rem;
+  }
+
+  .draft {
+    color: var(--stale-ink);
+  }
+
+  .text {
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .title {
+    font-family: var(--font-display);
+    font-weight: 750;
+    font-size: clamp(1.45rem, 2.8vw, 1.8rem);
+    line-height: 1.1;
+  }
+
+  .compact .title {
+    font-size: 1.35rem;
+  }
+
+  .summary {
+    color: var(--ink-2);
+    max-width: 38rem;
+  }
+
+  @media (min-width: 720px) {
+    .post {
+      grid-template-columns: 9rem minmax(0, 1fr);
+    }
+  }
+</style>

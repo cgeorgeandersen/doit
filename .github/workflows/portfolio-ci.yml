@@ -1,0 +1,37 @@
+# Checks the portfolio (portfolio/) on every push and pull request that touches
+# it: install, type-check and build, then list any frameworks or posts past
+# their review window. Hosting is on Vercel (see portfolio/vercel.json); this
+# workflow does not deploy.
+name: Portfolio
+
+on:
+  push:
+    branches: [master]
+    paths: ['portfolio/**', '.github/workflows/portfolio-ci.yml']
+  pull_request:
+    paths: ['portfolio/**', '.github/workflows/portfolio-ci.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: portfolio-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: portfolio
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: portfolio/package-lock.json
+      - run: npm ci
+      - run: npm run build
+      - run: npm run check:reviews

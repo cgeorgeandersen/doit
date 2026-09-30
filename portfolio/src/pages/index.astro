@@ -1,0 +1,445 @@
+---
+/**
+ * Home: the thesis, the methods ("How I think") with the projects that prove
+ * each one, the featured projects with the methods each puts into practice,
+ * a short bio, recent writing and contact. Everything below the thesis is
+ * derived from the content, so new Markdown files show up here on their own.
+ */
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import portrait from '../assets/george-andersen.jpg';
+import ContactBand from '../components/ContactBand.astro';
+import FrameworkCard from '../components/FrameworkCard.astro';
+import PostList from '../components/PostList.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import ReviewStamp from '../components/ReviewStamp.astro';
+import { SITE } from '../config/site';
+import { getSite, reviewedSince } from '../lib/content';
+
+const site = await getSite();
+const { philosophy, methods, projects, posts } = site;
+
+const featured = projects.filter((p) => p.data.featured);
+const proof = featured.length > 0 ? featured : projects.slice(0, 2);
+const liveCount = projects.filter((p) => p.data.status === 'live').length;
+const since = reviewedSince(site.frameworks);
+const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
+
+// Split the headline around the emphasized word, which gets the essay's dotted underline.
+const { headline, emphasis } = SITE.thesis;
+const at = emphasis ? headline.indexOf(emphasis) : -1;
+const [before, after] = at >= 0 ? [headline.slice(0, at), headline.slice(at + emphasis.length)] : [headline, ''];
+
+const personLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: SITE.name,
+  jobTitle: SITE.role,
+  description: SITE.description,
+  url: Astro.site?.href,
+  sameAs: [SITE.contact.linkedin].filter(Boolean),
+};
+---
+
+<BaseLayout jsonLd={personLd}>
+  <section class="hero wide" aria-labelledby="hero-title">
+    <div class="hero-grid">
+      <div class="hero-text">
+        <p class="kicker">{SITE.kicker.map((item) => <span>{item}</span>)}</p>
+        <h1 id="hero-title" class="hero-title">
+          {before}{at >= 0 && <span class="emphasis">{emphasis}</span>}{after}
+        </h1>
+        <p class="dek hero-dek">{SITE.thesis.dek}</p>
+        {
+          philosophy && (
+            <p class="hero-link">
+              <a class="more" href={`/frameworks/${philosophy.id}`}>
+                {SITE.thesis.linkLabel} <span aria-hidden="true">→</span>
+              </a>
+            </p>
+          )
+        }
+      </div>
+      <figure class="hero-portrait">
+        <div class="photo">
+          <Image
+            src={portrait}
+            alt={SITE.bio.portraitAlt}
+            widths={[240, 400]}
+            sizes="(min-width: 1100px) 15rem, (min-width: 720px) 11rem, 5rem"
+            loading="eager"
+          />
+        </div>
+        <figcaption>
+          <span class="who">{SITE.name}</span>
+          <span class="path-line">{SITE.bio.path.join(' → ')}</span>
+        </figcaption>
+      </figure>
+    </div>
+    <ul class="hero-meta" aria-label="At a glance">
+      <li>{plural(methods.length, 'method', 'methods')}</li>
+      <li>{plural(liveCount, 'live project', 'live projects')}</li>
+      {
+        since && (
+          <li>
+            <ReviewStamp date={since} label="Frameworks reviewed since" />
+          </li>
+        )
+      }
+    </ul>
+  </section>
+
+  {
+    methods.length > 0 && (
+      <section class="section" aria-labelledby="methods-title">
+        <div class="wide">
+          <header class="section-head">
+            <h2 id="methods-title" class="section-title">
+              {SITE.home.methodsHeading}
+            </h2>
+            <p>{SITE.home.methodsIntro}</p>
+          </header>
+          <ol class="methods">
+            {methods.map((framework) => (
+              <li>
+                <FrameworkCard framework={framework} number={site.numberOf(framework)} color={site.colorOf(framework)} projects={site.projectsFor(framework).applied} />
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+    )
+  }
+
+  {
+    proof.length > 0 && (
+      <section class="section" aria-labelledby="proof-title">
+        <div class="wide">
+          <header class="section-head section-head--split">
+            <h2 id="proof-title" class="section-title">
+              {SITE.home.proofHeading}
+            </h2>
+            <p>{SITE.home.proofIntro}</p>
+            {projects.length > proof.length && (
+              <p>
+                <a class="more" href="/projects">
+                  All {projects.length} projects <span aria-hidden="true">→</span>
+                </a>
+              </p>
+            )}
+          </header>
+          <div class="proof">
+            {proof.map((project) => (
+              <ProjectCard project={project} frameworks={site.frameworksFor(project)} numberOf={site.numberOf} colorOf={site.colorOf} />
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <section class="section" aria-labelledby="about-title">
+    <div class="wide">
+      <div class="about-body">
+        <h2 id="about-title" class="label">About</h2>
+        <ol class="path" aria-label="Career path">
+          {SITE.bio.path.map((step) => <li>{step}</li>)}
+        </ol>
+        <p class="about-text">{SITE.bio.text}</p>
+        <p>
+          <a class="more" href="/about">{SITE.bio.linkLabel} <span aria-hidden="true">→</span></a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  {
+    posts.length > 0 && (
+      <section class="section" aria-labelledby="writing-title">
+        <div class="wide">
+          <h2 id="writing-title" class="label">
+            {SITE.home.writingHeading}
+          </h2>
+          <div>
+            <PostList posts={posts.slice(0, 3)} headingLevel="h3" compact />
+            <p class="all-writing">
+              <a class="more" href="/writing">
+                All writing <span aria-hidden="true">→</span>
+              </a>
+            </p>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <ContactBand />
+</BaseLayout>
+
+<style>
+  .hero {
+    padding-block: clamp(2.75rem, 8vw, 5.5rem) clamp(2.5rem, 6vw, 4rem);
+  }
+
+  /* Phones: the photo is a compact byline above the headline. From 720px it
+     moves to the right of the text, and on wide screens it becomes a card. The
+     text comes first in the source, so screen readers meet the headline first. */
+  .hero-grid {
+    display: grid;
+    grid-template-areas: 'photo' 'text';
+    gap: 1.6rem;
+  }
+
+  .hero-text {
+    grid-area: text;
+    min-width: 0;
+  }
+
+  .hero-text .kicker {
+    margin-bottom: 1.1rem;
+  }
+
+  .hero-portrait {
+    grid-area: photo;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 0;
+  }
+
+  .photo {
+    flex: none;
+    width: 5rem;
+    padding-bottom: 4px;
+    background: linear-gradient(90deg, var(--fw-0) 0 25%, var(--fw-1) 25% 50%, var(--fw-2) 50% 75%, var(--fw-3) 75% 100%)
+      no-repeat 0 100% / 100% 4px;
+  }
+
+  .photo :global(img) {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 12px 12px 0 0;
+    filter: grayscale(1);
+  }
+
+  figcaption {
+    display: grid;
+    gap: 0.2rem;
+  }
+
+  .who {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.15rem;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+  }
+
+  .path-line {
+    font-size: 0.82rem;
+    line-height: 1.4;
+    color: var(--ink-3);
+  }
+
+  @media (min-width: 720px) {
+    .hero-grid {
+      grid-template-areas: 'text photo';
+      grid-template-columns: minmax(0, 1fr) 11rem;
+      align-items: end;
+      column-gap: 3rem;
+    }
+
+    .hero-portrait {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.9rem;
+    }
+
+    .photo {
+      width: 100%;
+      padding-bottom: 6px;
+      background-size: 100% 6px;
+    }
+
+    .photo :global(img) {
+      border-radius: 18px 18px 0 0;
+    }
+
+    .hero-title {
+      font-size: clamp(4rem, 11vw, 6rem);
+    }
+  }
+
+  /* 3.9em fits "Make AI" (3.6em) but not the whole line, so the headline
+     always breaks into two big lines. Keep the headline this short. */
+  .hero-title {
+    max-width: 3.9em;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(3.6rem, 22vw, 8.4rem);
+    line-height: 0.94;
+    letter-spacing: -0.045em;
+  }
+
+  /* Wide screens: the photo becomes a card that stands as tall as the headline. */
+  @media (min-width: 1100px) {
+    .hero-grid {
+      grid-template-columns: minmax(0, 1fr) 15rem;
+      column-gap: 5rem;
+    }
+
+    .hero-title {
+      font-size: clamp(6rem, 10vw, 8rem);
+    }
+  }
+
+  /* One stripe per framework color under the key word: the site's signature. */
+  .emphasis {
+    padding-bottom: 0.06em;
+    background: linear-gradient(90deg, var(--fw-0) 0 25%, var(--fw-1) 25% 50%, var(--fw-2) 50% 75%, var(--fw-3) 75% 100%)
+      no-repeat 0 96% / 100% 0.1em;
+  }
+
+  .hero-dek {
+    max-width: 34ch;
+    margin-top: clamp(1.8rem, 3.5vw, 2.2rem);
+    font-size: clamp(1.25rem, 2.6vw, 1.5rem);
+    line-height: 1.4;
+  }
+
+  @media (min-width: 1100px) {
+    .hero-dek {
+      max-width: 40ch;
+      font-size: 1.35rem;
+    }
+  }
+
+  .hero-link {
+    margin-top: 1.3rem;
+  }
+
+  .hero-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem 1.6rem;
+    margin: clamp(2rem, 5vw, 3rem) 0 0;
+    padding: 1rem 0 0;
+    list-style: none;
+    border-top: 1px solid var(--rule);
+    font-family: var(--font-label);
+    font-size: 0.74rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  /* One quiet entrance, off when the reader prefers reduced motion. The
+     headline only moves (it never starts invisible), so it paints at once. */
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-title {
+      animation: settle 700ms var(--ease) both;
+    }
+
+    .hero-dek,
+    .hero-link,
+    .hero-portrait,
+    .hero-meta {
+      animation: rise 700ms var(--ease) both;
+      animation-delay: 120ms;
+    }
+
+    .hero-meta {
+      animation-delay: 220ms;
+    }
+
+    @keyframes settle {
+      from {
+        transform: translateY(0.06em);
+      }
+    }
+
+    @keyframes rise {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+    }
+  }
+
+  .methods {
+    display: grid;
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .methods > li {
+    min-width: 0;
+  }
+
+  @media (min-width: 900px) {
+    .methods {
+      grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+      gap: 1rem;
+    }
+  }
+
+  .section-head--split p:last-child {
+    margin-top: 0.2rem;
+  }
+
+  .proof {
+    display: grid;
+    gap: 3.5rem;
+  }
+
+  @media (min-width: 900px) {
+    .proof {
+      grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+      gap: 3rem clamp(2rem, 4vw, 3.5rem);
+    }
+  }
+
+  .about-body {
+    display: grid;
+    gap: 1.1rem;
+    max-width: 40rem;
+  }
+
+  .path {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-family: var(--font-label);
+    font-size: 0.74rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+
+  .path > li + li::before {
+    content: '→';
+    content: '→' / '';
+    padding-inline: 0.7em;
+    color: var(--accent-ink);
+  }
+
+  .about-text {
+    font-size: var(--step-1);
+    line-height: 1.5;
+  }
+
+  .all-writing {
+    margin-top: 1rem;
+  }
+
+</style>

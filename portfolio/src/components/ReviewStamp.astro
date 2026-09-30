@@ -1,0 +1,82 @@
+---
+/**
+ * "Reviewed Sep 29, 2026", echoing The Confident Machine's "Checked" stamps.
+ * Past the review window in site.ts (180 days) it turns amber and adds
+ * "may be out of date".
+ *
+ * The state is rendered at build time and re-checked in the reader's browser
+ * against today's date, so the stamp stays honest even if the site hasn't
+ * been rebuilt in months.
+ */
+import { SITE } from '../config/site';
+import { formatDate, isDueForReview, isoDate } from '../lib/dates';
+
+interface Props {
+  date: Date;
+  label?: string;
+}
+
+const { date, label = 'Reviewed' } = Astro.props;
+const stale = isDueForReview(date);
+---
+
+<span class:list={['stamp', { 'stamp--stale': stale }]} data-reviewed={isoDate(date)} data-window={SITE.review.staleAfterDays}>
+  <span class="stamp-dot" aria-hidden="true"></span>
+  <span class="stamp-text"
+    >{label} <time datetime={isoDate(date)}>{formatDate(date)}</time><span class="stamp-note" hidden={!stale}> · may be out of date</span></span
+  >
+</span>
+
+<style>
+  /* Self-contained: it looks the same wherever it's placed (no inherited caps or tracking). */
+  .stamp {
+    display: inline-flex;
+    align-items: flex-start;
+    gap: 0.45em;
+    max-width: 100%;
+    padding: 0.1em 0.7em;
+    border: 1px solid var(--rule-strong);
+    border-radius: 1em;
+    font-family: var(--font-label);
+    font-size: 0.7rem;
+    font-weight: 400;
+    font-style: normal;
+    line-height: 1.7;
+    letter-spacing: 0.03em;
+    text-transform: none;
+    color: var(--ink-3);
+  }
+
+  /* Centered on the first line of text, even when the stamp wraps. */
+  .stamp-dot {
+    flex: none;
+    width: 6px;
+    height: 6px;
+    margin-top: calc(0.85em - 3px);
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  .stamp--stale {
+    color: var(--stale-ink);
+    border-color: var(--stale);
+    background: var(--stale-wash);
+  }
+
+  .stamp--stale .stamp-dot {
+    background: transparent;
+    box-shadow: inset 0 0 0 1.5px var(--stale);
+  }
+</style>
+
+<script>
+  const DAY_MS = 86_400_000;
+  for (const el of document.querySelectorAll<HTMLElement>('[data-reviewed]')) {
+    const reviewed = Date.parse(`${el.dataset.reviewed}T00:00:00Z`);
+    const windowDays = Number(el.dataset.window);
+    if (Number.isNaN(reviewed) || !windowDays) continue;
+    const stale = Math.floor((Date.now() - reviewed) / DAY_MS) > windowDays;
+    el.classList.toggle('stamp--stale', stale);
+    el.querySelector('.stamp-note')?.toggleAttribute('hidden', !stale);
+  }
+</script>

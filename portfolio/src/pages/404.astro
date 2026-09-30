@@ -1,0 +1,35 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../config/site';
+---
+
+<BaseLayout title="Page not found" description="This page doesn't exist." noindex>
+  <section class="page-head wide">
+    <p class="kicker"><span>Error 404</span></p>
+    <h1 class="page-title">Nothing here.</h1>
+    <p class="dek">The link sounded sure of itself, but this page doesn’t exist. It may have moved, or the address may have a typo.</p>
+    <ul class="ways">
+      <li><a class="btn btn--primary" href="/">Go to the home page</a></li>
+      {
+        SITE.nav.map((item) => (
+          <li>
+            <a class="btn" href={item.href}>
+              {item.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</BaseLayout>
+
+<style>
+  .ways {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+    margin: 2.2rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+</style>

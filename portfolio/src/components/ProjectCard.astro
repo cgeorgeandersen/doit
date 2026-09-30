@@ -1,0 +1,190 @@
+---
+/**
+ * A project as proof: status, title, summary, the frameworks it puts into
+ * practice (numbered like the methods on the home page), and two ways in.
+ * `stack` puts the cover on top (home); `row` puts it beside the text (/projects).
+ */
+import { Image } from 'astro:assets';
+import StatusPill from './StatusPill.astro';
+import { domainOf, type Framework, type Project } from '../lib/content';
+import { year } from '../lib/dates';
+
+interface Props {
+  project: Project;
+  frameworks: Framework[];
+  numberOf: (framework: Framework) => string | undefined;
+  colorOf: (framework: Framework) => 0 | 1 | 2 | 3;
+  layout?: 'stack' | 'row';
+  headingLevel?: 'h2' | 'h3';
+}
+
+const { project, frameworks, numberOf, colorOf, layout = 'stack', headingLevel = 'h3' } = Astro.props;
+const { title, summary, status, date, cover, liveUrl, draft } = project.data;
+const Heading = headingLevel;
+const href = `/projects/${project.id}`;
+const sizes = layout === 'row' ? '(min-width: 900px) 24rem, calc(100vw - 32px)' : '(min-width: 900px) 33rem, calc(100vw - 32px)';
+---
+
+<article class:list={['project-card', `project-card--${layout}`]}>
+  {
+    cover && (
+      <a class="media" href={href} tabindex="-1" aria-hidden="true">
+        <Image src={cover} alt="" widths={[480, 720, 960, 1200]} sizes={sizes} loading="lazy" />
+      </a>
+    )
+  }
+  <div class="body">
+    <p class="kicker">
+      <span><StatusPill status={status} /></span>
+      <span>{year(date)}</span>
+      {draft && <span class="draft">Draft · not published</span>}
+    </p>
+    <Heading class="title"><a class="quiet-link" href={href}>{title}</a></Heading>
+    <p class="summary">{summary}</p>
+    {
+      frameworks.length > 0 && (
+        <div class="practice">
+          <p class="label">Puts into practice</p>
+          <ul>
+            {frameworks.map((f) => (
+              <li data-fw={colorOf(f)}>
+                <a href={`/frameworks/${f.id}`}>
+                  {numberOf(f) && <span class="num">{numberOf(f)}</span>}
+                  <span class="name">{f.data.title}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )
+    }
+    <p class="actions">
+      {
+        liveUrl && (
+          <a class="btn btn--primary" href={liveUrl} target="_blank" rel="noopener">
+            Open the project <span class="arrow" aria-hidden="true">↗</span>
+            <span class="visually-hidden">(opens {domainOf(liveUrl)} in a new tab)</span>
+          </a>
+        )
+      }
+      <a class="more" href={href}>Read the case study <span aria-hidden="true">→</span></a>
+    </p>
+  </div>
+</article>
+
+<style>
+  .project-card {
+    display: grid;
+    gap: 1.3rem;
+    align-content: start;
+  }
+
+  .media {
+    display: block;
+    overflow: hidden;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    background: var(--paper-2);
+  }
+
+  .media :global(img) {
+    width: 100%;
+    aspect-ratio: 1200 / 630;
+    object-fit: cover;
+    transition: transform 400ms var(--ease);
+  }
+
+  .project-card:hover .media :global(img) {
+    transform: scale(1.015);
+  }
+
+  .body {
+    display: grid;
+    gap: 0.8rem;
+    align-content: start;
+  }
+
+  .draft {
+    color: var(--stale-ink);
+  }
+
+  .title {
+    font-family: var(--font-display);
+    font-weight: 750;
+    font-size: clamp(1.6rem, 3.2vw, 2.05rem);
+    line-height: 1.08;
+    letter-spacing: -0.035em;
+  }
+
+  .summary {
+    color: var(--ink-2);
+    max-width: 34rem;
+  }
+
+  .practice {
+    display: grid;
+    gap: 0.35rem;
+    padding-top: 0.2rem;
+  }
+
+  .practice ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem 1.2rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .practice a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    min-height: 32px;
+    text-decoration: none;
+  }
+
+  .name {
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+  }
+
+  .practice a:hover .name {
+    text-decoration-thickness: 2px;
+  }
+
+  /* The framework's color dot, then its numeral in that color. */
+  .practice a::before {
+    content: '';
+    flex: none;
+    width: 0.62rem;
+    height: 0.62rem;
+    border-radius: 50%;
+    background: var(--fw);
+  }
+
+  .num {
+    font-family: var(--font-label);
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--fw-ink);
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.9rem 1.4rem;
+    margin-top: 0.5rem;
+  }
+
+  @media (min-width: 900px) {
+    .project-card--row {
+      grid-template-columns: minmax(0, 24rem) minmax(0, 1fr);
+      gap: 2.6rem;
+      align-items: start;
+    }
+  }
+</style>

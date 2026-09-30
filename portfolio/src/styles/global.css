@@ -1,0 +1,531 @@
+/* Global styles: reset, type, layout primitives, prose and controls. Everything reads from tokens.css. */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 17px;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-padding-top: 1.5rem;
+}
+
+@media (min-width: 720px) {
+  html {
+    font-size: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-text);
+  font-size: 1rem;
+  line-height: 1.6;
+  font-optical-sizing: auto;
+  font-kerning: normal;
+  font-variant-ligatures: common-ligatures;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+
+main {
+  flex: 1;
+}
+
+img,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+/* ---------- Layout primitives ---------- */
+
+.measure {
+  width: min(var(--measure), 100% - 2 * var(--gutter));
+  margin-inline: auto;
+}
+
+.wide {
+  width: min(var(--wide), 100% - 2 * var(--gutter));
+  margin-inline: auto;
+}
+
+.section {
+  padding-block: var(--section);
+  border-top: 1px solid var(--rule);
+}
+
+/* ---------- Type ---------- */
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  font-weight: 700;
+  text-wrap: balance;
+}
+
+.display {
+  font-family: var(--font-display);
+  font-weight: 750;
+  letter-spacing: -0.035em;
+  line-height: 1.02;
+}
+
+.page-title {
+  font-family: var(--font-display);
+  font-weight: 750;
+  font-size: clamp(2.5rem, 7.5vw, 4.4rem);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  margin-top: 1rem;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-weight: 750;
+  font-size: clamp(1.9rem, 4.6vw, 2.8rem);
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+}
+
+p {
+  margin: 0;
+  text-wrap: pretty;
+}
+
+.dek {
+  font-size: clamp(1.18rem, 2.3vw, 1.45rem);
+  line-height: 1.42;
+  color: var(--ink-2);
+  text-wrap: pretty;
+}
+
+.label,
+.eyebrow {
+  font-family: var(--font-label);
+  font-size: var(--step--2);
+  font-weight: 500;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+/*
+ * A mono line of items separated by dots. The line is pulled left by one
+ * dot's width and that strip is clipped, so no wrapped line ever starts
+ * with a stray dot (the same technique as the essay's masthead).
+ */
+.kicker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  row-gap: 0.3rem;
+  margin: 0 0 0 -1.6em;
+  padding: 0;
+  list-style: none;
+  clip-path: inset(0 0 0 1.6em);
+  font-family: var(--font-label);
+  font-size: var(--step--2);
+  font-weight: 500;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.kicker > * {
+  display: inline-flex;
+  align-items: center;
+}
+
+.kicker > *::before {
+  content: '·';
+  content: '·' / '';
+  display: inline-block;
+  width: 1.6em;
+  text-align: center;
+}
+
+.mono {
+  font-family: var(--font-label);
+}
+
+.muted {
+  color: var(--ink-3);
+}
+
+.nums {
+  font-variant-numeric: tabular-nums;
+}
+
+strong {
+  font-weight: 650;
+}
+
+a {
+  color: inherit;
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--accent);
+  text-underline-offset: 0.2em;
+  transition: text-decoration-thickness 140ms var(--ease), color 140ms var(--ease);
+}
+
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+/* A link that reads as a heading or title: no underline until hovered or focused. */
+.quiet-link {
+  text-decoration-color: transparent;
+}
+
+.quiet-link:hover,
+.quiet-link:focus-visible {
+  text-decoration-color: var(--accent);
+}
+
+/* "Read more →" style links in mono. */
+.more {
+  font-family: var(--font-label);
+  font-size: var(--step--1);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+/* ---------- Page scaffolding ---------- */
+
+.page-head {
+  padding-block: clamp(2.5rem, 7vw, 4.75rem) clamp(1.75rem, 4vw, 3rem);
+}
+
+.page-head .dek {
+  margin-top: 1.1rem;
+  max-width: 36ch;
+}
+
+.kicker a {
+  text-decoration-color: var(--rule-strong);
+}
+
+.kicker a:hover {
+  color: var(--ink);
+  text-decoration-color: var(--accent);
+}
+
+.section-head {
+  display: grid;
+  gap: 0.75rem;
+  margin-bottom: clamp(2rem, 5vw, 3.25rem);
+}
+
+.section-head p {
+  max-width: 40rem;
+  color: var(--ink-2);
+}
+
+/*
+ * Detail pages: the text in a reading column, with a margin column beside it
+ * on wide screens (frameworks put into practice, projects that apply a
+ * framework). On phones the margin column comes first, so the theory → proof
+ * link is never buried below the essay.
+ */
+.detail {
+  display: grid;
+  gap: 2.5rem;
+  width: min(var(--wide), 100% - 2 * var(--gutter));
+  margin-inline: auto;
+}
+
+.detail-main {
+  min-width: 0;
+  max-width: var(--measure);
+}
+
+@media (min-width: 1100px) {
+  .detail {
+    grid-template-columns: minmax(0, var(--measure)) minmax(15rem, 19rem);
+    justify-content: space-between;
+    column-gap: 4rem;
+    align-items: start;
+  }
+
+  .detail-main {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .detail-aside {
+    grid-column: 2;
+    grid-row: 1;
+    position: sticky;
+    top: 2rem;
+  }
+}
+
+.aside-block + .aside-block {
+  margin-top: 2rem;
+}
+
+.aside-block > .label {
+  display: block;
+  margin-bottom: 0.9rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+/* ---------- Prose: rendered Markdown ---------- */
+
+.prose > * + * {
+  margin-top: 1.05em;
+}
+
+.prose h2 {
+  margin-top: 2.6rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.5rem, 3.2vw, 1.85rem);
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+}
+
+.prose h3 {
+  margin-top: 2rem;
+  font-family: var(--font-text);
+  font-weight: 650;
+  font-size: var(--step-1);
+  line-height: 1.3;
+}
+
+.prose h2 + *,
+.prose h3 + * {
+  margin-top: 0.7rem;
+}
+
+.prose ul,
+.prose ol {
+  padding-left: 1.25em;
+}
+
+.prose li + li {
+  margin-top: 0.45em;
+}
+
+.prose li::marker {
+  color: var(--ink-3);
+}
+
+.prose ol > li::marker {
+  font-family: var(--font-label);
+  font-size: 0.8em;
+}
+
+.prose blockquote {
+  margin: 1.8rem 0;
+  padding: 0.1rem 0 0.1rem 1.2rem;
+  border-left: 2px solid var(--accent);
+  font-style: italic;
+  font-size: 1.1rem;
+  color: var(--ink-2);
+}
+
+.prose blockquote p + p {
+  margin-top: 0.8em;
+}
+
+.prose hr {
+  width: 4rem;
+  margin: 2.6rem auto;
+  border: 0;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.prose code {
+  font-family: var(--font-label);
+  font-size: 0.82em;
+  padding: 0.1em 0.35em;
+  border-radius: var(--radius);
+  background: var(--paper-2);
+}
+
+.prose pre {
+  overflow-x: auto;
+  padding: 1rem 1.1rem;
+  border-radius: var(--radius);
+  background: var(--paper-2);
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.prose pre code {
+  padding: 0;
+  background: none;
+}
+
+.prose img {
+  margin-block: 2rem;
+  border-radius: var(--radius);
+}
+
+/* Tables scroll inside their own box so the page never scrolls sideways. */
+.prose table {
+  display: block;
+  overflow-x: auto;
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.prose th,
+.prose td {
+  padding: 0.6rem 0.8rem 0.6rem 0;
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+  vertical-align: top;
+}
+
+.prose th {
+  font-family: var(--font-label);
+  font-size: var(--step--2);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  border-bottom-color: var(--rule-strong);
+}
+
+/* ---------- Controls ---------- */
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55em;
+  min-height: 44px;
+  padding: 0.55em 1.1em;
+  border: 1px solid var(--ink);
+  border-radius: 10px;
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--font-label);
+  font-size: 0.92rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 140ms var(--ease), color 140ms var(--ease), border-color 140ms var(--ease);
+}
+
+.btn:hover {
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+
+.btn--primary {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.btn--primary:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #ffffff;
+}
+
+.btn .arrow {
+  display: inline-block;
+  transition: transform 160ms var(--ease);
+}
+
+.btn:hover .arrow {
+  transform: translate(2px, -2px);
+}
+
+/* ---------- Focus, skip link, utilities ---------- */
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.skip-link {
+  position: absolute;
+  left: var(--gutter);
+  top: -100px;
+  z-index: 100;
+  padding: 0.6rem 1rem;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-label);
+  font-size: var(--step--1);
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  top: 0.5rem;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+@media print {
+  .site-header nav,
+  .theme-toggle,
+  .site-footer {
+    display: none !important;
+  }
+
+  body {
+    background: #fff;
+    color: #000;
+  }
+}

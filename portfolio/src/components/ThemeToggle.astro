@@ -1,0 +1,104 @@
+---
+/**
+ * Auto (follow the system) → Light → Dark, like The Confident Machine's toggle.
+ * An explicit choice is stamped on <html data-theme> by BaseLayout's pre-paint
+ * script, and the visible label is picked by CSS from that attribute, so the
+ * button never flickers between states on load. Hidden when JavaScript is off.
+ */
+---
+
+<button type="button" class="theme-toggle" data-theme-toggle aria-label="Color theme">
+  <span class="theme-icon" aria-hidden="true"></span>
+  <span class="theme-label" data-for="auto">Auto</span>
+  <span class="theme-label" data-for="light">Light</span>
+  <span class="theme-label" data-for="dark">Dark</span>
+</button>
+
+<style>
+  .theme-toggle {
+    display: none;
+    align-items: center;
+    gap: 0.45rem;
+    min-height: 44px;
+    padding: 0 0.2rem 0 0.4rem;
+    border: 0;
+    background: transparent;
+    font-family: var(--font-label);
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+    cursor: pointer;
+  }
+
+  :global(.js) .theme-toggle {
+    display: inline-flex;
+  }
+
+  .theme-toggle:hover {
+    color: var(--ink);
+  }
+
+  .theme-icon {
+    width: 0.85rem;
+    height: 0.85rem;
+    border-radius: 50%;
+    border: 1.5px solid currentColor;
+    background: linear-gradient(90deg, currentColor 50%, transparent 50%);
+  }
+
+  .theme-label {
+    display: none;
+  }
+
+  :global(:root:not([data-theme])) .theme-label[data-for='auto'],
+  :global(:root[data-theme='light']) .theme-label[data-for='light'],
+  :global(:root[data-theme='dark']) .theme-label[data-for='dark'] {
+    display: inline;
+  }
+
+  :global(:root[data-theme='light']) .theme-icon {
+    background: transparent;
+  }
+
+  :global(:root[data-theme='dark']) .theme-icon {
+    background: currentColor;
+  }
+</style>
+
+<script>
+  type Mode = 'auto' | 'light' | 'dark';
+  const KEY = 'ga-theme';
+  const ORDER: Mode[] = ['auto', 'light', 'dark'];
+  const LABEL: Record<Mode, string> = { auto: 'Auto', light: 'Light', dark: 'Dark' };
+
+  const current = (): Mode => {
+    const t = document.documentElement.dataset.theme;
+    return t === 'light' || t === 'dark' ? t : 'auto';
+  };
+  const next = (mode: Mode): Mode => ORDER[(ORDER.indexOf(mode) + 1) % ORDER.length] ?? 'auto';
+
+  function apply(mode: Mode): void {
+    if (mode === 'auto') delete document.documentElement.dataset.theme;
+    else document.documentElement.dataset.theme = mode;
+    try {
+      if (mode === 'auto') localStorage.removeItem(KEY);
+      else localStorage.setItem(KEY, mode);
+    } catch {
+      /* Storage can be unavailable (private mode); the choice then lasts for this page only. */
+    }
+  }
+
+  for (const button of document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]')) {
+    const describe = () => {
+      const mode = current();
+      button.setAttribute('aria-label', `Color theme: ${LABEL[mode]}. Switch to ${LABEL[next(mode)]}.`);
+    };
+    button.addEventListener('click', () => {
+      apply(next(current()));
+      describe();
+    });
+    describe();
+  }
+</script>

@@ -1,0 +1,296 @@
+---
+/**
+ * One project: what it is, a prominent way to open it, a preview of the live
+ * site, the frameworks it puts into practice, and the case study itself.
+ */
+import { Image } from 'astro:assets';
+import { render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import FrameworkCard from '../../components/FrameworkCard.astro';
+import LinkPreview from '../../components/LinkPreview.astro';
+import StatusPill from '../../components/StatusPill.astro';
+import { SITE } from '../../config/site';
+import { domainOf, getSite, tagSlug, type Project } from '../../lib/content';
+import { formatMonth, isoDate } from '../../lib/dates';
+
+export async function getStaticPaths() {
+  const site = await getSite();
+  return site.projects.map((project) => ({ params: { slug: project.id }, props: { project } }));
+}
+
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+const site = await getSite();
+const { title, summary, status, date, tags, cover, coverAlt, liveUrl, draft } = project.data;
+const { Content } = await render(project);
+const frameworks = site.frameworksFor(project);
+
+const index = site.projects.findIndex((p) => p.id === project.id);
+const previous = site.projects[index - 1];
+const next = site.projects[index + 1];
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CreativeWork',
+  name: title,
+  description: summary,
+  dateCreated: isoDate(date),
+  url: liveUrl,
+  author: { '@type': 'Person', name: SITE.name },
+};
+---
+
+<BaseLayout
+  title={title}
+  description={summary}
+  image={`/og/projects/${project.id}.png`}
+  imageAlt={`${title}: a project by ${SITE.name}`}
+  type="article"
+  published={date}
+  jsonLd={jsonLd}
+>
+  <article>
+    <header class:list={['wide head', { 'head--split': Boolean(liveUrl || cover) }]}>
+      <div class="head-text">
+        <p class="kicker">
+          <span><a href="/projects">Projects</a></span>
+          <span><StatusPill status={status} /></span>
+          <span><time datetime={isoDate(date)}>{formatMonth(date)}</time></span>
+          {draft && <span class="draft">Draft · not published</span>}
+        </p>
+        <h1 class="page-title">{title}</h1>
+        <p class="dek">{summary}</p>
+        {
+          liveUrl && (
+            <p class="open">
+              <a class="btn btn--primary btn--open" href={liveUrl} target="_blank" rel="noopener">
+                Open the project <span class="arrow" aria-hidden="true">↗</span>
+                <span class="visually-hidden">(opens in a new tab)</span>
+              </a>
+              <span class="domain">{domainOf(liveUrl)}</span>
+            </p>
+          )
+        }
+      </div>
+      {
+        liveUrl ? (
+          <div class="head-preview">
+            <LinkPreview url={liveUrl} title={title} description={summary} image={cover} imageAlt={coverAlt} />
+          </div>
+        ) : (
+          cover && (
+            <div class="head-preview">
+              <Image
+                class="cover"
+                src={cover}
+                alt={coverAlt ?? ''}
+                widths={[560, 800, 1100, 1400]}
+                sizes="(min-width: 1100px) 30rem, calc(100vw - 32px)"
+                loading="eager"
+                fetchpriority="high"
+              />
+            </div>
+          )
+        )
+      }
+    </header>
+
+    <div class="detail">
+      {
+        frameworks.length > 0 && (
+          <aside class="detail-aside" aria-labelledby="practice-title">
+            <div class="aside-block">
+              <h2 id="practice-title" class="label">
+                Puts into practice
+              </h2>
+              <div class="frameworks">
+                {frameworks.map((framework) => (
+                  <FrameworkCard framework={framework} number={site.numberOf(framework)} color={site.colorOf(framework)} />
+                ))}
+              </div>
+            </div>
+          </aside>
+        )
+      }
+      <div class="detail-main">
+        <div class="prose">
+          <Content />
+        </div>
+        {
+          tags.length > 0 && (
+            <div class="tags">
+              <h2 class="label">Topics</h2>
+              <ul>
+                {tags.map((tag) => (
+                  <li>
+                    <a href={`/projects?tag=${tagSlug(tag)}`}>{tag}</a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )
+        }
+      </div>
+    </div>
+
+    {
+      (previous || next) && (
+        <nav class="wide pager" aria-label="More projects">
+          {previous ? (
+            <a class="pager-link" href={`/projects/${previous.id}`} rel="prev">
+              <span class="label">← Previous project</span>
+              <span class="pager-title">{previous.data.title}</span>
+            </a>
+          ) : (
+            <span />
+          )}
+          {next && (
+            <a class="pager-link pager-link--next" href={`/projects/${next.id}`} rel="next">
+              <span class="label">Next project →</span>
+              <span class="pager-title">{next.data.title}</span>
+            </a>
+          )}
+        </nav>
+      )
+    }
+  </article>
+</BaseLayout>
+
+<style>
+  .head {
+    display: grid;
+    gap: 2.5rem;
+    padding-block: clamp(2.5rem, 6vw, 4.5rem) clamp(2.5rem, 6vw, 4rem);
+  }
+
+  .head .page-title {
+    margin-top: 1rem;
+  }
+
+  .head .dek {
+    margin-top: 1.1rem;
+    max-width: 30ch;
+  }
+
+  .draft {
+    color: var(--stale-ink);
+  }
+
+  .open {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.8rem 1.2rem;
+    margin-top: 2rem;
+  }
+
+  .btn--open {
+    min-height: 52px;
+    padding-inline: 1.5rem;
+    font-size: 0.86rem;
+  }
+
+  .domain {
+    font-family: var(--font-label);
+    font-size: 0.7rem;
+    letter-spacing: 0.04em;
+    color: var(--ink-3);
+  }
+
+  /* Without a live site the cover shows on its own, framed like the preview. */
+  .cover {
+    width: 100%;
+    aspect-ratio: 1200 / 630;
+    object-fit: cover;
+    border: 1px solid var(--rule-strong);
+    border-radius: 6px;
+    box-shadow: var(--shadow);
+  }
+
+  /* Two columns only when there's something (preview or cover) to put beside the title. */
+  @media (min-width: 1100px) {
+    .head--split {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 30rem);
+      column-gap: 4rem;
+      align-items: center;
+    }
+  }
+
+  .frameworks {
+    display: grid;
+    gap: 2rem;
+  }
+
+  .tags {
+    display: grid;
+    gap: 0.6rem;
+    margin-top: 3rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .tags ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .tags a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 32px;
+    padding: 0 0.75rem;
+    border: 1px solid var(--rule-strong);
+    border-radius: 999px;
+    font-family: var(--font-label);
+    font-size: 0.74rem;
+    text-decoration: none;
+    color: var(--ink-2);
+  }
+
+  .tags a:hover {
+    border-color: var(--ink-3);
+    color: var(--ink);
+  }
+
+  .pager {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-top: var(--section);
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .pager-link {
+    display: grid;
+    gap: 0.35rem;
+    text-decoration: none;
+  }
+
+  .pager-link--next {
+    grid-column: 2;
+    text-align: right;
+  }
+
+  .pager-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    font-size: 1.3rem;
+    line-height: 1.15;
+  }
+
+  .pager-link:hover .pager-title {
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+  }
+</style>

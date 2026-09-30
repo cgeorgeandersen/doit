@@ -1,0 +1,58 @@
+---
+/**
+ * Everything a search engine or a link preview reads: title, description,
+ * canonical URL, OpenGraph and Twitter tags, the RSS feed and structured data.
+ */
+import { SITE } from '../config/site';
+
+interface Props {
+  /** The page's own title, e.g. "Frameworks". Omit on the home page. */
+  title?: string | undefined;
+  description?: string | undefined;
+  /** Path of this page's share image, e.g. "/og/frameworks/calibrated-trust.png". */
+  image: string;
+  imageAlt: string;
+  type?: 'website' | 'article';
+  published?: Date | undefined;
+  modified?: Date | undefined;
+  noindex?: boolean;
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[] | undefined;
+}
+
+const { title, description = SITE.description, image, imageAlt, type = 'website', published, modified, noindex = false, jsonLd } = Astro.props;
+
+const site = Astro.site ?? new URL('http://localhost:4321');
+const fullTitle = title ? `${title} · ${SITE.name}` : `${SITE.name} · ${SITE.role}`;
+const canonical = new URL(Astro.url.pathname.replace(/\/+$/, '') || '/', site).href;
+const imageUrl = new URL(image, site).href;
+---
+
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+{noindex && <meta name="robots" content="noindex" />}
+
+<meta property="og:type" content={type} />
+<meta property="og:site_name" content={SITE.name} />
+<meta property="og:title" content={title ?? fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:locale" content={SITE.locale.replace('-', '_')} />
+<meta property="og:image" content={imageUrl} />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content={imageAlt} />
+{published && <meta property="article:published_time" content={published.toISOString()} />}
+{modified && <meta property="article:modified_time" content={modified.toISOString()} />}
+{type === 'article' && <meta property="article:author" content={SITE.name} />}
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title ?? fullTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={imageUrl} />
+<meta name="twitter:image:alt" content={imageAlt} />
+
+<link rel="alternate" type="application/rss+xml" title={`${SITE.name}: writing, frameworks and projects`} href="/rss.xml" />
+<link rel="sitemap" href="/sitemap-index.xml" />
+{jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}

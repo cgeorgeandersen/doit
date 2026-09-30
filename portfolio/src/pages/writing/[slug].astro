@@ -1,0 +1,99 @@
+---
+/** One post: date, title, summary, review stamp, the text and its topics. */
+import { render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ReviewStamp from '../../components/ReviewStamp.astro';
+import { SITE } from '../../config/site';
+import { getSite, reviewedOn, type Post } from '../../lib/content';
+import { formatDate, isoDate } from '../../lib/dates';
+
+export async function getStaticPaths() {
+  const site = await getSite();
+  return site.posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+
+interface Props {
+  post: Post;
+}
+
+const { post } = Astro.props;
+const { title, summary, date, tags, draft } = post.data;
+const { Content } = await render(post);
+const reviewed = reviewedOn(post);
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: title,
+  description: summary,
+  datePublished: isoDate(date),
+  dateModified: isoDate(reviewed),
+  author: { '@type': 'Person', name: SITE.name },
+};
+---
+
+<BaseLayout
+  title={title}
+  description={summary}
+  image={`/og/writing/${post.id}.png`}
+  imageAlt={`${title}, by ${SITE.name}`}
+  type="article"
+  published={date}
+  modified={reviewed}
+  jsonLd={jsonLd}
+>
+  <article>
+    <header class="page-head measure">
+      <p class="kicker">
+        <span><a href="/writing">Writing</a></span>
+        <span><time datetime={isoDate(date)}>{formatDate(date)}</time></span>
+        {draft && <span class="draft">Draft · not published</span>}
+      </p>
+      <h1 class="post-title">{title}</h1>
+      <p class="dek">{summary}</p>
+      <p class="meta"><ReviewStamp date={reviewed} /></p>
+    </header>
+    <div class="measure prose">
+      <Content />
+    </div>
+    {
+      tags.length > 0 && (
+        <footer class="measure tags">
+          <span class="label">Topics</span> {tags.join(' · ')}
+        </footer>
+      )
+    }
+  </article>
+</BaseLayout>
+
+<style>
+  .post-title {
+    margin-top: 1rem;
+    font-family: var(--font-display);
+    font-weight: 750;
+    font-size: clamp(2.3rem, 6.5vw, 3.6rem);
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+  }
+
+  .draft {
+    color: var(--stale-ink);
+  }
+
+  .meta {
+    margin-top: 1.4rem;
+  }
+
+  .tags {
+    margin-top: 3rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--rule);
+    font-family: var(--font-label);
+    font-size: 0.74rem;
+    color: var(--ink-2);
+  }
+
+  .tags .label {
+    margin-right: 0.8rem;
+  }
+</style>
