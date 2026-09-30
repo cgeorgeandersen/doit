@@ -26,7 +26,7 @@ const { title, description } = SITE.sections.projects;
       {
         projects.map((project) => (
           <li data-status={statusSlug(project.data.status)} data-tags={project.data.tags.map(tagSlug).join(' ')}>
-            <ProjectCard project={project} frameworks={site.frameworksFor(project)} numberOf={site.numberOf} layout="row" headingLevel="h2" />
+            <ProjectCard project={project} frameworks={site.frameworksFor(project)} numberOf={site.numberOf} colorOf={site.colorOf} layout="row" headingLevel="h2" />
           </li>
         ))
       }

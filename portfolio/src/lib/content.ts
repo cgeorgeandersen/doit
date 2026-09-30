@@ -36,6 +36,11 @@ export interface Site {
   projectsFor(framework: Framework): { applied: Project[]; related: Project[] };
   /** "01", "02", … for methods; undefined for the philosophy. */
   numberOf(framework: Framework): string | undefined;
+  /**
+   * The framework's color slot for data-fw (see tokens.css): 0 for the
+   * philosophy, then 1, 2, 3 for the methods in order, repeating after three.
+   */
+  colorOf(framework: Framework): 0 | 1 | 2 | 3;
 }
 
 /** Top-level routes a standalone page must not take over. */
@@ -110,6 +115,10 @@ async function loadSite(): Promise<Site> {
     numberOf: (framework) => {
       const index = methods.findIndex((m) => m.id === framework.id);
       return index < 0 ? undefined : String(index + 1).padStart(2, '0');
+    },
+    colorOf: (framework) => {
+      const index = methods.findIndex((m) => m.id === framework.id);
+      return index < 0 ? 0 : (((index % 3) + 1) as 1 | 2 | 3);
     },
   };
 }

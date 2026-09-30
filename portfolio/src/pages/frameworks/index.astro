@@ -52,7 +52,7 @@ const { title, description } = SITE.sections.frameworks;
             const { applied, related } = site.projectsFor(framework);
             return (
               <li>
-                <FrameworkCard framework={framework} number={site.numberOf(framework)} projects={[...applied, ...related]} headingLevel="h3" />
+                <FrameworkCard framework={framework} number={site.numberOf(framework)} color={site.colorOf(framework)} projects={[...applied, ...related]} headingLevel="h3" />
               </li>
             );
           })}
@@ -78,10 +78,10 @@ const { title, description } = SITE.sections.frameworks;
 
   .philosophy-title {
     font-family: var(--font-display);
-    font-weight: 500;
+    font-weight: 750;
     font-size: clamp(2.2rem, 6vw, 3.6rem);
     line-height: 1;
-    letter-spacing: -0.015em;
+    letter-spacing: -0.035em;
   }
 
   .philosophy-thesis {
@@ -105,28 +105,29 @@ const { title, description } = SITE.sections.frameworks;
   }
 
   .methods {
+    display: grid;
+    gap: 1rem;
     margin: 0;
     padding: 0;
     list-style: none;
   }
 
   .methods > li {
-    padding-block: 2rem;
-    border-top: 1px solid var(--ink);
+    min-width: 0;
   }
 
   @media (min-width: 900px) {
     .methods {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
-      column-gap: clamp(1.5rem, 3vw, 2.75rem);
+      gap: 1rem;
     }
   }
 
   .review-note {
     margin-top: 2rem;
-    font-family: var(--font-mono);
-    font-size: 0.68rem;
+    font-family: var(--font-label);
+    font-size: 0.74rem;
     line-height: 1.6;
     color: var(--ink-3);
   }

@@ -19,7 +19,9 @@ function current(href: string): 'page' | 'true' | undefined {
 
 <header class="site-header">
   <div class="bar wide">
-    <a class="wordmark" href="/" aria-current={path === '/' ? 'page' : undefined}>{SITE.name}</a>
+    <a class="wordmark" href="/" aria-current={path === '/' ? 'page' : undefined}
+      ><span class="dots" aria-hidden="true"><i data-fw="0"></i><i data-fw="1"></i><i data-fw="2"></i><i data-fw="3"></i></span>{SITE.name}</a
+    >
     <nav aria-label="Main">
       <ul>
         {
@@ -59,13 +61,29 @@ function current(href: string): 'page' | 'true' | undefined {
     grid-area: brand;
     justify-self: start;
     padding-block: 0.4rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
     font-family: var(--font-display);
-    font-style: italic;
-    font-weight: 600;
-    font-size: 1.02rem;
-    letter-spacing: 0.005em;
+    font-weight: 700;
+    font-size: 1.05rem;
+    letter-spacing: -0.02em;
     text-decoration: none;
     white-space: nowrap;
+  }
+
+  /* One dot per framework color: the site's mark. */
+  .dots {
+    display: inline-grid;
+    grid-template-columns: repeat(2, 6px);
+    gap: 3px;
+  }
+
+  .dots i {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--fw);
   }
 
   .tools {
@@ -92,11 +110,9 @@ function current(href: string): 'page' | 'true' | undefined {
     align-items: center;
     min-height: 44px;
     padding: 0 0.45rem;
-    font-family: var(--font-mono);
-    font-size: 0.64rem;
+    font-family: var(--font-label);
+    font-size: 0.86rem;
     font-weight: 500;
-    letter-spacing: 0.09em;
-    text-transform: uppercase;
     text-decoration: none;
     color: var(--ink-2);
     white-space: nowrap;

@@ -7,7 +7,7 @@
 }
 
 html {
-  font-size: 19px;
+  font-size: 17px;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
   scroll-padding-top: 1.5rem;
@@ -15,7 +15,7 @@ html {
 
 @media (min-width: 720px) {
   html {
-    font-size: 20px;
+    font-size: 18px;
   }
 }
 
@@ -83,32 +83,32 @@ h2,
 h3,
 h4 {
   margin: 0;
-  font-weight: 500;
+  font-weight: 700;
   text-wrap: balance;
 }
 
 .display {
   font-family: var(--font-display);
-  font-weight: 500;
-  letter-spacing: -0.015em;
+  font-weight: 750;
+  letter-spacing: -0.035em;
   line-height: 1.02;
 }
 
 .page-title {
   font-family: var(--font-display);
-  font-weight: 500;
+  font-weight: 750;
   font-size: clamp(2.5rem, 7.5vw, 4.4rem);
   line-height: 1;
-  letter-spacing: -0.018em;
+  letter-spacing: -0.04em;
   margin-top: 1rem;
 }
 
 .section-title {
   font-family: var(--font-display);
-  font-weight: 500;
+  font-weight: 750;
   font-size: clamp(1.9rem, 4.6vw, 2.8rem);
   line-height: 1.05;
-  letter-spacing: -0.012em;
+  letter-spacing: -0.035em;
 }
 
 p {
@@ -125,7 +125,7 @@ p {
 
 .label,
 .eyebrow {
-  font-family: var(--font-mono);
+  font-family: var(--font-label);
   font-size: var(--step--2);
   font-weight: 500;
   letter-spacing: 0.13em;
@@ -147,7 +147,7 @@ p {
   padding: 0;
   list-style: none;
   clip-path: inset(0 0 0 1.6em);
-  font-family: var(--font-mono);
+  font-family: var(--font-label);
   font-size: var(--step--2);
   font-weight: 500;
   letter-spacing: 0.13em;
@@ -169,7 +169,7 @@ p {
 }
 
 .mono {
-  font-family: var(--font-mono);
+  font-family: var(--font-label);
 }
 
 .muted {
@@ -209,7 +209,7 @@ a:hover {
 
 /* "Read more →" style links in mono. */
 .more {
-  font-family: var(--font-mono);
+  font-family: var(--font-label);
   font-size: var(--step--1);
   font-weight: 500;
   letter-spacing: 0.02em;
@@ -306,10 +306,10 @@ a:hover {
 .prose h2 {
   margin-top: 2.6rem;
   font-family: var(--font-display);
-  font-weight: 500;
-  font-size: clamp(1.55rem, 3.2vw, 1.95rem);
-  line-height: 1.12;
-  letter-spacing: -0.01em;
+  font-weight: 700;
+  font-size: clamp(1.5rem, 3.2vw, 1.85rem);
+  line-height: 1.15;
+  letter-spacing: -0.025em;
 }
 
 .prose h3 {
@@ -339,7 +339,7 @@ a:hover {
 }
 
 .prose ol > li::marker {
-  font-family: var(--font-mono);
+  font-family: var(--font-label);
   font-size: 0.8em;
 }
 
@@ -364,7 +364,7 @@ a:hover {
 }
 
 .prose code {
-  font-family: var(--font-mono);
+  font-family: var(--font-label);
   font-size: 0.82em;
   padding: 0.1em 0.35em;
   border-radius: var(--radius);
@@ -409,7 +409,7 @@ a:hover {
 }
 
 .prose th {
-  font-family: var(--font-mono);
+  font-family: var(--font-label);
   font-size: var(--step--2);
   font-weight: 500;
   letter-spacing: 0.1em;
@@ -433,21 +433,21 @@ button {
   min-height: 44px;
   padding: 0.55em 1.1em;
   border: 1px solid var(--ink);
-  border-radius: 2px;
+  border-radius: 10px;
   background: transparent;
   color: var(--ink);
-  font-family: var(--font-mono);
-  font-size: var(--step--1);
-  font-weight: 500;
-  letter-spacing: 0.02em;
+  font-family: var(--font-label);
+  font-size: 0.92rem;
+  font-weight: 600;
+  letter-spacing: 0;
   text-decoration: none;
   cursor: pointer;
   transition: background-color 140ms var(--ease), color 140ms var(--ease), border-color 140ms var(--ease);
 }
 
 .btn:hover {
-  background: var(--ink);
-  color: var(--paper);
+  border-color: var(--accent);
+  color: var(--accent-ink);
 }
 
 .btn--primary {
@@ -456,8 +456,9 @@ button {
 }
 
 .btn--primary:hover {
-  background: var(--ink-2);
-  border-color: var(--ink-2);
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #ffffff;
 }
 
 .btn .arrow {
@@ -485,7 +486,7 @@ button {
   padding: 0.6rem 1rem;
   background: var(--ink);
   color: var(--paper);
-  font-family: var(--font-mono);
+  font-family: var(--font-label);
   font-size: var(--step--1);
   text-decoration: none;
 }

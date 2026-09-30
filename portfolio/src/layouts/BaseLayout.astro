@@ -3,17 +3,14 @@
  * The page shell every route uses: fonts, tokens and global styles, head
  * metadata, the pre-paint theme script, header, footer and analytics.
  */
-import '@fontsource-variable/bodoni-moda/opsz.css';
-import '@fontsource-variable/bodoni-moda/wght-italic.css';
-import '@fontsource-variable/newsreader/wght.css';
-import '@fontsource-variable/newsreader/wght-italic.css';
-import '@fontsource/ibm-plex-mono/400.css';
-import '@fontsource/ibm-plex-mono/500.css';
+import '@fontsource-variable/bricolage-grotesque/opsz.css';
+import '@fontsource-variable/instrument-sans/wght.css';
+import '@fontsource-variable/instrument-sans/wght-italic.css';
 import '../styles/tokens.css';
 import '../styles/global.css';
 
-import bodoniUrl from '@fontsource-variable/bodoni-moda/files/bodoni-moda-latin-opsz-normal.woff2?url';
-import newsreaderUrl from '@fontsource-variable/newsreader/files/newsreader-latin-wght-normal.woff2?url';
+import displayUrl from '@fontsource-variable/bricolage-grotesque/files/bricolage-grotesque-latin-opsz-normal.woff2?url';
+import textUrl from '@fontsource-variable/instrument-sans/files/instrument-sans-latin-wght-normal.woff2?url';
 import Analytics from '@vercel/analytics/astro';
 import Seo from '../components/Seo.astro';
 import SiteFooter from '../components/SiteFooter.astro';
@@ -48,15 +45,6 @@ const {
 
 // Vercel Web Analytics only in builds on Vercel, where its script is served from this site's own domain.
 const onVercel = process.env.VERCEL === '1';
-
-/*
- * Bodoni Moda draws hyphens and dashes as ~0.2px hairlines, which vanish on
- * screen ("Risk-Tiered" reads as "Risk Tiered"). This face covers only the
- * dash characters and borrows them from Newsreader (the same file the body
- * text already loads); it comes first in --font-display, so headings keep
- * Bodoni for everything else.
- */
-const dashFace = `@font-face{font-family:'Display Dashes';font-style:normal;font-weight:200 800;font-display:swap;src:url(${newsreaderUrl}) format('woff2-variations');unicode-range:U+002D,U+2010-2015,U+2212}`;
 ---
 
 <!doctype html>
@@ -65,14 +53,13 @@ const dashFace = `@font-face{font-family:'Display Dashes';font-style:normal;font
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="light dark" />
-    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#faf9f5" />
-    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#141413" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0e1014" />
     <meta name="author" content={SITE.name} />
     <meta name="generator" content={Astro.generator} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="preload" href={bodoniUrl} as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href={newsreaderUrl} as="font" type="font/woff2" crossorigin />
-    <style is:inline set:html={dashFace} />
+    <link rel="preload" href={displayUrl} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={textUrl} as="font" type="font/woff2" crossorigin />
     <script is:inline>
       (function () {
         var root = document.documentElement;

@@ -5,7 +5,9 @@
  * a short bio, recent writing and contact. Everything below the thesis is
  * derived from the content, so new Markdown files show up here on their own.
  */
+import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import portrait from '../assets/george-andersen.jpg';
 import ContactBand from '../components/ContactBand.astro';
 import FrameworkCard from '../components/FrameworkCard.astro';
 import PostList from '../components/PostList.astro';
@@ -85,7 +87,7 @@ const personLd = {
           <ol class="methods">
             {methods.map((framework) => (
               <li>
-                <FrameworkCard framework={framework} number={site.numberOf(framework)} projects={site.projectsFor(framework).applied} />
+                <FrameworkCard framework={framework} number={site.numberOf(framework)} color={site.colorOf(framework)} projects={site.projectsFor(framework).applied} />
               </li>
             ))}
           </ol>
@@ -113,7 +115,7 @@ const personLd = {
           </header>
           <div class="proof">
             {proof.map((project) => (
-              <ProjectCard project={project} frameworks={site.frameworksFor(project)} numberOf={site.numberOf} />
+              <ProjectCard project={project} frameworks={site.frameworksFor(project)} numberOf={site.numberOf} colorOf={site.colorOf} />
             ))}
           </div>
         </div>
@@ -123,8 +125,11 @@ const personLd = {
 
   <section class="section" aria-labelledby="about-title">
     <div class="wide about">
-      <h2 id="about-title" class="label">About</h2>
+      <figure class="portrait">
+        <Image src={portrait} alt={SITE.bio.portraitAlt} widths={[240, 400]} sizes="(min-width: 900px) 12rem, 9rem" loading="lazy" />
+      </figure>
       <div class="about-body">
+        <h2 id="about-title" class="label">About</h2>
         <ol class="path" aria-label="Career path">
           {SITE.bio.path.map((step) => <li>{step}</li>)}
         </ol>
@@ -175,10 +180,10 @@ const personLd = {
   .hero-title {
     max-width: 3.9em;
     font-family: var(--font-display);
-    font-weight: 500;
+    font-weight: 800;
     font-size: clamp(3.6rem, 22vw, 8.4rem);
     line-height: 0.94;
-    letter-spacing: -0.024em;
+    letter-spacing: -0.045em;
   }
 
   /* Wide screens: the dek sits beside the headline, on its last line. */
@@ -199,13 +204,11 @@ const personLd = {
     }
   }
 
+  /* One stripe per framework color under the key word: the site's signature. */
   .emphasis {
-    text-decoration-line: underline;
-    text-decoration-style: dotted;
-    text-decoration-color: var(--accent);
-    text-decoration-thickness: 0.032em;
-    text-underline-offset: 0.08em;
-    text-decoration-skip-ink: none;
+    padding-bottom: 0.06em;
+    background: linear-gradient(90deg, var(--fw-0) 0 25%, var(--fw-1) 25% 50%, var(--fw-2) 50% 75%, var(--fw-3) 75% 100%)
+      no-repeat 0 96% / 100% 0.1em;
   }
 
   .hero-dek {
@@ -234,8 +237,8 @@ const personLd = {
     padding: 1rem 0 0;
     list-style: none;
     border-top: 1px solid var(--rule);
-    font-family: var(--font-mono);
-    font-size: 0.66rem;
+    font-family: var(--font-label);
+    font-size: 0.74rem;
     font-weight: 500;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -276,21 +279,20 @@ const personLd = {
 
   .methods {
     display: grid;
-    gap: 2.5rem;
+    gap: 1rem;
     margin: 0;
     padding: 0;
     list-style: none;
   }
 
   .methods > li {
-    padding-top: 1.2rem;
-    border-top: 1px solid var(--ink);
+    min-width: 0;
   }
 
   @media (min-width: 900px) {
     .methods {
       grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
-      gap: 0 clamp(1.5rem, 3vw, 2.75rem);
+      gap: 1rem;
     }
   }
 
@@ -312,7 +314,24 @@ const personLd = {
 
   .about {
     display: grid;
-    gap: 1.2rem 2rem;
+    gap: 1.6rem 3rem;
+    align-items: start;
+  }
+
+  .portrait {
+    width: 9rem;
+    margin: 0;
+    padding-bottom: 6px;
+    background: linear-gradient(90deg, var(--fw-0) 0 25%, var(--fw-1) 25% 50%, var(--fw-2) 50% 75%, var(--fw-3) 75% 100%)
+      no-repeat 0 100% / 100% 6px;
+  }
+
+  .portrait :global(img) {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 16px 16px 0 0;
+    filter: grayscale(1);
   }
 
   .about-body {
@@ -328,8 +347,8 @@ const personLd = {
     margin: 0;
     padding: 0;
     list-style: none;
-    font-family: var(--font-mono);
-    font-size: 0.66rem;
+    font-family: var(--font-label);
+    font-size: 0.74rem;
     font-weight: 500;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -355,6 +374,10 @@ const personLd = {
   @media (min-width: 900px) {
     .about {
       grid-template-columns: 12rem minmax(0, 1fr);
+    }
+
+    .portrait {
+      width: 12rem;
     }
   }
 </style>

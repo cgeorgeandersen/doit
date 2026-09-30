@@ -13,11 +13,12 @@ interface Props {
   project: Project;
   frameworks: Framework[];
   numberOf: (framework: Framework) => string | undefined;
+  colorOf: (framework: Framework) => 0 | 1 | 2 | 3;
   layout?: 'stack' | 'row';
   headingLevel?: 'h2' | 'h3';
 }
 
-const { project, frameworks, numberOf, layout = 'stack', headingLevel = 'h3' } = Astro.props;
+const { project, frameworks, numberOf, colorOf, layout = 'stack', headingLevel = 'h3' } = Astro.props;
 const { title, summary, status, date, cover, liveUrl, draft } = project.data;
 const Heading = headingLevel;
 const href = `/projects/${project.id}`;
@@ -46,7 +47,7 @@ const sizes = layout === 'row' ? '(min-width: 900px) 24rem, calc(100vw - 32px)' 
           <p class="label">Puts into practice</p>
           <ul>
             {frameworks.map((f) => (
-              <li>
+              <li data-fw={colorOf(f)}>
                 <a href={`/frameworks/${f.id}`}>
                   {numberOf(f) && <span class="num">{numberOf(f)}</span>}
                   <span class="name">{f.data.title}</span>
@@ -109,10 +110,10 @@ const sizes = layout === 'row' ? '(min-width: 900px) 24rem, calc(100vw - 32px)' 
 
   .title {
     font-family: var(--font-display);
-    font-weight: 500;
-    font-size: clamp(1.7rem, 3.4vw, 2.2rem);
-    line-height: 1.05;
-    letter-spacing: -0.01em;
+    font-weight: 750;
+    font-size: clamp(1.6rem, 3.2vw, 2.05rem);
+    line-height: 1.08;
+    letter-spacing: -0.035em;
   }
 
   .summary {
@@ -154,11 +155,21 @@ const sizes = layout === 'row' ? '(min-width: 900px) 24rem, calc(100vw - 32px)' 
     text-decoration-thickness: 2px;
   }
 
+  /* The framework's color dot, then its numeral in that color. */
+  .practice a::before {
+    content: '';
+    flex: none;
+    width: 0.62rem;
+    height: 0.62rem;
+    border-radius: 50%;
+    background: var(--fw);
+  }
+
   .num {
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    font-weight: 500;
-    color: var(--accent-ink);
+    font-family: var(--font-label);
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--fw-ink);
   }
 
   .actions {
