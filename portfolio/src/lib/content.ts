@@ -183,7 +183,7 @@ function brokenLink(entry: Project | Framework, field: string, id: string, colle
 
 // ---------- Element symbols ----------
 
-/** Words skipped when making a symbol: "Make AI Boring" is Mb, not Ma. */
+/** Words skipped when making a symbol: "The AI Playbook" is Pl, not Ta. */
 const SYMBOL_SKIP = new Set(['ai', 'a', 'an', 'and', 'the', 'of', 'to', 'for', 'in', 'on']);
 
 function symbolWords(title: string): string[] {

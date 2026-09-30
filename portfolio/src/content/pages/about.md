@@ -33,4 +33,4 @@ I studied journalism, edited the student newspaper and directed the campus news 
 
 Making complex things clear. In a newsroom that meant a story. In analytics it meant a decision. With AI it means a system people can rely on, because they understand what it's good at and where it fails.
 
-That's what I mean by making AI boring.
+That's what I mean when I say AI should be boring.

@@ -34,7 +34,7 @@ export const SITE = {
 
   /** Used when a page has no description of its own (and by search engines for the home page). */
   description:
-    'Analytics and AI leader George Andersen on making AI boring: methods for getting AI into production, and live projects that prove them.',
+    'Analytics and AI leader George Andersen on why AI should be boring: methods for getting AI into production, and live projects that prove them.',
 
   lang: 'en',
   locale: 'en-US',
@@ -47,7 +47,7 @@ export const SITE = {
      */
     lead: 'AI today is {magic} alchemy.',
     leadAnswer: 'My job is turning it into chemistry.',
-    headline: 'Make AI boring.',
+    headline: 'AI should be boring.',
     emphasis: 'boring',
     dek: 'Real value comes from AI that’s in production, measured, and trusted exactly as far as it’s reliable. These are the methods I use to get there, and the work that proves them.',
     linkLabel: 'Read the philosophy',
@@ -56,7 +56,7 @@ export const SITE = {
   home: {
     methodsHeading: 'How I think',
     methodsIntro:
-      'Make AI boring is the philosophy. Three methods put it to work at three altitudes: the portfolio, the workflow, and the single decision.',
+      'The philosophy: AI should be boring. Three methods put it to work at three altitudes: the portfolio, the workflow, and the single decision.',
     proofHeading: 'The proof',
     proofIntro: 'Frameworks are claims until something ships. Each project below puts at least one of them into practice.',
     writingHeading: 'Latest lab notes',

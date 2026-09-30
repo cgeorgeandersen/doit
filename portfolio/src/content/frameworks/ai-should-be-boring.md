@@ -1,11 +1,12 @@
 ---
-title: "Make AI Boring"
+title: "AI Should Be Boring"
 thesis: "AI earns its keep in the boring part: in production, measured, and trusted exactly as far as it's reliable."
 kind: philosophy
 question: "What is AI for?"
 date: 2026-09-29
 lastReviewed: 2026-09-29
 order: 0
+symbol: "Bo"
 reaction:
   inputs: ["Clear scope", "Measurement", "An owner"]
   output: "AI you can rely on"
@@ -28,13 +29,13 @@ Alchemy didn't become chemistry by finding new ingredients. It became chemistry 
 
 For centuries, alchemists worked with the same metals, acids and furnaces that chemists would later use. What changed was the method. In 1661 Robert Boyle argued that claims should be tested by experiment, and a century later Antoine Lavoisier weighed everything before and after a reaction. Same materials, now measured, written down and repeatable.
 
-Most AI work today is still alchemy: impressive once, hard to repeat, and occasionally explosive. Making AI boring is the move to chemistry, and the frameworks on this site are the lab protocols.
+Most AI work today is still alchemy: impressive once, hard to repeat, and occasionally explosive. The goal is chemistry: AI that's boring because it works the same way every time. The frameworks on this site are the lab protocols.
 
 ## The idea
 
 The most useful technologies end up boring. Nobody gets excited about electricity or spreadsheets. People rely on them because they work the same way every time and everyone knows what they're for.
 
-AI isn't there yet. Most of the conversation is about demos, and most of the value is stuck in pilots. "Make AI boring" is my shorthand for the work of getting it out: four commitments that turn a promising tool into a dependable one.
+AI isn't there yet. Most of the conversation is about demos, and most of the value is stuck in pilots. "AI should be boring" is my shorthand for the work of getting it out: four commitments that turn a promising tool into a dependable one.
 
 - **Production over pilots.** A pilot proves something can work once, with the right people watching. Production means it works on an ordinary Tuesday, with ordinary data, when nobody is watching. That's the only place value shows up.
 - **Measurable results over demos.** A demo shows what a system can do at its best. A measure shows what it does on average, and how often it fails. Agree on the number before you build, and don't call it a success without it.
