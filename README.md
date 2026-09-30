@@ -4,7 +4,7 @@ This repository holds three websites and an old iOS app.
 
 | Folder | What it is | Live at |
 | --- | --- | --- |
-| [`portfolio/`](portfolio/) | **George Andersen's portfolio**: frameworks for making AI useful, and the projects that prove them | Vercel, with Root Directory `portfolio` |
+| [`portfolio/`](portfolio/) | **George Andersen's portfolio**: frameworks for making AI useful, and the projects that prove them | [georgeandersen.net](https://www.georgeandersen.net) (Vercel, with Root Directory `portfolio`) |
 | [`what-do-i-actually-do/`](what-do-i-actually-do/) | **What Do I Actually Do?** Map your work in two minutes and see what needs a fix, what a tool can take over and what needs you. | Vercel, from the repository root; also [GitHub Pages](https://cgeorgeandersen.github.io/doit/) |
 | [`confident-machine/`](confident-machine/) | **The Confident Machine**, an interactive essay on how to live and work with AI | [Vercel](https://doit-t17l.vercel.app), with Root Directory `confident-machine` |
 | `Doit/`, `Doit.xcodeproj/` | A 2019 iOS to-do app | Not deployed |

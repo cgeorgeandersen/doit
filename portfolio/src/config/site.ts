@@ -23,11 +23,11 @@ export const SITE = {
   name: 'George Andersen',
 
   /**
-   * The site's address, e.g. 'https://georgeandersen.com'. Leave it empty until
-   * you connect a domain: builds on Vercel then use the project's production
-   * domain automatically, so links, the sitemap, RSS and share images stay right.
+   * The site's address: links, the sitemap, RSS and share images all use it.
+   * Use the address visitors end up on (georgeandersen.net redirects to www).
+   * Left empty, builds on Vercel fall back to the project's production domain.
    */
-  url: '',
+  url: 'https://www.georgeandersen.net',
 
   /** How the site describes you: under your photo, page titles, share images. */
   role: 'Analytics & AI leader',

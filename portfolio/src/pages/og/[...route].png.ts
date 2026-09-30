@@ -20,7 +20,7 @@ function sourcePath(image: unknown): string | undefined {
 
 export const getStaticPaths = (async () => {
   const site = await getSite();
-  const host = new URL(import.meta.env.SITE ?? 'http://localhost').hostname;
+  const host = domainOf(import.meta.env.SITE ?? 'http://localhost');
   const byline = host === 'localhost' ? SITE.name : host;
   const live = site.projects.filter((p) => p.data.status === 'live').length;
   const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`;
