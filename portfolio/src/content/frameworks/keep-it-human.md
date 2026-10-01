@@ -5,6 +5,7 @@ question: "Who holds the judgment?"
 date: 2026-10-01
 lastReviewed: 2026-10-01
 order: 4
+symbol: "Kh"
 failureModes:
   - name: "Tired people hand off the hard part"
     risk: "Keeping the judgment takes effort every time, and the easiest moment to let it slip is the end of a long day."

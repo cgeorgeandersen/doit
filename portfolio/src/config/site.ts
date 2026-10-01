@@ -49,7 +49,7 @@ export const SITE = {
     leadAnswer: 'Let’s turn it into chemistry.',
     headline: 'AI should be boring.',
     emphasis: 'boring',
-    dek: 'Real value comes from AI that’s in production, measured, and trusted exactly as far as it’s reliable. These are the methods I use to get there, and the work that proves them.',
+    dek: 'Real value comes from AI that’s in production, measured, and trusted exactly as far as it’s reliable. These are the methods we can use to get there, and the work that proves them.',
     linkLabel: 'Read the philosophy',
   },
 
