@@ -84,8 +84,8 @@ export const SITE = {
       item: 'Lab note',
       title: 'Lab notes',
       description: 'Working notes on getting AI into production, numbered and dated like a lab notebook.',
-      /** Shown under the intro on the Lab notes page. Set it to '' to remove it. */
-      note: 'Writing is one of the things I believe should stay human. Every lab note here is written by me: some entirely, some drafted by me and then edited with AI.',
+      /** Shown under the intro on the Lab notes page; *words* in asterisks are italic. Set it to '' to remove it. */
+      note: 'Writing is one of the things I think should stay human. Communication is an extension of thinking, and it’s easy to let things slip. For this reason, I’m keeping my lab notes *mostly me* and relying on AI only for basic editing and polish. I don’t want to read AI blogs, and you don’t either. So I’ll keep that promise or tell you when I don’t.',
     },
   },
 
