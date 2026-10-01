@@ -1,6 +1,7 @@
 ---
 title: "The Confident Machine"
 summary: "An interactive essay on calibrated trust: why AI sounds sure when it's wrong, and how to decide when to rely on it, check it, or keep the work."
+note: "This one is almost entirely done by AI. I provided the vision for what I wanted, made a couple of tweaks, and was blown away by the results. So I kept it."
 status: live
 date: 2026-09-27
 liveUrl: "https://theconfidentmachine.com"

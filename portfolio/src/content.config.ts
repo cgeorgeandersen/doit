@@ -51,6 +51,8 @@ const projects = defineCollection({
         coverAlt: z.string(explain('a short description of the cover image')).optional(),
         liveUrl: z.url(explain('a full web address starting with https://')).optional(),
         frameworks: z.array(reference('frameworks'), explain('a list of framework file names like [calibrated-trust]')).default([]),
+        /** Optional. A short aside shown under the summary on the project's page, e.g. how it was made. */
+        note: z.string(explain('a sentence or two shown under the summary on the project’s page')).transform(typeset).optional(),
         featured: z.boolean(explain('true or false')).default(false),
         order: z.number(explain('a number; lower numbers come first')).default(100),
         draft,
