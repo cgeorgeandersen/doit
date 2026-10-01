@@ -6,7 +6,7 @@ import { SITE } from '../../config/site';
 import { getSite } from '../../lib/content';
 
 const { posts, entryOf, frameworksFor, elementOf, colorOf } = await getSite();
-const { label, title, description } = SITE.sections.writing;
+const { label, title, description, note } = SITE.sections.writing;
 ---
 
 <BaseLayout title={label} description={description} image="/og/writing.png" imageAlt={`${label} by ${SITE.name}`}>
@@ -14,6 +14,7 @@ const { label, title, description } = SITE.sections.writing;
     <p class="kicker"><span>{label}</span><span><a href="/rss.xml">RSS feed</a></span></p>
     <h1 class="page-title">{title}</h1>
     <p class="dek">{description}</p>
+    {note && <p class="note">{note}</p>}
   </header>
   <div class="wide">
     {posts.length > 0 ? (
@@ -21,3 +22,11 @@ const { label, title, description } = SITE.sections.writing;
       ) : <p class="muted">Nothing published yet.</p>}
   </div>
 </BaseLayout>
+
+<style>
+  .note {
+    max-width: 38rem;
+    margin-top: 1.2rem;
+    color: var(--ink-2);
+  }
+</style>

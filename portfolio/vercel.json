@@ -26,6 +26,16 @@
       "source": "/og/writing/cyborgs-centaurs-and-reverse-centaurs.png",
       "destination": "/og/writing/passengers-centaurs-and-reverse-centaurs.png",
       "permanent": true
+    },
+    {
+      "source": "/writing/why-i-built-this-site",
+      "destination": "/writing",
+      "permanent": true
+    },
+    {
+      "source": "/og/writing/why-i-built-this-site.png",
+      "destination": "/og/writing.png",
+      "permanent": true
     }
   ]
 }
