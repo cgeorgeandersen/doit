@@ -56,7 +56,7 @@ export const SITE = {
   home: {
     methodsHeading: 'How I think',
     methodsIntro:
-      'The philosophy: AI should be boring. Three methods put it to work at three altitudes: the portfolio, the workflow, and the single decision.',
+      'The philosophy: AI should be boring. Four methods put it to work at four altitudes: the portfolio, the workflow, the single decision, and the person making it.',
     proofHeading: 'The proof',
     proofIntro: 'Frameworks are claims until something ships. Each project below puts at least one of them into practice.',
     writingHeading: 'Latest lab notes',
@@ -76,7 +76,7 @@ export const SITE = {
     frameworks: {
       label: 'Frameworks',
       title: 'How I think',
-      description: 'The methods I use to get AI into production: what to do first, where it fits in the work, and how far to trust it.',
+      description: 'The methods I use to get AI into production: what to do first, where it fits in the work, how far to trust it, and who holds the judgment.',
     },
     writing: {
       label: 'Lab notes',

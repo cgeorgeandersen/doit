@@ -26,7 +26,7 @@ export interface OgCard {
   /** Absolute path of a cover image to show beside the text (projects). */
   image?: string | undefined;
   /** An element tile to show beside the text (frameworks); `color` is the framework's slot. */
-  element?: { number: number; symbol: string; kind: string; color: 0 | 1 | 2 | 3 } | undefined;
+  element?: { number: number; symbol: string; kind: string; color: 0 | 1 | 2 | 3 | 4 } | undefined;
 }
 
 const W = 1200;
@@ -39,10 +39,10 @@ const INK_3 = '#5c6370';
 const PAPER = '#ffffff';
 const RULE = '#e2e5ea';
 const FRESH = '#0a7568';
-/** The framework colors (tokens.css --fw-0 … --fw-3): the stripe and the dot mark. */
-const FW = ['#6b45f0', '#2759f5', '#f2553a', '#0fa08e'];
+/** The framework colors (tokens.css --fw-0 … --fw-4). The stripe and the dot mark use the first four. */
+const FW = ['#6b45f0', '#2759f5', '#f2553a', '#0fa08e', '#e0a400'];
 /** Their text twins (--fw-N-ink), for the element tile's number and symbol. */
-const FW_INK = ['#5733d9', '#1d47cf', '#c23a21', '#0a7568'];
+const FW_INK = ['#5733d9', '#1d47cf', '#c23a21', '#0a7568', '#806000'];
 
 /** A color mixed into white, like the tiles' color-mix(in srgb, var(--fw) 9%, var(--paper)). */
 function tint(hex: string, amount: number): string {
@@ -76,7 +76,7 @@ function loadFonts() {
 
 /** The four-color stripe, as a row of four equal bars. */
 function stripe(height: number): Node {
-  return h('div', { display: 'flex', height, width: '100%' }, ...FW.map((background) => h('div', { flex: 1, background })));
+  return h('div', { display: 'flex', height, width: '100%' }, ...FW.slice(0, 4).map((background) => h('div', { flex: 1, background })));
 }
 
 /** The site's mark: one dot per framework color, two by two. */

@@ -54,9 +54,9 @@ export interface Site {
   entryOf(post: Post): string;
   /**
    * The framework's color slot for data-fw (see tokens.css): 0 for the
-   * philosophy, then 1, 2, 3 for the methods in order, repeating after three.
+   * philosophy, then 1, 2, 3, 4 for the methods in order, repeating after four.
    */
-  colorOf(framework: Framework): 0 | 1 | 2 | 3;
+  colorOf(framework: Framework): 0 | 1 | 2 | 3 | 4;
 }
 
 /** Top-level routes a standalone page must not take over. */
@@ -145,7 +145,7 @@ async function loadSite(): Promise<Site> {
     entryOf: (post) => String(oldestFirst.findIndex((p) => p.id === post.id) + 1).padStart(3, '0'),
     colorOf: (framework) => {
       const index = methods.findIndex((m) => m.id === framework.id);
-      return index < 0 ? 0 : (((index % 3) + 1) as 1 | 2 | 3);
+      return index < 0 ? 0 : (((index % 4) + 1) as 1 | 2 | 3 | 4);
     },
   };
 }

@@ -31,6 +31,8 @@
   --fw-2-ink: #c23a21;
   --fw-3: #0fa08e;
   --fw-3-ink: #0a7568;
+  --fw-4: #e0a400;
+  --fw-4-ink: #806000;
 
   /* The site accent is the first method's cobalt: links, focus, "live". */
   --accent: var(--fw-1);
@@ -86,6 +88,8 @@
     --fw-2-ink: #ff9a86;
     --fw-3: #2ccdb8;
     --fw-3-ink: #5fe0ce;
+    --fw-4: #f0c23a;
+    --fw-4-ink: #f5cf5c;
     --accent-wash: rgb(110 143 255 / 0.12);
     --fresh: #2ccdb8;
     --stale: #c3862e;
@@ -113,6 +117,8 @@
   --fw-2-ink: #ff9a86;
   --fw-3: #2ccdb8;
   --fw-3-ink: #5fe0ce;
+  --fw-4: #f0c23a;
+  --fw-4-ink: #f5cf5c;
   --accent-wash: rgb(110 143 255 / 0.12);
   --fresh: #2ccdb8;
   --stale: #c3862e;
@@ -126,3 +132,4 @@
 [data-fw='1'] { --fw: var(--fw-1); --fw-ink: var(--fw-1-ink); }
 [data-fw='2'] { --fw: var(--fw-2); --fw-ink: var(--fw-2-ink); }
 [data-fw='3'] { --fw: var(--fw-3); --fw-ink: var(--fw-3-ink); }
+[data-fw='4'] { --fw: var(--fw-4); --fw-ink: var(--fw-4-ink); }

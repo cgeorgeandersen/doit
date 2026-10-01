@@ -97,7 +97,7 @@ failureModes:
     output: "AI you can rely on"
   ```
 - **lastReviewed** is the last time you re-read it and still stood behind it. After 180 days its stamp turns amber and says "may be out of date". Run `npm run check:reviews` to see what's due.
-- If a new framework changes the count, update the "Three methods…" sentence (`methodsIntro`) in `site.ts`.
+- If a new framework changes the count, update the "Four methods…" sentence (`methodsIntro`) in `site.ts`.
 
 ## Add a lab note
 
