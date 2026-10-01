@@ -9,7 +9,7 @@ I help organizations get AI out of pilots and into production. I got here throug
 
 ## AI strategy and governance
 
-Today I lead AI enablement for a large commercial organization. I work with directors to find the AI use cases worth pursuing, guide them through intake and governance, track each pilot's progress, risks and decisions, and report to senior leadership on what's working.
+Today I help lead AI enablement for a large commercial organization. I work with directors to find the AI use cases worth pursuing, guide them through intake and governance, track each pilot's progress, risks and decisions, and report to senior leadership on what's working.
 
 AI is the most powerful tool I've worked with, the least understood, and the easiest to oversell. The job is deciding where it fits, which initiatives go first, and how far to trust the result, and building things that make AI understandable and useful for people who don't work in tech.
 

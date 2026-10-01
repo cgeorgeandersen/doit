@@ -89,7 +89,7 @@ export const SITE = {
 
   /** The short bio on the home page. The full story is src/content/pages/about.md. */
   bio: {
-    text: 'Today I lead AI enablement for a large commercial organization: finding where AI fits, guiding it through governance, and reporting what it actually delivers. I got here through analytics, turning marketing and commerce data into decisions teams could act on. The habit underneath it all started with a journalism degree: make complicated things clear to people with no time to spare.',
+    text: 'Today I help lead AI enablement for a large commercial organization: finding where AI fits, guiding it through governance, and reporting what it actually delivers. I got here through analytics, turning marketing and commerce data into decisions teams could act on. The habit underneath it all started with a journalism degree: make complicated things clear to people with no time to spare.',
     linkLabel: 'More about my path',
     /** Your headshot is src/assets/george-andersen.jpg: replace that file to change it everywhere. */
     portraitAlt: 'George Andersen',
