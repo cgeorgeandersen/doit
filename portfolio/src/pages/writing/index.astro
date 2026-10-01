@@ -5,7 +5,7 @@ import PostList from '../../components/PostList.astro';
 import { SITE } from '../../config/site';
 import { getSite } from '../../lib/content';
 
-const { posts, entryOf } = await getSite();
+const { posts, entryOf, frameworksFor, elementOf, colorOf } = await getSite();
 const { label, title, description } = SITE.sections.writing;
 ---
 
@@ -16,6 +16,8 @@ const { label, title, description } = SITE.sections.writing;
     <p class="dek">{description}</p>
   </header>
   <div class="wide">
-    {posts.length > 0 ? <PostList posts={posts} entryOf={entryOf} /> : <p class="muted">Nothing published yet.</p>}
+    {posts.length > 0 ? (
+        <PostList posts={posts} entryOf={entryOf} frameworksFor={frameworksFor} elementOf={elementOf} colorOf={colorOf} />
+      ) : <p class="muted">Nothing published yet.</p>}
   </div>
 </BaseLayout>
