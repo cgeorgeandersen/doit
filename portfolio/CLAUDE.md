@@ -44,7 +44,7 @@ Four collections (`src/content.config.ts`), each a folder of `.md` files; the fi
 
 | Collection | Required fields | Optional fields |
 | --- | --- | --- |
-| `projects` | `title`, `summary` (≤160), `status` (`live` / `in progress` / `archived`), `date` | `tags`, `cover` + `coverAlt`, `liveUrl` (required if live), `frameworks` (references), `featured`, `order` (default 100), `draft` |
+| `projects` | `title`, `summary` (≤160), `status` (`live` / `in progress` / `archived`), `date` | `tags`, `cover` + `coverAlt`, `liveUrl` (required if live), `frameworks` (references), `note` (an aside under the summary on the project page), `featured`, `order` (default 100), `draft` |
 | `frameworks` | `title`, `thesis` (≤200), `date`, `lastReviewed`, `failureModes` (≥1 × `name` / `risk` / `precaution`) | `relatedProjects`, `kind` (`method` / `philosophy`), `question`, `order`, `symbol` (`Ct`), `reaction` (`inputs` ≥2, `output`), `draft` |
 | `writing` (shown as "Lab notes") | `title`, `date` | `summary` (subtitle and list text; without it, `openingOf()` gives search and link previews the note's opening sentences), `frameworks` (references), `tags`, `lastReviewed`, `draft` |
 | `pages` | `title`, `description` | `image` + `imageAlt` (a photo beside the title), `draft` |

@@ -57,6 +57,7 @@ What happened: where it's live, and anything you can measure or quote.
 - **status** is `live`, `in progress` or `archived`. A live project needs its `liveUrl`.
 - **frameworks** lists the frameworks it puts into practice, by file name without `.md` (look in `src/content/frameworks/`). The framework's page lists the project automatically; you don't edit the framework.
 - **cover** is optional. Save the image next to the Markdown file. Wide images work best (1200 × 630 is ideal); the project's own share image or a screenshot of its first screen are good choices. If you add a cover, add `coverAlt` too.
+- **note** is optional: a sentence or two shown under the summary on the project's page, such as how it was made (`note: "This one is almost entirely done by AI…"`).
 - **featured: true** puts it on the home page. **order** sorts projects: lower numbers first.
 - Add `draft: true` to keep a project off the published site while you work on it. Drafts still show in `npm run dev`.
 
