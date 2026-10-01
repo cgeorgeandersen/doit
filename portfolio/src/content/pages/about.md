@@ -1,6 +1,6 @@
 ---
 title: "About"
-description: "Analytics and AI leader: from marketing and commerce analytics to AI strategy and governance, with one habit throughout: making complex things clear."
+description: "Analytics leader and AI champion: from marketing and commerce analytics to AI strategy and governance, with one habit throughout: making complex things clear."
 image: ../../assets/george-andersen.jpg
 imageAlt: "George Andersen"
 ---

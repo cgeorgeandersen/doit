@@ -30,11 +30,11 @@ export const SITE = {
   url: 'https://www.georgeandersen.net',
 
   /** How the site describes you: under your photo, page titles, share images. */
-  role: 'Analytics & AI leader',
+  role: 'Analytics leader & AI champion',
 
   /** Used when a page has no description of its own (and by search engines for the home page). */
   description:
-    'Analytics and AI leader George Andersen on why AI should be boring: methods for getting AI into production, and live projects that prove them.',
+    'Analytics leader and AI champion George Andersen on why AI should be boring: methods for getting AI into production, and live projects that prove them.',
 
   lang: 'en',
   locale: 'en-US',
@@ -46,7 +46,7 @@ export const SITE = {
      * skipped by screen readers). Set both to '' to remove the line.
      */
     lead: 'AI today is {magic} alchemy.',
-    leadAnswer: 'My job is turning it into chemistry.',
+    leadAnswer: 'Let’s turn it into chemistry.',
     headline: 'AI should be boring.',
     emphasis: 'boring',
     dek: 'Real value comes from AI that’s in production, measured, and trusted exactly as far as it’s reliable. These are the methods I use to get there, and the work that proves them.',
