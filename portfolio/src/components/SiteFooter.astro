@@ -31,7 +31,19 @@ const thisYear = new Date().getUTCFullYear();
       {SITE.footer.privacy}
       {' '}<a href={SITE.footer.privacyUrl}>How it works</a>
     </p>
-    {SITE.footer.credit && <p class="note">{SITE.footer.credit}</p>}
+    {
+      SITE.footer.credit && (
+        <p class="note">
+          {SITE.footer.credit}
+          {SITE.footer.creditLink && (
+            <>
+              {' '}
+              <a href={SITE.footer.creditLink.href}>{SITE.footer.creditLink.text}</a>
+            </>
+          )}
+        </p>
+      )
+    }
   </div>
 </footer>
 

@@ -11,7 +11,7 @@
 import { defineCollection, reference } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
-import { AUTHORSHIPS } from './lib/authorship';
+import { OWNERS, WRITERS } from './lib/authorship';
 import { PROJECT_STATUSES } from './lib/status';
 import { typeset } from './lib/typeset';
 
@@ -120,13 +120,20 @@ const writing = defineCollection({
     /** Frameworks the note applies: a tag on the note, and the note appears under "Applied in" on each framework. */
     frameworks: z.array(reference('frameworks'), explain('a list of framework file names like [calibrated-trust]')).default([]),
     lastReviewed: date().optional(),
-    /** Who wrote it, shown as a label beside the review stamp (see src/lib/authorship.ts). */
-    authorship: z.enum(
-      AUTHORSHIPS,
-      explain(
-        'who wrote the note: me, mostly-me, mostly-ai, or ai',
-        'use exactly one of: me (written by me), mostly-me (written by me, edited with AI), mostly-ai (drafted with AI, rewritten by me), ai (written by AI, checked by me)',
-      ),
+    /** Who did what: the ideas, the writing and the final call, shown as a label on the note (see src/lib/authorship.ts). */
+    authorship: z.object(
+      {
+        ideas: z.enum(OWNERS, explain('who had the ideas: me, shared, or ai', 'use exactly one of: me, shared, ai')),
+        writing: z.enum(
+          WRITERS,
+          explain(
+            'who wrote the words: me, edited-with-ai, rewritten-from-ai, or ai-drafted',
+            'use exactly one of: me, edited-with-ai (written by me, edited with AI), rewritten-from-ai (drafted with AI, rewritten by me), ai-drafted (AI-drafted, edited by me)',
+          ),
+        ),
+        finalCall: z.enum(OWNERS, explain('who made the final call: me, shared, or ai', 'use exactly one of: me, shared, ai')),
+      },
+      explain('three lines under it: ideas, writing and finalCall (see HOW-TO-ADD-CONTENT.md)'),
     ),
     draft,
   }),
