@@ -63,14 +63,14 @@ Rules that matter:
 ### Adding each type (the owner's templates are in HOW-TO-ADD-CONTENT.md)
 
 - **Project:** `src/content/projects/<slug>.md` (+ optional `<slug>.png` cover next to it). Link frameworks by file name. The body is an experiment write-up with four `##` sections, numbered by CSS on the project page: Hypothesis (its first paragraph is the claim, set as a lede) / Method / Result / What I'd change.
-- **Framework:** `src/content/frameworks/<slug>.md` with two body sections, The idea / Why it works, and its failure modes in frontmatter (rendered by `FailureModes.astro` after the body). An opening paragraph before the first heading is set as a lede (AI Should Be Boring uses this for the alchemy history). If the number of methods changes, update `home.methodsIntro` in `site.ts` (it says "Three methods").
+- **Framework:** `src/content/frameworks/<slug>.md` with two body sections, The idea / Why it works, and its failure modes in frontmatter (rendered by `FailureModes.astro` after the body). An opening paragraph before the first heading is set as a lede (AI Should Be Boring uses this for the alchemy history). If the number of methods changes, update `home.methodsIntro` in `site.ts` (it says "Four methods").
 - **Lab note:** `src/content/writing/<slug>.md`. George writes these himself: publish them as written, formatting only. Don't add a summary, tags, framework links or other words he didn't ask for.
 - **Page:** `src/content/pages/<slug>.md`, then a `nav` entry in `site.ts` (and optionally `contact.cta`).
 - **A new content type** (rare): add a collection with `explain()` messages, load it in `getSite()`, add index/detail pages, add share-image cards in `src/pages/og/[...route].png.ts`, add it to RSS if it's dated, and document it in both guides.
 
 ## Design system: "Studio"
 
-Clean and modern with a controlled burst of color: a white page, near-black type, and four framework colors that do real work (they tell you which framework you're looking at). Business-first, not a template: no stock gradients, no illustrations, no shadows everywhere.
+Clean and modern with a controlled burst of color: a white page, near-black type, and five framework colors that do real work (they tell you which framework you're looking at). Business-first, not a template: no stock gradients, no illustrations, no shadows everywhere.
 
 **Palette** (`src/styles/tokens.css`; dark values redefined twice, for the OS setting and for `data-theme="dark"`, so the toggle wins both ways):
 
@@ -80,15 +80,16 @@ Clean and modern with a controlled burst of color: a white page, near-black type
 | `--ink` / `--ink-2` / `--ink-3` | `#111318` / `#3e4450` / `#5c6370` | `#eef0f4` / `#b9bfca` / `#8e95a3` | text / secondary / metadata |
 | `--rule` / `--rule-strong` | `#e2e5ea` / `#c9ced6` | `#262a33` / `#3a404b` | hairlines, card borders |
 | `--fw-0` (violet) | `#6b45f0` | `#9d80ff` | the philosophy (AI Should Be Boring) |
-| `--fw-1` (cobalt) | `#2759f5` | `#6e8fff` | method 1, 4, 7…; also `--accent` (links, focus ring) |
-| `--fw-2` (coral) | `#f2553a` | `#ff7a62` | method 2, 5…; also the hazard label on Failure modes |
-| `--fw-3` (teal) | `#0fa08e` | `#2ccdb8` | method 3, 6… |
+| `--fw-1` (cobalt) | `#2759f5` | `#6e8fff` | method 1, 5, 9…; also `--accent` (links, focus ring) |
+| `--fw-2` (coral) | `#f2553a` | `#ff7a62` | method 2, 6…; also the hazard label on Failure modes |
+| `--fw-3` (teal) | `#0fa08e` | `#2ccdb8` | method 3, 7… |
+| `--fw-4` (gold) | `#e0a400` | `#f0c23a` | method 4, 8…; more yellow than the reserved amber, and never used for warnings |
 | `--fw-N-ink` | darker / lighter twins | | the same colors when used as **text** (AA on paper) |
 | `--fresh` | `#0a7568` | `#2ccdb8` | the review stamp's "current" dot |
 | `--stale` / `--stale-ink` | `#ad721c` / `#7b510d` | `#c3862e` / `#deae62` | **amber, reserved for "may be out of date"** |
 
-- **Framework colors are assigned, not chosen.** `getSite().colorOf(framework)` returns the slot: 0 for the philosophy, then methods cycle 1 → 2 → 3 by their order. Put `data-fw={colorOf(f)}` on an element and use `var(--fw)` (marks) / `var(--fw-ink)` (text) inside it. A new framework gets its color automatically; never hard-code one.
-- **The four-color stripe** (violet / cobalt / coral / teal, equal quarters) is the signature: under "boring." in the hero, under the headshot, on share images. The **four-dot mark** (two by two) is the logo in the header, favicon and share-image kicker.
+- **Framework colors are assigned, not chosen.** `getSite().colorOf(framework)` returns the slot: 0 for the philosophy, then methods cycle 1 → 2 → 3 → 4 by their order. Put `data-fw={colorOf(f)}` on an element and use `var(--fw)` (marks) / `var(--fw-ink)` (text) inside it. A new framework gets its color automatically; never hard-code one.
+- **The four-color stripe** (violet / cobalt / coral / teal, equal quarters) is the signature: under "boring." in the hero, under the headshot, on share images. The **four-dot mark** (two by two) is the logo in the header, favicon and share-image kicker. Both stay four colors (violet, cobalt, coral, teal) as the brand mark; gold, added with the fourth method, appears only on that framework's own tiles, cards and chips.
 - **Amber stays reserved.** It appears only on overdue review stamps (and draft labels in dev); using it elsewhere drains the warning of meaning. That's why coral, not orange, is a framework color.
 - **Color never carries meaning alone:** framework colors always sit beside the framework's symbol, number or name; stamps pair the dot with words; status pills use ● / ◐ / ○ plus a label; pressed filter chips are filled and carry a ✓. The one reuse is coral for hazards: the Failure modes label is always the diamond, the "!" and the words, so it can't be read as framework 2.
 - **Colored text and fills use the `-ink` twins.** The symbol chips are white-on-`--fw-N-ink` (the bright `--fw-N` fails AA behind small white text).
@@ -106,13 +107,13 @@ Clean and modern with a controlled burst of color: a white page, near-black type
 - frameworks as elements (`ElementTile.astro`: `chip` beside names, `sm` on cards, `lg` in the table on /frameworks, on each framework page and on its share image), with an optional `reaction` formula under the thesis;
 - projects written up as experiments, frameworks ending in a Failure modes safety sheet, and posts as numbered lab notes.
 
-Keep it that way: no beakers, flasks, smoke, explosions or other clip art; no parchment, gold or "magic" styling (except the struck-out word); and don't rename the plain sections (Projects, Frameworks, About). One well-placed metaphor is intriguing; a costume isn't. Every lab element must also make the content clearer: a testable hypothesis, a precaution per risk, a dated entry.
+Keep it that way: no beakers, flasks, smoke, explosions or other clip art; no parchment, gilding or "magic" styling (gold as a framework color is fine) (except the struck-out word); and don't rename the plain sections (Projects, Frameworks, About). One well-placed metaphor is intriguing; a costume isn't. Every lab element must also make the content clearer: a testable hypothesis, a precaution per risk, a dated entry.
 
 **Layout:** `.wide` (70rem) for page structure, `.measure` (38rem) for reading; detail pages use `.detail` (text column + a margin column on ≥1100px; margin column first on phones). 16px minimum gutters; nothing may scroll sideways at 320px. Corners: `--radius` 12px, cards 16px, buttons 10px.
 
 **Motion:** one entrance on the home hero, hover transitions, all disabled under `prefers-reduced-motion`. The hero headline only moves, never starts invisible (it's the LCP element).
 
-**Never:** stock gradients (the stripe is hard-edged, not a gradient blend), hero illustrations, laboratory clip art, emoji, a fifth decorative color, drop shadows everywhere.
+**Never:** stock gradients (the stripe is hard-edged, not a gradient blend), hero illustrations, laboratory clip art, emoji, a decorative color beyond the five framework slots, drop shadows everywhere.
 
 ## Conventions
 
