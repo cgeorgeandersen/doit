@@ -1,11 +1,11 @@
 ---
-title: "Cyborgs, Centaurs, and Reverse Centaurs"
+title: "Passengers, Centaurs, and Reverse Centaurs"
 date: 2026-10-01
-summary: "That dull feeling when you use AI is your judgment going unexercised. Four AI mindsets, and why the centaur gets it right: hand off the hauling, keep the decisions."
-tags: [AI literacy, judgment, ways of working]
 ---
 
-As you go down the path of using AI in your everyday work, you're going to stumble across a problem. For some of you it's already familiar. Others feel it but can't quite put a name to it yet. It shows up as a slight sense of dullness when you use the tool.
+As you go down the path of using AI in your everyday work, you're going to stumble across a problem. For some of you it's already familiar. Others feel it but can't quite put a name to it yet.
+
+For me, it showed up while I was sitting at my computer, watching the AI load, waiting for it to finish just so I could prompt it again. I wasn't thinking about the problem anymore. I was just waiting for my turn to push the button. And I noticed a slight sense of dullness.
 
 That dullness is the feeling of outsourcing the one thing that makes you most valuable as a human: your judgment.
 
@@ -15,9 +15,9 @@ One of those moments is nothing. But if you're like me, the little cuts, day aft
 
 ## The Cost
 
-Think of your judgment as a model that only stays accurate because it keeps getting feedback. You make a call, see how it plays out, and adjust. Every decision you own is a new labeled example.
+Think of your judgment as a muscle. Every call you make yourself is a rep: you decide, see how it plays out, and adjust. That's what keeps it strong.
 
-When AI makes the call and you just approve it, you stop generating that training data. Nothing breaks on day one. The model drifts quietly, and you don't notice until the day you need it and it's off. That's the dullness.
+When AI makes the call and you just approve it, you skip the rep. The muscle atrophies without you noticing in the moment, the way an astronaut's legs do in zero gravity. You can float through a project feeling great, then land the spaceship and find out your legs don't work anymore. That faint dullness is your early warning: the one sign you get before your legs give out.
 
 This isn't just a hunch, either. A 2025 survey of knowledge workers by researchers at Microsoft and Carnegie Mellon found that the more people trusted AI with a task, the less critical thinking they reported putting into it.
 
@@ -33,12 +33,14 @@ Every piece of work you do breaks down roughly into three parts:
 
 For each one, you can keep it, augment it with AI, or outsource it entirely. Where you land on each is your AI mindset.
 
-| Mindset | Thinking | Doing | Judging |
+| | Thinking | Doing | Judging |
 |---|---|---|---|
 | **Holdout** | Kept | Kept | Kept |
-| **Cyborg** | Outsourced | Outsourced | Outsourced |
+| **Passenger** | Outsourced | Outsourced | Outsourced |
 | **Centaur** | Augmented | Outsourced | Kept |
 | **Reverse Centaur** | Outsourced | Kept | Outsourced |
+
+These aren't personality types. Most of us shift between all four depending on the task. You might be a centaur while building the deck and a passenger while deciding which deck to build. The goal isn't to become one of these permanently. It's to notice which one you're being on the work that matters.
 
 ## The Holdout
 
@@ -46,11 +48,11 @@ For each one, you can keep it, augment it with AI, or outsource it entirely. Whe
 
 The holdout doesn't use AI at all. Their judgment is fully intact, but they're plowing by hand while the farm next door bought a tractor. They aren't the villain of this story, just the slowest character in it. I include them so it's clear the goal isn't less AI. It's AI in the right places.
 
-## The Cyborg
+## The Passenger
 
 *Thinking, doing, and judging are all outsourced.*
 
-The cyborg runs every decision, workflow, and process through AI. This person was voted "Most likely to ask AI what their kid wants for their birthday" and has a chat window open at all times. If you've gotten an email from them, it probably opened with "You're absolutely right" and had an em dash in every paragraph.
+The passenger is on the horse, but they've let go of the reins. They run every decision, workflow, and process through AI and go wherever it takes them. This person was voted "Most likely to ask AI what their kid wants for their birthday" and has a chat window open at all times. If you've gotten an email from them, it probably opened with "You're absolutely right" and had an em dash in every paragraph.
 
 **The pros:** They're genuinely fluent with the tools and may know how to use AI to boost their productivity better than anyone.
 
@@ -97,8 +99,8 @@ A farmer doesn't feel dull driving a tractor, because they still decide where th
 
 ## Notes and credits
 
-**On the names.** None of these names are originally mine, and plenty of people have used them to describe how humans work with machines. "Centaur" goes back to Garry Kasparov's "centaur chess," where human-plus-computer teams played together. "Centaur" and "cyborg" as patterns of AI use come from a 2023 Harvard Business School and BCG study of consultants using GPT-4 (Dell'Acqua et al., ["Navigating the Jagged Technological Frontier"](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4573321)). In that study, centaurs split work cleanly between themselves and the AI, cyborgs wove AI through every step, and both groups did well. "Reverse centaur" comes from [Cory Doctorow](https://pluralistic.net/2025/09/11/vulgar-thatcherism/), who uses it to describe a person who ends up serving the machine instead of the other way around.
+**On the names.** The centaur and reverse centaur aren't originally mine, and plenty of people have used them to describe how humans work with machines. "Centaur" goes back to Garry Kasparov's "centaur chess," where human-plus-computer teams played together. It was later used to describe patterns of AI use in a 2023 Harvard Business School and BCG study of consultants using GPT-4 (Dell'Acqua et al., "Navigating the Jagged Technological Frontier"), where centaurs split work cleanly between themselves and the AI. "Reverse centaur" comes from Cory Doctorow, who uses it to describe a person who ends up serving the machine instead of the other way around.
 
-I'm borrowing the names but sorting people by a different question: who's holding the judgment? So my cyborg is a more cautionary character than the one in the research.
+I'm borrowing those names but sorting people by a different question: who's holding the judgment?
 
-**On the survey.** Lee et al., ["The Impact of Generative AI on Critical Thinking,"](https://doi.org/10.1145/3706598.3713778) CHI 2025, Microsoft Research and Carnegie Mellon University.
+**On the survey.** Lee et al., "The Impact of Generative AI on Critical Thinking," CHI 2025, Microsoft Research and Carnegie Mellon University.
