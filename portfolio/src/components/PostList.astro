@@ -1,5 +1,5 @@
 ---
-/** Lab notes, like a notebook: entry number, date, title, summary and review stamp. */
+/** Lab notes, like a notebook: entry number, date, title, summary (when there is one) and review stamp. */
 import ReviewStamp from './ReviewStamp.astro';
 import { reviewedOn, type Post } from '../lib/content';
 import { formatDate, isoDate } from '../lib/dates';
@@ -32,7 +32,7 @@ const Heading = headingLevel;
                 {post.data.title}
               </a>
             </Heading>
-            {!compact && <p class="summary">{post.data.summary}</p>}
+            {!compact && post.data.summary && <p class="summary">{post.data.summary}</p>}
             {!compact && (
               <p class="stamp-row">
                 <ReviewStamp date={reviewedOn(post)} />

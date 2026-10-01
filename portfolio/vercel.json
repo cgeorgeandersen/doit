@@ -16,6 +16,16 @@
       "source": "/og/frameworks/make-ai-boring.png",
       "destination": "/og/frameworks/ai-should-be-boring.png",
       "permanent": true
+    },
+    {
+      "source": "/writing/cyborgs-centaurs-and-reverse-centaurs",
+      "destination": "/writing/passengers-centaurs-and-reverse-centaurs",
+      "permanent": true
+    },
+    {
+      "source": "/og/writing/cyborgs-centaurs-and-reverse-centaurs.png",
+      "destination": "/og/writing/passengers-centaurs-and-reverse-centaurs.png",
+      "permanent": true
     }
   ]
 }

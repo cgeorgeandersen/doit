@@ -15,6 +15,22 @@ const stripHtmlComments = {
 };
 
 /**
+ * An empty header cell (the corner of a table whose rows are labelled in the
+ * first column) becomes a plain cell. Screen readers announce every header,
+ * and an empty one reads as a column with no name.
+ */
+const emptyHeaderCells = {
+  name: 'empty-header-cells',
+  element: {
+    filter: ['th'],
+    visit(node: { properties?: Record<string, unknown> }, ctx: { textContent(node: unknown): string; replaceNode(node: unknown, next: unknown): void }) {
+      if (ctx.textContent(node).trim() !== '') return;
+      ctx.replaceNode(node, { type: 'element', tagName: 'td', properties: { ...node.properties }, children: [] });
+    },
+  },
+};
+
+/**
  * The site's public address, used for canonical links, the sitemap, RSS and
  * share images. site.ts wins when it is set; otherwise builds on Vercel use the
  * project's production domain (your custom domain once connected, else the
@@ -31,7 +47,7 @@ export default defineConfig({
   site: siteUrl(),
   trailingSlash: 'never',
   markdown: {
-    processor: satteri({ mdastPlugins: [stripHtmlComments] }),
+    processor: satteri({ mdastPlugins: [stripHtmlComments], hastPlugins: [emptyHeaderCells] }),
   },
   integrations: [
     sitemap({
