@@ -5,7 +5,7 @@
 import rss from '@astrojs/rss';
 import type { APIRoute } from 'astro';
 import { SITE } from '../config/site';
-import { getSite } from '../lib/content';
+import { getSite, openingOf } from '../lib/content';
 
 export const GET: APIRoute = async (context) => {
   const site = await getSite();
@@ -13,7 +13,7 @@ export const GET: APIRoute = async (context) => {
   const items = [
     ...site.posts.map((post) => ({
       title: post.data.title,
-      description: post.data.summary,
+      description: post.data.summary ?? openingOf(post.body),
       content: post.rendered?.html,
       pubDate: post.data.date,
       link: `/writing/${post.id}`,

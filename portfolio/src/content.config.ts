@@ -113,7 +113,8 @@ const writing = defineCollection({
   schema: z.object({
     title: z.string(explain('the post’s title')).min(1, 'Required: the post’s title').transform(typeset),
     date: date(),
-    summary: z.string(explain('one or two sentences describing the post')).transform(typeset),
+    /** Optional. Shown under the title and in lists; without it there's no subtitle, and search results use the opening sentences. */
+    summary: z.string(explain('one or two sentences describing the post')).transform(typeset).optional(),
     tags: z.array(z.string(), explain('a list like [ai-strategy, governance]')).default([]),
     lastReviewed: date().optional(),
     draft,

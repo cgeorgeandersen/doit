@@ -46,7 +46,7 @@ Four collections (`src/content.config.ts`), each a folder of `.md` files; the fi
 | --- | --- | --- |
 | `projects` | `title`, `summary` (≤160), `status` (`live` / `in progress` / `archived`), `date` | `tags`, `cover` + `coverAlt`, `liveUrl` (required if live), `frameworks` (references), `featured`, `order` (default 100), `draft` |
 | `frameworks` | `title`, `thesis` (≤200), `date`, `lastReviewed`, `failureModes` (≥1 × `name` / `risk` / `precaution`) | `relatedProjects`, `kind` (`method` / `philosophy`), `question`, `order`, `symbol` (`Ct`), `reaction` (`inputs` ≥2, `output`), `draft` |
-| `writing` (shown as "Lab notes") | `title`, `date`, `summary` | `tags`, `lastReviewed`, `draft` |
+| `writing` (shown as "Lab notes") | `title`, `date` | `summary` (subtitle and list text; without it, `openingOf()` gives search and link previews the note's opening sentences), `tags`, `lastReviewed`, `draft` |
 | `pages` | `title`, `description` | `image` + `imageAlt` (a photo beside the title), `draft` |
 
 Rules that matter:
@@ -64,7 +64,7 @@ Rules that matter:
 
 - **Project:** `src/content/projects/<slug>.md` (+ optional `<slug>.png` cover next to it). Link frameworks by file name. The body is an experiment write-up with four `##` sections, numbered by CSS on the project page: Hypothesis (its first paragraph is the claim, set as a lede) / Method / Result / What I'd change.
 - **Framework:** `src/content/frameworks/<slug>.md` with two body sections, The idea / Why it works, and its failure modes in frontmatter (rendered by `FailureModes.astro` after the body). An opening paragraph before the first heading is set as a lede (AI Should Be Boring uses this for the alchemy history). If the number of methods changes, update `home.methodsIntro` in `site.ts` (it says "Three methods").
-- **Lab note:** `src/content/writing/<slug>.md`.
+- **Lab note:** `src/content/writing/<slug>.md`. George writes these himself: publish them as written, formatting only. Don't add a summary, tags, links or extra words he didn't write.
 - **Page:** `src/content/pages/<slug>.md`, then a `nav` entry in `site.ts` (and optionally `contact.cta`).
 - **A new content type** (rare): add a collection with `explain()` messages, load it in `getSite()`, add index/detail pages, add share-image cards in `src/pages/og/[...route].png.ts`, add it to RSS if it's dated, and document it in both guides.
 
@@ -127,7 +127,7 @@ Keep it that way: no beakers, flasks, smoke, explosions or other clip art; no pa
 
 - **Astro 7:** import `z` from `astro/zod` (Zod 4; `z` from `astro:content` is deprecated); `defineCollection`/`reference`/`render` from `astro:content`; loaders from `astro/loaders`; config in `src/content.config.ts`.
 - **TypeScript is pinned to 6.** `@astrojs/check` does not support TypeScript 7 yet.
-- **Markdown plugins:** Astro 7's default processor is Sätteri, not unified/remark. `markdown.remarkPlugins`/`rehypePlugins` are ignored. Plugins go in `satteri({ mdastPlugins, hastPlugins })` in `astro.config.ts` (see `stripHtmlComments`, which keeps `<!-- notes -->` out of the published HTML).
+- **Markdown plugins:** Astro 7's default processor is Sätteri, not unified/remark. `markdown.remarkPlugins`/`rehypePlugins` are ignored. Plugins go in `satteri({ mdastPlugins, hastPlugins })` in `astro.config.ts` (see `stripHtmlComments`, which keeps `<!-- notes -->` out of the published HTML, and `emptyHeaderCells`, which turns a table's empty corner `th` into a `td` so screen readers don't announce a nameless column).
 - **Satori** (share images): every `div` with more than one child needs `display: flex`, and an element with no children must have `children: undefined` (satori treats `[]` as "several children"). It can't read woff2 or variable fonts: that's why `src/og-fonts/` exists (regenerate with `scripts/make-og-fonts.py` if the fonts change). Dotted `border` isn't supported; dotted `textDecoration` is. The stripe and mark are built from flex boxes (`stripe()`, `mark()` in `og.ts`).
 - **Share-image covers** are read from `image().fsPath`, which Astro sets during the build.
 - **Site URL:** `site.ts` `url` → else `VERCEL_PROJECT_PRODUCTION_URL` → else `http://localhost:4321`. Canonicals, OG image URLs, RSS, robots and the sitemap all follow it.

@@ -1,10 +1,10 @@
 ---
-/** One lab note: entry number, date, title, summary, review stamp, the text and its topics. */
+/** One lab note: entry number, date, title, optional summary, review stamp, the text and its topics. */
 import { render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ReviewStamp from '../../components/ReviewStamp.astro';
 import { SITE } from '../../config/site';
-import { getSite, reviewedOn, type Post } from '../../lib/content';
+import { getSite, openingOf, reviewedOn, type Post } from '../../lib/content';
 import { formatDate, isoDate } from '../../lib/dates';
 
 export async function getStaticPaths() {
@@ -19,6 +19,8 @@ interface Props {
 const { post } = Astro.props;
 const site = await getSite();
 const { title, summary, date, tags, draft } = post.data;
+// Search results and link previews need a description; without a summary, the note's own opening serves.
+const description = summary ?? openingOf(post.body);
 const { Content } = await render(post);
 const reviewed = reviewedOn(post);
 
@@ -26,7 +28,7 @@ const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'BlogPosting',
   headline: title,
-  description: summary,
+  description,
   datePublished: isoDate(date),
   dateModified: isoDate(reviewed),
   author: { '@type': 'Person', name: SITE.name },
@@ -35,7 +37,7 @@ const jsonLd = {
 
 <BaseLayout
   title={title}
-  description={summary}
+  description={description}
   image={`/og/writing/${post.id}.png`}
   imageAlt={`${title}, by ${SITE.name}`}
   type="article"
@@ -52,7 +54,7 @@ const jsonLd = {
         {draft && <span class="draft">Draft · not published</span>}
       </p>
       <h1 class="post-title">{title}</h1>
-      <p class="dek">{summary}</p>
+      {summary && <p class="dek">{summary}</p>}
       <p class="meta"><ReviewStamp date={reviewed} /></p>
     </header>
     <div class="measure prose">

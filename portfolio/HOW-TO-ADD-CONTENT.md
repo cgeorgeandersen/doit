@@ -115,6 +115,8 @@ Write here. Blank lines separate paragraphs. **Bold**, *italic*, [links](https:/
 lists that start with "- ", and headings that start with "## " all work.
 ```
 
+**summary** is optional. With one, it shows under the title and in the Lab notes list. Leave the line out to publish the note exactly as written, with no subtitle; search results and link previews then use its opening sentences.
+
 Lab notes are numbered automatically by date: the oldest is Entry 001. Optionally add `lastReviewed: 2026-12-01` when you revisit a note; its stamp shows that date instead of the publish date.
 
 ## Add a page (for example, "Work with me")

@@ -12,6 +12,7 @@
  * goes for two frameworks that would share an element symbol.
  */
 import { getCollection, type CollectionEntry } from 'astro:content';
+import { typeset } from './typeset';
 
 export type Project = CollectionEntry<'projects'>;
 export type Framework = CollectionEntry<'frameworks'>;
@@ -280,6 +281,35 @@ export function tagSlug(tag: string): string {
 /** Every tag used by the given projects, alphabetically. */
 export function tagsOf(projects: Project[]): string[] {
   return [...new Set(projects.flatMap((p) => p.data.tags))].sort((a, b) => a.localeCompare(b));
+}
+
+/**
+ * A lab note's description when it has no summary: its opening sentences, as
+ * plain text, up to `max` characters. It goes only into search results, link
+ * previews and the feed; nothing is added to the page itself.
+ */
+export function openingOf(markdown: string | undefined, max = 160): string {
+  const paragraph =
+    (markdown ?? '')
+      .replace(/<!--[\s\S]*?-->/g, '')
+      .split(/\n\s*\n/)
+      .map((block) => block.trim())
+      .find((block) => block !== '' && !/^(#|[-*+]\s|\d+\.\s|\||>|```|---)/.test(block)) ?? '';
+  const text = typeset(
+    paragraph
+      .replace(/!\[[^\]]*\]\([^)]*\)/g, '')
+      .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+      .replace(/[*_`]/g, '')
+      .replace(/\s+/g, ' ')
+      .trim(),
+  );
+  let opening = '';
+  for (const sentence of text.match(/[^.!?…]+[.!?…]+[”’")]*\s*/g) ?? []) {
+    if ((opening + sentence).trim().length > max) break;
+    opening += sentence;
+  }
+  if (opening.trim()) return opening.trim();
+  return text.length <= max ? text : `${text.slice(0, max - 1).replace(/\s+\S*$/, '')}…`;
 }
 
 /** When a post was last reviewed: its lastReviewed date, or its publish date. */
