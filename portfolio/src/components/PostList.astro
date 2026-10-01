@@ -1,18 +1,27 @@
 ---
-/** Lab notes, like a notebook: entry number, date, title, summary (when there is one) and review stamp. */
+/**
+ * Lab notes, like a notebook: entry number, date, title, summary (when there is one),
+ * review stamp and, when `frameworksFor` is given, the frameworks each note applies.
+ */
+import ElementTile from './ElementTile.astro';
 import ReviewStamp from './ReviewStamp.astro';
-import { reviewedOn, type Post } from '../lib/content';
+import { reviewedOn, type Framework, type FrameworkElement, type Post } from '../lib/content';
 import { formatDate, isoDate } from '../lib/dates';
 
 interface Props {
   posts: Post[];
   /** Entry numbers from getSite().entryOf(). */
   entryOf: (post: Post) => string;
+  /** From getSite(); together they add the framework chips the note page shows. */
+  frameworksFor?: (post: Post) => Framework[];
+  elementOf?: (framework: Framework) => FrameworkElement;
+  colorOf?: (framework: Framework) => 0 | 1 | 2 | 3;
   headingLevel?: 'h2' | 'h3';
   compact?: boolean;
 }
 
-const { posts, entryOf, headingLevel = 'h2', compact = false } = Astro.props;
+const { posts, entryOf, frameworksFor, elementOf, colorOf, headingLevel = 'h2', compact = false } = Astro.props;
+const showFrameworks = !compact && frameworksFor && elementOf && colorOf;
 const Heading = headingLevel;
 ---
 
@@ -36,6 +45,14 @@ const Heading = headingLevel;
             {!compact && (
               <p class="stamp-row">
                 <ReviewStamp date={reviewedOn(post)} />
+                {showFrameworks &&
+                  frameworksFor(post).map((f) => (
+                    <a class="fw-tag" href={`/frameworks/${f.id}`}>
+                      <ElementTile element={elementOf(f)} color={colorOf(f)} size="chip" />
+                      <span class="visually-hidden">Framework: </span>
+                      <span class="fw-tag-name">{f.data.title}</span>
+                    </a>
+                  ))}
               </p>
             )}
           </div>
@@ -111,6 +128,35 @@ const Heading = headingLevel;
   .summary {
     color: var(--ink-2);
     max-width: 38rem;
+  }
+
+  .stamp-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 1.1rem;
+  }
+
+  /* The same framework chips as the note's own page. */
+  .fw-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    min-height: 32px;
+    font-size: 0.92rem;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .fw-tag-name {
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+  }
+
+  .fw-tag:hover .fw-tag-name {
+    text-decoration-thickness: 2px;
   }
 
   @media (min-width: 720px) {
