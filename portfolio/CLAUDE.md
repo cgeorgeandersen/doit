@@ -46,16 +46,16 @@ Four collections (`src/content.config.ts`), each a folder of `.md` files; the fi
 | --- | --- | --- |
 | `projects` | `title`, `summary` (≤160), `status` (`live` / `in progress` / `archived`), `date` | `tags`, `cover` + `coverAlt`, `liveUrl` (required if live), `frameworks` (references), `featured`, `order` (default 100), `draft` |
 | `frameworks` | `title`, `thesis` (≤200), `date`, `lastReviewed`, `failureModes` (≥1 × `name` / `risk` / `precaution`) | `relatedProjects`, `kind` (`method` / `philosophy`), `question`, `order`, `symbol` (`Ct`), `reaction` (`inputs` ≥2, `output`), `draft` |
-| `writing` (shown as "Lab notes") | `title`, `date` | `summary` (subtitle and list text; without it, `openingOf()` gives search and link previews the note's opening sentences), `tags`, `lastReviewed`, `draft` |
+| `writing` (shown as "Lab notes") | `title`, `date` | `summary` (subtitle and list text; without it, `openingOf()` gives search and link previews the note's opening sentences), `frameworks` (references), `tags`, `lastReviewed`, `draft` |
 | `pages` | `title`, `description` | `image` + `imageAlt` (a photo beside the title), `draft` |
 
 Rules that matter:
 
-- **The project ↔ framework link is stored once, on the project** (`frameworks: [...]`). A framework's "Applied in" list is derived in `getSite().projectsFor()`. Never add a second, hand-maintained list; `relatedProjects` exists only for projects that are related without formally applying the framework, shown separately as "Related".
+- **The project ↔ framework link is stored once, on the project** (`frameworks: [...]`), and the same goes for lab notes. A framework's "Applied in" list is derived in `getSite().projectsFor()` and `notesFor()`; notes are listed after projects and marked "Lab note" (`SITE.sections.writing.item`). A note's frameworks show as symbol chips in its header. Never add a second, hand-maintained list; `relatedProjects` exists only for projects that are related without formally applying the framework, shown separately as "Related".
 - **Numbering:** frameworks with `kind: method` are numbered 1, 2… by `order`; the one with `kind: philosophy` (AI Should Be Boring, symbol **Bo**, set in its frontmatter because the derived **Sb** is antimony) is element 0, frames the others and is linked from the home hero. `getSite().elementOf()` gives a framework's number, kind and symbol; `symbolOf()` makes the symbol from the title (first letters of the first two words, skipping "AI" and small words) unless the file sets `symbol`. `checkSymbols()` fails the build if two frameworks would share one.
 - **Lab notes** are the `writing` collection under another name: the URL stays `/writing`, the words come from `SITE.sections.writing` and `nav`. `getSite().entryOf()` numbers them 001, 002… from the oldest, so backdating a post renumbers the ones after it.
 - **Always read content through `getSite()`**, not `getCollection()` directly: it drops drafts in builds, sorts, and runs the link checks.
-- **Link checks:** Astro 7 only logs a misspelled `reference()` and exits 0. `checkLinks()` in `src/lib/content.ts` throws instead, naming the file and suggesting the closest id. Keep it.
+- **Link checks:** Astro 7 only logs a misspelled `reference()` and exits 0. `checkLinks()` in `src/lib/content.ts` throws instead (for projects, frameworks and lab notes), naming the file and suggesting the closest id. Keep it.
 - **Error messages are part of the UX.** Every schema field uses `explain()` so a missing field reads "summary: Required: one line describing the project, under 160 characters". Keep new fields to the same standard.
 - **Drafts** (`draft: true`) render in `npm run dev` with a "Draft · not published" label and are excluded from builds, feeds, sitemap and share images.
 - **Standalone pages:** any file in `src/content/pages/` becomes `/<id>` via `src/pages/[page].astro`. Slugs that would shadow a section (`projects`, `frameworks`, `writing`, `og`, …) fail the build.
@@ -64,7 +64,7 @@ Rules that matter:
 
 - **Project:** `src/content/projects/<slug>.md` (+ optional `<slug>.png` cover next to it). Link frameworks by file name. The body is an experiment write-up with four `##` sections, numbered by CSS on the project page: Hypothesis (its first paragraph is the claim, set as a lede) / Method / Result / What I'd change.
 - **Framework:** `src/content/frameworks/<slug>.md` with two body sections, The idea / Why it works, and its failure modes in frontmatter (rendered by `FailureModes.astro` after the body). An opening paragraph before the first heading is set as a lede (AI Should Be Boring uses this for the alchemy history). If the number of methods changes, update `home.methodsIntro` in `site.ts` (it says "Three methods").
-- **Lab note:** `src/content/writing/<slug>.md`. George writes these himself: publish them as written, formatting only. Don't add a summary, tags, links or extra words he didn't write.
+- **Lab note:** `src/content/writing/<slug>.md`. George writes these himself: publish them as written, formatting only. Don't add a summary, tags, framework links or other words he didn't ask for.
 - **Page:** `src/content/pages/<slug>.md`, then a `nav` entry in `site.ts` (and optionally `contact.cta`).
 - **A new content type** (rare): add a collection with `explain()` messages, load it in `getSite()`, add index/detail pages, add share-image cards in `src/pages/og/[...route].png.ts`, add it to RSS if it's dated, and document it in both guides.
 

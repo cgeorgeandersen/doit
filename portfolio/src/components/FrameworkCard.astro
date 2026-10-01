@@ -1,25 +1,28 @@
 ---
 /**
  * A framework as a method: its element tile and question, title, one-line
- * thesis, review stamp, and the projects that apply it (derived, never typed
- * twice). The card wears its framework's color (a band on top, the tile), the
+ * thesis, review stamp, and the projects and lab notes that apply it (derived,
+ * never typed twice). The card wears its framework's color (a band on top, the tile), the
  * same color its projects carry.
  */
 import ElementTile from './ElementTile.astro';
 import ReviewStamp from './ReviewStamp.astro';
-import type { FrameworkElement, Framework, Project } from '../lib/content';
+import { SITE } from '../config/site';
+import type { FrameworkElement, Framework, Post, Project } from '../lib/content';
 
 interface Props {
   framework: Framework;
   element: FrameworkElement;
   projects?: Project[];
+  /** Lab notes that apply the framework, listed after the projects. */
+  notes?: Post[];
   headingLevel?: 'h2' | 'h3';
   proofLabel?: string;
   /** Color slot from getSite().colorOf(). */
   color?: 0 | 1 | 2 | 3;
 }
 
-const { framework, element, projects = [], headingLevel = 'h3', proofLabel = 'Applied in', color = 1 } = Astro.props;
+const { framework, element, projects = [], notes = [], headingLevel = 'h3', proofLabel = 'Applied in', color = 1 } = Astro.props;
 const { title, thesis, question, lastReviewed, draft } = framework.data;
 const Heading = headingLevel;
 ---
@@ -38,7 +41,7 @@ const Heading = headingLevel;
     {draft && <span class="draft">Draft · not published</span>}
   </p>
   {
-    projects.length > 0 && (
+    projects.length + notes.length > 0 && (
       <div class="fw-proof">
         <p class="label">{proofLabel}</p>
         <ul>
@@ -47,6 +50,14 @@ const Heading = headingLevel;
               <a href={`/projects/${p.id}`}>
                 {p.data.title} <span aria-hidden="true">→</span>
               </a>
+            </li>
+          ))}
+          {notes.map((n) => (
+            <li>
+              <a href={`/writing/${n.id}`}>
+                {n.data.title} <span aria-hidden="true">→</span>
+              </a>
+              <span class="kind">{SITE.sections.writing.item}</span>
             </li>
           ))}
         </ul>
@@ -130,10 +141,27 @@ const Heading = headingLevel;
     list-style: none;
   }
 
+  /* Ordinary text flow, so a long title wraps with its arrow and keeps the space before it. */
   .fw-proof a {
-    display: inline-flex;
-    align-items: center;
-    min-height: 32px;
+    display: inline-block;
+    padding-block: 0.3rem;
     font-weight: 600;
+    line-height: 1.35;
+  }
+
+  .fw-proof li + li {
+    margin-top: 0.2rem;
+  }
+
+  /* A lab note is marked as one, under its title, so it isn't mistaken for a project. */
+  .kind {
+    display: block;
+    margin-top: -0.1rem;
+    font-family: var(--font-label);
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-3);
   }
 </style>

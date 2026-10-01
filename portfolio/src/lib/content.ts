@@ -2,9 +2,10 @@
  * Typed access to the content, and the links between it.
  *
  * getSite() loads every collection once per build, drops drafts, sorts
- * everything, and resolves the links. The link between a project and a
- * framework is stored once, on the project; each framework's list of projects
- * is derived from it here, so the two directions can never disagree.
+ * everything, and resolves the links. The link between a project (or a lab
+ * note) and a framework is stored once, on the project or note; each
+ * framework's "Applied in" list is derived from it here, so the two
+ * directions can never disagree.
  *
  * It also checks every link. Astro 7 only logs a misspelled reference and
  * carries on, which would quietly drop a link from the site, so a broken link
@@ -39,10 +40,12 @@ export interface Site {
   posts: Post[];
   /** Standalone pages such as About. */
   pages: Page[];
-  /** The frameworks a project puts into practice, in framework order. */
-  frameworksFor(project: Project): Framework[];
+  /** The frameworks a project puts into practice, or a lab note applies, in framework order. */
+  frameworksFor(entry: Project | Post): Framework[];
   /** Projects that name this framework, plus any it lists as related. */
   projectsFor(framework: Framework): { applied: Project[]; related: Project[] };
+  /** Lab notes that name this framework, newest first. */
+  notesFor(framework: Framework): Post[];
   /** "1", "2", … for methods; undefined for the philosophy. */
   numberOf(framework: Framework): string | undefined;
   /** The framework's element: number, symbol (its own, or made from the title) and kind. */
@@ -93,7 +96,7 @@ async function loadSite(): Promise<Site> {
     getCollection('pages'),
   ]);
 
-  checkLinks(allProjects, allFrameworks);
+  checkLinks(allProjects, allFrameworks, allPosts);
   checkPageSlugs(allPages);
 
   const projects = allProjects.filter(isPublished).sort(projectOrder);
@@ -119,8 +122,8 @@ async function loadSite(): Promise<Site> {
     methods,
     posts,
     pages,
-    frameworksFor: (project) =>
-      project.data.frameworks
+    frameworksFor: (entry) =>
+      entry.data.frameworks
         .map((ref) => frameworkById.get(ref.id))
         .filter(isDefined)
         .sort(byOrder),
@@ -132,6 +135,7 @@ async function loadSite(): Promise<Site> {
         .filter((p) => !applied.includes(p));
       return { applied, related };
     },
+    notesFor: (framework) => posts.filter((post) => post.data.frameworks.some((ref) => ref.id === framework.id)),
     numberOf,
     elementOf: (framework) => ({
       number: Number(numberOf(framework) ?? 0),
@@ -148,7 +152,7 @@ async function loadSite(): Promise<Site> {
 
 // ---------- Link checks ----------
 
-function checkLinks(projects: Project[], frameworks: Framework[]): void {
+function checkLinks(projects: Project[], frameworks: Framework[], posts: Post[]): void {
   const frameworkIds = frameworks.map((f) => f.id);
   const projectIds = projects.map((p) => p.id);
   const problems: string[] = [];
@@ -156,6 +160,11 @@ function checkLinks(projects: Project[], frameworks: Framework[]): void {
   for (const project of projects) {
     for (const ref of project.data.frameworks) {
       if (!frameworkIds.includes(ref.id)) problems.push(brokenLink(project, 'frameworks', ref.id, 'frameworks', frameworkIds));
+    }
+  }
+  for (const post of posts) {
+    for (const ref of post.data.frameworks) {
+      if (!frameworkIds.includes(ref.id)) problems.push(brokenLink(post, 'frameworks', ref.id, 'frameworks', frameworkIds));
     }
   }
   for (const framework of frameworks) {
@@ -169,7 +178,7 @@ function checkLinks(projects: Project[], frameworks: Framework[]): void {
   }
 }
 
-function brokenLink(entry: Project | Framework, field: string, id: string, collection: string, available: string[]): string {
+function brokenLink(entry: Project | Framework | Post, field: string, id: string, collection: string, available: string[]): string {
   const file = entry.filePath ?? `src/content/${entry.collection}/${entry.id}.md`;
   const guess = closest(id, available);
   return [

@@ -73,7 +73,14 @@ const { label, title, description } = SITE.sections.frameworks;
             const { applied, related } = site.projectsFor(framework);
             return (
               <li>
-                <FrameworkCard framework={framework} element={site.elementOf(framework)} color={site.colorOf(framework)} projects={[...applied, ...related]} headingLevel="h3" />
+                <FrameworkCard
+                  framework={framework}
+                  element={site.elementOf(framework)}
+                  color={site.colorOf(framework)}
+                  projects={[...applied, ...related]}
+                  notes={site.notesFor(framework)}
+                  headingLevel="h3"
+                />
               </li>
             );
           })}

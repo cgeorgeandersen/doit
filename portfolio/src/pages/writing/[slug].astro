@@ -2,6 +2,7 @@
 /** One lab note: entry number, date, title, optional summary, review stamp, the text and its topics. */
 import { render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import ElementTile from '../../components/ElementTile.astro';
 import ReviewStamp from '../../components/ReviewStamp.astro';
 import { SITE } from '../../config/site';
 import { getSite, openingOf, reviewedOn, type Post } from '../../lib/content';
@@ -21,6 +22,7 @@ const site = await getSite();
 const { title, summary, date, tags, draft } = post.data;
 // Search results and link previews need a description; without a summary, the note's own opening serves.
 const description = summary ?? openingOf(post.body);
+const frameworks = site.frameworksFor(post);
 const { Content } = await render(post);
 const reviewed = reviewedOn(post);
 
@@ -55,7 +57,18 @@ const jsonLd = {
       </p>
       <h1 class="post-title">{title}</h1>
       {summary && <p class="dek">{summary}</p>}
-      <p class="meta"><ReviewStamp date={reviewed} /></p>
+      <p class="meta">
+        <ReviewStamp date={reviewed} />
+        {
+          frameworks.map((f) => (
+            <a class="fw-tag" href={`/frameworks/${f.id}`}>
+              <ElementTile element={site.elementOf(f)} color={site.colorOf(f)} size="chip" />
+              <span class="visually-hidden">Framework: </span>
+              <span class="fw-tag-name">{f.data.title}</span>
+            </a>
+          ))
+        }
+      </p>
     </header>
     <div class="measure prose">
       <Content />
@@ -85,7 +98,33 @@ const jsonLd = {
   }
 
   .meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 1.1rem;
     margin-top: 1.4rem;
+  }
+
+  /* The frameworks the note applies, as the same symbol chips the project cards use. */
+  .fw-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    min-height: 32px;
+    font-size: 0.92rem;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .fw-tag-name {
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+  }
+
+  .fw-tag:hover .fw-tag-name {
+    text-decoration-thickness: 2px;
   }
 
   .tags {

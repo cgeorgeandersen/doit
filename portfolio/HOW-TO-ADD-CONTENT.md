@@ -6,7 +6,7 @@ Everything on the site comes from Markdown files in `src/content/`, plus the sit
 | --- | --- | --- |
 | Project | `src/content/projects/` | `/projects/<file-name>`, on /projects, on its frameworks' pages, and on the home page if `featured: true` |
 | Framework | `src/content/frameworks/` | `/frameworks/<file-name>`, on /frameworks (with its element tile) and the home page |
-| Lab note (post) | `src/content/writing/` | `/writing/<file-name>`, on the Lab notes page and the home page |
+| Lab note (post) | `src/content/writing/` | `/writing/<file-name>`, on the Lab notes page, the home page, and under "Applied in" on any framework it names |
 | Page | `src/content/pages/` | `/<file-name>` (add it to the menu in `site.ts`) |
 
 **File names become web addresses**, so use lowercase words joined by hyphens: `meeting-cost-calculator.md`.
@@ -108,6 +108,7 @@ Posts are called lab notes on the site. Copy this into `src/content/writing/your
 title: "Post title"
 date: 2026-10-15
 summary: "One or two sentences, shown in lists and link previews."
+frameworks: [calibrated-trust]
 tags: [ai-strategy]
 ---
 
@@ -116,6 +117,8 @@ lists that start with "- ", and headings that start with "## " all work.
 ```
 
 **summary** is optional. With one, it shows under the title and in the Lab notes list. Leave the line out to publish the note exactly as written, with no subtitle; search results and link previews then use its opening sentences.
+
+**frameworks** is optional too: list the frameworks the note applies, by file name, the same way projects do. Each shows as a tag at the top of the note (like **Ct** Calibrated Trust), and the note appears under "Applied in" on that framework's card and page automatically. You don't edit the framework.
 
 Lab notes are numbered automatically by date: the oldest is Entry 001. Optionally add `lastReviewed: 2026-12-01` when you revisit a note; its stamp shows that date instead of the publish date.
 
