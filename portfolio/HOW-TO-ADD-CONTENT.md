@@ -107,6 +107,7 @@ Posts are called lab notes on the site. Copy this into `src/content/writing/your
 ---
 title: "Post title"
 date: 2026-10-15
+authorship: mostly-me
 summary: "One or two sentences, shown in lists and link previews."
 frameworks: [calibrated-trust]
 tags: [ai-strategy]
@@ -115,6 +116,17 @@ tags: [ai-strategy]
 Write here. Blank lines separate paragraphs. **Bold**, *italic*, [links](https://example.com),
 lists that start with "- ", and headings that start with "## " all work.
 ```
+
+**authorship** is required: who wrote the note. It shows as a label beside the review stamp, on the note and in the Lab notes list. Use one of:
+
+| Value | Label on the site |
+| --- | --- |
+| `me` | Written by me ●●●● |
+| `mostly-me` | Written by me, with AI help ●●●○ |
+| `mostly-ai` | Drafted with AI, rewritten by me ●●○○ |
+| `ai` | Written by AI, checked by me ●○○○ |
+
+The test is who wrote the first draft, and who shaped it after. To change the wording of a label, edit `src/lib/authorship.ts`.
 
 **summary** is optional. With one, it shows under the title and in the Lab notes list. Leave the line out to publish the note exactly as written, with no subtitle; search results and link previews then use its opening sentences.
 

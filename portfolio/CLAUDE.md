@@ -31,7 +31,7 @@ portfolio/
   src/styles/              tokens.css (palette, type, spacing) and global.css (base, prose, layout)
   src/layouts/BaseLayout.astro   head, fonts, theme pre-paint, header, footer, analytics
   src/components/          SiteHeader, SiteFooter, ThemeToggle, ReviewStamp, StatusPill, ProjectCard,
-                           FrameworkCard, ElementTile, FailureModes, LinkPreview, ProjectFilter, PostList,
+                           FrameworkCard, ElementTile, FailureModes, AuthorshipLabel, LinkPreview, ProjectFilter, PostList,
                            ContactBand, ThroughLine, Seo
   src/pages/               index, 404, [page] (About etc.), projects/, frameworks/, writing/,
                            rss.xml.ts, robots.txt.ts, og/[...route].png.ts
@@ -46,7 +46,7 @@ Four collections (`src/content.config.ts`), each a folder of `.md` files; the fi
 | --- | --- | --- |
 | `projects` | `title`, `summary` (≤160), `status` (`live` / `in progress` / `archived`), `date` | `tags`, `cover` + `coverAlt`, `liveUrl` (required if live), `frameworks` (references), `featured`, `order` (default 100), `draft` |
 | `frameworks` | `title`, `thesis` (≤200), `date`, `lastReviewed`, `failureModes` (≥1 × `name` / `risk` / `precaution`) | `relatedProjects`, `kind` (`method` / `philosophy`), `question`, `order`, `symbol` (`Ct`), `reaction` (`inputs` ≥2, `output`), `draft` |
-| `writing` (shown as "Lab notes") | `title`, `date` | `summary` (subtitle and list text; without it, `openingOf()` gives search and link previews the note's opening sentences), `frameworks` (references), `tags`, `lastReviewed`, `draft` |
+| `writing` (shown as "Lab notes") | `title`, `date`, `authorship` (`me` / `mostly-me` / `mostly-ai` / `ai`; labels and dots in `src/lib/authorship.ts`, shown by `AuthorshipLabel.astro`) | `summary` (subtitle and list text; without it, `openingOf()` gives search and link previews the note's opening sentences), `frameworks` (references), `tags`, `lastReviewed`, `draft` |
 | `pages` | `title`, `description` | `image` + `imageAlt` (a photo beside the title), `draft` |
 
 Rules that matter:
@@ -64,7 +64,7 @@ Rules that matter:
 
 - **Project:** `src/content/projects/<slug>.md` (+ optional `<slug>.png` cover next to it). Link frameworks by file name. The body is an experiment write-up with four `##` sections, numbered by CSS on the project page: Hypothesis (its first paragraph is the claim, set as a lede) / Method / Result / What I'd change.
 - **Framework:** `src/content/frameworks/<slug>.md` with two body sections, The idea / Why it works, and its failure modes in frontmatter (rendered by `FailureModes.astro` after the body). An opening paragraph before the first heading is set as a lede (AI Should Be Boring uses this for the alchemy history). If the number of methods changes, update `home.methodsIntro` in `site.ts` (it says "Four methods").
-- **Lab note:** `src/content/writing/<slug>.md`. George writes these himself: publish them as written, formatting only. Don't add a summary, tags, framework links or other words he didn't ask for.
+- **Lab note:** `src/content/writing/<slug>.md`. George writes these himself: publish them as written, formatting only. Don't add a summary, tags, framework links or other words he didn't ask for. Ask him for the `authorship` value; never guess it.
 - **Page:** `src/content/pages/<slug>.md`, then a `nav` entry in `site.ts` (and optionally `contact.cta`).
 - **A new content type** (rare): add a collection with `explain()` messages, load it in `getSite()`, add index/detail pages, add share-image cards in `src/pages/og/[...route].png.ts`, add it to RSS if it's dated, and document it in both guides.
 
@@ -91,7 +91,7 @@ Clean and modern with a controlled burst of color: a white page, near-black type
 - **Framework colors are assigned, not chosen.** `getSite().colorOf(framework)` returns the slot: 0 for the philosophy, then methods cycle 1 → 2 → 3 → 4 by their order. Put `data-fw={colorOf(f)}` on an element and use `var(--fw)` (marks) / `var(--fw-ink)` (text) inside it. A new framework gets its color automatically; never hard-code one.
 - **The four-color stripe** (violet / cobalt / coral / teal, equal quarters) is the signature: under "boring." in the hero, under the headshot, on share images. The **four-dot mark** (two by two) is the logo in the header, favicon and share-image kicker. Both stay four colors (violet, cobalt, coral, teal) as the brand mark; gold, added with the fourth method, appears only on that framework's own tiles, cards and chips.
 - **Amber stays reserved.** It appears only on overdue review stamps (and draft labels in dev); using it elsewhere drains the warning of meaning. That's why coral, not orange, is a framework color.
-- **Color never carries meaning alone:** framework colors always sit beside the framework's symbol, number or name; stamps pair the dot with words; status pills use ● / ◐ / ○ plus a label; pressed filter chips are filled and carry a ✓. The one reuse is coral for hazards: the Failure modes label is always the diamond, the "!" and the words, so it can't be read as framework 2.
+- **Color never carries meaning alone:** framework colors always sit beside the framework's symbol, number or name; stamps pair the dot with words; the authorship label's four dots sit beside its words, in neutral ink; status pills use ● / ◐ / ○ plus a label; pressed filter chips are filled and carry a ✓. The one reuse is coral for hazards: the Failure modes label is always the diamond, the "!" and the words, so it can't be read as framework 2.
 - **Colored text and fills use the `-ink` twins.** The symbol chips are white-on-`--fw-N-ink` (the bright `--fw-N` fails AA behind small white text).
 - All text tokens pass WCAG AA on both surfaces in both themes. Re-check contrast if you change a token (use the `-ink` variant for colored text).
 

@@ -1,8 +1,9 @@
 ---
 /**
  * Lab notes, like a notebook: entry number, date, title, summary (when there is one),
- * review stamp and, when `frameworksFor` is given, the frameworks each note applies.
+ * review stamp, who wrote it and, when `frameworksFor` is given, the frameworks each note applies.
  */
+import AuthorshipLabel from './AuthorshipLabel.astro';
 import ElementTile from './ElementTile.astro';
 import ReviewStamp from './ReviewStamp.astro';
 import { reviewedOn, type Framework, type FrameworkElement, type Post } from '../lib/content';
@@ -45,6 +46,7 @@ const Heading = headingLevel;
             {!compact && (
               <p class="stamp-row">
                 <ReviewStamp date={reviewedOn(post)} />
+                <AuthorshipLabel authorship={post.data.authorship} />
                 {showFrameworks &&
                   frameworksFor(post).map((f) => (
                     <a class="fw-tag" href={`/frameworks/${f.id}`}>
