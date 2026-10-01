@@ -1,0 +1,48 @@
+---
+/**
+ * How a lab note was written, in words, with four dots for my share of the
+ * writing (●●●○ = written by me, with AI help). The words carry the meaning;
+ * the dots are decoration and hidden from screen readers.
+ */
+import { AUTHORSHIP_DOTS, AUTHORSHIP_LABEL, type Authorship } from '../lib/authorship';
+
+interface Props {
+  authorship: Authorship;
+}
+
+const { authorship } = Astro.props;
+const filled = AUTHORSHIP_DOTS[authorship];
+---
+
+<span class="authorship">
+  <span class="dots" aria-hidden="true">{[1, 2, 3, 4].map((n) => <i class:list={{ on: n <= filled }} />)}</span>
+  {AUTHORSHIP_LABEL[authorship]}
+</span>
+
+<style>
+  .authorship {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55em;
+    font-family: var(--font-label);
+    font-size: 0.74rem;
+    color: var(--ink-2);
+  }
+
+  .dots {
+    display: inline-flex;
+    gap: 2px;
+  }
+
+  .dots i {
+    width: 0.55em;
+    height: 0.55em;
+    border-radius: 50%;
+    border: 1.5px solid var(--ink-3);
+  }
+
+  .dots i.on {
+    background: var(--ink-2);
+    border-color: var(--ink-2);
+  }
+</style>

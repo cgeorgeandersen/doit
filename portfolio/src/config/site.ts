@@ -83,7 +83,7 @@ export const SITE = {
       /** What one entry is called where it's listed under a framework's "Applied in". */
       item: 'Lab note',
       title: 'Lab notes',
-      description: 'Working notes on getting AI into production, numbered and dated like a lab notebook.',
+      description: 'Working notes on getting AI into production, numbered and dated like a lab notebook. Each one says who wrote it: me, AI, or somewhere in between.',
     },
   },
 

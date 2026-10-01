@@ -1,7 +1,8 @@
 ---
-/** One lab note: entry number, date, title, optional summary, review stamp, the text and its topics. */
+/** One lab note: entry number, date, title, optional summary, review stamp, who wrote it, the text and its topics. */
 import { render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import AuthorshipLabel from '../../components/AuthorshipLabel.astro';
 import ElementTile from '../../components/ElementTile.astro';
 import ReviewStamp from '../../components/ReviewStamp.astro';
 import { SITE } from '../../config/site';
@@ -19,7 +20,7 @@ interface Props {
 
 const { post } = Astro.props;
 const site = await getSite();
-const { title, summary, date, tags, draft } = post.data;
+const { title, summary, date, tags, draft, authorship } = post.data;
 // Search results and link previews need a description; without a summary, the note's own opening serves.
 const description = summary ?? openingOf(post.body);
 const frameworks = site.frameworksFor(post);
@@ -59,6 +60,7 @@ const jsonLd = {
       {summary && <p class="dek">{summary}</p>}
       <p class="meta">
         <ReviewStamp date={reviewed} />
+        <AuthorshipLabel authorship={authorship} />
         {
           frameworks.map((f) => (
             <a class="fw-tag" href={`/frameworks/${f.id}`}>
