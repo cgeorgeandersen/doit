@@ -116,6 +116,8 @@ const writing = defineCollection({
     /** Optional. Shown under the title and in lists; without it there's no subtitle, and search results use the opening sentences. */
     summary: z.string(explain('one or two sentences describing the post')).transform(typeset).optional(),
     tags: z.array(z.string(), explain('a list like [ai-strategy, governance]')).default([]),
+    /** Frameworks the note applies: a tag on the note, and the note appears under "Applied in" on each framework. */
+    frameworks: z.array(reference('frameworks'), explain('a list of framework file names like [calibrated-trust]')).default([]),
     lastReviewed: date().optional(),
     draft,
   }),

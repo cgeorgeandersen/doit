@@ -12,7 +12,7 @@ import FailureModes from '../../components/FailureModes.astro';
 import ReviewStamp from '../../components/ReviewStamp.astro';
 import StatusPill from '../../components/StatusPill.astro';
 import { SITE } from '../../config/site';
-import { domainOf, getSite, type Framework, type Project } from '../../lib/content';
+import { domainOf, getSite, type Framework, type Post, type Project } from '../../lib/content';
 import { formatDate, isoDate } from '../../lib/dates';
 
 export async function getStaticPaths() {
@@ -31,12 +31,13 @@ const { Content } = await render(framework);
 const number = site.numberOf(framework);
 const color = site.colorOf(framework);
 const { applied, related } = site.projectsFor(framework);
+const notes = site.notesFor(framework);
 const others = site.frameworks.filter((f) => f.id !== framework.id);
 
-const groups: { label: string; projects: Project[] }[] = [
-  { label: 'Applied in', projects: applied },
-  { label: 'Related', projects: related },
-].filter((g) => g.projects.length > 0);
+const groups: { label: string; projects: Project[]; notes: Post[] }[] = [
+  { label: 'Applied in', projects: applied, notes },
+  { label: 'Related', projects: related, notes: [] },
+].filter((g) => g.projects.length + g.notes.length > 0);
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -113,6 +114,17 @@ const jsonLd = {
                       <span class="project-meta">
                         <StatusPill status={project.data.status} />
                         {project.data.liveUrl && <span>{domainOf(project.data.liveUrl)}</span>}
+                      </span>
+                    </a>
+                  </li>
+                ))}
+                {group.notes.map((note) => (
+                  <li>
+                    <a class="project" href={`/writing/${note.id}`}>
+                      <span class="project-title">{note.data.title}</span>
+                      <span class="project-meta">
+                        <span>{SITE.sections.writing.item}</span>
+                        <span>Entry {site.entryOf(note)}</span>
                       </span>
                     </a>
                   </li>
