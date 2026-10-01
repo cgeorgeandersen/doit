@@ -418,6 +418,18 @@ a:hover {
   border-bottom-color: var(--rule-strong);
 }
 
+/* Phones: a little tighter, so a four-column table fits a 360px screen without scrolling. */
+@media (max-width: 479px) {
+  .prose table {
+    font-size: 0.84rem;
+  }
+
+  .prose th,
+  .prose td {
+    padding-right: 0.42rem;
+  }
+}
+
 /* ---------- Controls ---------- */
 
 button {
