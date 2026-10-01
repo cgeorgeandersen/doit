@@ -125,7 +125,7 @@ const writing = defineCollection({
       AUTHORSHIPS,
       explain(
         'who wrote the note: me, mostly-me, mostly-ai, or ai',
-        'use exactly one of: me (written by me), mostly-me (with AI help), mostly-ai (drafted with AI, rewritten by me), ai (written by AI, checked by me)',
+        'use exactly one of: me (written by me), mostly-me (written by me, edited with AI), mostly-ai (drafted with AI, rewritten by me), ai (written by AI, checked by me)',
       ),
     ),
     draft,
