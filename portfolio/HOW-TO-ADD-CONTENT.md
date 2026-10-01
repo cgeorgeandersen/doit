@@ -122,7 +122,7 @@ lists that start with "- ", and headings that start with "## " all work.
 | Value | Label on the site |
 | --- | --- |
 | `me` | Written by me ●●●● |
-| `mostly-me` | Written by me, with AI help ●●●○ |
+| `mostly-me` | Written by me, edited with AI ●●●○ |
 | `mostly-ai` | Drafted with AI, rewritten by me ●●○○ |
 | `ai` | Written by AI, checked by me ●○○○ |
 

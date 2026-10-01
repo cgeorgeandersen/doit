@@ -5,7 +5,7 @@ export type Authorship = (typeof AUTHORSHIPS)[number];
 
 export const AUTHORSHIP_LABEL: Record<Authorship, string> = {
   me: 'Written by me',
-  'mostly-me': 'Written by me, with AI help',
+  'mostly-me': 'Written by me, edited with AI',
   'mostly-ai': 'Drafted with AI, rewritten by me',
   ai: 'Written by AI, checked by me',
 };
