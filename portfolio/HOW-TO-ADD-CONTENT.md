@@ -107,10 +107,6 @@ Posts are called lab notes on the site. Copy this into `src/content/writing/your
 ---
 title: "Post title"
 date: 2026-10-15
-authorship:
-  ideas: me
-  writing: edited-with-ai
-  finalCall: me
 summary: "One or two sentences, shown in lists and link previews."
 frameworks: [calibrated-trust]
 tags: [ai-strategy]
@@ -120,18 +116,7 @@ Write here. Blank lines separate paragraphs. **Bold**, *italic*, [links](https:/
 lists that start with "- ", and headings that start with "## " all work.
 ```
 
-**authorship** is required: who did what, in the three parts of Keep It Human. It shows on the note and in the Lab notes list as *Ideas · Writing · Final call*. Indent its three lines by two spaces.
-
-| Line | Values | Shown as |
-| --- | --- | --- |
-| `ideas` | `me`, `shared`, `ai` | Me / Me and AI / AI |
-| `writing` | `me` | Me |
-| | `edited-with-ai` | Me, edited with AI |
-| | `rewritten-from-ai` | Drafted with AI, rewritten by me |
-| | `ai-drafted` | AI-drafted, edited by me |
-| `finalCall` | `me`, `shared`, `ai` | Me / Me and AI / AI |
-
-Keep it true, especially when it's unflattering: the label is only worth something if it's honest every time. To change the wording, edit `src/lib/authorship.ts`.
+**Who writes lab notes:** you do. The Lab notes page promises every note is written by you, either entirely or drafted by you and then edited with AI. Don't publish a note AI drafted; rewrite it in your own words first. (The promise is in `sections.writing.note` in `site.ts`.)
 
 **summary** is optional. With one, it shows under the title and in the Lab notes list. Leave the line out to publish the note exactly as written, with no subtitle; search results and link previews then use its opening sentences.
 

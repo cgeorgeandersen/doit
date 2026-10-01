@@ -1,8 +1,7 @@
 ---
-/** One lab note: entry number, date, title, optional summary, review stamp, who wrote it, the text and its topics. */
+/** One lab note: entry number, date, title, optional summary, review stamp, the text and its topics. */
 import { render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import AuthorshipLabel from '../../components/AuthorshipLabel.astro';
 import ElementTile from '../../components/ElementTile.astro';
 import ReviewStamp from '../../components/ReviewStamp.astro';
 import { SITE } from '../../config/site';
@@ -20,7 +19,7 @@ interface Props {
 
 const { post } = Astro.props;
 const site = await getSite();
-const { title, summary, date, tags, draft, authorship } = post.data;
+const { title, summary, date, tags, draft } = post.data;
 // Search results and link previews need a description; without a summary, the note's own opening serves.
 const description = summary ?? openingOf(post.body);
 const frameworks = site.frameworksFor(post);
@@ -70,7 +69,6 @@ const jsonLd = {
           ))
         }
       </p>
-      <div class="authorship-row"><AuthorshipLabel authorship={authorship} /></div>
     </header>
     <div class="measure prose">
       <Content />
@@ -105,10 +103,6 @@ const jsonLd = {
     align-items: center;
     gap: 0.5rem 1.1rem;
     margin-top: 1.4rem;
-  }
-
-  .authorship-row {
-    margin-top: 0.9rem;
   }
 
   /* The frameworks the note applies, as the same symbol chips the project cards use. */

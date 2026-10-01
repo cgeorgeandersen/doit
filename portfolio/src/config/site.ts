@@ -83,7 +83,9 @@ export const SITE = {
       /** What one entry is called where it's listed under a framework's "Applied in". */
       item: 'Lab note',
       title: 'Lab notes',
-      description: 'Working notes on getting AI into production, numbered and dated like a lab notebook. Each one shows who had the ideas, who wrote the words, and who made the final call.',
+      description: 'Working notes on getting AI into production, numbered and dated like a lab notebook.',
+      /** Shown under the intro on the Lab notes page. Set it to '' to remove it. */
+      note: 'Writing is one of the things I believe should stay human. Every lab note here is written by me: some entirely, some drafted by me and then edited with AI.',
     },
   },
 
