@@ -107,7 +107,10 @@ Posts are called lab notes on the site. Copy this into `src/content/writing/your
 ---
 title: "Post title"
 date: 2026-10-15
-authorship: mostly-me
+authorship:
+  ideas: me
+  writing: edited-with-ai
+  finalCall: me
 summary: "One or two sentences, shown in lists and link previews."
 frameworks: [calibrated-trust]
 tags: [ai-strategy]
@@ -117,16 +120,18 @@ Write here. Blank lines separate paragraphs. **Bold**, *italic*, [links](https:/
 lists that start with "- ", and headings that start with "## " all work.
 ```
 
-**authorship** is required: who wrote the note. It shows as a label beside the review stamp, on the note and in the Lab notes list. Use one of:
+**authorship** is required: who did what, in the three parts of Keep It Human. It shows on the note and in the Lab notes list as *Ideas · Writing · Final call*. Indent its three lines by two spaces.
 
-| Value | Label on the site |
-| --- | --- |
-| `me` | Written by me ●●●● |
-| `mostly-me` | Written by me, edited with AI ●●●○ |
-| `mostly-ai` | Drafted with AI, rewritten by me ●●○○ |
-| `ai` | Written by AI, checked by me ●○○○ |
+| Line | Values | Shown as |
+| --- | --- | --- |
+| `ideas` | `me`, `shared`, `ai` | Me / Me and AI / AI |
+| `writing` | `me` | Me |
+| | `edited-with-ai` | Me, edited with AI |
+| | `rewritten-from-ai` | Drafted with AI, rewritten by me |
+| | `ai-drafted` | AI-drafted, edited by me |
+| `finalCall` | `me`, `shared`, `ai` | Me / Me and AI / AI |
 
-The test is who wrote the first draft, and who shaped it after. To change the wording of a label, edit `src/lib/authorship.ts`.
+Keep it true, especially when it's unflattering: the label is only worth something if it's honest every time. To change the wording, edit `src/lib/authorship.ts`.
 
 **summary** is optional. With one, it shows under the title and in the Lab notes list. Leave the line out to publish the note exactly as written, with no subtitle; search results and link previews then use its opening sentences.
 

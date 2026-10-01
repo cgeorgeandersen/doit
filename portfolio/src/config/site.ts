@@ -83,7 +83,7 @@ export const SITE = {
       /** What one entry is called where it's listed under a framework's "Applied in". */
       item: 'Lab note',
       title: 'Lab notes',
-      description: 'Working notes on getting AI into production, numbered and dated like a lab notebook. Each one says who wrote it: me, AI, or somewhere in between.',
+      description: 'Working notes on getting AI into production, numbered and dated like a lab notebook. Each one shows who had the ideas, who wrote the words, and who made the final call.',
     },
   },
 
@@ -128,8 +128,10 @@ export const SITE = {
   footer: {
     privacy: 'No cookies. Page views are counted anonymously by Vercel Web Analytics.',
     privacyUrl: 'https://vercel.com/docs/analytics/privacy-policy',
-    /** Delete this line (set it to '') to remove the credit. */
-    credit: 'Built with an AI assistant, directed and edited by me.',
+    /** How the site was made. Delete this line (set it to '') to remove it. */
+    credit: 'The ideas, frameworks and design here are mine. I use AI the way this site recommends: it does some of the hauling, I keep the judgment.',
+    /** The link after the credit: the framework it describes. */
+    creditLink: { text: 'Keep It Human', href: '/frameworks/keep-it-human' },
   },
 
   /** Frameworks and writing show when they were last reviewed; after this many days the stamp turns amber. */

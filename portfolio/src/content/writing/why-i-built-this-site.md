@@ -3,7 +3,10 @@ title: "Why I built this site"
 date: 2026-09-29
 summary: "Frameworks are claims until something ships. This site puts my methods next to the work that tests them, and dates my thinking so you can see it's current."
 tags: [meta]
-authorship: ai
+authorship:
+  ideas: me
+  writing: ai-drafted
+  finalCall: me
 ---
 
 For my whole career, my job has been making complicated things clear: first in analytics, now in AI strategy and governance. This site is the same job, applied to my own work.

@@ -2,7 +2,10 @@
 title: "Passengers, Centaurs, and Reverse Centaurs"
 date: 2026-10-01
 frameworks: [calibrated-trust, keep-it-human]
-authorship: mostly-me
+authorship:
+  ideas: me
+  writing: edited-with-ai
+  finalCall: me
 ---
 
 As you go down the path of using AI in your everyday work, you're going to stumble across a problem. For some of you it's already familiar. Others feel it but can't quite put a name to it yet.

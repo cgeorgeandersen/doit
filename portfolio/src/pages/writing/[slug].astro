@@ -60,7 +60,6 @@ const jsonLd = {
       {summary && <p class="dek">{summary}</p>}
       <p class="meta">
         <ReviewStamp date={reviewed} />
-        <AuthorshipLabel authorship={authorship} />
         {
           frameworks.map((f) => (
             <a class="fw-tag" href={`/frameworks/${f.id}`}>
@@ -71,6 +70,7 @@ const jsonLd = {
           ))
         }
       </p>
+      <div class="authorship-row"><AuthorshipLabel authorship={authorship} /></div>
     </header>
     <div class="measure prose">
       <Content />
@@ -105,6 +105,10 @@ const jsonLd = {
     align-items: center;
     gap: 0.5rem 1.1rem;
     margin-top: 1.4rem;
+  }
+
+  .authorship-row {
+    margin-top: 0.9rem;
   }
 
   /* The frameworks the note applies, as the same symbol chips the project cards use. */
