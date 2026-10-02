@@ -25,6 +25,7 @@ Enter two addresses and Track the Pole maps every known Flock license plate came
 | State legislators | [Open States](https://open.pluralpolicy.com/data/) bulk CSVs | Fetched at build time |
 | Members of Congress | [unitedstates/congress-legislators](https://github.com/unitedstates/congress-legislators) | Fetched at build time |
 | Mayors and county leaders | [Wikidata](https://www.wikidata.org) | From the browser, when a card or summary needs them |
+| Visit counts | [Vercel Web Analytics](https://vercel.com/docs/analytics) (no cookies) | From the browser to this site, with the route taken out of each address first |
 
 No API keys. Camera data is served from this site rather than queried per visitor because DeFlock’s CDN only allows its own pages to call it, the Overpass API is a shared volunteer resource, and serving it ourselves means a visitor’s route is never sent anywhere.
 
@@ -86,6 +87,7 @@ npm run preview      # serve dist/ with the same security headers as Vercel, and
 - **Vercel:** import the repository as a new project and set its Root Directory to `flockwatch`. [`vercel.json`](vercel.json) runs `npm run build:deploy`, so every deploy carries that day’s camera data; it also rewrites `/api/census/*` to the Census Geocoder and sets the security headers, including a Content-Security-Policy that limits the page to the services listed above. If the data fetch fails, the build fails and the previous deployment stays live.
 - **Domain:** in the Vercel project, Settings → Domains, add `trackthepole.com` and `www.trackthepole.com` (redirecting to it), then add the DNS records Vercel shows wherever the domain was bought. HTTPS is automatic. The page’s canonical and sharing links point to trackthepole.com.
 - **Fresh data on a schedule:** camera data changes daily. To redeploy regularly without a code change, create a Deploy Hook in the Vercel project (Settings → Git → Deploy Hooks) and call it on a schedule, for example from a scheduled GitHub Action that keeps the hook URL in a repository secret.
+- **Visit counts:** Web Analytics is turned on in the Vercel project’s Analytics tab, and [`src/main.ts`](src/main.ts) loads Vercel’s script in production builds (`npm run dev` loads nothing). Vercel’s script reports the page’s full address, and a shared link ends in `#from=…&to=…`, so [`src/lib/analytics.ts`](src/lib/analytics.ts) cuts every address down to its path plus any `utm_*` or `ref` tags before it’s sent. Blockers using the EasyPrivacy list (on by default in uBlock Origin) stop the script, so visit counts are minimums too. “Data and privacy” on the page says what’s collected; keep it in step.
 - **Checks:** [`.github/workflows/flockwatch-ci.yml`](../.github/workflows/flockwatch-ci.yml) installs, tests and builds on every push and pull request that touches this folder. It doesn’t fetch data or deploy.
 - **Elsewhere:** any static host works for `dist/`, but the officials lookup needs `/api/census/` forwarded to `https://geocoding.geo.census.gov/geocoder/geographies/`. Without it, cards say officials couldn’t be looked up and link to USA.gov.
 

@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { pageAddress } from '../src/lib/analytics';
 import { fmtDuration, fmtMiles, spacing } from '../src/lib/format';
 import { nearbyPlace, photonParams, toPlaces, type PhotonResponse } from '../src/lib/geocode';
 import { offsetPoint, type LngLat } from '../src/lib/geo';
@@ -18,6 +19,23 @@ describe('share links', () => {
     expect(decodeRoute('#from=abc,1&to=1,2')).toBeNull();
     expect(decodeRoute('#from=95,0&to=1,2')).toBeNull();
     expect(decodeRoute('')).toBeNull();
+  });
+});
+
+describe('pageAddress', () => {
+  it('reports the page without the route someone counted', () => {
+    expect(pageAddress('https://www.trackthepole.com/#from=33.749,-84.388&to=33.641,-84.428')).toBe(
+      'https://www.trackthepole.com/',
+    );
+  });
+
+  it('keeps campaign tags and drops every other parameter', () => {
+    expect(pageAddress('https://www.trackthepole.com/?utm_source=newsletter&fbclid=IwAR0abc&ref=reddit#from=1,2&to=3,4')).toBe(
+      'https://www.trackthepole.com/?utm_source=newsletter&ref=reddit',
+    );
+    expect(pageAddress('https://www.trackthepole.com/?from=33.749,-84.388&to=33.641,-84.428')).toBe(
+      'https://www.trackthepole.com/',
+    );
   });
 });
 
