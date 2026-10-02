@@ -52,16 +52,22 @@ export class App {
 
     this.card = new CameraCard(qs('#cam-card'), mapWrap, () => this.map.focus(null));
 
+    // Suggestions lean toward the other end of the route, or toward the area on the map once it's zoomed in.
     const near = (other: () => AddressBox): (() => LngLat | undefined) => () => {
       const p = other().place;
-      return p ? [p.lon, p.lat] : this.map.map.getZoom() > 7 ? this.map.center() : undefined;
+      return p ? [p.lon, p.lat] : this.map.map.getZoom() > 5.5 ? this.map.center() : undefined;
     };
-    this.from = new AddressBox(qs('#from-input'), qs('#from-list'), near(() => this.to), () => {
-      if (!this.to.place) this.to.input.focus();
-    });
-    this.to = new AddressBox(qs('#to-input'), qs('#to-list'), near(() => this.from), () => {
-      if (this.from.place) void this.run();
-    });
+    // Picking one end counts the cameras if the other is already set, or moves on to it.
+    const picked = (other: () => AddressBox) => () => {
+      if (other().place) void this.run();
+      else other().input.focus();
+    };
+    this.from = new AddressBox(qs('#from-input'), qs('#from-list'), near(() => this.to), picked(() => this.to), () =>
+      this.locate(this.from),
+    );
+    this.to = new AddressBox(qs('#to-input'), qs('#to-list'), near(() => this.from), picked(() => this.from), () =>
+      this.locate(this.to),
+    );
 
     this.results = new ResultsView(qs('#results'), qs('#map-count'), {
       selectRoute: (i) => this.selectRoute(i),
@@ -80,7 +86,7 @@ export class App {
       void this.run();
     });
     qs('#swap').addEventListener('click', () => this.swap());
-    qs('#locate').addEventListener('click', (e) => this.locate(e.currentTarget as HTMLButtonElement));
+    qs('#locate').addEventListener('click', (e) => this.locate(this.from, e.currentTarget as HTMLButtonElement));
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && this.card.pinned) this.card.close();
     });
@@ -241,24 +247,32 @@ export class App {
     if (!a) this.to.place = null;
   }
 
-  private locate(button: HTMLButtonElement): void {
+  /** Fills `box` with the device's location; the nearby street is filled in when the lookup answers. */
+  private locate(box: AddressBox, button?: HTMLButtonElement): void {
     if (!('geolocation' in navigator)) return this.showError('This browser can’t share its location.');
-    button.setAttribute('aria-busy', 'true');
+    button?.setAttribute('aria-busy', 'true');
+    const placeholder = box.input.placeholder;
+    box.input.placeholder = 'Finding your location…';
+    const done = () => {
+      button?.removeAttribute('aria-busy');
+      box.input.placeholder = placeholder;
+    };
     navigator.geolocation.getCurrentPosition(
-      async ({ coords }) => {
-        const near = await reversePlace(coords.longitude, coords.latitude).catch(() => null);
-        this.from.set({
-          label: 'Current location',
-          detail: near ? near.label.replace(/^Near /, 'near ') : '',
-          lon: coords.longitude,
-          lat: coords.latitude,
-        });
-        button.removeAttribute('aria-busy');
-        if (this.to.place) void this.run();
-        else this.to.input.focus();
+      ({ coords }) => {
+        done();
+        const here: Place = { label: 'Current location', detail: '', lon: coords.longitude, lat: coords.latitude, kind: 'place' };
+        box.set(here);
+        void reversePlace(here.lon, here.lat)
+          .then((near) => {
+            if (near && box.place === here) box.set({ ...here, detail: near.label.replace(/^Near /, 'near ') });
+          })
+          .catch(() => undefined);
+        const other = box === this.from ? this.to : this.from;
+        if (other.place) void this.run();
+        else other.input.focus();
       },
       () => {
-        button.removeAttribute('aria-busy');
+        done();
         this.showError('Couldn’t get your location. Type an address instead.');
       },
       { enableHighAccuracy: false, timeout: 10_000, maximumAge: 60_000 },
