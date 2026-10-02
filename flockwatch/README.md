@@ -1,6 +1,8 @@
-# FlockWatch
+# Track the Pole
 
-Enter two addresses and FlockWatch maps every known Flock license plate camera along the drive, counts the ones that would photograph your car, and tells you who answers for each one: the mayor or county, state legislators and members of Congress for that spot. Below the map, a short explainer covers what the cameras record, who can search the data, the legal picture, and what people can do. Every factual claim there links to a source.
+Live at [trackthepole.com](https://trackthepole.com). (The code keeps its working name, FlockWatch, in this `flockwatch/` folder, which is the Vercel project’s Root Directory.)
+
+Enter two addresses and Track the Pole maps every known Flock license plate camera along the drive, counts the ones that would photograph your car, and tells you who answers for each one: the mayor or county, state legislators and members of Congress for that spot. Below the map, a short explainer covers what the cameras record, who can search the data, the legal picture, and what people can do. Every factual claim there links to a source.
 
 | Part | What it does |
 | --- | --- |
@@ -17,7 +19,8 @@ Enter two addresses and FlockWatch maps every known Flock license plate camera a
 | Cameras | [DeFlock](https://deflock.me)’s export of OpenStreetMap plate readers (ODbL) | Fetched at build time and served from this site |
 | Map | [OpenFreeMap](https://openfreemap.org) vector tiles | From the visitor’s browser |
 | Routes | [OSRM](https://project-osrm.org) on [FOSSGIS](https://routing.openstreetmap.de/about.html)’s server, falling back to the OSRM demo server | From the browser, one request per search |
-| Address search | [Photon](https://photon.komoot.io) (komoot) | From the browser, as you type |
+| Address search | [Photon](https://photon.komoot.io) (komoot), U.S. results only | From the browser, as you type |
+| City and town suggestions | U.S. Census Bureau [gazetteer of places](https://www.census.gov/geographies/reference-files/time-series/geo/gazetteer-files.html) and [population estimates](https://www.census.gov/programs-surveys/popest.html) | Fetched at build time, one small file per first letter |
 | Districts for a camera | [U.S. Census Geocoder](https://geocoding.geo.census.gov) | Through this site’s `/api/census` (the Census server doesn’t allow cross-site calls) |
 | State legislators | [Open States](https://open.pluralpolicy.com/data/) bulk CSVs | Fetched at build time |
 | Members of Congress | [unitedstates/congress-legislators](https://github.com/unitedstates/congress-legislators) | Fetched at build time |
@@ -36,6 +39,14 @@ The rules live in `COUNT_RULES` in [`src/lib/seen.ts`](src/lib/seen.ts) and are 
 
 Counts are minimums: only cameras volunteers have mapped are known.
 
+## The address boxes
+
+[`src/ui/combobox.ts`](src/ui/combobox.ts) suggests places as you type, like a map app. Photon’s free server can take a few seconds to answer, so:
+
+- Cities and towns come up instantly from the Census list (32,000 places, split by first letter so typing “a” loads one file of about 20 KB compressed; the largest, “s”, is 46 KB), ranked by population and leaning toward the other end of the route ([`src/lib/places.ts`](src/lib/places.ts)). “Springfield, IL”, “springfield il” and a half-typed “atlanta, g” all narrow by state.
+- Addresses, streets and named places come from Photon. Requests go out while you type (at least every 0.4 s), none is cancelled, and the newest answer to arrive is shown, so the list fills in and sharpens with a “Searching…” row instead of waiting for a pause. Landforms such as “Atlantic Coastal Plain” are dropped, and one place mapped several times appears once.
+- An empty box offers “Use my current location”. Enter takes the highlighted suggestion, or the top one.
+
 ## Who answers for a camera
 
 [`src/lib/officials.ts`](src/lib/officials.ts): the Census Geocoder gives the city or township, county, and state and congressional districts for the camera’s location. District names are normalized so the Census’s “Third Suffolk District” matches Open States’ “3rd Suffolk”, and DC’s council, Nebraska’s one-house legislature, multi-member districts and counties without governments are handled.
@@ -49,11 +60,11 @@ Requires Node 22 (as pinned in `package.json`, and used by CI and Vercel).
 ```bash
 cd flockwatch
 npm ci
-npm run data       # fetch cameras and officials into public/data/ (about 13 MB, about 10 seconds)
+npm run data       # fetch cameras, officials and cities into public/data/ (about 14 MB, about 10 seconds)
 npm run dev        # http://localhost:5173
 ```
 
-`npm run data -- --only=cameras` or `--only=officials` refreshes one part.
+`npm run data -- --only=cameras`, `--only=officials` or `--only=places` refreshes one part.
 
 ## Test it
 
@@ -62,7 +73,7 @@ npm test           # Vitest
 npm run typecheck  # TypeScript, strict
 ```
 
-The tests cover the geometry; the direction parser against every format found in the data; the counting rules on synthetic roads (rear and front captures, cameras aimed at cross streets and parallel roads, unknown directions, a corner, a performance check with 40,000 cameras); the officials logic against real Census answers saved in `tests/fixtures/` (cities, a Pennsylvania township, DC, Boston, a newly incorporated city) and against stale-Wikidata cases; address labels; share links; and the page’s content: every citation number must match its source’s place in the list.
+The tests cover the geometry; the direction parser against every format found in the data; the counting rules on synthetic roads (rear and front captures, cameras aimed at cross streets and parallel roads, unknown directions, a corner, a performance check with 40,000 cameras); the officials logic against real Census answers saved in `tests/fixtures/` (cities, a Pennsylvania township, DC, Boston, a newly incorporated city) and against stale-Wikidata cases; address labels and city matching (ranking, states, accents, alternate names); the zip reader for the Census file; share links; and the page’s content: every citation number must match its source’s place in the list.
 
 ## Build and deploy
 
@@ -73,6 +84,7 @@ npm run preview      # serve dist/ with the same security headers as Vercel, and
 ```
 
 - **Vercel:** import the repository as a new project and set its Root Directory to `flockwatch`. [`vercel.json`](vercel.json) runs `npm run build:deploy`, so every deploy carries that day’s camera data; it also rewrites `/api/census/*` to the Census Geocoder and sets the security headers, including a Content-Security-Policy that limits the page to the services listed above. If the data fetch fails, the build fails and the previous deployment stays live.
+- **Domain:** in the Vercel project, Settings → Domains, add `trackthepole.com` and `www.trackthepole.com` (redirecting to it), then add the DNS records Vercel shows wherever the domain was bought. HTTPS is automatic. The page’s canonical and sharing links point to trackthepole.com.
 - **Fresh data on a schedule:** camera data changes daily. To redeploy regularly without a code change, create a Deploy Hook in the Vercel project (Settings → Git → Deploy Hooks) and call it on a schedule, for example from a scheduled GitHub Action that keeps the hook URL in a repository secret.
 - **Checks:** [`.github/workflows/flockwatch-ci.yml`](../.github/workflows/flockwatch-ci.yml) installs, tests and builds on every push and pull request that touches this folder. It doesn’t fetch data or deploy.
 - **Elsewhere:** any static host works for `dist/`, but the officials lookup needs `/api/census/` forwarded to `https://geocoding.geo.census.gov/geocoder/geographies/`. Without it, cards say officials couldn’t be looked up and link to USA.gov.
@@ -86,7 +98,7 @@ The explainer’s facts are dated and sourced in [`index.html`](index.html) (Sou
 ```
 flockwatch/
   index.html            page shell and all explainer prose (readable without JavaScript)
-  scripts/build-data.ts fetches cameras, legislators and Congress into public/data/
+  scripts/build-data.ts fetches cameras, legislators, Congress and cities into public/data/
   src/lib/              pure, tested logic: geometry, direction parsing, counting,
                         officials matching, geocoding, routing, tiles, share links
   src/ui/               map, address boxes, camera card, results panel, theme
@@ -99,4 +111,4 @@ flockwatch/
 
 Code: MIT. Camera data © OpenStreetMap contributors (ODbL), compiled by DeFlock. Map tiles: OpenFreeMap, OpenMapTiles, OpenStreetMap. Fonts: Public Sans and IBM Plex Mono (SIL Open Font License). Map rendering: MapLibre GL JS (BSD-3-Clause).
 
-FlockWatch is independent. It isn’t affiliated with Flock Safety, DeFlock or any government. It was built with the help of an AI assistant, and its claims were checked against the sources cited on the page.
+Track the Pole is independent. It isn’t affiliated with Flock Safety, DeFlock or any government. It was built with the help of an AI assistant, and its claims were checked against the sources cited on the page.

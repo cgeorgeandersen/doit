@@ -1,9 +1,10 @@
 /**
- * Builds the data FlockWatch serves from its own domain, into public/data/:
+ * Builds the data Track the Pole serves from its own domain, into public/data/:
  *
  *   cameras/<lat>_<lon>.json   every mapped license plate reader, in 1° tiles
  *   overview.json              camera counts on a 0.1° grid, for the zoomed-out map
  *   officials/<st>.json        state legislators and members of Congress, per state
+ *   places/<letter>.json       every U.S. city and town, for instant address suggestions
  *   meta.json                  totals, sources and dates
  *
  * Sources:
@@ -11,24 +12,29 @@
  *     (https://deflock.me; data © OpenStreetMap contributors, ODbL).
  *   - State legislators: Open States bulk data (https://open.pluralpolicy.com/data/).
  *   - Congress: unitedstates/congress-legislators (public domain).
+ *   - Cities and towns: U.S. Census Bureau gazetteer and population
+ *     estimates (public domain).
  *
  * Fetching once per deploy, instead of from every visitor's browser, keeps the
  * app fast, keeps visitors' routes away from third parties, and puts one small
  * load on these volunteer-run services instead of thousands.
  *
  * Run with: npm run data   (Node 22 runs this TypeScript file directly)
- * Options:  --only=cameras | --only=officials
+ * Options:  --only=cameras | --only=officials | --only=places
  */
 
 import { mkdir, rm, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
-import { normalizeBrand, normalizeOperator, parseCsv, tileKey } from '../src/lib/normalize.ts';
+import { normalizeBrand, normalizeOperator, parseCsv, placeKey, placeName, tileKey } from '../src/lib/normalize.ts';
+import { unzipSingle } from './unzip.ts';
 
 const OUT = resolve(import.meta.dirname, '../public/data');
-const USER_AGENT = 'FlockWatch/0.1 (+https://github.com/cgeorgeandersen/doit)';
+const USER_AGENT = 'TrackThePole/0.1 (+https://trackthepole.com)';
 const DEFLOCK_INDEX = 'https://cdn.deflock.me/regions/index.json';
 const OPEN_STATES_CSV = (st: string) => `https://data.openstates.org/people/current/${st}.csv`;
 const CONGRESS_JSON = 'https://unitedstates.github.io/congress-legislators/legislators-current.json';
+const GAZETTEER_ZIP = 'https://www2.census.gov/geo/docs/maps-data/data/gazetteer/2024_Gazetteer/2024_Gaz_place_national.zip';
+const POPULATION_CSV = 'https://www2.census.gov/programs-surveys/popest/datasets/2020-2024/cities/totals/sub-est2024.csv';
 
 /** 50 states, DC and Puerto Rico: the places with both Census districts and Open States data. */
 const STATES = [
@@ -39,13 +45,13 @@ const STATES = [
 
 const only = process.argv.find((a) => a.startsWith('--only='))?.slice('--only='.length);
 
-async function fetchText(url: string, attempts = 3): Promise<string> {
+async function fetchBytes(url: string, attempts = 3): Promise<Buffer> {
   let lastError: unknown;
   for (let attempt = 1; attempt <= attempts; attempt++) {
     try {
       const res = await fetch(url, { headers: { 'User-Agent': USER_AGENT } });
       if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
-      return await res.text();
+      return Buffer.from(await res.arrayBuffer());
     } catch (err) {
       lastError = err;
       if (attempt < attempts) await new Promise((r) => setTimeout(r, 1000 * 2 ** attempt));
@@ -53,6 +59,8 @@ async function fetchText(url: string, attempts = 3): Promise<string> {
   }
   throw new Error(`Could not fetch ${url}: ${String(lastError)}`);
 }
+
+const fetchText = async (url: string) => (await fetchBytes(url)).toString('utf8');
 
 async function writeJson(path: string, data: unknown): Promise<void> {
   await mkdir(dirname(path), { recursive: true });
@@ -271,10 +279,83 @@ async function buildOfficials(): Promise<Record<string, unknown>> {
   };
 }
 
+// ----------------------------------------------------------------- places --
+
+/**
+ * Every U.S. city, town, village and unincorporated community (Census
+ * "places"), so the address boxes can suggest them instantly instead of
+ * waiting on the geocoder. Split by first letter, so typing "a" loads only
+ * the A file. Ranked by population where the Census estimates it (cities and
+ * towns; unincorporated communities count as 0).
+ */
+async function buildPlaces(): Promise<Record<string, unknown>> {
+  const [zip, populationCsv] = await Promise.all([fetchBytes(GAZETTEER_ZIP), fetchText(POPULATION_CSV)]);
+
+  const population = new Map<string, number>();
+  const popRows = parseCsv(populationCsv);
+  // Use the newest year in the file, so a later vintage of the same file still works.
+  const latest = Object.keys(popRows[0] ?? {})
+    .filter((k) => /^POPESTIMATE\d{4}$/.test(k))
+    .sort()
+    .at(-1);
+  for (const row of popRows) {
+    if (row.SUMLEV === '162' && latest) population.set(`${row.STATE}${row.PLACE}`, Number(row[latest]) || 0);
+  }
+
+  const lines = unzipSingle(zip).toString('utf8').split(/\r?\n/);
+  const header = (lines[0] ?? '').split('\t').map((h) => h.trim());
+  const at = (name: string) => {
+    const i = header.indexOf(name);
+    if (i < 0) throw new Error(`Gazetteer is missing the ${name} column`);
+    return i;
+  };
+  const [iState, iGeoid, iName, iLat, iLon] = [at('USPS'), at('GEOID'), at('NAME'), at('INTPTLAT'), at('INTPTLONG')];
+
+  const byKey = new Map<string, Array<[string, string, number, number, number]>>();
+  let count = 0;
+  for (const line of lines.slice(1)) {
+    const cells = line.split('\t').map((c) => c.trim());
+    const name = placeName(cells[iName] ?? '');
+    const lat = Number(cells[iLat]);
+    const lon = Number(cells[iLon]);
+    if (!name || !Number.isFinite(lat) || !Number.isFinite(lon)) continue;
+    const round4 = (n: number) => Math.round(n * 1e4) / 1e4;
+    const key = placeKey(name);
+    const list = byKey.get(key) ?? [];
+    list.push([name, cells[iState] ?? '', round4(lon), round4(lat), population.get(cells[iGeoid] ?? '') ?? 0]);
+    byKey.set(key, list);
+    count++;
+  }
+  if (count < 10_000) throw new Error(`Only ${count} places in the gazetteer; refusing to publish.`);
+
+  await rm(resolve(OUT, 'places'), { recursive: true, force: true });
+  for (const [key, list] of byKey) {
+    list.sort((a, b) => b[4] - a[4] || a[0].localeCompare(b[0]));
+    await writeJson(resolve(OUT, `places/${key}.json`), { v: 1, places: list });
+  }
+  console.log(`Places: ${count.toLocaleString('en-US')} cities and towns (${population.size.toLocaleString('en-US')} with population)`);
+  return {
+    places: {
+      source: 'U.S. Census Bureau: 2024 gazetteer of places and population estimates',
+      count,
+      withPopulation: population.size,
+      populationYear: latest?.slice(-4) ?? null,
+    },
+  };
+}
+
 // ------------------------------------------------------------------- main --
 
 const meta: Record<string, unknown> = { generated: new Date().toISOString() };
-if (only !== 'officials') Object.assign(meta, await buildCameras());
-if (only !== 'cameras') Object.assign(meta, await buildOfficials());
+if (!only || only === 'cameras') Object.assign(meta, await buildCameras());
+if (!only || only === 'officials') Object.assign(meta, await buildOfficials());
+if (!only || only === 'places') {
+  try {
+    Object.assign(meta, await buildPlaces());
+  } catch (err) {
+    // City suggestions are a convenience; the address boxes still work through the geocoder without them.
+    console.warn(`Places: skipped (${String(err)})`);
+  }
+}
 if (!only) await writeJson(resolve(OUT, 'meta.json'), meta);
 console.log(only ? `Done (${only} only; meta.json left as it was).` : `Done: ${OUT}`);

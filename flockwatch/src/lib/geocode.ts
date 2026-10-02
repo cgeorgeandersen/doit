@@ -1,10 +1,12 @@
 /**
  * Address search and reverse lookup with Photon (photon.komoot.io), an
  * OpenStreetMap geocoder built for search-as-you-type. (Nominatim, the other
- * OSM geocoder, forbids autocomplete on its public server.)
+ * OSM geocoder, forbids autocomplete on its public server, and Esri's needs
+ * an access token.) Photon's free server can take a few seconds to answer,
+ * so the address boxes also suggest cities instantly from src/lib/places.ts.
  */
 
-import type { LngLat } from './geo';
+import { haversine, type LngLat } from './geo';
 
 export interface Place {
   /** First line, e.g. "1600 Pennsylvania Avenue Northwest" or "Hartsfield-Jackson Atlanta International Airport". */
@@ -13,13 +15,16 @@ export interface Place {
   detail: string;
   lon: number;
   lat: number;
+  /** What it is, for the suggestion's icon: a city or other area, a street, a named place, or an address. */
+  kind?: 'area' | 'street' | 'place' | 'address';
 }
 
 const PHOTON = 'https://photon.komoot.io';
 /** The U.S. and its territories with roads people drive. */
 const COUNTRIES = new Set(['US', 'PR', 'VI', 'GU']);
 
-const STATES: Record<string, string> = {
+/** State and territory names to postal codes. */
+export const STATE_ABBR: Record<string, string> = {
   Alabama: 'AL', Alaska: 'AK', Arizona: 'AZ', Arkansas: 'AR', California: 'CA', Colorado: 'CO', Connecticut: 'CT',
   Delaware: 'DE', 'District of Columbia': 'DC', Florida: 'FL', Georgia: 'GA', Hawaii: 'HI', Idaho: 'ID', Illinois: 'IL',
   Indiana: 'IN', Iowa: 'IA', Kansas: 'KS', Kentucky: 'KY', Louisiana: 'LA', Maine: 'ME', Maryland: 'MD',
@@ -43,8 +48,15 @@ interface PhotonProperties {
   state?: string;
   postcode?: string;
   countrycode?: string;
+  /** house, street, locality, district, city, county, state, country or other */
   type?: string;
+  osm_key?: string;
+  osm_value?: string;
 }
+
+const AREA_TYPES = new Set(['locality', 'district', 'city', 'county', 'state', 'country']);
+/** Landforms and waters too big to drive to ("Atlantic Coastal Plain"), and whole states. Beaches, peaks and parks stay. */
+const NOT_DESTINATIONS = new Set(['plain', 'valley', 'ridge', 'water', 'bay', 'strait', 'coastline', 'wetland', 'glacier', 'sea', 'ocean', 'region', 'continent', 'archipelago']);
 
 export interface PhotonResponse {
   features?: Array<{ geometry: { coordinates: [number, number] }; properties: PhotonProperties }>;
@@ -57,9 +69,10 @@ export function toPlaces(json: PhotonResponse): Place[] {
   for (const f of json.features ?? []) {
     const p = f.properties;
     if (!COUNTRIES.has((p.countrycode ?? '').toUpperCase())) continue;
+    if (p.type === 'state' || p.type === 'country' || p.osm_key === 'waterway' || NOT_DESTINATIONS.has(p.osm_value ?? '')) continue;
     const street = p.housenumber && p.street ? `${p.housenumber} ${p.street}` : p.street;
     const town = p.city ?? p.town ?? p.village ?? p.district;
-    const state = p.state ? (STATES[p.state] ?? p.state) : undefined;
+    const state = p.state ? (STATE_ABBR[p.state] ?? p.state) : undefined;
     const label = p.name ?? street ?? town ?? p.county ?? '';
     if (!label) continue;
     const parts = [label !== street ? street : undefined, label !== town ? town : undefined, state]
@@ -70,30 +83,37 @@ export function toPlaces(json: PhotonResponse): Place[] {
     if (seen.has(key)) continue;
     seen.add(key);
     const [lon, lat] = f.geometry.coordinates;
-    out.push({ label, detail, lon, lat });
+    // The same name a few hundred meters apart is one place mapped several times (a mall, its bus stop, its garage).
+    if (out.some((o) => o.label === label && haversine([o.lon, o.lat], [lon, lat]) < 400)) continue;
+    const kind = AREA_TYPES.has(p.type ?? '') ? 'area' : p.type === 'street' ? 'street' : p.name ? 'place' : 'address';
+    out.push({ label, detail, lon, lat, kind });
   }
   return out;
 }
 
-const searchCache = new Map<string, Promise<Place[]>>();
-
-/** Places matching `query`, nearest to `near` first when given. */
-export function searchPlaces(query: string, near?: LngLat, signal?: AbortSignal): Promise<Place[]> {
-  const q = query.trim();
-  const params = new URLSearchParams({ q, limit: '10', lang: 'en' });
+/** The Photon request for a search: U.S. results only, nearest to `near` first when given. */
+export function photonParams(query: string, near?: LngLat): URLSearchParams {
+  const params = new URLSearchParams({ q: query.trim(), limit: '10', lang: 'en', countrycode: 'US' });
   if (near) {
     params.set('lon', near[0].toFixed(3));
     params.set('lat', near[1].toFixed(3));
   }
-  const key = params.toString();
+  return params;
+}
+
+const searchCache = new Map<string, Promise<Place[]>>();
+
+/** Places matching `query`, nearest to `near` first when given. Results are cached for the visit. */
+export function searchPlaces(query: string, near?: LngLat): Promise<Place[]> {
+  const key = photonParams(query, near).toString();
   let hit = searchCache.get(key);
   if (!hit) {
-    hit = fetch(`${PHOTON}/api/?${key}`, { signal })
+    hit = fetch(`${PHOTON}/api/?${key}`)
       .then((r) => {
         if (!r.ok) throw new Error(`Address search failed (${r.status})`);
         return r.json() as Promise<PhotonResponse>;
       })
-      .then((json) => toPlaces(json).slice(0, 6));
+      .then((json) => toPlaces(json).slice(0, 7));
     hit.catch(() => searchCache.delete(key));
     searchCache.set(key, hit);
   }
@@ -112,7 +132,7 @@ export function nearbyPlace(json: PhotonResponse, lon: number, lat: number): Pla
   if (withStreet) {
     const p = withStreet.properties;
     const town = p.city ?? p.town ?? p.village ?? p.district;
-    const state = p.state ? (STATES[p.state] ?? p.state) : undefined;
+    const state = p.state ? (STATE_ABBR[p.state] ?? p.state) : undefined;
     return {
       label: `Near ${p.housenumber ? `${p.housenumber} ` : ''}${p.street}`,
       detail: [town, state].filter(Boolean).join(', '),

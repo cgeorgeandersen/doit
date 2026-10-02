@@ -1,8 +1,8 @@
-# Checks FlockWatch (flockwatch/) on every push and pull request that touches
+# Checks Track the Pole (flockwatch/) on every push and pull request that touches
 # it: install, tests, and a type-checked production build. It does not fetch
 # camera data (Vercel does that at deploy time; see flockwatch/vercel.json),
 # and it does not deploy.
-name: FlockWatch
+name: Track the Pole
 
 on:
   push:

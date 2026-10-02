@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { fmtDuration, fmtMiles, spacing } from '../src/lib/format';
-import { nearbyPlace, toPlaces, type PhotonResponse } from '../src/lib/geocode';
+import { nearbyPlace, photonParams, toPlaces, type PhotonResponse } from '../src/lib/geocode';
 import { offsetPoint, type LngLat } from '../src/lib/geo';
 import { NoRouteError, parseOsrm } from '../src/lib/route';
 import { decodeRoute, encodeRoute } from '../src/lib/share';
@@ -77,10 +77,23 @@ describe('toPlaces', () => {
       ],
     };
     expect(toPlaces(json)).toEqual([
-      { label: 'White House', detail: '1600 Pennsylvania Avenue Northwest, Washington, DC 20500', lon: -77.0365, lat: 38.8977 },
-      { label: '10 Main Street', detail: 'Smallville, KS 66002', lon: -95, lat: 39 },
-      { label: 'Paris', detail: 'TX', lon: -95.55, lat: 33.66 },
+      { label: 'White House', detail: '1600 Pennsylvania Avenue Northwest, Washington, DC 20500', lon: -77.0365, lat: 38.8977, kind: 'place' },
+      { label: '10 Main Street', detail: 'Smallville, KS 66002', lon: -95, lat: 39, kind: 'address' },
+      { label: 'Paris', detail: 'TX', lon: -95.55, lat: 33.66, kind: 'place' },
     ]);
+  });
+
+  it('drops landforms, whole states, and one place mapped several times', () => {
+    const json: PhotonResponse = {
+      features: [
+        feature({ countrycode: 'US', name: 'Atlantic Coastal Plain', type: 'other', osm_key: 'natural', osm_value: 'plain', state: 'North Carolina' }),
+        feature({ countrycode: 'US', name: 'Georgia', type: 'state', osm_key: 'place', osm_value: 'state' }),
+        feature({ countrycode: 'US', name: 'Lenox Square', type: 'house', osm_key: 'shop', osm_value: 'mall', street: 'Peachtree Road', city: 'Atlanta', state: 'Georgia' }, [-84.3621, 33.8466]),
+        feature({ countrycode: 'US', name: 'Lenox Square', type: 'house', osm_key: 'highway', osm_value: 'bus_stop', street: 'Lenox Road', city: 'Atlanta', state: 'Georgia' }, [-84.3605, 33.8455]),
+        feature({ countrycode: 'US', name: 'Tybee Island Beach', type: 'house', osm_key: 'natural', osm_value: 'beach', state: 'Georgia' }, [-80.84, 32.0]),
+      ],
+    };
+    expect(toPlaces(json).map((p) => p.label)).toEqual(['Lenox Square', 'Tybee Island Beach']);
   });
 
   it('drops duplicates and nameless results', () => {
@@ -92,6 +105,37 @@ describe('toPlaces', () => {
       ],
     };
     expect(toPlaces(json)).toHaveLength(1);
+  });
+});
+
+describe('photonParams', () => {
+  it('asks for U.S. results only, near the other end of the route when known', () => {
+    expect(Object.fromEntries(photonParams('  lenox sq ', [-84.38812, 33.74911]))).toEqual({
+      q: 'lenox sq',
+      limit: '10',
+      lang: 'en',
+      countrycode: 'US',
+      lon: '-84.388',
+      lat: '33.749',
+    });
+    expect(photonParams('walm').has('lat')).toBe(false);
+  });
+
+  it('tags each result with its kind, for its icon', () => {
+    const json: PhotonResponse = {
+      features: [
+        { geometry: { coordinates: [-84.39, 33.75] }, properties: { countrycode: 'US', name: 'Atlanta', type: 'city', state: 'Georgia' } },
+        { geometry: { coordinates: [-84.39, 33.76] }, properties: { countrycode: 'US', name: 'Peachtree Street Northeast', type: 'street', city: 'Atlanta', state: 'Georgia' } },
+        { geometry: { coordinates: [-84.36, 33.85] }, properties: { countrycode: 'US', name: 'Lenox Square', type: 'house', city: 'Atlanta', state: 'Georgia' } },
+        { geometry: { coordinates: [-84.37, 33.77] }, properties: { countrycode: 'US', housenumber: '675', street: 'Ponce de Leon Avenue Northeast', type: 'house', city: 'Atlanta', state: 'Georgia' } },
+      ],
+    };
+    expect(toPlaces(json).map((p) => [p.label, p.detail, p.kind])).toEqual([
+      ['Atlanta', 'GA', 'area'],
+      ['Peachtree Street Northeast', 'Atlanta, GA', 'street'],
+      ['Lenox Square', 'Atlanta, GA', 'place'],
+      ['675 Ponce de Leon Avenue Northeast', 'Atlanta, GA', 'address'],
+    ]);
   });
 });
 
