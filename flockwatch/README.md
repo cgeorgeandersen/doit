@@ -1,6 +1,8 @@
-# FlockWatch
+# Track the Pole
 
-Enter two addresses and FlockWatch maps every known Flock license plate camera along the drive, counts the ones that would photograph your car, and tells you who answers for each one: the mayor or county, state legislators and members of Congress for that spot. Below the map, a short explainer covers what the cameras record, who can search the data, the legal picture, and what people can do. Every factual claim there links to a source.
+Live at [trackthepole.com](https://trackthepole.com). (The code keeps its working name, FlockWatch, in this `flockwatch/` folder, which is the Vercel project’s Root Directory.)
+
+Enter two addresses and Track the Pole maps every known Flock license plate camera along the drive, counts the ones that would photograph your car, and tells you who answers for each one: the mayor or county, state legislators and members of Congress for that spot. Below the map, a short explainer covers what the cameras record, who can search the data, the legal picture, and what people can do. Every factual claim there links to a source.
 
 | Part | What it does |
 | --- | --- |
@@ -82,6 +84,7 @@ npm run preview      # serve dist/ with the same security headers as Vercel, and
 ```
 
 - **Vercel:** import the repository as a new project and set its Root Directory to `flockwatch`. [`vercel.json`](vercel.json) runs `npm run build:deploy`, so every deploy carries that day’s camera data; it also rewrites `/api/census/*` to the Census Geocoder and sets the security headers, including a Content-Security-Policy that limits the page to the services listed above. If the data fetch fails, the build fails and the previous deployment stays live.
+- **Domain:** in the Vercel project, Settings → Domains, add `trackthepole.com` and `www.trackthepole.com` (redirecting to it), then add the DNS records Vercel shows wherever the domain was bought. HTTPS is automatic. The page’s canonical and sharing links point to trackthepole.com.
 - **Fresh data on a schedule:** camera data changes daily. To redeploy regularly without a code change, create a Deploy Hook in the Vercel project (Settings → Git → Deploy Hooks) and call it on a schedule, for example from a scheduled GitHub Action that keeps the hook URL in a repository secret.
 - **Checks:** [`.github/workflows/flockwatch-ci.yml`](../.github/workflows/flockwatch-ci.yml) installs, tests and builds on every push and pull request that touches this folder. It doesn’t fetch data or deploy.
 - **Elsewhere:** any static host works for `dist/`, but the officials lookup needs `/api/census/` forwarded to `https://geocoding.geo.census.gov/geocoder/geographies/`. Without it, cards say officials couldn’t be looked up and link to USA.gov.
@@ -108,4 +111,4 @@ flockwatch/
 
 Code: MIT. Camera data © OpenStreetMap contributors (ODbL), compiled by DeFlock. Map tiles: OpenFreeMap, OpenMapTiles, OpenStreetMap. Fonts: Public Sans and IBM Plex Mono (SIL Open Font License). Map rendering: MapLibre GL JS (BSD-3-Clause).
 
-FlockWatch is independent. It isn’t affiliated with Flock Safety, DeFlock or any government. It was built with the help of an AI assistant, and its claims were checked against the sources cited on the page.
+Track the Pole is independent. It isn’t affiliated with Flock Safety, DeFlock or any government. It was built with the help of an AI assistant, and its claims were checked against the sources cited on the page.

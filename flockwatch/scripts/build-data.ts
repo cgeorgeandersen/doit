@@ -1,5 +1,5 @@
 /**
- * Builds the data FlockWatch serves from its own domain, into public/data/:
+ * Builds the data Track the Pole serves from its own domain, into public/data/:
  *
  *   cameras/<lat>_<lon>.json   every mapped license plate reader, in 1° tiles
  *   overview.json              camera counts on a 0.1° grid, for the zoomed-out map
@@ -29,7 +29,7 @@ import { normalizeBrand, normalizeOperator, parseCsv, placeKey, placeName, tileK
 import { unzipSingle } from './unzip.ts';
 
 const OUT = resolve(import.meta.dirname, '../public/data');
-const USER_AGENT = 'FlockWatch/0.1 (+https://github.com/cgeorgeandersen/doit)';
+const USER_AGENT = 'TrackThePole/0.1 (+https://trackthepole.com)';
 const DEFLOCK_INDEX = 'https://cdn.deflock.me/regions/index.json';
 const OPEN_STATES_CSV = (st: string) => `https://data.openstates.org/people/current/${st}.csv`;
 const CONGRESS_JSON = 'https://unitedstates.github.io/congress-legislators/legislators-current.json';
