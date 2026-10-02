@@ -35,6 +35,30 @@
   font-size: 1.0625rem;
 }
 
+/* Points people to the camera cards; the dot matches the cameras on the map. */
+.hint {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  margin-top: var(--space-1);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius);
+  background: var(--flock-soft);
+  color: var(--ink);
+  font-size: 0.9375rem;
+  line-height: 1.45;
+}
+
+.hint-dot {
+  flex: none;
+  width: 12px;
+  height: 12px;
+  margin-top: 0.32em;
+  border-radius: 999px;
+  background: var(--flock);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--flock) 30%, transparent);
+}
+
 /* ---------------------------------------------------------------- form -- */
 
 .route-form {
