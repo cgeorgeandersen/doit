@@ -1,0 +1,74 @@
+{
+ "result": {
+  "geographies": {
+   "Incorporated Places": [
+    {
+     "NAME": "Manchester city",
+     "BASENAME": "Manchester",
+     "GEOID": "3345140",
+     "FUNCSTAT": "A",
+     "PLACENS": "00873658"
+    }
+   ],
+   "Counties": [
+    {
+     "NAME": "Hillsborough County",
+     "BASENAME": "Hillsborough",
+     "GEOID": "33011",
+     "FUNCSTAT": "A",
+     "COUNTYNS": "00873179"
+    }
+   ],
+   "States": [
+    {
+     "NAME": "New Hampshire",
+     "BASENAME": "New Hampshire",
+     "STUSAB": "NH",
+     "GEOID": "33",
+     "FUNCSTAT": "A"
+    }
+   ],
+   "County Subdivisions": [
+    {
+     "NAME": "Manchester city",
+     "BASENAME": "Manchester",
+     "GEOID": "3301145140",
+     "FUNCSTAT": "F",
+     "COUSUBNS": "00873658"
+    }
+   ],
+   "2026 State Legislative Districts - Upper": [
+    {
+     "NAME": "State Senate District 20",
+     "BASENAME": "20",
+     "GEOID": "33020",
+     "FUNCSTAT": "N"
+    }
+   ],
+   "120th Congressional Districts": [
+    {
+     "NAME": "Congressional District 1",
+     "BASENAME": "1",
+     "GEOID": "3301",
+     "FUNCSTAT": "N"
+    }
+   ],
+   "2026 State Legislative Districts - Lower": [
+    {
+     "NAME": "State House District Hillsborough 23",
+     "BASENAME": "Hillsborough 23",
+     "GEOID": "33523",
+     "FUNCSTAT": "N"
+    }
+   ],
+   "Census Tracts": [
+    {
+     "NAME": "Census Tract 14",
+     "BASENAME": "14",
+     "GEOID": "33011001400",
+     "FUNCSTAT": "S"
+    }
+   ]
+  }
+ }
+}

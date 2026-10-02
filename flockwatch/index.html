@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>FlockWatch: who sees your drive?</title>
+    <meta
+      name="description"
+      content="Enter two addresses and see every known Flock license plate camera along the way, how many would photograph your car, and who to contact about them."
+    />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#0b0e12" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f3f1ec" media="(prefers-color-scheme: light)" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="FlockWatch: who sees your drive?" />
+    <meta
+      property="og:description"
+      content="Map the Flock license plate cameras on any drive, count the ones that would photograph your car, and find out who answers for them."
+    />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <script src="/theme-init.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#tool">Skip to the map</a>
+
+    <header class="topbar">
+      <a class="brand" href="#top" aria-label="FlockWatch, back to top">
+        <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
+          <path class="brand-cone" d="M11 22 L27 7 A21 21 0 0 1 30 20 Z" />
+          <circle class="brand-dot" cx="11" cy="22" r="5" />
+        </svg>
+        <span class="brand-name">FlockWatch</span>
+      </a>
+      <nav class="topnav" aria-label="Sections">
+        <a href="#what">What they are</a>
+        <a href="#records">What they record</a>
+        <a href="#act">What you can do</a>
+        <a href="#method">How we count</a>
+      </nav>
+      <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Switch to dark theme">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path class="theme-icon" d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z" /></svg>
+      </button>
+    </header>
+
+    <main id="top">
+      <section id="tool" class="tool" aria-label="Route camera counter">
+        <div class="panel">
+          <div class="intro">
+            <p class="eyebrow">License plate cameras on your route</p>
+            <h1>Who sees your drive?</h1>
+            <p class="lede">
+              Enter where you start and where you’re going. FlockWatch maps the Flock license plate cameras along the
+              way and counts the ones that would photograph your car.
+            </p>
+          </div>
+
+          <form id="route-form" class="route-form" autocomplete="off" novalidate>
+            <div class="field" data-field="from">
+              <label for="from-input">From</label>
+              <div class="combo">
+                <span class="pin pin-a" aria-hidden="true">A</span>
+                <input
+                  id="from-input"
+                  name="from"
+                  type="text"
+                  inputmode="search"
+                  placeholder="Starting address or place"
+                  role="combobox"
+                  aria-autocomplete="list"
+                  aria-expanded="false"
+                  aria-controls="from-list"
+                  spellcheck="false"
+                />
+                <button type="button" class="locate" id="locate" aria-label="Use my current location" title="Use my current location">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.2" /><path d="M12 2v3M12 19v3M2 12h3M19 12h3" /><circle cx="12" cy="12" r="7" /></svg>
+                </button>
+                <ul id="from-list" class="suggestions" role="listbox" aria-label="Matching places" hidden></ul>
+              </div>
+            </div>
+
+            <button type="button" class="swap" id="swap" aria-label="Swap start and destination" title="Swap start and destination">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4v15M8 4 4.5 7.5M8 4l3.5 3.5M16 20V5M16 20l-3.5-3.5M16 20l3.5-3.5" /></svg>
+            </button>
+
+            <div class="field" data-field="to">
+              <label for="to-input">To</label>
+              <div class="combo">
+                <span class="pin pin-b" aria-hidden="true">B</span>
+                <input
+                  id="to-input"
+                  name="to"
+                  type="text"
+                  inputmode="search"
+                  placeholder="Destination"
+                  role="combobox"
+                  aria-autocomplete="list"
+                  aria-expanded="false"
+                  aria-controls="to-list"
+                  spellcheck="false"
+                />
+                <ul id="to-list" class="suggestions" role="listbox" aria-label="Matching places" hidden></ul>
+              </div>
+            </div>
+
+            <button type="submit" class="go" id="go">Count the cameras</button>
+            <p class="form-error" id="form-error" role="alert" hidden></p>
+          </form>
+
+          <div class="examples" id="examples">
+            <span class="examples-label">Or try a drive:</span>
+          </div>
+
+          <div id="results" class="results" aria-live="polite"></div>
+
+          <p class="stat-line" id="stat-line"></p>
+        </div>
+
+        <div class="map-wrap">
+          <div id="map" class="map" role="region" aria-label="Map of license plate cameras"></div>
+          <div class="map-legend" id="map-legend" aria-label="Map key">
+            <span class="route-key"><i class="key key-flock"></i>Flock camera on your route</span>
+            <span class="route-key"><i class="key key-other"></i>Other plate reader on your route</span>
+            <span class="route-key"><i class="key key-passed"></i>Nearby, not counted</span>
+            <span><i class="key key-all"></i><span class="key-all-label">Mapped license plate cameras</span></span>
+          </div>
+          <div class="map-status" id="map-status" role="status"></div>
+          <div class="map-count" id="map-count" aria-hidden="true"></div>
+          <div class="cam-card" id="cam-card" hidden></div>
+        </div>
+      </section>
+
+      <article class="explainer">
+        <section id="what" class="chapter">
+          <p class="eyebrow">The cameras</p>
+          <h2>What is a Flock camera?</h2>
+          <p>
+            Flock Safety, a company founded in Atlanta in 2017, makes automated license plate readers: cameras on poles
+            beside the road that photograph passing vehicles and turn each picture into searchable data. Police
+            departments and sheriffs use them, and so do homeowners’ associations, shopping centers and stores. Flock’s network has grown to about 120,000 cameras, used by some 5,000 law enforcement
+            agencies.<a class="cite" href="#s-mittr">1</a>
+          </p>
+          <p>
+            Flock says its technology “helps communities deter crime, respond to emergencies, and investigate safety
+            incidents,” and that in 2025 it helped locate more than 10,000 missing people.<a class="cite" href="#s-flock">2</a>
+            Critics point to what it costs everyone else: a record of where ordinary drivers go, kept by default and
+            searchable without a warrant.
+          </p>
+          <p class="aside">
+            <span class="count-mapped" data-stat="flock">More than 115,000</span> Flock cameras have been found and
+            mapped by volunteers so far. FlockWatch uses their map.
+          </p>
+        </section>
+
+        <section id="records" class="chapter">
+          <p class="eyebrow">The data</p>
+          <h2>What it records</h2>
+          <div class="split">
+            <div>
+              <p>For every vehicle that passes, Flock’s software records:<a class="cite" href="#s-falcon">3</a></p>
+              <ul class="checks">
+                <li>the license plate and its state, including partial, missing and covered plates and temporary tags;</li>
+                <li>the vehicle’s make, color and body type;</li>
+                <li>“unique features like decals, bumper stickers, and accessories,” which Flock calls a Vehicle Fingerprint;</li>
+                <li>the camera, the place and the time.</li>
+              </ul>
+              <p>
+                Because the Vehicle Fingerprint describes the car itself, police can search for a vehicle “even when a
+                license plate isn’t visible.”<a class="cite" href="#s-falcon">3</a> Flock’s customers describe the
+                cameras as capturing “license plates and vehicle characteristics, not people or faces,” and say they
+                aren’t meant for minor traffic or parking violations.<a class="cite" href="#s-campbell">4</a>
+              </p>
+            </div>
+            <figure class="record" aria-labelledby="record-caption">
+              <svg class="record-photo" viewBox="0 0 320 150" aria-hidden="true">
+                <rect class="rp-sky" x="0" y="0" width="320" height="150" />
+                <rect class="rp-road" x="0" y="112" width="320" height="38" />
+                <path class="rp-body" d="M88 118 L92 70 Q96 52 116 50 L204 50 Q224 52 228 70 L232 118 Q232 126 224 126 L96 126 Q88 126 88 118 Z" />
+                <path class="rp-glass" d="M104 74 L110 58 Q113 54 120 54 L200 54 Q207 54 210 58 L216 74 Z" />
+                <rect class="rp-light" x="94" y="80" width="26" height="10" rx="3" />
+                <rect class="rp-light" x="200" y="80" width="26" height="10" rx="3" />
+                <rect class="rp-plate" x="136" y="92" width="48" height="22" rx="2" />
+                <text class="rp-plate-text" x="160" y="107" text-anchor="middle">SAMPLE</text>
+                <rect class="rp-sticker" x="196" y="96" width="22" height="9" rx="1.5" />
+                <rect class="rp-rack" x="112" y="44" width="96" height="4" rx="2" />
+                <rect class="rp-box" x="128" y="86" width="64" height="34" rx="2" />
+                <rect class="rp-box rp-box-2" x="190" y="90" width="32" height="20" rx="2" />
+              </svg>
+              <dl class="record-fields">
+                <div><dt>Plate</dt><dd>SAMPLE · GA</dd></div>
+                <div><dt>Vehicle</dt><dd>Silver sedan</dd></div>
+                <div><dt>Features</dt><dd>Roof rack, bumper sticker</dd></div>
+                <div><dt>Camera</dt><dd>Main St at 5th Ave, facing north</dd></div>
+                <div><dt>Time</dt><dd>8:14:32 a.m.</dd></div>
+              </dl>
+              <figcaption id="record-caption">An illustration of one capture, using the fields Flock lists. Not a real record.</figcaption>
+            </figure>
+          </div>
+        </section>
+
+        <section id="search" class="chapter">
+          <p class="eyebrow">The database</p>
+          <h2>How long it’s kept, and who can search it</h2>
+          <p>
+            Each capture goes into Flock’s cloud, where it stays searchable for a set time. For years the default was
+            30 days.<a class="cite" href="#s-falcon">3</a> In August 2026, after a Washington Post investigation found
+            at least 50 officers charged with or accused of misusing license plate readers, many of them to track
+            partners and exes,<a class="cite" href="#s-wapo">5</a> Flock changed its rules: a 7-day default for keeping
+            data, a case number for every search by January 1, and automatic flags on unusual searches.<a
+              class="cite"
+              href="#s-mittr"
+              >1</a
+            ><a class="cite" href="#s-mpr">6</a> Agencies can still keep data longer where state law allows, and Flock
+            does not check that a case number is real.<a class="cite" href="#s-mittr">1</a>
+          </p>
+          <p>
+            Departments can open their cameras to other departments across a state or the whole country. That sharing
+            let plate data reach federal immigration enforcement without a federal contract: one set of search logs
+            showed more than 4,000 lookups by local and state police done for federal agencies or with a possible
+            immigration focus.<a class="cite" href="#s-404-ice">7</a> Businesses can share theirs too. Records showed one Texas
+            sheriff’s office could search Flock cameras at 173 Lowe’s stores around the country.<a
+              class="cite"
+              href="#s-404-lowes"
+              >8</a
+            >
+          </p>
+        </section>
+
+        <section id="law" class="chapter">
+          <p class="eyebrow">The law</p>
+          <h2>Is it legal?</h2>
+          <p>
+            Photographing a car on a public road doesn’t require a warrant, and courts are still deciding when a
+            network of cameras adds up to a search under the Fourth Amendment. In January 2026 a federal judge ruled
+            that Norfolk, Virginia’s 176 Flock cameras, which keep data for 21 days, don’t yet
+            capture enough of a person’s movements to count as one. He warned that “as the number and
+            capabilities of ALPR cameras expand, the constitutional balancing could conceivably tip the other way.” The
+            drivers who sued said they would appeal.<a class="cite" href="#s-whro">9</a>
+          </p>
+          <p>
+            In June 2026 the Supreme Court held, in <i>Chatrie v. United States</i>, that the location data our phones
+            generate is protected by the Fourth Amendment.<a class="cite" href="#s-eff">10</a> It didn’t decide whether
+            plate reader networks are. For now, the rules come mostly from state laws and from the city and county
+            contracts that pay for the cameras.
+          </p>
+        </section>
+
+        <section id="act" class="chapter">
+          <p class="eyebrow">What you can do</p>
+          <h2>The people who can switch them off</h2>
+          <p>
+            A police department’s cameras are usually paid for under a contract that a city council or county
+            commission approves, and can cancel. Between January and mid-August 2026, more than 50 agencies or
+            local governments canceled, suspended or rejected a Flock contract or turned their cameras off, by
+            DeFlock’s count.<a
+              class="cite"
+              href="#s-mpr"
+              >6</a
+            >
+          </p>
+          <ol class="steps">
+            <li>
+              <h3>Find out who answers for each camera</h3>
+              <p>
+                Hover over or tap any camera on the map to see who runs it, if that’s known, and the mayor, state
+                legislators and members of Congress for that spot. Under your results, “Who’s responsible” lists them
+                for every camera on your route.
+              </p>
+            </li>
+            <li>
+              <h3>Ask your council or commission</h3>
+              <ul class="questions">
+                <li>How many cameras do we have, where are they, and who decided?</li>
+                <li>How long is data kept? Do we use Flock’s 7-day default?</li>
+                <li>Which other agencies can search our cameras: in other states? Federal agencies?</li>
+                <li>Are searches audited, and are the audits public?</li>
+                <li>What has the system helped solve, and what does it cost each year?</li>
+              </ul>
+            </li>
+            <li>
+              <h3>Ask your state legislators</h3>
+              <p>
+                State law decides how long plate data can be kept, who it can be shared with, and whether searches need
+                a warrant.
+              </p>
+            </li>
+            <li>
+              <h3>Ask for the records</h3>
+              <p>
+                Agencies’ plate reader policies and search logs are often public records you can request. 404 Media’s
+                reporting on immigration lookups began with exactly that.<a class="cite" href="#s-404-ice">7</a>
+              </p>
+            </li>
+            <li>
+              <h3>Map what’s missing</h3>
+              <p>
+                Every camera on this map was found and recorded by a volunteer. If you know one that isn’t here, add it
+                on <a href="https://deflock.me" rel="noopener">DeFlock</a>; it will appear on FlockWatch after the next
+                update.
+              </p>
+            </li>
+          </ol>
+        </section>
+
+        <section id="method" class="chapter">
+          <p class="eyebrow">The method</p>
+          <h2>How we count</h2>
+          <figure class="method-figure">
+            <svg viewBox="0 0 560 220" role="img" aria-labelledby="method-title method-desc">
+              <title id="method-title">Two cameras beside a route</title>
+              <desc id="method-desc">
+                Left: a camera beside the road, aimed along it; the route passes through its view, so it counts. Right: a
+                camera on a side street, aimed down the side street; the route passes the corner but not through its
+                view, so it doesn’t count.
+              </desc>
+              <g class="m-scene">
+                <rect class="m-road" x="104" y="10" width="44" height="200" rx="4" />
+                <path class="m-cone m-cone-on" d="M168 150 L134 46 A110 110 0 0 1 202 46 Z" />
+                <circle class="m-cam m-cam-on" cx="168" cy="150" r="7" />
+                <path class="m-route" d="M126 205 L126 18" />
+                <path class="m-arrow" d="M118 30 L126 14 L134 30" />
+                <text class="m-label" x="210" y="160">Aimed down</text>
+                <text class="m-label" x="210" y="178">your road:</text>
+                <text class="m-label m-yes" x="210" y="198">counted</text>
+              </g>
+              <g class="m-scene" transform="translate(290 0)">
+                <rect class="m-road" x="44" y="10" width="44" height="200" rx="4" />
+                <rect class="m-road" x="88" y="70" width="170" height="40" rx="4" />
+                <path class="m-cone m-cone-off" d="M150 124 L240 92 A100 100 0 0 1 240 156 Z" />
+                <circle class="m-cam m-cam-off" cx="150" cy="124" r="7" />
+                <path class="m-route" d="M66 205 L66 18" />
+                <path class="m-arrow" d="M58 30 L66 14 L74 30" />
+                <text class="m-label" x="104" y="160">Aimed at a</text>
+                <text class="m-label" x="104" y="178">side street:</text>
+                <text class="m-label m-no" x="104" y="198">not counted</text>
+              </g>
+            </svg>
+          </figure>
+          <p>
+            A plate reader watches one stretch of road. We count a camera when your route passes through the stretch it
+            is aimed at, within about 60 meters (200 feet), while you drive toward it or away from it. Driving away, it
+            photographs your rear plate; driving toward it, the front of your car. Cameras aimed at a side street, a
+            parking lot or the other side of a divided road aren’t counted, even when you pass right by them. They show
+            on the map as “nearby, not counted.”
+          </p>
+          <p>
+            A few cameras have no direction recorded. We count one of those only if it stands within 30 meters (100
+            feet) of your route. Flock cameras are counted separately from other makers’ plate readers, such as
+            Motorola Solutions, Genetec and Axis, which read plates too.
+          </p>
+          <p class="callout">
+            <strong>Every count here is a minimum.</strong> The map only knows the cameras volunteers have found and
+            recorded, and some places are far better mapped than others. Some mapped cameras may since have moved or
+            come down, and directions are estimated by eye. So read “14 cameras” as “at least 14 that we know of.”
+          </p>
+        </section>
+
+        <section id="data" class="chapter">
+          <p class="eyebrow">The fine print</p>
+          <h2>Data and privacy</h2>
+          <dl class="facts">
+            <div>
+              <dt>Cameras</dt>
+              <dd>
+                <a href="https://deflock.me" rel="noopener">DeFlock</a>’s export of
+                <a href="https://www.openstreetmap.org/copyright" rel="noopener">OpenStreetMap</a> (© OpenStreetMap
+                contributors, Open Database License), <span data-stat="asof">refreshed each time this site is
+                published</span>.
+              </dd>
+            </div>
+            <div>
+              <dt>Map and routes</dt>
+              <dd>
+                Map by <a href="https://openfreemap.org" rel="noopener">OpenFreeMap</a> with
+                <a href="https://openmaptiles.org" rel="noopener">OpenMapTiles</a>; routes by
+                <a href="https://project-osrm.org" rel="noopener">OSRM</a> on servers run by
+                <a href="https://routing.openstreetmap.de/about.html" rel="noopener">FOSSGIS</a>; address search by
+                <a href="https://photon.komoot.io" rel="noopener">Photon</a> from komoot.
+              </dd>
+            </div>
+            <div>
+              <dt>Officials</dt>
+              <dd>
+                Districts from the <a href="https://geocoding.geo.census.gov" rel="noopener">U.S. Census Geocoder</a>;
+                state legislators from <a href="https://open.pluralpolicy.com/data/" rel="noopener">Open States</a>;
+                members of Congress from
+                <a href="https://github.com/unitedstates/congress-legislators" rel="noopener">congress-legislators</a>;
+                mayors and county leaders from <a href="https://www.wikidata.org" rel="noopener">Wikidata</a>, which
+                volunteers keep up to date and which can lag after an election.
+              </dd>
+            </div>
+            <div>
+              <dt>Your privacy</dt>
+              <dd>
+                FlockWatch has no accounts, cookies, ads or analytics, and keeps nothing you enter. To work, it has to
+                send a few things to the services above: what you type in the address boxes goes to Photon; your
+                route’s start and end go to the routing server; when you look up who answers for a camera, that
+                camera’s location goes to the Census Geocoder (through this site) and to Wikidata; and the map’s images
+                come from OpenFreeMap. Camera data comes from this site, so the route itself is never sent anywhere.
+                The page’s security policy allows it to talk to those services and nothing else. Shared links round your
+                start and end to about 100 meters.
+              </dd>
+            </div>
+          </dl>
+        </section>
+
+        <section class="chapter sources" aria-labelledby="sources-title">
+          <h2 id="sources-title">Sources</h2>
+          <ol>
+            <li id="s-mittr">
+              <a href="https://www.technologyreview.com/2026/08/13/1141904/flock-is-tightening-its-rules-in-response-to-a-growing-surveillance-backlash/" rel="noopener">“Flock is tightening its rules in response to a growing surveillance backlash.”</a>
+              MIT Technology Review, August 13, 2026.
+            </li>
+            <li id="s-flock">
+              <a href="https://www.flocksafety.com/" rel="noopener">Flock Safety, home page.</a> Accessed October 2, 2026.
+            </li>
+            <li id="s-falcon">
+              <a href="https://mccmeetingspublic.blob.core.usgovcloudapi.net/madisonal-meet-ca852550c3514552ba469e40303a95d0/ITEM-Attachment-001-31edd803004d4841ac9909fa404f89dc.pdf" rel="noopener">“Flock Safety Falcon License Plate Reading (LPR) Camera,”</a>
+              Flock Safety product sheet, from City of Madison, Alabama meeting records.
+            </li>
+            <li id="s-campbell">
+              <a href="https://www.campbellca.gov/1260/Flock-Safety-ALPR" rel="noopener">“Flock Safety ALPR.”</a>
+              City of Campbell, California.
+            </li>
+            <li id="s-wapo">
+              <a href="https://www.washingtonpost.com/technology/2026/08/02/how-police-officers-used-vast-network-cameras-spy-their-exes/" rel="noopener">“How rogue officers turned a nationwide camera network into a tool for stalking.”</a>
+              The Washington Post, August 2, 2026.
+            </li>
+            <li id="s-mpr">
+              <a href="https://www.mprnews.org/story/2026/08/13/amid-public-backlash-surveillance-tech-company-flock-announces-platform-changes" rel="noopener">“Amid public backlash, surveillance tech company Flock announces platform changes.”</a>
+              MPR News, August 13, 2026.
+            </li>
+            <li id="s-404-ice">
+              <a href="https://www.404media.co/ice-taps-into-nationwide-ai-enabled-camera-network-data-shows/" rel="noopener">“ICE Taps into Nationwide AI-Enabled Camera Network, Data Shows.”</a>
+              404 Media, May 27, 2025.
+            </li>
+            <li id="s-404-lowes">
+              <a href="https://www.404media.co/home-depot-and-lowes-share-data-from-hundreds-of-ai-cameras-with-cops/" rel="noopener">“Home Depot and Lowe’s Share Data From Hundreds of AI Cameras With Cops.”</a>
+              404 Media, August 6, 2025.
+            </li>
+            <li id="s-whro">
+              <a href="https://www.whro.org/business-growth/2026-02-11/a-federal-judge-ruled-norfolks-flock-surveillance-cameras-dont-invade-peoples-privacy-yet" rel="noopener">“A federal judge ruled Norfolk’s Flock surveillance cameras don’t invade people’s privacy — yet.”</a>
+              WHRO, February 11, 2026.
+            </li>
+            <li id="s-eff">
+              <a href="https://www.eff.org/deeplinks/2026/06/victory-supreme-court-says-constitution-protects-peoples-location-data" rel="noopener">“Victory! Supreme Court Says Constitution Protects People’s Location Data.”</a>
+              Electronic Frontier Foundation, June 2026.
+            </li>
+          </ol>
+        </section>
+      </article>
+    </main>
+
+    <footer class="site-footer">
+      <p>
+        FlockWatch is an independent project. It is not affiliated with Flock Safety, DeFlock or any government.
+        Corrections are welcome.
+      </p>
+    </footer>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

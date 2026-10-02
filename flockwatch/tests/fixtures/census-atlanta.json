@@ -1,0 +1,74 @@
+{
+ "result": {
+  "geographies": {
+   "Incorporated Places": [
+    {
+     "NAME": "Atlanta city",
+     "BASENAME": "Atlanta",
+     "GEOID": "1304000",
+     "FUNCSTAT": "A",
+     "PLACENS": "02403126"
+    }
+   ],
+   "Counties": [
+    {
+     "NAME": "Fulton County",
+     "BASENAME": "Fulton",
+     "GEOID": "13121",
+     "FUNCSTAT": "A",
+     "COUNTYNS": "01694833"
+    }
+   ],
+   "States": [
+    {
+     "NAME": "Georgia",
+     "BASENAME": "Georgia",
+     "STUSAB": "GA",
+     "GEOID": "13",
+     "FUNCSTAT": "A"
+    }
+   ],
+   "County Subdivisions": [
+    {
+     "NAME": "Atlanta CCD",
+     "BASENAME": "Atlanta",
+     "GEOID": "1312190144",
+     "FUNCSTAT": "S",
+     "COUSUBNS": "01936089"
+    }
+   ],
+   "2026 State Legislative Districts - Upper": [
+    {
+     "NAME": "State Senate District 36",
+     "BASENAME": "36",
+     "GEOID": "13036",
+     "FUNCSTAT": "N"
+    }
+   ],
+   "120th Congressional Districts": [
+    {
+     "NAME": "Congressional District 5",
+     "BASENAME": "5",
+     "GEOID": "1305",
+     "FUNCSTAT": "N"
+    }
+   ],
+   "2026 State Legislative Districts - Lower": [
+    {
+     "NAME": "State House District 58",
+     "BASENAME": "58",
+     "GEOID": "13058",
+     "FUNCSTAT": "N"
+    }
+   ],
+   "Census Tracts": [
+    {
+     "NAME": "Census Tract 35",
+     "BASENAME": "35",
+     "GEOID": "13121003500",
+     "FUNCSTAT": "S"
+    }
+   ]
+  }
+ }
+}

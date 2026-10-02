@@ -1,0 +1,33 @@
+{
+  "name": "flockwatch",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "See how many Flock license plate cameras photograph your car on a drive, and who to contact about them.",
+  "license": "MIT",
+  "scripts": {
+    "dev": "vite",
+    "build": "npm run typecheck && vite build",
+    "build:deploy": "npm run data && npm run build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "data": "node --experimental-strip-types scripts/build-data.ts"
+  },
+  "engines": {
+    "node": "22.x"
+  },
+  "dependencies": {
+    "maplibre-gl": "^6.11.2"
+  },
+  "devDependencies": {
+    "@fontsource-variable/public-sans": "^5.3.0",
+    "@fontsource/ibm-plex-mono": "^5.3.0",
+    "@types/geojson": "^7946.0.16",
+    "@types/node": "^26.6.4",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.2",
+    "vitest": "^5.0.3"
+  }
+}
