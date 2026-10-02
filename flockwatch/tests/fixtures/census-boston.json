@@ -1,0 +1,74 @@
+{
+ "result": {
+  "geographies": {
+   "Incorporated Places": [
+    {
+     "NAME": "Boston city",
+     "BASENAME": "Boston",
+     "GEOID": "2507000",
+     "FUNCSTAT": "A",
+     "PLACENS": "00619463"
+    }
+   ],
+   "Counties": [
+    {
+     "NAME": "Suffolk County",
+     "BASENAME": "Suffolk",
+     "GEOID": "25025",
+     "FUNCSTAT": "N",
+     "COUNTYNS": "00606939"
+    }
+   ],
+   "States": [
+    {
+     "NAME": "Massachusetts",
+     "BASENAME": "Massachusetts",
+     "STUSAB": "MA",
+     "GEOID": "25",
+     "FUNCSTAT": "A"
+    }
+   ],
+   "County Subdivisions": [
+    {
+     "NAME": "Boston city",
+     "BASENAME": "Boston",
+     "GEOID": "2502507000",
+     "FUNCSTAT": "F",
+     "COUSUBNS": "00619463"
+    }
+   ],
+   "2026 State Legislative Districts - Upper": [
+    {
+     "NAME": "Third Suffolk District",
+     "BASENAME": "Third Suffolk",
+     "GEOID": "25D25",
+     "FUNCSTAT": "N"
+    }
+   ],
+   "120th Congressional Districts": [
+    {
+     "NAME": "Congressional District 8",
+     "BASENAME": "8",
+     "GEOID": "2508",
+     "FUNCSTAT": "N"
+    }
+   ],
+   "2026 State Legislative Districts - Lower": [
+    {
+     "NAME": "3rd Suffolk District",
+     "BASENAME": "3rd Suffolk",
+     "GEOID": "25125",
+     "FUNCSTAT": "N"
+    }
+   ],
+   "Census Tracts": [
+    {
+     "NAME": "Census Tract 303.02",
+     "BASENAME": "303.02",
+     "GEOID": "25025030302",
+     "FUNCSTAT": "S"
+    }
+   ]
+  }
+ }
+}

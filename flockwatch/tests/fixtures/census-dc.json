@@ -1,0 +1,66 @@
+{
+ "result": {
+  "geographies": {
+   "Incorporated Places": [
+    {
+     "NAME": "Washington city",
+     "BASENAME": "Washington",
+     "GEOID": "1150000",
+     "FUNCSTAT": "N",
+     "PLACENS": "02390665"
+    }
+   ],
+   "Counties": [
+    {
+     "NAME": "District of Columbia",
+     "BASENAME": "District of Columbia",
+     "GEOID": "11001",
+     "FUNCSTAT": "F",
+     "COUNTYNS": "01702382"
+    }
+   ],
+   "States": [
+    {
+     "NAME": "District of Columbia",
+     "BASENAME": "District of Columbia",
+     "STUSAB": "DC",
+     "GEOID": "11",
+     "FUNCSTAT": "A"
+    }
+   ],
+   "County Subdivisions": [
+    {
+     "NAME": "Washington city",
+     "BASENAME": "Washington",
+     "GEOID": "1100150000",
+     "FUNCSTAT": "F",
+     "COUSUBNS": "02390665"
+    }
+   ],
+   "2026 State Legislative Districts - Upper": [
+    {
+     "NAME": "Ward 2",
+     "BASENAME": "2",
+     "GEOID": "11002",
+     "FUNCSTAT": "N"
+    }
+   ],
+   "120th Congressional Districts": [
+    {
+     "NAME": "Delegate District (at Large)",
+     "BASENAME": "Delegate District (at Large)",
+     "GEOID": "1198",
+     "FUNCSTAT": "N"
+    }
+   ],
+   "Census Tracts": [
+    {
+     "NAME": "Census Tract 58.02",
+     "BASENAME": "58.02",
+     "GEOID": "11001005802",
+     "FUNCSTAT": "S"
+    }
+   ]
+  }
+ }
+}

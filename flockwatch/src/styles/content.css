@@ -1,0 +1,381 @@
+/* The explainer below the tool: a reading column with wider figures. */
+
+.explainer {
+  display: grid;
+  gap: var(--space-8);
+  max-width: 760px;
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-4);
+}
+
+.chapter {
+  display: grid;
+  gap: var(--space-4);
+  font-size: 1.0625rem;
+}
+
+.chapter h2 {
+  font-size: clamp(1.75rem, 1.4rem + 1.2vw, 2.25rem);
+  margin-bottom: var(--space-1);
+}
+
+.chapter h3 {
+  font-size: 1.125rem;
+  letter-spacing: -0.01em;
+}
+
+.chapter p,
+.chapter li {
+  color: var(--ink-2);
+}
+
+.chapter p strong,
+.chapter li strong {
+  color: var(--ink);
+}
+
+.cite {
+  display: inline-block;
+  margin-left: 2px;
+  font-family: var(--font-mono);
+  font-size: 0.7em;
+  font-weight: 600;
+  line-height: 1;
+  vertical-align: super;
+  color: var(--flock-ink);
+  text-decoration: none;
+}
+
+.cite::before {
+  content: '[';
+}
+
+.cite::after {
+  content: ']';
+}
+
+.cite + .cite {
+  margin-left: 0;
+}
+
+.aside {
+  padding-left: var(--space-4);
+  border-left: 3px solid var(--flock);
+}
+
+.count-mapped {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 300px);
+  gap: var(--space-6);
+  align-items: start;
+}
+
+.split > div {
+  display: grid;
+  gap: var(--space-4);
+}
+
+@media (max-width: 720px) {
+  .split {
+    grid-template-columns: 1fr;
+  }
+}
+
+.checks {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.checks li {
+  position: relative;
+  padding-left: 26px;
+}
+
+.checks li::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 0.45em;
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  background: var(--flock);
+  opacity: 0.85;
+}
+
+/* The illustrative capture record */
+
+.record {
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-l);
+  background: var(--surface);
+  box-shadow: var(--shadow-1);
+}
+
+.record-photo {
+  width: 100%;
+  height: auto;
+}
+
+.rp-sky {
+  fill: #2a2f36;
+}
+.rp-road {
+  fill: #3a3f46;
+}
+.rp-body {
+  fill: #b9bec5;
+}
+.rp-glass {
+  fill: #59616b;
+}
+.rp-light {
+  fill: #e9e2e2;
+}
+.rp-plate {
+  fill: #f4f4f4;
+}
+.rp-plate-text {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  fill: #1a1a1a;
+}
+.rp-sticker {
+  fill: #e3e3e3;
+}
+.rp-rack {
+  fill: #3a3f46;
+}
+.rp-box {
+  fill: none;
+  stroke: #ff4a3d;
+  stroke-width: 1.5;
+  stroke-dasharray: 4 3;
+}
+
+.record-fields {
+  display: grid;
+  margin: 0;
+  padding: var(--space-3) var(--space-4) var(--space-2);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+}
+
+.record-fields div {
+  display: grid;
+  grid-template-columns: 82px 1fr;
+  gap: var(--space-2);
+  padding: 5px 0;
+  border-bottom: 1px dashed var(--line);
+}
+
+.record-fields div:last-child {
+  border-bottom: 0;
+}
+
+.record-fields dt {
+  color: var(--ink-3);
+  text-transform: uppercase;
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  padding-top: 2px;
+}
+
+.record-fields dd {
+  margin: 0;
+  color: var(--ink);
+}
+
+.record figcaption {
+  padding: var(--space-2) var(--space-4) var(--space-3);
+  border-top: 1px solid var(--line);
+  background: var(--surface-2);
+  font-size: 0.75rem;
+  color: var(--ink-3);
+}
+
+/* Steps */
+
+.steps {
+  display: grid;
+  gap: var(--space-5);
+  margin: var(--space-2) 0 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+}
+
+.steps > li {
+  position: relative;
+  display: grid;
+  gap: var(--space-2);
+  padding-left: 52px;
+  counter-increment: step;
+}
+
+.steps > li::before {
+  content: counter(step);
+  position: absolute;
+  left: 0;
+  top: -2px;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  border: 1px solid var(--line-strong);
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--ink);
+}
+
+.questions {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0;
+  padding-left: 1.1em;
+}
+
+.questions li::marker {
+  color: var(--ink-3);
+}
+
+/* How we count */
+
+.method-figure {
+  margin: var(--space-2) 0;
+  padding: var(--space-4);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-l);
+  background: var(--surface);
+}
+
+.method-figure svg {
+  width: 100%;
+  height: auto;
+}
+
+.m-road {
+  fill: var(--surface-3);
+  stroke: var(--line-strong);
+}
+
+.m-cone {
+  opacity: 0.28;
+}
+
+.m-cone-on {
+  fill: var(--flock);
+}
+
+.m-cone-off {
+  fill: var(--passed);
+}
+
+.m-cam-on {
+  fill: var(--flock);
+}
+
+.m-cam-off {
+  fill: var(--surface);
+  stroke: var(--passed);
+  stroke-width: 3;
+}
+
+.m-route,
+.m-arrow {
+  fill: none;
+  stroke: var(--route);
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.m-label {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  fill: var(--ink-2);
+}
+
+.m-yes {
+  font-weight: 800;
+  fill: var(--flock-ink);
+}
+
+.m-no {
+  font-weight: 800;
+  fill: var(--ink-3);
+}
+
+.callout {
+  padding: var(--space-4);
+  border-radius: var(--radius);
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+
+.facts {
+  display: grid;
+  gap: var(--space-4);
+  margin: 0;
+}
+
+.facts div {
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  gap: var(--space-4);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--line);
+}
+
+.facts dt {
+  font-weight: 700;
+}
+
+.facts dd {
+  margin: 0;
+  color: var(--ink-2);
+  font-size: 0.9375rem;
+}
+
+@media (max-width: 600px) {
+  .facts div {
+    grid-template-columns: 1fr;
+    gap: var(--space-1);
+  }
+}
+
+.sources ol {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding-left: 1.6em;
+  font-size: 0.875rem;
+}
+
+.sources li {
+  color: var(--ink-3);
+}
+
+.sources li::marker {
+  font-family: var(--font-mono);
+  color: var(--flock-ink);
+}
+
+.sources li:target {
+  color: var(--ink);
+  background: var(--flock-soft);
+  border-radius: 4px;
+}

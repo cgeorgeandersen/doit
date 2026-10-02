@@ -1,0 +1,74 @@
+{
+ "result": {
+  "geographies": {
+   "Incorporated Places": [
+    {
+     "NAME": "Mableton city",
+     "BASENAME": "Mableton",
+     "GEOID": "1348288",
+     "FUNCSTAT": "A",
+     "PLACENS": "02831294"
+    }
+   ],
+   "Counties": [
+    {
+     "NAME": "Cobb County",
+     "BASENAME": "Cobb",
+     "GEOID": "13067",
+     "FUNCSTAT": "A",
+     "COUNTYNS": "01686112"
+    }
+   ],
+   "States": [
+    {
+     "NAME": "Georgia",
+     "BASENAME": "Georgia",
+     "STUSAB": "GA",
+     "GEOID": "13",
+     "FUNCSTAT": "A"
+    }
+   ],
+   "County Subdivisions": [
+    {
+     "NAME": "Austell CCD",
+     "BASENAME": "Austell",
+     "GEOID": "1306790174",
+     "FUNCSTAT": "S",
+     "COUSUBNS": "01936094"
+    }
+   ],
+   "2026 State Legislative Districts - Upper": [
+    {
+     "NAME": "State Senate District 33",
+     "BASENAME": "33",
+     "GEOID": "13033",
+     "FUNCSTAT": "N"
+    }
+   ],
+   "120th Congressional Districts": [
+    {
+     "NAME": "Congressional District 6",
+     "BASENAME": "6",
+     "GEOID": "1306",
+     "FUNCSTAT": "N"
+    }
+   ],
+   "2026 State Legislative Districts - Lower": [
+    {
+     "NAME": "State House District 38",
+     "BASENAME": "38",
+     "GEOID": "13038",
+     "FUNCSTAT": "N"
+    }
+   ],
+   "Census Tracts": [
+    {
+     "NAME": "Census Tract 314.11",
+     "BASENAME": "314.11",
+     "GEOID": "13067031411",
+     "FUNCSTAT": "S"
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,65 @@
+{
+ "result": {
+  "geographies": {
+   "Counties": [
+    {
+     "NAME": "Butler County",
+     "BASENAME": "Butler",
+     "GEOID": "42019",
+     "FUNCSTAT": "A",
+     "COUNTYNS": "01213661"
+    }
+   ],
+   "States": [
+    {
+     "NAME": "Pennsylvania",
+     "BASENAME": "Pennsylvania",
+     "STUSAB": "PA",
+     "GEOID": "42",
+     "FUNCSTAT": "A"
+    }
+   ],
+   "County Subdivisions": [
+    {
+     "NAME": "Cranberry township",
+     "BASENAME": "Cranberry",
+     "GEOID": "4201916920",
+     "FUNCSTAT": "A",
+     "COUSUBNS": "01216052"
+    }
+   ],
+   "2026 State Legislative Districts - Upper": [
+    {
+     "NAME": "State Senate District 47",
+     "BASENAME": "47",
+     "GEOID": "42047",
+     "FUNCSTAT": "N"
+    }
+   ],
+   "120th Congressional Districts": [
+    {
+     "NAME": "Congressional District 16",
+     "BASENAME": "16",
+     "GEOID": "4216",
+     "FUNCSTAT": "N"
+    }
+   ],
+   "2026 State Legislative Districts - Lower": [
+    {
+     "NAME": "State House District 12",
+     "BASENAME": "12",
+     "GEOID": "42012",
+     "FUNCSTAT": "N"
+    }
+   ],
+   "Census Tracts": [
+    {
+     "NAME": "Census Tract 9122",
+     "BASENAME": "9122",
+     "GEOID": "42019912200",
+     "FUNCSTAT": "S"
+    }
+   ]
+  }
+ }
+}

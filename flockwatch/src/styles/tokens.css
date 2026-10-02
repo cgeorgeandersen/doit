@@ -1,0 +1,105 @@
+/*
+ * Design tokens. Red is reserved for cameras: nothing else on the page uses it,
+ * so on the map and in the text it always means "a camera".
+ */
+:root {
+  --font-sans: 'Public Sans Variable', 'Public Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --topbar-h: 56px;
+  --radius-s: 6px;
+  --radius: 10px;
+  --radius-l: 16px;
+  --panel-w: 440px;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 72px;
+
+  /* Light */
+  --bg: #f3f1ec;
+  --surface: #ffffff;
+  --surface-2: #f8f7f3;
+  --surface-3: #efece5;
+  --ink: #14181d;
+  --ink-2: #47505c;
+  --ink-3: #6b7481;
+  --line: #e2ded5;
+  --line-strong: #cbc5b8;
+  --flock: #d42a1d;
+  --flock-soft: #fbe5e1;
+  --flock-ink: #a51d13;
+  --other: #b06a00;
+  --other-soft: #fbefd9;
+  --passed: #8b939e;
+  --route: #1f5bd8;
+  --route-alt: #9aa3af;
+  --focus: #1f5bd8;
+  --button-bg: #14181d;
+  --button-ink: #ffffff;
+  --overlay: rgba(255, 255, 255, 0.92);
+  --shadow-1: 0 1px 2px rgba(20, 24, 29, 0.06), 0 2px 8px rgba(20, 24, 29, 0.06);
+  --shadow-2: 0 2px 6px rgba(20, 24, 29, 0.08), 0 16px 40px rgba(20, 24, 29, 0.14);
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --bg: #0b0e12;
+    --surface: #12161c;
+    --surface-2: #161b22;
+    --surface-3: #1c222a;
+    --ink: #e8ecf1;
+    --ink-2: #a9b2be;
+    --ink-3: #7f8996;
+    --line: #232a33;
+    --line-strong: #343d48;
+    --flock: #ff4a3d;
+    --flock-soft: #3b1714;
+    --flock-ink: #ff7a70;
+    --other: #ffb020;
+    --other-soft: #3a2a0c;
+    --passed: #6c7682;
+    --route: #63c1ff;
+    --route-alt: #56606c;
+    --focus: #63c1ff;
+    --button-bg: #e8ecf1;
+    --button-ink: #0b0e12;
+    --overlay: rgba(18, 22, 28, 0.92);
+    --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.3);
+    --shadow-2: 0 2px 6px rgba(0, 0, 0, 0.4), 0 16px 40px rgba(0, 0, 0, 0.5);
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme='dark'] {
+  --bg: #0b0e12;
+  --surface: #12161c;
+  --surface-2: #161b22;
+  --surface-3: #1c222a;
+  --ink: #e8ecf1;
+  --ink-2: #a9b2be;
+  --ink-3: #7f8996;
+  --line: #232a33;
+  --line-strong: #343d48;
+  --flock: #ff4a3d;
+  --flock-soft: #3b1714;
+  --flock-ink: #ff7a70;
+  --other: #ffb020;
+  --other-soft: #3a2a0c;
+  --passed: #6c7682;
+  --route: #63c1ff;
+  --route-alt: #56606c;
+  --focus: #63c1ff;
+  --button-bg: #e8ecf1;
+  --button-ink: #0b0e12;
+  --overlay: rgba(18, 22, 28, 0.92);
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-2: 0 2px 6px rgba(0, 0, 0, 0.4), 0 16px 40px rgba(0, 0, 0, 0.5);
+  color-scheme: dark;
+}
