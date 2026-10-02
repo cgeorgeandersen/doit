@@ -19,6 +19,7 @@
     "node": "22.x"
   },
   "dependencies": {
+    "@vercel/analytics": "^2.0.1",
     "maplibre-gl": "^6.11.2"
   },
   "devDependencies": {

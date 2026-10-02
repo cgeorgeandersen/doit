@@ -4,8 +4,10 @@ import './styles/base.css';
 import './styles/tool.css';
 import './styles/content.css';
 
+import { inject } from '@vercel/analytics';
 import { App } from './app';
 import { EXAMPLES } from './content/examples';
+import { pageAddress } from './lib/analytics';
 import { fmtDate, fmtInt } from './lib/format';
 import { loadMeta, loadOverview } from './lib/tiles';
 import { h, qs } from './ui/dom';
@@ -43,7 +45,15 @@ function showExamples(app: App): void {
   }
 }
 
+// Counts visits on the live site with Vercel Web Analytics, taking the route
+// out of every address it reports. Development builds load nothing.
+function countVisits(): void {
+  if (!import.meta.env.PROD) return;
+  inject({ mode: 'production', beforeSend: (event) => ({ ...event, url: pageAddress(event.url) }) });
+}
+
 function boot(): void {
+  countVisits();
   const app = new App(currentTheme());
   initTheme(qs<HTMLButtonElement>('#theme-toggle'), (theme) => app.setTheme(theme));
   showStats();
