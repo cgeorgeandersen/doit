@@ -56,7 +56,7 @@ Mayors come from Wikidata, which is often stale after elections. The query prefe
 
 ## Who paid for a camera
 
-[`src/lib/funding.ts`](src/lib/funding.ts) writes the card’s “Funded and operated by” line. The operator comes from OpenStreetMap (recorded for about 1 in 7 Flock cameras), and a few rules read its kind from the name: city, county, state, federal, tribal or private, or nothing when the name doesn’t say. Who paid stays unknown unless `FUNDING` holds a public record for that operator, or the operator is a business or association, whose own cameras count as privately funded. Running a camera doesn’t mean paying for it: Texas paid for thousands of cameras that city police run.
+[`src/lib/funding.ts`](src/lib/funding.ts) writes the card’s “Funded and operated by” line. The operator comes from OpenStreetMap (recorded for about 1 in 7 Flock cameras), and a few rules read its kind from the name: city, county, state, federal, tribal or private, or nothing when the name doesn’t say. Who paid stays unknown unless `FUNDING` holds a public record for that operator’s Flock cameras (records don’t extend to its other makers’ cameras), or the operator is a business or association, whose own cameras count as privately funded. Running a camera doesn’t mean paying for it: Texas paid for thousands of cameras that city police run.
 
 To add a record, add one entry to `FUNDING`: a pattern for the operator’s name, the source’s link and month, and for a city or county agency a point in that place (a record only applies within 50 km of it, because other states have towns with the same name). `npm test` fails if a record has no source or date.
 
