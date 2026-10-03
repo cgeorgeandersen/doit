@@ -63,6 +63,7 @@ export function kindLabel(kind: Kind, name: string): string {
   return kind === 'metro' ? 'city-county' : kind;
 }
 
+/** A public record of who paid for an operator's Flock cameras (not its other makers' cameras). */
 export interface Funding {
   /** The operator names this record covers. */
   operators: RegExp;
@@ -114,14 +115,14 @@ export interface FundingRow {
   source?: string;
 }
 
-/** The card's one or two rows for a camera's operator (as recorded) and location. */
-export function fundingRows(operator: string, at: LngLat): FundingRow[] {
+/** The card's one or two rows for a camera's operator (as recorded), location and maker. */
+export function fundingRows(operator: string, at: LngLat, flock: boolean): FundingRow[] {
   const name = operator.trim();
   if (!name || /^(unknown|none|n\/?a|\?+)$/i.test(name)) return [{ label: 'Funded and operated by', name: null }];
   const kind = operatorKind(name);
   const operated: FundingRow = { label: 'Operated by', name, ...(kind && { kind: kindLabel(kind, name) }) };
   if (kind === 'private') return [{ ...operated, label: 'Funded and operated by' }];
-  const record = FUNDING.find((f) => f.operators.test(name) && (!f.near || haversine(f.near, at) <= NEAR_M));
+  const record = flock ? FUNDING.find((f) => f.operators.test(name) && (!f.near || haversine(f.near, at) <= NEAR_M)) : undefined;
   if (!record) return [{ label: 'Funded by', name: null }, operated];
   if (!record.funder) return [{ ...operated, label: 'Funded and operated by', source: record.source }];
   return [{ label: 'Funded by', name: record.funder, how: record.how, source: record.source }, operated];

@@ -153,7 +153,7 @@ export class CameraCard {
       h(
         'p',
         { class: 'card-op' },
-        fundingRows(camera.operator, [camera.lon, camera.lat]).map((row) => fundingRow(row, this.pinned)),
+        fundingRows(camera.operator, [camera.lon, camera.lat], camera.flock).map((row) => fundingRow(row, this.pinned)),
       ),
       s
         ? h(

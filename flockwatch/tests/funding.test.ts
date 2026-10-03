@@ -70,32 +70,40 @@ describe('operatorKind', () => {
 
 describe('fundingRows', () => {
   it('says unknown when no one recorded who runs the camera', () => {
-    expect(text(fundingRows('', OAKLAND))).toBe('Funded and operated by: unknown');
-    expect(text(fundingRows('Unknown', OAKLAND))).toBe('Funded and operated by: unknown');
+    expect(text(fundingRows('', OAKLAND, true))).toBe('Funded and operated by: unknown');
+    expect(text(fundingRows('Unknown', OAKLAND, true))).toBe('Funded and operated by: unknown');
   });
 
   it('counts a business’s own cameras as privately funded', () => {
-    expect(text(fundingRows("Lowe's", OAKLAND))).toBe("Funded and operated by: **Lowe's** [private]");
+    expect(text(fundingRows("Lowe's", OAKLAND, true))).toBe("Funded and operated by: **Lowe's** [private]");
   });
 
   it('keeps funding unknown for an agency with no record, whatever its kind', () => {
-    expect(text(fundingRows("Volusia County Sheriff's Office", [-81.2, 29.0]))).toBe(
+    expect(text(fundingRows("Volusia County Sheriff's Office", [-81.2, 29.0], true))).toBe(
       "Funded by: unknown / Operated by: **Volusia County Sheriff's Office** [county]",
     );
   });
 
   it('names an agency that paid for its own cameras, with the source', () => {
-    expect(text(fundingRows('California Highway Patrol (CHP)', OAKLAND))).toBe(
+    expect(text(fundingRows('California Highway Patrol (CHP)', OAKLAND, true))).toBe(
       'Funded and operated by: **California Highway Patrol (CHP)** [state] (source)',
     );
   });
 
+  it('applies funding records only to the Flock cameras they describe', () => {
+    expect(text(fundingRows('California Highway Patrol (CHP)', OAKLAND, false))).toBe(
+      'Funded by: unknown / Operated by: **California Highway Patrol (CHP)** [state]',
+    );
+    // A business pays for its own cameras, whoever made them.
+    expect(text(fundingRows("Lowe's", OAKLAND, false))).toBe("Funded and operated by: **Lowe's** [private]");
+  });
+
   it('names a different funder only near the place its record covers', () => {
-    expect(text(fundingRows('Dallas Police Department', DALLAS_TX))).toBe(
+    expect(text(fundingRows('Dallas Police Department', DALLAS_TX, true))).toBe(
       'Funded by: **Texas state grant**, at least in part (source) / Operated by: **Dallas Police Department** [city]',
     );
     // Dallas, Georgia has a police department of its own.
-    expect(text(fundingRows('Dallas Police Department', DALLAS_GA))).toBe(
+    expect(text(fundingRows('Dallas Police Department', DALLAS_GA, true))).toBe(
       'Funded by: unknown / Operated by: **Dallas Police Department** [city]',
     );
   });
