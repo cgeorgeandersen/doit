@@ -8,7 +8,7 @@ Enter two addresses and Track the Pole maps every known Flock license plate came
 | --- | --- |
 | **The map** | A heat map of every mapped plate reader when zoomed out, individual cameras with the direction each one faces when zoomed in. |
 | **The count** | Routes the drive (with alternatives), finds the cameras that would see the car, and shows the number, how often one comes up, and a numbered list. When there's an alternative route with fewer cameras, it says so. |
-| **The camera card** | Hover over (or tap) any camera: maker, operator if known, which way it faces, whether it sees your front or rear plate, and who answers for it, with email, phone and contact links when pinned. |
+| **The camera card** | Hover over (or tap) any camera: maker, who paid for and runs it when that’s known, which way it faces, whether it sees your front or rear plate, and who answers for it, with email, phone and contact links when pinned. |
 | **Who’s responsible** | For a whole route: every city or county and every legislator whose territory holds a counted camera, with camera counts. |
 | **The explainer** | What Flock cameras are and record, retention and sharing, the law, what you can do, how we count, data and privacy. |
 
@@ -54,6 +54,12 @@ Counts are minimums: only cameras volunteers have mapped are known.
 
 Mayors come from Wikidata, which is often stale after elections. The query prefers people’s own dated “position held” records over the city’s “head of government” field, skips anyone recorded as having left office or died, and only accepts humans (Wikidata once listed a video game character as mayor of New York). On 23 large cities checked in October 2026, including many whose mayors took office in January 2026, it named the current mayor in 21; one city had no data and one still named its former acting mayor. The pinned card links each name to Wikidata so anyone can check or fix it.
 
+## Who paid for a camera
+
+[`src/lib/funding.ts`](src/lib/funding.ts) writes the card’s “Funded and operated by” line. The operator comes from OpenStreetMap (recorded for about 1 in 7 Flock cameras), and a few rules read its kind from the name: city, county, state, federal, tribal or private, or nothing when the name doesn’t say. Who paid stays unknown unless `FUNDING` holds a public record for that operator, or the operator is a business or association, whose own cameras count as privately funded. Running a camera doesn’t mean paying for it: Texas paid for thousands of cameras that city police run.
+
+To add a record, add one entry to `FUNDING`: a pattern for the operator’s name, the source’s link and month, and for a city or county agency a point in that place (a record only applies within 50 km of it, because other states have towns with the same name). `npm test` fails if a record has no source or date.
+
 ## Run it
 
 Requires Node 22 (as pinned in `package.json`, and used by CI and Vercel).
@@ -74,7 +80,7 @@ npm test           # Vitest
 npm run typecheck  # TypeScript, strict
 ```
 
-The tests cover the geometry; the direction parser against every format found in the data; the counting rules on synthetic roads (rear and front captures, cameras aimed at cross streets and parallel roads, unknown directions, a corner, a performance check with 40,000 cameras); the officials logic against real Census answers saved in `tests/fixtures/` (cities, a Pennsylvania township, DC, Boston, a newly incorporated city) and against stale-Wikidata cases; address labels and city matching (ranking, states, accents, alternate names); the zip reader for the Census file; share links; and the page’s content: every citation number must match its source’s place in the list.
+The tests cover the geometry; the direction parser against every format found in the data; the counting rules on synthetic roads (rear and front captures, cameras aimed at cross streets and parallel roads, unknown directions, a corner, a performance check with 40,000 cameras); the officials logic against real Census answers saved in `tests/fixtures/` (cities, a Pennsylvania township, DC, Boston, a newly incorporated city) and against stale-Wikidata cases; address labels and city matching (ranking, states, accents, alternate names); who-paid labels against real operator names, including look-alikes such as the Falls Church Police Department; the zip reader for the Census file; share links; and the page’s content: every citation number must match its source’s place in the list.
 
 ## Build and deploy
 
@@ -102,7 +108,7 @@ flockwatch/
   index.html            page shell and all explainer prose (readable without JavaScript)
   scripts/build-data.ts fetches cameras, legislators, Congress and cities into public/data/
   src/lib/              pure, tested logic: geometry, direction parsing, counting,
-                        officials matching, geocoding, routing, tiles, share links
+                        officials matching, who paid, geocoding, routing, tiles, share links
   src/ui/               map, address boxes, camera card, results panel, theme
   src/app.ts            ties search, routing, counting and the map together
   src/styles/           design tokens (light and dark), layout, explainer
