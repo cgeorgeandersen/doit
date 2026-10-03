@@ -1,12 +1,13 @@
 /**
- * The card for one camera: what it is, which way it points, how it sees your
- * route, and who answers for it. Hovering shows it briefly; clicking or
- * tapping pins it so its links can be used.
+ * The card for one camera: what it is, who paid for and runs it, which way it
+ * points, how it sees your route, and who answers for it. Hovering shows it
+ * briefly; clicking or tapping pins it so its links can be used.
  */
 
 import { osmLinks, type Camera } from '../lib/camera';
 import { describeDirection, parseDirection } from '../lib/direction';
 import { fmtMiles } from '../lib/format';
+import { fundingRows, type FundingRow } from '../lib/funding';
 import { lookupResponsible, type Official, type Responsible } from '../lib/officials';
 import { describeVerdict, isCounted, type Sighting } from '../lib/seen';
 import { fill, h, type Child } from './dom';
@@ -152,7 +153,7 @@ export class CameraCard {
       h(
         'p',
         { class: 'card-op' },
-        camera.operator ? ['Run by ', h('strong', null, camera.operator)] : 'Who runs it isn’t recorded.',
+        fundingRows(camera.operator, [camera.lon, camera.lat]).map((row) => fundingRow(row, this.pinned)),
       ),
       s
         ? h(
@@ -245,6 +246,18 @@ export class CameraCard {
     if (!blocks.length) blocks.push(h('p', { class: 'note' }, 'No officials found for this spot.'));
     return blocks;
   }
+}
+
+function fundingRow(row: FundingRow, withSource: boolean): HTMLElement {
+  return h(
+    'span',
+    { class: 'op-row' },
+    `${row.label}: `,
+    row.name ? h('strong', null, row.name) : 'unknown',
+    row.kind ? [' ', h('span', { class: 'op-kind' }, row.kind)] : null,
+    row.how ? `, ${row.how}` : null,
+    withSource && row.source ? [' · ', h('a', { href: row.source, target: '_blank', rel: 'noopener' }, 'source')] : null,
+  );
 }
 
 function person(p: Official, withContact: boolean): HTMLElement {
