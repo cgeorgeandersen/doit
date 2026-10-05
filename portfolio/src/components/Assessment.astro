@@ -1,0 +1,154 @@
+---
+/**
+ * The AI readiness self-assessment, "How Boring Is Your AI?". Every word comes
+ * from src/assessment/content.ts.
+ *
+ * The first screen is written here at build time, so it paints at once and
+ * reads without JavaScript. The questions and the results are drawn in the
+ * browser by src/assessment/app.ts, into the empty sections below. Both of the
+ * tool's pages use this component: the tool itself and its /results page
+ * (where a finished or shared result opens).
+ *
+ * The frameworks come from the collection, never typed twice: the browser gets
+ * their titles, symbols, colors and pages in data-frameworks, and one
+ * <template> per framework holding its ElementTile chip to copy.
+ */
+import '../assessment/assessment.css';
+import ContactBand from './ContactBand.astro';
+import ElementTile from './ElementTile.astro';
+import { ASSESSMENT } from '../assessment/content';
+import type { FrameworkInfo } from '../assessment/model';
+import { questionCount } from '../assessment/scoring';
+import { tx } from '../assessment/text';
+import { SITE } from '../config/site';
+import { getSite } from '../lib/content';
+
+const site = await getSite();
+const { intro, stages } = ASSESSMENT;
+
+/** The tool's own address: this page's, without /results. */
+const base = Astro.url.pathname.replace(/\/results\/?$/, '').replace(/\/+$/, '');
+const sectionPath = base.replace(/\/[^/]+$/, '') || '/';
+
+// The frameworks the questions are built on, in the site's order. A misspelled name stops the build here.
+const ids = [...new Set(ASSESSMENT.dimensions.map((d) => d.framework))];
+const unknown = ids.filter((id) => !site.frameworks.some((f) => f.id === id));
+if (unknown.length > 0) {
+  throw new Error(
+    `src/assessment/content.ts: a dimension's "framework" names ${unknown.map((id) => `"${id}"`).join(', ')}, but there is no such file in src/content/frameworks/.\n  Available: ${site.frameworks.map((f) => f.id).join(', ')}`,
+  );
+}
+const frameworks = site.frameworks.filter((f) => ids.includes(f.id));
+const info: Record<string, FrameworkInfo> = Object.fromEntries(
+  frameworks.map((f) => [f.id, { title: f.data.title, symbol: site.elementOf(f).symbol, color: site.colorOf(f), path: `/frameworks/${f.id}` }]),
+);
+
+// The headline, split around the word on the four-color stripe.
+const at = intro.emphasis ? intro.title.indexOf(intro.emphasis) : -1;
+const [before, after] = at >= 0 ? [intro.title.slice(0, at), intro.title.slice(at + intro.emphasis.length)] : [intro.title, ''];
+const questions = questionCount(ASSESSMENT);
+const last = stages.length - 1;
+---
+
+<div class="assessment" data-base={base} data-results={`${base}/results`} data-frameworks={JSON.stringify(info)}>
+  <section class="view intro" data-view="intro" aria-labelledby="assessment-title">
+    <div class="wide">
+      <p class="notice" data-link-notice role="status" hidden></p>
+      <div class="intro-head">
+        <p class="kicker">
+          <span><a href={sectionPath}>{SITE.sections.tools.label}</a></span>
+          {intro.kicker.map((item) => <span>{tx(item, { questions })}</span>)}
+        </p>
+        <h1 id="assessment-title" class="intro-title" tabindex="-1">
+          {tx(before)}{at >= 0 && <span class="emphasis">{intro.emphasis}</span>}{tx(after)}
+        </h1>
+        <p class="dek intro-dek">{tx(intro.dek)}</p>
+      </div>
+
+      <div class="start">
+        <h2 class="start-title">{tx(intro.modeHeading)}</h2>
+        <div class="modes">
+          {
+            (['department', 'company'] as const).map((mode) => (
+              <button type="button" class="mode" data-mode={mode}>
+                <span class="mode-label">{tx(intro.modes[mode].label)}</span>
+                <span class="mode-hint">{tx(intro.modes[mode].hint)}</span>
+                <span class="mode-arrow" aria-hidden="true">→</span>
+              </button>
+            ))
+          }
+        </div>
+        <noscript><p class="noscript">{tx(intro.noscript)}</p></noscript>
+        <ul class="intro-notes">{intro.notes.map((note) => <li>{tx(note)}</li>)}</ul>
+      </div>
+
+      <section class="stages-block" aria-labelledby="stages-title">
+        <h2 id="stages-title" class="label">{tx(intro.stagesHeading)}</h2>
+        <p class="stages-intro">{tx(intro.stagesIntro)}</p>
+        <ol class="stages">
+          {
+            stages.map((stage, i) => (
+              <li class:list={['stage', { 'stage--goal': i === last }]}>
+                <span class="stage-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                <span class="stage-name">{i === last ? <span class="emphasis">{stage.name}</span> : stage.name}</span>
+                {i === last && <span class="stage-goal">{tx(intro.goalLabel)}</span>}
+                <span class="stage-def">{tx(stage.definition)}</span>
+              </li>
+            ))
+          }
+        </ol>
+      </section>
+
+      <section class="built-on" aria-labelledby="built-title">
+        <h2 id="built-title" class="label">{tx(intro.frameworksHeading)}</h2>
+        <ul class="fw-list">
+          {
+            frameworks.map((f) => (
+              <li>
+                <a class="fw-link" href={`/frameworks/${f.id}`}>
+                  <ElementTile element={site.elementOf(f)} color={site.colorOf(f)} size="chip" />
+                  <span class="fw-name">{f.data.title}</span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+    </div>
+  </section>
+
+  <section class="view quiz" data-view="quiz" hidden></section>
+
+  <section class="view results" data-view="results" hidden>
+    <div class="wide" data-results-body></div>
+    <ContactBand note={tx(ASSESSMENT.results.contactNote)} />
+  </section>
+
+  {
+    frameworks.map((f) => (
+      <template data-chip={f.id}>
+        <ElementTile element={site.elementOf(f)} color={site.colorOf(f)} size="chip" />
+      </template>
+    ))
+  }
+  <div id="announcer" class="visually-hidden" aria-live="polite" aria-atomic="true"></div>
+</div>
+
+<script>
+  import { App } from '../assessment/app';
+  import { emailAdapter } from '../assessment/email';
+
+  const root = document.querySelector<HTMLElement>('.assessment');
+  if (root) new App(root, emailAdapter).start();
+
+  // "How the score works" is folded away on screen; open it for printing, then fold it again.
+  let unfolded: HTMLDetailsElement[] = [];
+  window.addEventListener('beforeprint', () => {
+    unfolded = [...document.querySelectorAll<HTMLDetailsElement>('.assessment details:not([open])')];
+    for (const details of unfolded) details.open = true;
+  });
+  window.addEventListener('afterprint', () => {
+    for (const details of unfolded) details.open = false;
+    unfolded = [];
+  });
+</script>

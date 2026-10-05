@@ -19,7 +19,7 @@ export interface OgCard {
   /** A word in the title to give the four-color stripe (the home page's "boring"). */
   emphasis?: string | undefined;
   dek?: string | undefined;
-  /** Bottom-left note, e.g. "Reviewed Sep 29, 2026"; `dot` adds the stamp's dot. */
+  /** Bottom-left note, e.g. "Reviewed Sep 29, 2026"; `dot` adds the stamp's dot. Each → is drawn as an arrow. */
   note?: { text: string; dot?: boolean } | undefined;
   /** Bottom-right text, usually the site's or the project's domain. */
   byline: string;
@@ -55,7 +55,7 @@ function tint(hex: string, amount: number): string {
   return `#${channel(0)}${channel(1)}${channel(2)}`;
 }
 
-type Node = { type: string; props: { style?: Record<string, unknown>; children?: unknown; src?: string; width?: number; height?: number } };
+type Node = { type: string; props: { style?: Record<string, unknown>; children?: unknown; src?: string; width?: number; height?: number; [attribute: string]: unknown } };
 
 /** A satori element. No children means none at all: satori reads even [] as "several children". */
 function h(type: string, style: Record<string, unknown>, ...children: unknown[]): Node {
@@ -106,6 +106,27 @@ function title(text: string, size: number, emphasis: string | undefined): Node {
     { display: 'flex', flexWrap: 'wrap', columnGap: Math.round(size * 0.2), fontFamily: 'Bricolage Grotesque', fontWeight: 800, fontSize: size, lineHeight: 1.02, letterSpacing: -size * 0.035, color: INK },
     ...words,
   );
+}
+
+/** A right arrow drawn as a path: the share-image fonts are Latin-only cuts with no → glyph. */
+function arrow(size: number, color: string): Node {
+  return {
+    type: 'svg',
+    props: {
+      width: size,
+      height: size,
+      viewBox: '0 0 24 24',
+      style: { margin: '0 10px' },
+      children: { type: 'path', props: { d: 'M4 12h15M13 6l6 6-6 6', fill: 'none', stroke: color, strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round' } },
+    },
+  };
+}
+
+/** The note's text, with each → as a drawn arrow. */
+function noteText(text: string): Node | string {
+  if (!text.includes('→')) return text;
+  const parts = text.split(/\s*→\s*/);
+  return h('div', { display: 'flex', alignItems: 'center' }, ...parts.flatMap((part, i) => (i === 0 ? [h('span', {}, part)] : [arrow(20, INK_3), h('span', {}, part)])));
 }
 
 function titleSize(text: string, narrow: boolean): number {
@@ -194,7 +215,7 @@ export async function renderCard(card: OgCard): Promise<Buffer> {
             'div',
             { display: 'flex', alignItems: 'center', gap: 12 },
             card.note.dot ? h('div', { width: 10, height: 10, borderRadius: 5, background: FRESH }) : null,
-            card.note.text,
+            noteText(card.note.text),
           )
         : h('div', {}, ''),
       h('div', { display: 'flex' }, card.byline),

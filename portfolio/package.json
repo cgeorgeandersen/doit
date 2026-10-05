@@ -10,7 +10,9 @@
     "build": "astro check && astro build",
     "preview": "astro preview",
     "check": "astro check",
-    "check:reviews": "node scripts/check-reviews.mjs"
+    "test": "node --test --disable-warning=ExperimentalWarning \"tests/*.test.mjs\"",
+    "check:reviews": "node scripts/check-reviews.mjs",
+    "drafts": "node scripts/list-drafts.mjs"
   },
   "engines": {
     "node": "22.x"

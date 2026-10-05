@@ -1,0 +1,25 @@
+---
+/**
+ * Where a finished or shared result opens: /tools/how-boring-is-your-ai/results#…
+ * The answers are after the #, so this page is the same as the tool's, kept
+ * out of search results (noindex) and counted separately by analytics, which
+ * shows how many people finish.
+ */
+import Assessment from '../../../components/Assessment.astro';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { ASSESSMENT } from '../../../assessment/content';
+import { tx } from '../../../assessment/text';
+import { SITE } from '../../../config/site';
+
+const name = tx(ASSESSMENT.name);
+---
+
+<BaseLayout
+  title={name}
+  description={tx(ASSESSMENT.meta.description)}
+  image="/og/tools/how-boring-is-your-ai.png"
+  imageAlt={`${name} A self-assessment by ${SITE.name}`}
+  noindex
+>
+  <Assessment />
+</BaseLayout>

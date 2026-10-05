@@ -68,6 +68,11 @@ const onVercel = process.env.VERCEL === '1';
           var t = localStorage.getItem('ga-theme');
           if (t === 'light' || t === 'dark') root.setAttribute('data-theme', t);
         } catch (e) {}
+        // Vercel Web Analytics reports each page's address. Nothing after # is sent:
+        // that's where the assessment keeps a result's answers.
+        window.webAnalyticsBeforeSend = function (event) {
+          return Object.assign({}, event, { url: String(event.url).split('#')[0] });
+        };
       })();
     </script>
     <Seo

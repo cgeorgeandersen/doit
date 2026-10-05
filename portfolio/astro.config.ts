@@ -51,7 +51,8 @@ export default defineConfig({
   },
   integrations: [
     sitemap({
-      filter: (page) => !page.includes('/404'),
+      // The assessment's /results page only shows a result from its link's #, so it isn't a page to index.
+      filter: (page) => !page.includes('/404') && !/\/results\/?$/.test(page),
     }),
   ],
   build: {

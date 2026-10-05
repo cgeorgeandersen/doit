@@ -1,0 +1,32 @@
+---
+/** The AI readiness self-assessment. Its words are in src/assessment/content.ts. */
+import Assessment from '../../../components/Assessment.astro';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { ASSESSMENT } from '../../../assessment/content';
+import { tx } from '../../../assessment/text';
+import { SITE } from '../../../config/site';
+
+const name = tx(ASSESSMENT.name);
+const description = tx(ASSESSMENT.meta.description);
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name,
+  description,
+  url: new URL(Astro.url.pathname, Astro.site).href,
+  applicationCategory: 'BusinessApplication',
+  operatingSystem: 'Any',
+  isAccessibleForFree: true,
+  author: { '@type': 'Person', name: SITE.name, url: Astro.site?.href },
+};
+---
+
+<BaseLayout
+  title={name}
+  description={description}
+  image="/og/tools/how-boring-is-your-ai.png"
+  imageAlt={`${name} A self-assessment by ${SITE.name}`}
+  jsonLd={jsonLd}
+>
+  <Assessment />
+</BaseLayout>

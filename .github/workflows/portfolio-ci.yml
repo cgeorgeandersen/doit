@@ -1,7 +1,7 @@
 # Checks the portfolio (portfolio/) on every push and pull request that touches
-# it: install, type-check and build, then list any frameworks or posts past
-# their review window. Hosting is on Vercel (see portfolio/vercel.json); this
-# workflow does not deploy.
+# it: install, run the AI readiness assessment's tests, type-check and build,
+# then list any frameworks or posts past their review window. Hosting is on
+# Vercel (see portfolio/vercel.json); this workflow does not deploy.
 name: Portfolio
 
 on:
@@ -33,5 +33,6 @@ jobs:
           cache: npm
           cache-dependency-path: portfolio/package-lock.json
       - run: npm ci
+      - run: npm test
       - run: npm run build
       - run: npm run check:reviews

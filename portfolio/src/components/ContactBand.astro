@@ -1,7 +1,16 @@
 ---
-/** The closing invitation, from site.ts: a heading and whichever contact links are filled in. */
+/**
+ * The closing invitation, from site.ts: a heading and whichever contact links
+ * are filled in. `note` adds a line under the heading (the assessment's
+ * results use it).
+ */
 import { SITE } from '../config/site';
 
+interface Props {
+  note?: string | undefined;
+}
+
+const { note } = Astro.props;
 const { heading, linkedin, linkedinLabel, email, cta } = SITE.contact;
 ---
 
@@ -9,6 +18,7 @@ const { heading, linkedin, linkedinLabel, email, cta } = SITE.contact;
   <div class="wide inner">
     <p class="label">Contact</p>
     <h2 id="contact-title" class="heading">{heading}</h2>
+    {note && <p class="note">{note}</p>}
     <ul class="links">
       {
         linkedin && (
@@ -62,6 +72,11 @@ const { heading, linkedin, linkedinLabel, email, cta } = SITE.contact;
     font-size: clamp(2rem, 5vw, 3.1rem);
     line-height: 1.04;
     letter-spacing: -0.035em;
+  }
+
+  .note {
+    max-width: 36rem;
+    color: var(--ink-2);
   }
 
   .links {
