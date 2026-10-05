@@ -135,6 +135,19 @@ function titleSize(text: string, narrow: boolean): number {
   return n <= 16 ? 116 : n <= 24 ? 96 : n <= 34 ? 80 : 68;
 }
 
+/**
+ * The description as one flex item per word, like the title, so lines break
+ * only at spaces. (Satori would also break at hyphens: "sign- / up". The fonts
+ * have no non-breaking hyphen to prevent it.)
+ */
+function dek(text: string, size: number): Node {
+  return h(
+    'div',
+    { display: 'flex', flexWrap: 'wrap', columnGap: Math.round(size * 0.26), fontFamily: 'Instrument Sans', fontWeight: 400, fontSize: size, lineHeight: 1.36, color: INK_2 },
+    ...text.split(' ').map((word) => h('span', {}, word)),
+  );
+}
+
 function clip(text: string, max: number): string {
   return text.length <= max ? text : `${text.slice(0, max - 1).replace(/\s+\S*$/, '')}…`;
 }
@@ -180,7 +193,7 @@ export async function renderCard(card: OgCard): Promise<Buffer> {
     'div',
     { display: 'flex', flexDirection: 'column', gap: 26, flex: 1, minWidth: 0 },
     title(card.title, size, card.emphasis),
-    card.dek ? h('div', { display: 'flex', fontFamily: 'Instrument Sans', fontWeight: 400, fontSize: narrow ? 28 : 32, lineHeight: 1.36, color: INK_2 }, clip(card.dek, narrow ? 150 : 190)) : null,
+    card.dek ? dek(clip(card.dek, narrow ? 150 : 190), narrow ? 28 : 32) : null,
   );
 
   const cover: Node | null = card.image
