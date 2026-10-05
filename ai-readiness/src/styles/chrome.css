@@ -1,0 +1,257 @@
+/*
+ * The pieces this page shares with georgeandersen.net, copied from the
+ * portfolio's components so they look the same: the header (SiteHeader), the
+ * theme toggle (ThemeToggle), the element chip (ElementTile), the date stamp
+ * (ReviewStamp), the contact band (ContactBand) and the footer (SiteFooter).
+ * Astro scopes those styles to each component; here each rule is prefixed
+ * with the component's own class instead.
+ */
+
+/* ---------- Header ---------- */
+
+.site-header {
+  border-bottom: 1px solid var(--rule);
+}
+
+.site-header .bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 3.2rem;
+}
+
+.site-header .wordmark {
+  padding-block: 0.4rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 44px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+/* One dot per framework color: the site's mark. */
+.site-header .dots {
+  display: inline-grid;
+  grid-template-columns: repeat(2, 6px);
+  gap: 3px;
+}
+
+.site-header .dots i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--fw);
+}
+
+/* ---------- Theme toggle: Auto → Light → Dark ---------- */
+
+.theme-toggle {
+  display: none;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 44px;
+  padding: 0 0.2rem 0 0.4rem;
+  border: 0;
+  background: transparent;
+  font-family: var(--font-label);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  cursor: pointer;
+}
+
+.js .theme-toggle {
+  display: inline-flex;
+}
+
+.theme-toggle:hover {
+  color: var(--ink);
+}
+
+.theme-icon {
+  width: 0.85rem;
+  height: 0.85rem;
+  border-radius: 50%;
+  border: 1.5px solid currentColor;
+  background: linear-gradient(90deg, currentColor 50%, transparent 50%);
+}
+
+.theme-label {
+  display: none;
+}
+
+:root:not([data-theme]) .theme-label[data-for='auto'],
+:root[data-theme='light'] .theme-label[data-for='light'],
+:root[data-theme='dark'] .theme-label[data-for='dark'] {
+  display: inline;
+}
+
+:root[data-theme='light'] .theme-icon {
+  background: transparent;
+}
+
+:root[data-theme='dark'] .theme-icon {
+  background: currentColor;
+}
+
+/* ---------- Element chip: a framework's symbol, in its color ---------- */
+
+.el {
+  display: grid;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.el--chip {
+  flex: none;
+  place-items: center;
+  min-width: 1.75rem;
+  height: 1.5rem;
+  padding-inline: 0.2rem;
+  border-radius: 5px;
+  background: var(--fw-ink);
+}
+
+.el--chip .el-symbol {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.85rem;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--paper);
+}
+
+/* ---------- Stamp: "Reviewed Sep 29, 2026", here "Taken Oct 5, 2026" ---------- */
+
+.stamp {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 0.45em;
+  max-width: 100%;
+  padding: 0.1em 0.7em;
+  border: 1px solid var(--rule-strong);
+  border-radius: 1em;
+  font-family: var(--font-label);
+  font-size: 0.7rem;
+  font-weight: 400;
+  font-style: normal;
+  line-height: 1.7;
+  letter-spacing: 0.03em;
+  text-transform: none;
+  color: var(--ink-3);
+}
+
+.stamp-dot {
+  flex: none;
+  width: 6px;
+  height: 6px;
+  margin-top: calc(0.85em - 3px);
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+/* ---------- Contact band ---------- */
+
+.contact {
+  margin-top: var(--section);
+  padding-top: var(--section);
+  border-top: 1px solid var(--rule);
+}
+
+.contact .inner {
+  display: grid;
+  gap: 1rem;
+  justify-items: start;
+}
+
+.contact .heading {
+  max-width: 18ch;
+  font-family: var(--font-display);
+  font-weight: 750;
+  font-size: clamp(2rem, 5vw, 3.1rem);
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+}
+
+.contact .note {
+  max-width: 36rem;
+  color: var(--ink-2);
+}
+
+.contact .links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin: 0.8rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* ---------- Footer ---------- */
+
+.site-footer {
+  margin-top: var(--section);
+  border-top: 1px solid var(--rule);
+  padding-block: 2rem 2.6rem;
+  font-family: var(--font-label);
+  font-size: 0.74rem;
+  line-height: 1.7;
+  letter-spacing: 0.02em;
+  color: var(--ink-3);
+}
+
+.site-footer .inner {
+  display: grid;
+  gap: 0.6rem 2rem;
+}
+
+.site-footer .name {
+  color: var(--ink-2);
+}
+
+.site-footer .links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 1.2rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.site-footer .links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--ink-2);
+}
+
+.site-footer .note a {
+  color: var(--ink-2);
+}
+
+@media (min-width: 720px) {
+  .site-footer .inner {
+    grid-template-columns: auto 1fr;
+    align-items: baseline;
+  }
+
+  .site-footer .links {
+    justify-content: flex-end;
+  }
+
+  .site-footer .links a {
+    min-height: 28px;
+  }
+
+  .site-footer .note {
+    grid-column: 1 / -1;
+  }
+}

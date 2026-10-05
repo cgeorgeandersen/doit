@@ -1,0 +1,135 @@
+/*
+ * Design tokens: the "Studio" direction. Clean white, near-black ink, and a
+ * color for each framework: violet for the philosophy, then cobalt, coral and
+ * teal for methods 01, 02 and 03 (a fourth method would reuse cobalt, and so
+ * on). Projects carry the colors of the frameworks they put into practice, so
+ * color always means "which framework". Amber is reserved for the
+ * "may be out of date" review stamp.
+ *
+ * The full light palette lives on :root; dark mode redefines only the tokens,
+ * once for the OS setting (unless the reader chose light) and once for an
+ * explicit dark choice, so the toggle wins in both directions.
+ */
+:root {
+  color-scheme: light;
+
+  --paper: #ffffff;
+  --paper-2: #f4f5f7;
+  --paper-3: #e9ebef;
+  --ink: #111318;
+  --ink-2: #3e4450;
+  --ink-3: #5c6370;
+  --rule: #e2e5ea;
+  --rule-strong: #c9ced6;
+
+  /* Framework colors: --fw-N marks, --fw-N-ink text in that color. */
+  --fw-0: #6b45f0;
+  --fw-0-ink: #5733d9;
+  --fw-1: #2759f5;
+  --fw-1-ink: #1d47cf;
+  --fw-2: #f2553a;
+  --fw-2-ink: #c23a21;
+  --fw-3: #0fa08e;
+  --fw-3-ink: #0a7568;
+  --fw-4: #e0a400;
+  --fw-4-ink: #806000;
+
+  /* The site accent is the first method's cobalt: links, focus, "live". */
+  --accent: var(--fw-1);
+  --accent-ink: var(--fw-1-ink);
+  --accent-wash: rgb(39 89 245 / 0.08);
+  --fresh: #0a7568;
+
+  --stale: #ad721c;
+  --stale-ink: #7b510d;
+  --stale-wash: rgb(173 114 28 / 0.1);
+
+  --shadow: 0 1px 2px rgb(17 19 24 / 0.05), 0 10px 30px rgb(17 19 24 / 0.07);
+  --focus: var(--accent-ink);
+
+  --font-display: 'Bricolage Grotesque Variable', 'Bricolage Grotesque', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-text: 'Instrument Sans Variable', 'Instrument Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  /* Small uppercase labels, dates, stamps and buttons. */
+  --font-label: var(--font-text);
+
+  --step--2: 0.72rem;
+  --step--1: 0.84rem;
+  --step-0: 1rem;
+  --step-1: 1.25rem;
+  --step-2: 1.6rem;
+  --step-3: 2.2rem;
+  --step-4: 3.2rem;
+
+  --measure: 38rem;
+  --wide: 70rem;
+  --gutter: max(16px, 4vw);
+  --section: clamp(3.5rem, 9vw, 6.5rem);
+  --radius: 12px;
+  --radius-small: 8px;
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --paper: #0e1014;
+    --paper-2: #171a20;
+    --paper-3: #20242b;
+    --ink: #eef0f4;
+    --ink-2: #b9bfca;
+    --ink-3: #8e95a3;
+    --rule: #262a33;
+    --rule-strong: #3a404b;
+    --fw-0: #9d80ff;
+    --fw-0-ink: #b7a2ff;
+    --fw-1: #6e8fff;
+    --fw-1-ink: #93aeff;
+    --fw-2: #ff7a62;
+    --fw-2-ink: #ff9a86;
+    --fw-3: #2ccdb8;
+    --fw-3-ink: #5fe0ce;
+    --fw-4: #f0c23a;
+    --fw-4-ink: #f5cf5c;
+    --accent-wash: rgb(110 143 255 / 0.12);
+    --fresh: #2ccdb8;
+    --stale: #c3862e;
+    --stale-ink: #deae62;
+    --stale-wash: rgb(195 134 46 / 0.14);
+    --shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 10px 30px rgb(0 0 0 / 0.35);
+  }
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --paper: #0e1014;
+  --paper-2: #171a20;
+  --paper-3: #20242b;
+  --ink: #eef0f4;
+  --ink-2: #b9bfca;
+  --ink-3: #8e95a3;
+  --rule: #262a33;
+  --rule-strong: #3a404b;
+  --fw-0: #9d80ff;
+  --fw-0-ink: #b7a2ff;
+  --fw-1: #6e8fff;
+  --fw-1-ink: #93aeff;
+  --fw-2: #ff7a62;
+  --fw-2-ink: #ff9a86;
+  --fw-3: #2ccdb8;
+  --fw-3-ink: #5fe0ce;
+  --fw-4: #f0c23a;
+  --fw-4-ink: #f5cf5c;
+  --accent-wash: rgb(110 143 255 / 0.12);
+  --fresh: #2ccdb8;
+  --stale: #c3862e;
+  --stale-ink: #deae62;
+  --stale-wash: rgb(195 134 46 / 0.14);
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 10px 30px rgb(0 0 0 / 0.35);
+}
+
+/* Any element with data-fw="N" gets --fw / --fw-ink for its framework. */
+[data-fw='0'] { --fw: var(--fw-0); --fw-ink: var(--fw-0-ink); }
+[data-fw='1'] { --fw: var(--fw-1); --fw-ink: var(--fw-1-ink); }
+[data-fw='2'] { --fw: var(--fw-2); --fw-ink: var(--fw-2-ink); }
+[data-fw='3'] { --fw: var(--fw-3); --fw-ink: var(--fw-3-ink); }
+[data-fw='4'] { --fw: var(--fw-4); --fw-ink: var(--fw-4-ink); }
