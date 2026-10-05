@@ -1,12 +1,13 @@
 # doit
 
-This repository holds four websites and an old iOS app.
+This repository holds five websites and an old iOS app.
 
 | Folder | What it is | Live at |
 | --- | --- | --- |
 | [`portfolio/`](portfolio/) | **George Andersen's portfolio**: frameworks for making AI useful, and the projects that prove them | [georgeandersen.net](https://www.georgeandersen.net) (Vercel, with Root Directory `portfolio`) |
 | [`what-do-i-actually-do/`](what-do-i-actually-do/) | **What Do I Actually Do?** Map your work in two minutes and see what needs a fix, what a tool can take over and what needs you. | Vercel, from the repository root; also [GitHub Pages](https://cgeorgeandersen.github.io/doit/) |
 | [`confident-machine/`](confident-machine/) | **The Confident Machine**, an interactive essay on how to live and work with AI | [Vercel](https://doit-t17l.vercel.app), with Root Directory `confident-machine` |
+| [`ai-readiness/`](ai-readiness/) | **How Boring Is Your AI?** A five-minute self-assessment of how ready a department or company is to get AI into production, and the gaps to close first | Vercel, with Root Directory `ai-readiness` (not deployed yet) |
 | [`flockwatch/`](flockwatch/) | **Track the Pole**: enter two addresses and see the Flock license plate cameras along the drive, how many would photograph your car, and who answers for each one | [trackthepole.com](https://trackthepole.com) (Vercel, with Root Directory `flockwatch`) |
 | `Doit/`, `Doit.xcodeproj/` | A 2019 iOS to-do app | Not deployed |
 
@@ -21,6 +22,10 @@ The whole tool is one self-contained page, [`what-do-i-actually-do/index.html`](
 ## The Confident Machine
 
 See [`confident-machine/README.md`](confident-machine/README.md).
+
+## How Boring Is Your AI?
+
+See [`ai-readiness/README.md`](ai-readiness/README.md).
 
 ## Track the Pole
 

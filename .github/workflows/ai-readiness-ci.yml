@@ -1,0 +1,37 @@
+# Checks How Boring Is Your AI? (ai-readiness/) on every push and pull request
+# that touches it: install, tests (scoring, share links, content, CSP hash) and
+# a type-checked production build. Hosting is on Vercel (see
+# ai-readiness/vercel.json); this workflow does not deploy.
+name: How Boring Is Your AI?
+
+on:
+  push:
+    branches: [master]
+    paths: ['ai-readiness/**', '.github/workflows/ai-readiness-ci.yml']
+  pull_request:
+    paths: ['ai-readiness/**', '.github/workflows/ai-readiness-ci.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ai-readiness-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ai-readiness
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: ai-readiness/package-lock.json
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
