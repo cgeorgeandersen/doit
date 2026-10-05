@@ -19,7 +19,7 @@ export interface OgCard {
   /** A word in the title to give the four-color stripe (the home page's "boring"). */
   emphasis?: string | undefined;
   dek?: string | undefined;
-  /** Bottom-left note, e.g. "Reviewed Sep 29, 2026"; `dot` adds the stamp's dot. */
+  /** Bottom-left note, e.g. "Reviewed Sep 29, 2026"; `dot` adds the stamp's dot. Each → is drawn as an arrow. */
   note?: { text: string; dot?: boolean } | undefined;
   /** Bottom-right text, usually the site's or the project's domain. */
   byline: string;
@@ -55,7 +55,7 @@ function tint(hex: string, amount: number): string {
   return `#${channel(0)}${channel(1)}${channel(2)}`;
 }
 
-type Node = { type: string; props: { style?: Record<string, unknown>; children?: unknown; src?: string; width?: number; height?: number } };
+type Node = { type: string; props: { style?: Record<string, unknown>; children?: unknown; src?: string; width?: number; height?: number; [attribute: string]: unknown } };
 
 /** A satori element. No children means none at all: satori reads even [] as "several children". */
 function h(type: string, style: Record<string, unknown>, ...children: unknown[]): Node {
@@ -108,10 +108,44 @@ function title(text: string, size: number, emphasis: string | undefined): Node {
   );
 }
 
+/** A right arrow drawn as a path: the share-image fonts are Latin-only cuts with no → glyph. */
+function arrow(size: number, color: string): Node {
+  return {
+    type: 'svg',
+    props: {
+      width: size,
+      height: size,
+      viewBox: '0 0 24 24',
+      style: { margin: '0 10px' },
+      children: { type: 'path', props: { d: 'M4 12h15M13 6l6 6-6 6', fill: 'none', stroke: color, strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round' } },
+    },
+  };
+}
+
+/** The note's text, with each → as a drawn arrow. */
+function noteText(text: string): Node | string {
+  if (!text.includes('→')) return text;
+  const parts = text.split(/\s*→\s*/);
+  return h('div', { display: 'flex', alignItems: 'center' }, ...parts.flatMap((part, i) => (i === 0 ? [h('span', {}, part)] : [arrow(20, INK_3), h('span', {}, part)])));
+}
+
 function titleSize(text: string, narrow: boolean): number {
   const n = text.length;
   if (narrow) return n <= 16 ? 88 : n <= 24 ? 76 : 64;
   return n <= 16 ? 116 : n <= 24 ? 96 : n <= 34 ? 80 : 68;
+}
+
+/**
+ * The description as one flex item per word, like the title, so lines break
+ * only at spaces. (Satori would also break at hyphens: "sign- / up". The fonts
+ * have no non-breaking hyphen to prevent it.)
+ */
+function dek(text: string, size: number): Node {
+  return h(
+    'div',
+    { display: 'flex', flexWrap: 'wrap', columnGap: Math.round(size * 0.26), fontFamily: 'Instrument Sans', fontWeight: 400, fontSize: size, lineHeight: 1.36, color: INK_2 },
+    ...text.split(' ').map((word) => h('span', {}, word)),
+  );
 }
 
 function clip(text: string, max: number): string {
@@ -159,7 +193,7 @@ export async function renderCard(card: OgCard): Promise<Buffer> {
     'div',
     { display: 'flex', flexDirection: 'column', gap: 26, flex: 1, minWidth: 0 },
     title(card.title, size, card.emphasis),
-    card.dek ? h('div', { display: 'flex', fontFamily: 'Instrument Sans', fontWeight: 400, fontSize: narrow ? 28 : 32, lineHeight: 1.36, color: INK_2 }, clip(card.dek, narrow ? 150 : 190)) : null,
+    card.dek ? dek(clip(card.dek, narrow ? 150 : 190), narrow ? 28 : 32) : null,
   );
 
   const cover: Node | null = card.image
@@ -194,7 +228,7 @@ export async function renderCard(card: OgCard): Promise<Buffer> {
             'div',
             { display: 'flex', alignItems: 'center', gap: 12 },
             card.note.dot ? h('div', { width: 10, height: 10, borderRadius: 5, background: FRESH }) : null,
-            card.note.text,
+            noteText(card.note.text),
           )
         : h('div', {}, ''),
       h('div', { display: 'flex' }, card.byline),

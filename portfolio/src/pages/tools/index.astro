@@ -1,0 +1,60 @@
+---
+/**
+ * Tools & resources: free things to use on your own work, one card per file
+ * in src/content/tools/. Each links to the tool and to the project page that
+ * tells how it was built.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ToolCard from '../../components/ToolCard.astro';
+import { SITE } from '../../config/site';
+import { getSite } from '../../lib/content';
+
+const site = await getSite();
+const { label, title, description } = SITE.sections.tools;
+---
+
+<BaseLayout title={title} description={description} image="/og/tools.png" imageAlt={`${title} by ${SITE.name}`}>
+  <header class="page-head wide">
+    <p class="kicker"><span>{label}</span></p>
+    <h1 class="page-title">{title}</h1>
+    <p class="dek">{description}</p>
+  </header>
+
+  <div class="wide">
+    <ul class="tools">
+      {
+        site.tools.map((tool) => (
+          <li>
+            <ToolCard tool={tool} frameworks={site.frameworksFor(tool)} project={site.projectOf(tool)} elementOf={site.elementOf} colorOf={site.colorOf} />
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</BaseLayout>
+
+<style>
+  .tools {
+    display: grid;
+    gap: 1.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .tools > li {
+    min-width: 0;
+  }
+
+  @media (min-width: 640px) {
+    .tools {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 1000px) {
+    .tools {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+</style>

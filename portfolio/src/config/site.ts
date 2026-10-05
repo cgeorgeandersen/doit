@@ -51,6 +51,15 @@ export const SITE = {
     emphasis: 'boring',
     dek: 'Real value comes from AI that’s in production, measured, and trusted exactly as far as it’s reliable. These are the methods we can use to get there, and the work that proves them.',
     linkLabel: 'Read the philosophy',
+    /**
+     * The button beside that link: the AI readiness assessment. `label` is its
+     * first line, `note` the smaller second. Set it to null to remove the button.
+     */
+    cta: {
+      label: 'How boring is your AI?',
+      note: 'Take the free five-minute assessment',
+      href: '/tools/how-boring-is-your-ai',
+    } as NavItem & { note: string } | null,
   },
 
   home: {
@@ -71,12 +80,17 @@ export const SITE = {
     projects: {
       label: 'Projects',
       title: 'The proof',
-      description: 'Working tools and essays that put the frameworks into practice, each live on its own site.',
+      description: 'Working tools and essays that put the frameworks into practice, each one written up as an experiment.',
     },
     frameworks: {
       label: 'Frameworks',
       title: 'How I think',
       description: 'The methods I use to get AI into production: what to do first, where it fits in the work, how far to trust it, and who holds the judgment.',
+    },
+    tools: {
+      label: 'Tools',
+      title: 'Tools & resources',
+      description: 'Free tools that put the frameworks to work on your own team. No sign-up, and your answers stay in your browser.',
     },
     writing: {
       label: 'Lab notes',
@@ -113,6 +127,7 @@ export const SITE = {
   nav: [
     { label: 'Projects', href: '/projects' },
     { label: 'Frameworks', href: '/frameworks' },
+    { label: 'Tools', href: '/tools' },
     { label: 'Lab notes', href: '/writing' },
     { label: 'About', href: '/about' },
   ] satisfies NavItem[],

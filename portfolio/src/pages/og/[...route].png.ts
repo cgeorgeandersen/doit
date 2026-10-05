@@ -1,11 +1,14 @@
 /**
  * One share image per page, generated at build time:
- *   /og/site.png, /og/projects.png, /og/frameworks.png, /og/writing.png,
+ *   /og/site.png, /og/projects.png, /og/frameworks.png, /og/tools.png, /og/writing.png,
+ *   /og/tools/how-boring-is-your-ai.png (the assessment),
  *   /og/projects/<file>.png, /og/frameworks/<file>.png, /og/writing/<file>.png,
  *   /og/pages/<file>.png
  * Each page's <meta property="og:image"> points at its own card (see Seo.astro).
  */
 import type { APIRoute, GetStaticPaths } from 'astro';
+import { ASSESSMENT } from '../../assessment/content';
+import { tx } from '../../assessment/text';
 import { SITE } from '../../config/site';
 import { domainOf, getSite, reviewedOn } from '../../lib/content';
 import { formatDate } from '../../lib/dates';
@@ -37,7 +40,7 @@ export const getStaticPaths = (async () => {
         byline,
       },
     },
-    ...(['projects', 'frameworks', 'writing'] as const).map((key) => ({
+    ...(['projects', 'frameworks', 'tools', 'writing'] as const).map((key) => ({
       route: key,
       card: {
         kicker: [SITE.name, SITE.sections[key].label],
@@ -46,6 +49,17 @@ export const getStaticPaths = (async () => {
         byline,
       },
     })),
+    {
+      route: 'tools/how-boring-is-your-ai',
+      card: {
+        kicker: [SITE.name, 'Self-assessment'],
+        title: tx(ASSESSMENT.intro.title),
+        emphasis: ASSESSMENT.intro.emphasis,
+        dek: tx(ASSESSMENT.meta.imageDek),
+        note: { text: tx(ASSESSMENT.meta.imageNote) },
+        byline,
+      },
+    },
     ...site.projects.map((project) => {
       const frameworks = site.frameworksFor(project).map((f) => f.data.title);
       return {

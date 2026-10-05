@@ -7,6 +7,7 @@ Everything on the site comes from Markdown files in `src/content/`, plus the sit
 | Project | `src/content/projects/` | `/projects/<file-name>`, on /projects, on its frameworks' pages, and on the home page if `featured: true` |
 | Framework | `src/content/frameworks/` | `/frameworks/<file-name>`, on /frameworks (with its element tile) and the home page |
 | Lab note (post) | `src/content/writing/` | `/writing/<file-name>`, on the Lab notes page, the home page, and under "Applied in" on any framework it names |
+| Tool or resource | `src/content/tools/` | a card on Tools & resources (`/tools`) |
 | Page | `src/content/pages/` | `/<file-name>` (add it to the menu in `site.ts`) |
 
 **File names become web addresses**, so use lowercase words joined by hyphens: `meeting-cost-calculator.md`.
@@ -124,6 +125,48 @@ lists that start with "- ", and headings that start with "## " all work.
 **frameworks** is optional too: list the frameworks the note applies, by file name, the same way projects do. Each shows as a tag at the top of the note (like **Ct** Calibrated Trust), and the note appears under "Applied in" on that framework's card and page automatically. You don't edit the framework.
 
 Lab notes are numbered automatically by date: the oldest is Entry 001. Optionally add `lastReviewed: 2026-12-01` when you revisit a note; its stamp shows that date instead of the publish date.
+
+## Add a tool or resource
+
+Tools & resources (`/tools`) lists free things people can use on their own work. Each card is one file. Copy this into `src/content/tools/your-tool.md`:
+
+```markdown
+---
+title: "Tool name"
+summary: "One line on what it does for the reader. Under 160 characters."
+kind: "Workflow map"
+time: "2 minutes"
+href: "https://example.com"
+action: "Map your work"
+frameworks: [fix-first-ai-last]
+project: your-project
+order: 4
+---
+```
+
+- **kind** is what it is, in a word or two ("Self-assessment", "Interactive essay"); **time** is how long it takes. Both show above the title.
+- **href** is where it lives: a full address (`https://…`, which opens in a new tab) or a page on this site (`/tools/…`).
+- **action** is the button's words. Start with a verb: "Take the assessment", "Read the essay".
+- **project** (optional) is the project page that tells how it was built, by file name. The card shows that project's cover image and a "Read the case study" link, so you don't add an image here.
+- **frameworks** shows "Puts into practice" on the card. The band on top of the card takes the framework's color, or the four-color stripe when you list several.
+- **order** sorts the cards: lower numbers first. Add `draft: true` to keep a card off the site while you work on it.
+
+## Edit the AI readiness assessment
+
+"How Boring Is Your AI?" (`/tools/how-boring-is-your-ai`) is the one part of the site whose words don't live in Markdown, because its questions are structured: every question has four answers, scored 0 to 3 in order. **All of its words are in `src/assessment/content.ts`**: the questions and answers, the four stages, the next steps, the results page and every button. The top of that file explains the few rules (keep the `{placeholders}`; keep four answers per question, least ready first).
+
+- **Drafts:** words you haven't rewritten in your own voice yet are marked `// TODO REVIEW`. Run `npm run drafts` to list them, and delete a marker once the words under it sound like you.
+- **Check it:** run `npm test`. It says what to fix if a question lost an answer, a placeholder is misspelled, or a word slipped in that doesn't belong (emoji, hype words, comparisons with other companies).
+- **Reordering:** a shared result stores each answer's position. If you add, remove or reorder questions or answers, add one to `shareVersion` in the same file, so older links show a short notice instead of answers read wrong. Rewording doesn't need it.
+- **The home button** that leads to it ("How boring is your AI?") is `thesis.cta` in `src/config/site.ts`; set it to `null` to remove it.
+
+### Turn on the email form
+
+The results page can offer "Email me this result" with an optional, unticked box for occasional notes. It stays hidden until an email service is connected, so nobody sees a form that can't send. It shows in `npm run dev`, where it only logs what it would send. To connect a service:
+
+1. Make an endpoint that sends the email. Either a Vercel Function (`api/email-result.ts` in `portfolio/`, using an email service such as [Resend](https://resend.com) with its key in the Vercel project's Environment Variables), or a no-code webhook from Zapier, Make or n8n that sends the email and adds the address to your newsletter tool. It receives JSON: `email`, `wantsNotes` (true only if they ticked the box), `resultUrl` and a short `summary`. Only ever send the result link to the address given, and add a rate limit (Vercel Firewall → Rate Limiting) so nobody can use the form to send hundreds of emails.
+2. In `src/assessment/email.ts`, change the last line to point at it: `export const emailAdapter: EmailAdapter = postJsonAdapter('/api/email-result');`
+3. Before you publish: reread the consent text and the "a few a year" promise in `content.ts` (`email`), use double opt-in for the notes, and update the footer's privacy line (`footer.privacy` in `site.ts`), since answers no longer stay only in the browser for someone who emails themselves.
 
 ## Add a page (for example, "Work with me")
 
