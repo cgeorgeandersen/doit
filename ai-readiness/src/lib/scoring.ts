@@ -12,7 +12,7 @@
  *    lowest average, then lowest single answer, then the order they're asked in.
  *    Each gap's next step comes from its lowest answer (the first, on a tie).
  */
-import { allQuestions, type Dimension, type Question, type ScoringModel, type Stage } from './model';
+import { allQuestions, type Dimension, type Question, type ScoringModel, type Stage } from './model.ts';
 
 /** The best answer to any question. Every question has four options: 0, 1, 2, 3. */
 export const MAX_ANSWER = 3;

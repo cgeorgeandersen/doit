@@ -9,7 +9,7 @@
  *   a  one digit per answer, 0 to 3, in the order asked
  *   t  the day it was taken (optional)
  */
-import type { Mode } from './model';
+import type { Mode } from './model.ts';
 
 export interface Snapshot {
   mode: Mode;

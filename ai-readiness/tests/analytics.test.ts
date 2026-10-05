@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { createBeforeSend, pageAddress } from '../src/lib/analytics';
+import { createBeforeSend, pageAddress } from '../src/lib/analytics.ts';
 
 describe('pageAddress', () => {
   it('never reports the answers after the #', () => {

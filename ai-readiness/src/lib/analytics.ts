@@ -9,8 +9,8 @@
  * assessment as one view of "/results", so the dashboard shows how many
  * people finish.
  *
- * Only production builds load it. On Vercel the script is served from the
- * site's own domain; anywhere else the request fails quietly.
+ * Only production builds made on Vercel load it: the script is served from
+ * the site's own domain there, and nowhere else.
  */
 import { inject, type BeforeSendEvent } from '@vercel/analytics';
 
@@ -46,7 +46,7 @@ export function createBeforeSend(): (event: BeforeSendEvent) => BeforeSendEvent 
 }
 
 export function startAnalytics(): void {
-  if (!import.meta.env.PROD) return;
+  if (!import.meta.env.PROD || !__ON_VERCEL__) return;
   inject(
     { beforeSend: createBeforeSend(), basePath: import.meta.env.VITE_VERCEL_OBSERVABILITY_BASEPATH },
     import.meta.env.VITE_VERCEL_OBSERVABILITY_CLIENT_CONFIG,

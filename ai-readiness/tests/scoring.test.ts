@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { CONTENT } from '../src/content';
-import type { Dimension, ScoringModel, Stage } from '../src/lib/model';
-import { isComplete, questionCount, score, stageIndexFor } from '../src/lib/scoring';
+import { CONTENT } from '../src/content.ts';
+import type { Dimension, ScoringModel, Stage } from '../src/lib/model.ts';
+import { isComplete, questionCount, score, stageIndexFor } from '../src/lib/scoring.ts';
 
 /** The real model: six dimensions of three questions, four stages, the weakest-link rule on. */
 const MODEL: ScoringModel = { dimensions: CONTENT.dimensions, stages: CONTENT.stages, rules: CONTENT.rules };

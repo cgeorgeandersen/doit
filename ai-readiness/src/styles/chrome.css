@@ -126,6 +126,8 @@
   font-size: 0.85rem;
   line-height: 1;
   letter-spacing: -0.02em;
+  /* A symbol keeps its case (Rt, not RT), even inside an uppercase kicker. */
+  text-transform: none;
   color: var(--paper);
 }
 

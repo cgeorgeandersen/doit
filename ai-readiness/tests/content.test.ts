@@ -3,8 +3,8 @@
  * with a message that says what to fix.
  */
 import { describe, expect, it } from 'vitest';
-import { CONTENT } from '../src/content';
-import { MODES, say, type Text } from '../src/lib/model';
+import { CONTENT } from '../src/content.ts';
+import { MODES, say, type Text } from '../src/lib/model.ts';
 
 /** Every string anywhere in the content, with where it is. */
 function strings(value: unknown, path = 'CONTENT'): { path: string; text: string }[] {

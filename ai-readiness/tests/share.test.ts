@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { decodeSnapshot, encodeSnapshot, resultUrl, sameAnswers, type Snapshot } from '../src/lib/share';
+import { decodeSnapshot, encodeSnapshot, resultUrl, sameAnswers, type Snapshot } from '../src/lib/share.ts';
 
 const EXPECTED = { version: 1, questions: 18 };
 const answers = [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1];

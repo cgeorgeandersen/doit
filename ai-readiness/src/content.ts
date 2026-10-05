@@ -19,7 +19,7 @@
  * options each, no empty text, no emoji) and says what to fix if something
  * is off.
  */
-import type { Dimension, Framework, Rules, Stage } from './lib/model';
+import type { Dimension, Framework, Rules, Stage } from './lib/model.ts';
 
 export const CONTENT = {
   site: {
@@ -43,6 +43,9 @@ export const CONTENT = {
     // TODO REVIEW
     description:
       "A five-minute self-assessment of how ready your department or company is to get AI into production, and the gaps to close first. Free, no sign-up.",
+    /** The share image's description, under the title. Keep it to two lines (about 110 characters). */
+    // TODO REVIEW
+    imageDek: "Eighteen questions on how ready your team is to get AI into production, and what to fix first.",
     /** The line at the bottom of the share image. */
     // TODO REVIEW
     imageNote: "Magic → Alchemy → Chemistry → Boring",
@@ -592,7 +595,7 @@ export const CONTENT = {
 
     // TODO REVIEW
     shared: {
-      banner: "Someone shared this snapshot with you.",
+      banner: "You're looking at a shared result.",
       takeIt: "Take the assessment yourself",
     },
     // TODO REVIEW
@@ -645,8 +648,9 @@ export const CONTENT = {
   /** Words the page says out loud to screen readers, and button labels. */
   a11y: {
     skip: "Skip to content",
-    portfolio: "George Andersen's portfolio",
     newTab: "(opens in a new tab)",
+    /** Read after a score such as "6 of 9". */
+    points: "points",
     theme: { auto: "Auto", light: "Light", dark: "Dark", label: "Color theme: {mode}. Switch to {next}." },
   },
 };
