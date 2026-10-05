@@ -19,6 +19,8 @@ import { getSite, reviewedSince } from '../lib/content';
 
 const site = await getSite();
 const { philosophy, methods, projects, posts } = site;
+// The button beside "Read the philosophy": the AI readiness assessment (thesis.cta in site.ts).
+const { cta } = SITE.thesis;
 
 const featured = projects.filter((p) => p.data.featured);
 const proof = featured.length > 0 ? featured : projects.slice(0, 2);
@@ -68,12 +70,22 @@ const personLd = {
         </h1>
         <p class="dek hero-dek">{SITE.thesis.dek}</p>
         {
-          philosophy && (
-            <p class="hero-link">
-              <a class="more" href={`/frameworks/${philosophy.id}`}>
-                {SITE.thesis.linkLabel} <span aria-hidden="true">→</span>
-              </a>
-            </p>
+          (cta || philosophy) && (
+            <div class="hero-actions">
+              {cta && (
+                <a class="btn btn--primary hero-cta" href={cta.href}>
+                  <span class="hero-cta-label">{cta.label}</span>
+                  <span class="hero-cta-note">
+                    {cta.note} <span class="arrow" aria-hidden="true">→</span>
+                  </span>
+                </a>
+              )}
+              {philosophy && (
+                <a class="more" href={`/frameworks/${philosophy.id}`}>
+                  {SITE.thesis.linkLabel} <span aria-hidden="true">→</span>
+                </a>
+              )}
+            </div>
           )
         }
       </div>
@@ -368,8 +380,39 @@ const personLd = {
     }
   }
 
-  .hero-link {
-    margin-top: 1.3rem;
+  /* The assessment button and the philosophy link, side by side when they fit. */
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 1.6rem;
+    margin-top: 1.6rem;
+  }
+
+  /* Two lines: the question, then what you get. */
+  .hero-cta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.1rem;
+    padding: 0.7rem 1.3rem 0.75rem;
+    text-align: left;
+  }
+
+  .hero-cta-label {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+
+  .hero-cta-note {
+    font-size: 0.82rem;
+    font-weight: 500;
+  }
+
+  .hero-cta:hover .arrow {
+    transform: translateX(3px);
   }
 
   .hero-meta {
@@ -397,7 +440,7 @@ const personLd = {
     }
 
     .hero-dek,
-    .hero-link,
+    .hero-actions,
     .hero-portrait,
     .hero-meta {
       animation: rise 700ms var(--ease) both;
