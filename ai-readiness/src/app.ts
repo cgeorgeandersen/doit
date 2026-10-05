@@ -104,7 +104,7 @@ export class App {
     }
 
     // Anything else is the intro: a plain visit, an empty /results, or a damaged link (said so on the intro).
-    if (!decoded.ok && decoded.reason !== 'empty') this.showNotice(decoded.reason === 'old' ? R.badLink.old : R.badLink.broken);
+    if (decoded.reason !== 'empty') this.showNotice(decoded.reason === 'old' ? R.badLink.old : R.badLink.broken);
     if (location.pathname !== '/' || location.hash) history.replaceState({ view: 'intro', depth: this.depth } satisfies Entry, '', '/' + location.search);
     else if (!entry) history.replaceState({ view: 'intro', depth: 0 } satisfies Entry, '');
     this.showIntro(moved);
@@ -152,7 +152,8 @@ export class App {
     this.progress = { mode, answers };
     write(PROGRESS_KEY, this.progress);
     this.notice.hidden = true;
-    this.go({ view: 'question', index: 0 }, '/');
+    // Keep any campaign tag (?utm_source=…) so starting doesn't count as a second visit.
+    this.go({ view: 'question', index: 0 }, `/${location.search}`);
     this.showQuestion(0, true);
   }
 

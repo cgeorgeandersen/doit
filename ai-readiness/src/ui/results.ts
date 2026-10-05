@@ -217,25 +217,17 @@ function thresholds(): string {
 }
 
 function about(result: Result): HTMLElement {
-  const questions = result.answers.length;
-  const max = result.dimensions[0]?.max ?? 9;
   const cap = CONTENT.rules.weakestLinkCap;
-  const [scoring, dimension, stage, weakest, gapRule] = R.about.method;
-  const method = [
-    scoring,
-    dimension && tx(dimension, { max }),
-    stage && tx(stage, { questions, thresholds: thresholds() }),
-    cap !== null && weakest ? tx(weakest, { steps: steps(cap) }) : null,
-    gapRule,
-    ...R.about.method.slice(5),
-  ].filter((line): line is string => Boolean(line));
+  const values = { questions: result.answers.length, max: result.dimensions[0]?.max ?? 9, thresholds: thresholds(), steps: steps(cap ?? 1) };
+  // Lines can be reordered or added in content.ts; the weakest-link line (the one with {steps}) goes when the rule is off.
+  const method = R.about.method.filter((line) => cap !== null || !line.includes('{steps}')).map((line) => tx(line, values));
 
   return h(
     'section',
     { class: 'r-section r-about wide', 'aria-labelledby': 'about-title' },
     sectionTitle('about-title', R.about.heading),
     h('div', { class: 'r-about-text' }, R.about.paragraphs.map((p) => h('p', null, tx(p)))),
-    h('details', { class: 'method' }, h('summary', null, tx(R.about.methodHeading)), h('ul', null, method.map((line) => h('li', null, tx(line))))),
+    h('details', { class: 'method' }, h('summary', null, tx(R.about.methodHeading)), h('ul', null, method.map((line) => h('li', null, line)))),
   );
 }
 
