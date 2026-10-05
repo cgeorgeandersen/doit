@@ -3,15 +3,13 @@ title: "How Boring Is Your AI?"
 summary: "A five-minute self-assessment of how ready a department or company is to get AI into production, and the three gaps to close first."
 status: live
 date: 2026-10-05
-# TODO REVIEW: set liveUrl to the real address once the site is deployed (see ai-readiness/README.md), then delete the draft line.
-liveUrl: "https://howboringisyourai.com"
+liveUrl: "https://www.georgeandersen.net/tools/how-boring-is-your-ai"
 cover: ./how-boring-is-your-ai.png
 coverAlt: "The assessment's share image: the headline How boring is your AI?, with boring underlined in four colors, above the stages Magic, Alchemy, Chemistry and Boring."
 frameworks: [ai-should-be-boring, risk-tiered-adoption, fix-first-ai-last, calibrated-trust, keep-it-human]
 tags: [AI readiness, interactive, privacy-first, teams]
 featured: false
 order: 3
-draft: true
 ---
 
 <!-- TODO REVIEW: this whole write-up is a draft for you to rewrite. Consider a note: line in the top section on how it was made, as The Confident Machine has. -->
@@ -40,9 +38,9 @@ How the tool keeps itself honest:
 
 ## Result
 
-Built in October 2026; not public yet.
+Live on this site, under Tools, since October 2026. Answers stay in each person's browser and in their own link, so there's no central dataset, by design.
 
-<!-- TODO REVIEW: once it's live, add where it lives, how many people started and how many finished (Vercel Analytics counts views of /results separately), and what the conversations it started turned up. -->
+<!-- TODO REVIEW: add how many people started and finished (Vercel Analytics counts views of /tools/how-boring-is-your-ai and of its /results page separately), and what the conversations it started turned up. -->
 
 What building it showed:
 
