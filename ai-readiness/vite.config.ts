@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import type { Plugin, ViteDevServer } from 'vite';
 import { defineConfig } from 'vitest/config';
+import { themeScript } from './scripts/inline.ts';
 import { CONTENT } from './src/content.ts';
 
 /**
@@ -36,6 +37,7 @@ function pageFromContent(): Plugin {
       const render = (server ? await server.ssrLoadModule('/src/render.ts') : await import('./src/render.ts')) as Render;
       const page = { siteUrl: siteUrl(), year: new Date().getUTCFullYear() };
       const parts: Record<string, string> = {
+        theme: `<script>${themeScript()}</script>`,
         head: render.headHtml(page),
         header: render.headerHtml(),
         intro: render.introHtml(),
@@ -88,6 +90,34 @@ function shareImagePlugin(): Plugin {
   };
 }
 
+/**
+ * Puts the stylesheet (about 7 KB compressed) inside index.html, as the
+ * portfolio does, so first paint needs no second request. Most visitors
+ * arrive from a shared link and see one page, so that beats caching the CSS.
+ */
+function inlineStylesheet(): Plugin {
+  return {
+    name: 'inline-stylesheet',
+    apply: 'build',
+    transformIndexHtml: {
+      order: 'post',
+      handler(html, ctx) {
+        const bundle = ctx.bundle;
+        if (!bundle) return html;
+        for (const [file, output] of Object.entries(bundle)) {
+          if (output.type !== 'asset' || !file.endsWith('.css')) continue;
+          const link = new RegExp(`<link rel="stylesheet"[^>]*href="/${file.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}"[^>]*>`);
+          if (!link.test(html)) continue;
+          const css = String(output.source);
+          html = html.replace(link, () => `<style>${css}</style>`);
+          delete bundle[file];
+        }
+        return html;
+      },
+    },
+  };
+}
+
 /** `vite preview` sends the same headers as Vercel, so the Content-Security-Policy is tested before it ships. */
 function vercelHeaders(): Record<string, string> {
   const config = JSON.parse(readFileSync(resolve(import.meta.dirname, 'vercel.json'), 'utf8')) as {
@@ -99,7 +129,7 @@ function vercelHeaders(): Record<string, string> {
 
 export default defineConfig({
   base: '/',
-  plugins: [pageFromContent(), shareImagePlugin()],
+  plugins: [pageFromContent(), shareImagePlugin(), inlineStylesheet()],
   define: {
     // Web Analytics only in builds on Vercel, where its script is served from this site's own domain
     // (as on the portfolio), so local previews and Lighthouse runs don't request a script that 404s.

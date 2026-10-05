@@ -290,10 +290,15 @@ button {
   color: var(--paper);
 }
 
+/*
+ * One change from the portfolio: the hover text is --paper, not #ffffff. White on
+ * the dark theme's lighter accent (#6e8fff) is 2.98:1, under WCAG AA; --paper is
+ * white in light mode (5:1) and near-black in dark mode (6.3:1).
+ */
 .btn--primary:hover {
   background: var(--accent);
   border-color: var(--accent);
-  color: #ffffff;
+  color: var(--paper);
 }
 
 .btn .arrow {

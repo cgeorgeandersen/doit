@@ -1,6 +1,7 @@
 // Applies a saved light or dark choice before the page paints, the same way
-// the portfolio does (same "ga-theme" key). Kept external, not inline, so the
-// Content-Security-Policy can forbid inline scripts.
+// the portfolio does (same "ga-theme" key). The build writes it inline into
+// index.html (see scripts/inline.ts); vercel.json allows it by its hash, so
+// change the hash there when you change this file (npm test says how).
 (function () {
   var root = document.documentElement;
   root.classList.add('js');
