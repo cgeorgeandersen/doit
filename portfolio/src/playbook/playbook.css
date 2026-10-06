@@ -604,18 +604,18 @@
   counter-reset: rule;
 }
 
+/* Number, chip and the rule's first line share a baseline. */
 .playbook .rules li {
   display: grid;
   grid-template-columns: 1.1rem auto minmax(0, 1fr);
   column-gap: 0.6rem;
-  align-items: start;
+  align-items: baseline;
   line-height: 1.45;
   counter-increment: rule;
 }
 
 .playbook .rules li::before {
   content: counter(rule);
-  padding-top: 0.1rem;
   font-family: var(--font-label);
   font-size: 0.8rem;
   font-weight: 600;
