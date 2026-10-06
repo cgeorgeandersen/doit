@@ -18,7 +18,6 @@ import { typeset } from './typeset';
 export type Project = CollectionEntry<'projects'>;
 export type Framework = CollectionEntry<'frameworks'>;
 export type Post = CollectionEntry<'writing'>;
-export type Tool = CollectionEntry<'tools'>;
 export type Page = CollectionEntry<'pages'>;
 
 /** A framework drawn as an element tile: 0 for the philosophy, then 1, 2, … for the methods. */
@@ -39,14 +38,10 @@ export interface Site {
   methods: Framework[];
   /** Published posts, newest first. */
   posts: Post[];
-  /** Published tools and resources, by `order`. */
-  tools: Tool[];
   /** Standalone pages such as About. */
   pages: Page[];
-  /** The frameworks a project, lab note or tool puts into practice, in framework order. */
-  frameworksFor(entry: Project | Post | Tool): Framework[];
-  /** The published project page that tells how a tool was built, if it has one. */
-  projectOf(tool: Tool): Project | undefined;
+  /** The frameworks a project or lab note puts into practice, in framework order. */
+  frameworksFor(entry: Project | Post): Framework[];
   /** Projects that name this framework, plus any it lists as related. */
   projectsFor(framework: Framework): { applied: Project[]; related: Project[] };
   /** Lab notes that name this framework, newest first. */
@@ -65,7 +60,7 @@ export interface Site {
 }
 
 /** Top-level routes a standalone page must not take over. */
-const RESERVED_PAGE_SLUGS = new Set(['index', 'projects', 'frameworks', 'writing', 'tools', 'og', '404', 'rss.xml', 'robots.txt']);
+const RESERVED_PAGE_SLUGS = new Set(['index', 'projects', 'frameworks', 'writing', 'playbook', 'tools', 'og', '404', 'rss.xml', 'robots.txt']);
 
 /** Drafts appear in `npm run dev`, marked as drafts, and are left out of the built site. */
 function isPublished(entry: { data: { draft: boolean } }): boolean {
@@ -94,21 +89,19 @@ export function getSite(): Promise<Site> {
 }
 
 async function loadSite(): Promise<Site> {
-  const [allProjects, allFrameworks, allPosts, allTools, allPages] = await Promise.all([
+  const [allProjects, allFrameworks, allPosts, allPages] = await Promise.all([
     getCollection('projects'),
     getCollection('frameworks'),
     getCollection('writing'),
-    getCollection('tools'),
     getCollection('pages'),
   ]);
 
-  checkLinks(allProjects, allFrameworks, allPosts, allTools);
+  checkLinks(allProjects, allFrameworks, allPosts);
   checkPageSlugs(allPages);
 
   const projects = allProjects.filter(isPublished).sort(projectOrder);
   const frameworks = allFrameworks.filter(isPublished).sort(byOrder);
   const posts = allPosts.filter(isPublished).sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
-  const tools = allTools.filter(isPublished).sort(byOrder);
   const pages = allPages.filter(isPublished);
 
   const frameworkById = new Map(frameworks.map((f) => [f.id, f]));
@@ -128,14 +121,12 @@ async function loadSite(): Promise<Site> {
     philosophy: frameworks.find((f) => f.data.kind === 'philosophy'),
     methods,
     posts,
-    tools,
     pages,
     frameworksFor: (entry) =>
       entry.data.frameworks
         .map((ref) => frameworkById.get(ref.id))
         .filter(isDefined)
         .sort(byOrder),
-    projectOf: (tool) => (tool.data.project ? projectById.get(tool.data.project.id) : undefined),
     projectsFor: (framework) => {
       const applied = projects.filter((p) => p.data.frameworks.some((ref) => ref.id === framework.id));
       const related = framework.data.relatedProjects
@@ -161,7 +152,7 @@ async function loadSite(): Promise<Site> {
 
 // ---------- Link checks ----------
 
-function checkLinks(projects: Project[], frameworks: Framework[], posts: Post[], tools: Tool[]): void {
+function checkLinks(projects: Project[], frameworks: Framework[], posts: Post[]): void {
   const frameworkIds = frameworks.map((f) => f.id);
   const projectIds = projects.map((p) => p.id);
   const problems: string[] = [];
@@ -176,13 +167,6 @@ function checkLinks(projects: Project[], frameworks: Framework[], posts: Post[],
       if (!frameworkIds.includes(ref.id)) problems.push(brokenLink(post, 'frameworks', ref.id, 'frameworks', frameworkIds));
     }
   }
-  for (const tool of tools) {
-    for (const ref of tool.data.frameworks) {
-      if (!frameworkIds.includes(ref.id)) problems.push(brokenLink(tool, 'frameworks', ref.id, 'frameworks', frameworkIds));
-    }
-    const project = tool.data.project;
-    if (project && !projectIds.includes(project.id)) problems.push(brokenLink(tool, 'project', project.id, 'projects', projectIds));
-  }
   for (const framework of frameworks) {
     for (const ref of framework.data.relatedProjects) {
       if (!projectIds.includes(ref.id)) problems.push(brokenLink(framework, 'relatedProjects', ref.id, 'projects', projectIds));
@@ -194,7 +178,7 @@ function checkLinks(projects: Project[], frameworks: Framework[], posts: Post[],
   }
 }
 
-function brokenLink(entry: Project | Framework | Post | Tool, field: string, id: string, collection: string, available: string[]): string {
+function brokenLink(entry: Project | Framework | Post, field: string, id: string, collection: string, available: string[]): string {
   const file = entry.filePath ?? `src/content/${entry.collection}/${entry.id}.md`;
   const guess = closest(id, available);
   return [
@@ -292,6 +276,29 @@ function editDistance(a: string, b: string): number {
 /** "theconfidentmachine.com" from "https://www.theconfidentmachine.com/". */
 export function domainOf(url: string): string {
   return new URL(url).hostname.replace(/^www\./, '');
+}
+
+/** How a project's button opens it. */
+export interface OpenLink {
+  /** A path when the project lives on this site (it opens in the same tab), else its full address. */
+  href: string;
+  /** On another site: the button opens a new tab and says so. */
+  external: boolean;
+  /** The button's words: the project's `action`, or "Open the project". */
+  label: string;
+}
+
+/** The project's button, or undefined when it has no live address. `site` is Astro.site. */
+export function openLink(project: Project, site: URL | undefined): OpenLink | undefined {
+  const { liveUrl, action } = project.data;
+  if (!liveUrl) return undefined;
+  const url = new URL(liveUrl);
+  const here = site !== undefined && url.hostname.replace(/^www\./, '') === site.hostname.replace(/^www\./, '');
+  return {
+    href: here ? `${url.pathname}${url.search}${url.hash}` : liveUrl,
+    external: !here,
+    label: action ?? 'Open the project',
+  };
 }
 
 /** "AI literacy" → "ai-literacy", for filter values in URLs. */

@@ -50,6 +50,12 @@ const projects = defineCollection({
         cover: image().optional(),
         coverAlt: z.string(explain('a short description of the cover image')).optional(),
         liveUrl: z.url(explain('a full web address starting with https://')).optional(),
+        /** What it is, shown above the title on its card: "Self-assessment", "Interactive essay". */
+        kind: z.string(explain('what it is in a word or two, like "Self-assessment" or "Interactive essay"')).min(1).transform(typeset).optional(),
+        /** How long it takes, shown beside the kind: "5 minutes". */
+        time: z.string(explain('how long it takes, like "5 minutes"')).min(1).transform(typeset).optional(),
+        /** The words on the button that opens it, like "Take the assessment". Left out, it says "Open the project". */
+        action: z.string(explain('the button’s words, like "Take the assessment"')).min(1).transform(typeset).optional(),
         frameworks: z.array(reference('frameworks'), explain('a list of framework file names like [calibrated-trust]')).default([]),
         /** Optional. A short aside shown under the summary on the project's page, e.g. how it was made. */
         note: z.string(explain('a sentence or two shown under the summary on the project’s page')).transform(typeset).optional(),
@@ -125,34 +131,6 @@ const writing = defineCollection({
   }),
 });
 
-/** A web address (https://…) or a path on this site (/tools/…). */
-const LINK = /^(https:\/\/\S+|\/\S*)$/;
-
-const tools = defineCollection({
-  loader: glob({ pattern: '**/*.md', base: './src/content/tools' }),
-  schema: z.object({
-    title: z.string(explain('the tool’s name')).min(1, 'Required: the tool’s name').transform(typeset),
-    summary: z
-      .string(explain('one line on what it does for the reader, under 160 characters'))
-      .max(160, 'Too long: keep the summary to one line, under 160 characters')
-      .transform(typeset),
-    /** What it is, shown above the title: "Self-assessment", "Interactive essay". */
-    kind: z.string(explain('what it is in a word or two, like "Self-assessment" or "Interactive essay"')).min(1).transform(typeset),
-    /** How long it takes, shown beside the kind: "5 minutes". */
-    time: z.string(explain('how long it takes, like "5 minutes"')).transform(typeset).optional(),
-    href: z
-      .string(explain('where it lives: a full address starting with https://, or a path on this site starting with /'))
-      .regex(LINK, 'Not valid: a full address starting with https://, or a path on this site starting with /'),
-    /** The button's words: "Take the assessment", "Read the essay". */
-    action: z.string(explain('the button’s words, like "Take the assessment"')).min(1).transform(typeset),
-    frameworks: z.array(reference('frameworks'), explain('a list of framework file names like [calibrated-trust]')).default([]),
-    /** The project page that tells how it was built, by file name. */
-    project: reference('projects').optional(),
-    order: z.number(explain('a number; lower numbers come first')).default(100),
-    draft,
-  }),
-});
-
 const pages = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/pages' }),
   schema: ({ image }) =>
@@ -171,4 +149,4 @@ const pages = defineCollection({
       }),
 });
 
-export const collections = { projects, frameworks, writing, tools, pages };
+export const collections = { projects, frameworks, writing, pages };

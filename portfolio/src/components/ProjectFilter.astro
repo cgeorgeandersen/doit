@@ -65,6 +65,13 @@ const noun = (n: number) => (n === 1 ? 'project' : 'projects');
     display: none;
   }
 
+  /* With JavaScript on (the "js" class is set before the first paint), the
+     filters take their place from the start, so the list doesn't jump down
+     when the script reveals them. */
+  :global(.js) .filters[hidden] {
+    display: grid;
+  }
+
   .group {
     display: flex;
     flex-wrap: wrap;

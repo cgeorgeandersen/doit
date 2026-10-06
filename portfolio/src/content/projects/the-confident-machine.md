@@ -5,6 +5,9 @@ note: "This one is almost entirely done by AI. I provided the vision for what I 
 status: live
 date: 2026-09-27
 liveUrl: "https://theconfidentmachine.com"
+kind: "Interactive essay"
+time: "25 minutes"
+action: "Read the essay"
 cover: ./the-confident-machine.png
 coverAlt: "The essay's opening screen: the title The Confident Machine in large serif type, with a dotted green underline beneath Confident."
 frameworks: [calibrated-trust]

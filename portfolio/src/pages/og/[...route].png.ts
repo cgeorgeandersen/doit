@@ -1,13 +1,14 @@
 /**
  * One share image per page, generated at build time:
- *   /og/site.png, /og/projects.png, /og/frameworks.png, /og/tools.png, /og/writing.png,
- *   /og/tools/how-boring-is-your-ai.png (the assessment),
+ *   /og/site.png, /og/projects.png, /og/frameworks.png, /og/writing.png,
+ *   /og/tools/how-boring-is-your-ai.png (the assessment), /og/playbook.png,
  *   /og/projects/<file>.png, /og/frameworks/<file>.png, /og/writing/<file>.png,
  *   /og/pages/<file>.png
  * Each page's <meta property="og:image"> points at its own card (see Seo.astro).
  */
 import type { APIRoute, GetStaticPaths } from 'astro';
 import { ASSESSMENT } from '../../assessment/content';
+import { PLAYBOOK } from '../../playbook/content';
 import { tx } from '../../assessment/text';
 import { SITE } from '../../config/site';
 import { domainOf, getSite, reviewedOn } from '../../lib/content';
@@ -40,7 +41,7 @@ export const getStaticPaths = (async () => {
         byline,
       },
     },
-    ...(['projects', 'frameworks', 'tools', 'writing'] as const).map((key) => ({
+    ...(['projects', 'frameworks', 'writing'] as const).map((key) => ({
       route: key,
       card: {
         kicker: [SITE.name, SITE.sections[key].label],
@@ -57,6 +58,17 @@ export const getStaticPaths = (async () => {
         emphasis: ASSESSMENT.intro.emphasis,
         dek: tx(ASSESSMENT.meta.imageDek),
         note: { text: tx(ASSESSMENT.meta.imageNote) },
+        byline,
+      },
+    },
+    {
+      route: 'playbook',
+      card: {
+        kicker: [SITE.name, PLAYBOOK.intro.label],
+        title: tx(PLAYBOOK.intro.title),
+        emphasis: PLAYBOOK.intro.emphasis,
+        dek: tx(PLAYBOOK.meta.imageDek),
+        note: { text: tx(PLAYBOOK.meta.imageNote) },
         byline,
       },
     },

@@ -46,7 +46,7 @@ export const ASSESSMENT = {
   // The first screen
   // ---------------------------------------------------------------------------
   intro: {
-    /** After the "Tools" link in the line above the headline. */
+    /** After the "Projects" link in the line above the headline. */
     // TODO REVIEW
     kicker: ["Self-assessment", "{questions} questions", "5 minutes"],
     /** The headline. `emphasis` is the word that sits on the four-color stripe. */
@@ -531,6 +531,9 @@ export const ASSESSMENT = {
       said: "Where things stand",
       step: "Next step",
       read: "Read the framework: {framework}",
+      // TODO REVIEW
+      /** The link to the dimension's play in the playbook (/playbook). */
+      play: "What good looks like: {play}",
       none: "Nothing stands out: every dimension scored full marks. That's rare enough to double-check. Would the people doing the work answer the same way?",
     },
 

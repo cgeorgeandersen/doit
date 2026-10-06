@@ -12,7 +12,7 @@ import FrameworkCard from '../../components/FrameworkCard.astro';
 import LinkPreview from '../../components/LinkPreview.astro';
 import StatusPill from '../../components/StatusPill.astro';
 import { SITE } from '../../config/site';
-import { domainOf, getSite, tagSlug, type Project } from '../../lib/content';
+import { domainOf, getSite, openLink, tagSlug, type Project } from '../../lib/content';
 import { formatMonth, isoDate } from '../../lib/dates';
 
 export async function getStaticPaths() {
@@ -26,7 +26,8 @@ interface Props {
 
 const { project } = Astro.props;
 const site = await getSite();
-const { title, summary, note, status, date, tags, cover, coverAlt, liveUrl, draft } = project.data;
+const { title, summary, note, status, date, tags, cover, coverAlt, liveUrl, kind, time, draft } = project.data;
+const open = openLink(project, Astro.site);
 const { Content } = await render(project);
 const frameworks = site.frameworksFor(project);
 
@@ -67,13 +68,19 @@ const jsonLd = {
         <p class="dek">{summary}</p>
         {note && <p class="note">{note}</p>}
         {
-          liveUrl && (
+          open && (
             <p class="open">
-              <a class="btn btn--primary btn--open" href={liveUrl} target="_blank" rel="noopener">
-                Open the project <span class="arrow" aria-hidden="true">↗</span>
-                <span class="visually-hidden">(opens in a new tab)</span>
-              </a>
-              <span class="domain">{domainOf(liveUrl)}</span>
+              {open.external ? (
+                <a class="btn btn--primary btn--open" href={open.href} target="_blank" rel="noopener">
+                  {open.label} <span class="arrow" aria-hidden="true">↗</span>
+                  <span class="visually-hidden">(opens in a new tab)</span>
+                </a>
+              ) : (
+                <a class="btn btn--primary btn--open" href={open.href}>
+                  {open.label} <span class="arrow" aria-hidden="true">→</span>
+                </a>
+              )}
+              <span class="domain">{open.external ? domainOf(open.href) : [kind, time].filter(Boolean).join(' · ')}</span>
             </p>
           )
         }
@@ -81,7 +88,7 @@ const jsonLd = {
       {
         liveUrl ? (
           <div class="head-preview">
-            <LinkPreview url={liveUrl} title={title} description={summary} image={cover} imageAlt={coverAlt} />
+            <LinkPreview url={liveUrl} href={open?.href} external={open?.external} title={title} description={summary} image={cover} imageAlt={coverAlt} />
           </div>
         ) : (
           cover && (

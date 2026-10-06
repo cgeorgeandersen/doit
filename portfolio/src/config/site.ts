@@ -10,6 +10,8 @@
 export interface NavItem {
   label: string;
   href: string;
+  /** Other paths that belong to this section, so it's marked as the current one there too. */
+  also?: string[];
 }
 
 /** One step in the career diagram on the home page (see `bio.path`). */
@@ -63,6 +65,8 @@ export const SITE = {
   },
 
   home: {
+    /** The playbook band under the hero: its title and plays come from src/playbook/content.ts. */
+    playbookLink: 'Read the playbook',
     methodsHeading: 'How I think',
     methodsIntro:
       'The philosophy: AI should be boring. Four methods put it to work at four altitudes: the portfolio, the workflow, the single decision, and the person making it.',
@@ -80,17 +84,12 @@ export const SITE = {
     projects: {
       label: 'Projects',
       title: 'The proof',
-      description: 'Working tools and essays that put the frameworks into practice, each one written up as an experiment.',
+      description: 'Free tools and essays that put the frameworks into practice. Use them on your own work, then read how each one was built, written up as an experiment.',
     },
     frameworks: {
       label: 'Frameworks',
       title: 'How I think',
       description: 'The methods I use to get AI into production: what to do first, where it fits in the work, how far to trust it, and who holds the judgment.',
-    },
-    tools: {
-      label: 'Tools',
-      title: 'Tools & resources',
-      description: 'Free tools that put the frameworks to work on your own team. No sign-up, and your answers stay in your browser.',
     },
     writing: {
       label: 'Lab notes',
@@ -123,11 +122,16 @@ export const SITE = {
     throughLine: 'One job throughout: making complex things clear.',
   },
 
-  /** Top navigation, in order. Add { label: 'Work with me', href: '/work-with-me' } when that page exists. */
+  /**
+   * Top navigation, in order. Five short labels fit one row on phones; a sixth
+   * needs re-measuring (see SiteHeader.astro). Add { label: 'Work with me',
+   * href: '/work-with-me' } in place of one when that page exists.
+   */
   nav: [
-    { label: 'Projects', href: '/projects' },
+    { label: 'Playbook', href: '/playbook' },
     { label: 'Frameworks', href: '/frameworks' },
-    { label: 'Tools', href: '/tools' },
+    // The assessment lives at /tools/how-boring-is-your-ai and is one of the projects.
+    { label: 'Projects', href: '/projects', also: ['/tools'] },
     { label: 'Lab notes', href: '/writing' },
     { label: 'About', href: '/about' },
   ] satisfies NavItem[],

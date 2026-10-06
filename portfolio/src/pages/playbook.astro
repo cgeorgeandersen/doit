@@ -1,0 +1,336 @@
+---
+/**
+ * The playbook, "What boring AI looks like": the ideal state of a company run
+ * on the frameworks, as six plays (one per dimension of the assessment, in
+ * the same order), the responsible-AI guardrails and the champion network.
+ *
+ * Every word comes from src/playbook/content.ts. Framework names, symbols and
+ * colors come from the collection, and stage names from the assessment, so
+ * nothing is typed twice; a misspelled framework or dimension stops the build.
+ *
+ * It's built as a document: on screen a sheet on a gray band, on paper two
+ * pages (Letter or A4; see playbook.css). The PDF at /playbook.pdf is this
+ * page printed by `npm run playbook:pdf`; src/playbook/pdf.ts swaps the
+ * download for "Print or save as PDF" whenever the PDF is out of date.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ContactBand from '../components/ContactBand.astro';
+import ElementTile from '../components/ElementTile.astro';
+import '../playbook/playbook.css';
+import { ASSESSMENT } from '../assessment/content';
+import { ASSESSMENT_PATH } from '../assessment/model';
+import { tx } from '../assessment/text';
+import { SITE } from '../config/site';
+import { getSite, type Framework } from '../lib/content';
+import { formatMonth, isoDate } from '../lib/dates';
+import { PLAYBOOK as P } from '../playbook/content';
+import { PLAYBOOK_PATH, type Play } from '../playbook/model';
+import { pdfStatus, PDF_PATH } from '../playbook/pdf';
+
+const site = await getSite();
+const FILE = 'src/playbook/content.ts';
+
+function frameworkFor(id: string, where: string): Framework {
+  const framework = site.frameworks.find((f) => f.id === id);
+  if (!framework) {
+    throw new Error(`${FILE}: ${where} names framework "${id}", but there is no such file in src/content/frameworks/.\n  Available: ${site.frameworks.map((f) => f.id).join(', ')}`);
+  }
+  return framework;
+}
+
+// Each play answers one of the assessment's dimensions and takes its framework from there.
+const plays = (P.plays as readonly Play[]).map((play, i) => {
+  const dimension = ASSESSMENT.dimensions.find((d) => d.id === play.dimension);
+  if (!dimension) {
+    throw new Error(`${FILE}: play ${i + 1} answers dimension "${play.dimension}", but the assessment has no such dimension.\n  Available: ${ASSESSMENT.dimensions.map((d) => d.id).join(', ')}`);
+  }
+  return { ...play, n: i + 1, framework: frameworkFor(dimension.framework, `play ${i + 1}`) };
+});
+const guardrails = P.guardrails.rules.map((rule, i) => ({ ...rule, f: frameworkFor(rule.framework, `guardrail ${i + 1}`) }));
+const champions = frameworkFor(P.champions.framework, 'the champion network');
+
+// Every framework the playbook puts into practice, in the site's order.
+const used = new Set([...plays.map((p) => p.framework.id), ...guardrails.map((g) => g.f.id), champions.id]);
+const builtOn = site.frameworks.filter((f) => used.has(f.id));
+
+const stages = ASSESSMENT.stages.map((stage) => {
+  const gloss = (P.stages as Record<string, string>)[stage.id];
+  if (!gloss) throw new Error(`${FILE}: "stages" has no words for the assessment's stage "${stage.id}".`);
+  return { name: stage.name, gloss };
+});
+const last = stages.length - 1;
+
+// The headline, split around the word on the four-color stripe.
+const { title, emphasis } = P.intro;
+const at = title.indexOf(emphasis);
+const [before, after] = at >= 0 ? [title.slice(0, at), title.slice(at + emphasis.length)] : [title, ''];
+
+const pad = (n: number) => String(n).padStart(2, '0');
+const chip = (f: Framework) => ({ element: site.elementOf(f), color: site.colorOf(f) });
+const updated = new Date(P.updated);
+
+// The PDF is offered only while it matches this page (see src/playbook/pdf.ts).
+const pdf = pdfStatus(site);
+if (!pdf.ready && import.meta.env.PROD) console.warn(`[playbook] Offering "Print or save as PDF" instead of the download: ${pdf.reason}. Run npm run playbook:pdf to remake it.`);
+
+const origin = new URL(Astro.site ?? 'http://localhost:4321');
+const shortUrl = (path: string) => `${origin.host.replace(/^www\./, '')}${path}`;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CreativeWork',
+  name: P.name,
+  headline: title,
+  description: tx(P.meta.description),
+  dateModified: isoDate(updated),
+  url: new URL(PLAYBOOK_PATH, origin).href,
+  author: { '@type': 'Person', name: SITE.name },
+  ...(pdf.ready && { encoding: { '@type': 'MediaObject', contentUrl: new URL(PDF_PATH, origin).href, encodingFormat: 'application/pdf' } }),
+};
+---
+
+<BaseLayout title={P.name} description={tx(P.meta.description)} image="/og/playbook.png" imageAlt={`${P.name}: ${title}`} jsonLd={jsonLd}>
+  <div class="playbook" data-fingerprint={pdf.fingerprint}>
+    <article class="sheet" aria-labelledby="playbook-title">
+      <header class="pb-head">
+        <p class="kicker">
+          <span>{P.intro.label}</span>
+          {P.intro.kicker.map((item) => <span>{tx(item)}</span>)}
+        </p>
+        <h1 id="playbook-title" class="pb-title">
+          {before}{at >= 0 && <span class="emphasis">{emphasis}</span>}{after}
+        </h1>
+        <p class="dek pb-dek">{tx(P.intro.dek)}</p>
+        <div class="pb-actions">
+          {
+            pdf.ready ? (
+              <>
+                <a class="btn btn--primary" href={PDF_PATH} download={`${P.name} (${SITE.name}).pdf`}>
+                  {P.intro.download} <span class="arrow" aria-hidden="true">↓</span>
+                </a>
+                <span class="pb-note">{tx(P.intro.downloadNote)}</span>
+                <button type="button" class="more pb-print" data-print hidden>
+                  {P.intro.print}
+                </button>
+              </>
+            ) : (
+              <button type="button" class="btn btn--primary" data-print hidden>
+                {P.intro.printOnly}
+              </button>
+            )
+          }
+        </div>
+        <p class="pb-start">
+          {tx(P.intro.start)}{' '}
+          <a class="more" href={ASSESSMENT_PATH}>{tx(P.intro.assessmentLink)} <span aria-hidden="true">→</span></a>
+        </p>
+      </header>
+
+      <section class="pb-stages" aria-labelledby="stages-title">
+        <h2 id="stages-title" class="label">{P.stagesHeading}</h2>
+        <ol>
+          {
+            stages.map((stage, i) => (
+              <li class:list={['pb-stage', { 'pb-stage--goal': i === last }]}>
+                <span class="pb-stage-num" aria-hidden="true">{pad(i + 1)}</span>
+                <span class="pb-stage-name">{i === last ? <span class="emphasis">{stage.name}</span> : stage.name}</span>
+                {i === last && <span class="pb-stage-goal">{P.goalLabel}</span>}
+                <span class="pb-stage-gloss">{tx(stage.gloss)}</span>
+              </li>
+            ))
+          }
+        </ol>
+      </section>
+
+      <section class="pb-built" aria-labelledby="built-title">
+        <h2 id="built-title" class="label">{P.intro.frameworksHeading}</h2>
+        <ul>
+          {
+            builtOn.map((f) => (
+              <li>
+                <a href={`/frameworks/${f.id}`}>
+                  <ElementTile {...chip(f)} size="chip" />
+                  <span>{f.data.title}</span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
+      <div class="pb-plays">
+        {
+          plays.map((play) => (
+            <section class="play" id={play.dimension} data-fw={site.colorOf(play.framework)} aria-labelledby={`${play.dimension}-title`}>
+              <div class="play-top">
+                <span class="play-num" aria-hidden="true">{pad(play.n)}</span>
+                <a class="play-fw" href={`/frameworks/${play.framework.id}`}>
+                  <ElementTile {...chip(play.framework)} size="chip" />
+                  <span>{play.framework.data.title}</span>
+                </a>
+              </div>
+              <h2 id={`${play.dimension}-title`} class="play-title">
+                <span class="visually-hidden">{tx(P.labels.play, { n: play.n })}: </span>
+                {tx(play.title)}
+              </h2>
+              <p class="play-model">{tx(play.model)}</p>
+              <p class="play-why">{tx(play.why)}</p>
+
+              {play.figure.kind === 'steps' && play.figure.steps.every((step) => !step.then) ? (
+                <figure class="fig">
+                  <figcaption class="fig-label">{tx(play.figure.label)}</figcaption>
+                  <ol class="chain">
+                    {play.figure.steps.map((step) => (
+                      <li>{tx(step.term)}</li>
+                    ))}
+                  </ol>
+                </figure>
+              ) : play.figure.kind === 'steps' ? (
+                <figure class="fig">
+                  <figcaption class="fig-label">{tx(play.figure.label)}</figcaption>
+                  <ol class="fig-steps">
+                    {play.figure.steps.map((step) => (
+                      <li>
+                        <span class="fig-term">{tx(step.term)}</span>
+                        {step.then && (
+                          <span class="fig-then">
+                            <span class="fig-arrow" aria-hidden="true">
+                              →
+                            </span>{' '}
+                            {tx(step.then)}
+                          </span>
+                        )}
+                      </li>
+                    ))}
+                  </ol>
+                </figure>
+              ) : (
+                <div class="fig">
+                  <table class:list={['fig-grid', { 'fig-grid--dense': play.figure.columns.length > 2 }]}>
+                    <caption class="fig-label">{tx(play.figure.label)}</caption>
+                    <thead>
+                      <tr>
+                        <th scope="col" class="fig-corner">
+                          {tx(play.figure.corner)}
+                        </th>
+                        {play.figure.columns.map((column) => (
+                          <th scope="col">{tx(column)}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {play.figure.rows.map((row) => (
+                        <tr>
+                          <th scope="row">{tx(row.name)}</th>
+                          {row.cells.map((cell) => (
+                            <td>{tx(cell)}</td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+
+              <h3 class="play-label play-label--working">{tx(P.labels.working)}</h3>
+              <ul class="signs signs--working">
+                {play.working.map((sign) => (
+                  <li>{tx(sign.text)}</li>
+                ))}
+              </ul>
+              <h3 class="play-label play-label--not-yet">{tx(P.labels.notYet)}</h3>
+              <ul class="signs signs--not-yet">
+                {play.notYet.map((text) => (
+                  <li>{tx(text)}</li>
+                ))}
+              </ul>
+              <h3 class="play-label play-label--bridge">{tx(P.labels.bridge)}</h3>
+              <ol class="signs signs--bridge">
+                {play.bridge.map((text) => (
+                  <li>{tx(text)}</li>
+                ))}
+              </ol>
+            </section>
+          ))
+        }
+      </div>
+
+      <div class="pb-extras">
+        <section class="pb-panel pb-guardrails" aria-labelledby="guardrails-title">
+          <h2 id="guardrails-title" class="pb-panel-title">{tx(P.guardrails.heading)}</h2>
+          <p class="pb-panel-intro">{tx(P.guardrails.intro)}</p>
+          <ol class="rules">
+            {
+              guardrails.map((rule) => (
+                <li>
+                  <a class="rule-fw" href={`/frameworks/${rule.f.id}`}>
+                    <ElementTile {...chip(rule.f)} size="chip" />
+                    <span class="visually-hidden">{rule.f.data.title}</span>
+                  </a>
+                  <span>{tx(rule.text)}</span>
+                </li>
+              ))
+            }
+          </ol>
+        </section>
+
+        <section class="pb-panel pb-champions" data-fw={site.colorOf(champions)} aria-labelledby="champions-title">
+          <h2 id="champions-title" class="pb-panel-title">{tx(P.champions.heading)}</h2>
+          <p class="play-model">{tx(P.champions.model)}</p>
+          <figure class="fig">
+            <figcaption class="fig-label">{tx(P.champions.flow.label)}</figcaption>
+            <dl class="routes">
+              {
+                P.champions.flow.routes.map((route) => (
+                  <div class="route">
+                    <dt>{tx(route.name)}</dt>
+                    <dd>
+                      <ol class="chain">
+                        {route.path.map((who) => (
+                          <li>{tx(who)}</li>
+                        ))}
+                      </ol>
+                    </dd>
+                  </div>
+                ))
+              }
+            </dl>
+          </figure>
+          <ul class="signs signs--points">
+            {P.champions.points.map((point) => <li>{tx(point)}</li>)}
+          </ul>
+        </section>
+      </div>
+
+      <section class="pb-close" aria-labelledby="close-title">
+        <div>
+          <h2 id="close-title" class="pb-panel-title">{tx(P.close.heading)}</h2>
+          <p>{tx(P.close.text)} <span class="print-only">{shortUrl(ASSESSMENT_PATH)}</span></p>
+        </div>
+        <a class="btn btn--primary" href={ASSESSMENT_PATH}>
+          {P.close.action} <span class="arrow" aria-hidden="true">→</span>
+        </a>
+      </section>
+
+      <footer class="pb-foot">
+        <p class="kicker pb-credit">
+          <span>{P.name}</span>
+          <span>{SITE.name}</span>
+          <span><a href={PLAYBOOK_PATH}>{shortUrl(PLAYBOOK_PATH)}</a></span>
+          <span><time datetime={isoDate(updated)}>{tx(P.footer.updated, { date: formatMonth(updated) })}</time></span>
+          <span>{tx(P.footer.share)}</span>
+        </p>
+      </footer>
+    </article>
+  </div>
+
+  <ContactBand />
+</BaseLayout>
+
+<script>
+  // Print needs JavaScript, so its buttons stay hidden without it (the browser's own Print still works).
+  for (const button of document.querySelectorAll<HTMLButtonElement>('[data-print]')) {
+    button.hidden = false;
+    button.addEventListener('click', () => window.print());
+  }
+</script>

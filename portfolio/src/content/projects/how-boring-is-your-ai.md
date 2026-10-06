@@ -4,6 +4,9 @@ summary: "A five-minute self-assessment of how ready a department or company is 
 status: live
 date: 2026-10-05
 liveUrl: "https://www.georgeandersen.net/tools/how-boring-is-your-ai"
+kind: "Self-assessment"
+time: "5 minutes"
+action: "Take the assessment"
 cover: ./how-boring-is-your-ai.png
 coverAlt: "The assessment's share image: the headline How boring is your AI?, with boring underlined in four colors, above the stages Magic, Alchemy, Chemistry and Boring."
 frameworks: [ai-should-be-boring, risk-tiered-adoption, fix-first-ai-last, calibrated-trust, keep-it-human]

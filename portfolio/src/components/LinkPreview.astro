@@ -1,7 +1,8 @@
 ---
 /**
  * The live site, previewed the way a link unfurls in a message: its image,
- * its domain, its title and description. The whole card opens the site.
+ * its domain, its title and description. The whole card opens the site: in a
+ * new tab when it's another site, in the same tab when it's a page here.
  */
 import type { ImageMetadata } from 'astro';
 import { Image } from 'astro:assets';
@@ -9,16 +10,20 @@ import { domainOf } from '../lib/content';
 
 interface Props {
   url: string;
+  /** Where the card links, when it isn't `url` itself: a path for a page on this site. */
+  href?: string | undefined;
+  /** False for a page on this site: no new tab. */
+  external?: boolean | undefined;
   title: string;
   description: string;
   image?: ImageMetadata | undefined;
   imageAlt?: string | undefined;
 }
 
-const { url, title, description, image, imageAlt } = Astro.props;
+const { url, href = url, external = true, title, description, image, imageAlt } = Astro.props;
 ---
 
-<a class="preview" href={url} target="_blank" rel="noopener">
+<a class="preview" href={href} target={external ? '_blank' : undefined} rel={external ? 'noopener' : undefined}>
   {
     image && (
       <Image
@@ -32,11 +37,11 @@ const { url, title, description, image, imageAlt } = Astro.props;
     )
   }
   <span class="meta">
-    <span class="domain">{domainOf(url)} <span aria-hidden="true">↗</span></span>
+    <span class="domain">{domainOf(url)} <span aria-hidden="true">{external ? '↗' : '→'}</span></span>
     <span class="title">{title}</span>
     <span class="desc">{description}</span>
   </span>
-  <span class="visually-hidden">(opens in a new tab)</span>
+  {external && <span class="visually-hidden">(opens in a new tab)</span>}
 </a>
 
 <style>

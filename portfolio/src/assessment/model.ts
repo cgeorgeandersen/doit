@@ -4,6 +4,9 @@
  * instead of a broken page.
  */
 
+/** Where the assessment lives (src/pages/tools/how-boring-is-your-ai/), for links from other pages. */
+export const ASSESSMENT_PATH = '/tools/how-boring-is-your-ai';
+
 /** Who the answers describe: chosen on the first screen. */
 export type Mode = 'department' | 'company';
 
