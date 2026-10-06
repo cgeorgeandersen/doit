@@ -1,13 +1,15 @@
 ---
 /**
- * A project as proof: status, title, summary, the frameworks it puts into
- * practice (each with its element symbol, like a formula), and two ways in.
+ * A project as proof: status and what it is, title, summary, the frameworks it
+ * puts into practice (each with its element symbol, like a formula), and two
+ * ways in: the project itself (its `action`, like "Take the assessment"; a new
+ * tab only when it lives on another site) and its case study.
  * `stack` puts the cover on top (home); `row` puts it beside the text (/projects).
  */
 import { Image } from 'astro:assets';
 import ElementTile from './ElementTile.astro';
 import StatusPill from './StatusPill.astro';
-import { domainOf, type FrameworkElement, type Framework, type Project } from '../lib/content';
+import { domainOf, openLink, type FrameworkElement, type Framework, type Project } from '../lib/content';
 import { year } from '../lib/dates';
 
 interface Props {
@@ -20,7 +22,8 @@ interface Props {
 }
 
 const { project, frameworks, elementOf, colorOf, layout = 'stack', headingLevel = 'h3' } = Astro.props;
-const { title, summary, status, date, cover, liveUrl, draft } = project.data;
+const { title, summary, status, date, cover, kind, time, draft } = project.data;
+const open = openLink(project, Astro.site);
 const Heading = headingLevel;
 const href = `/projects/${project.id}`;
 const sizes = layout === 'row' ? '(min-width: 900px) 24rem, calc(100vw - 32px)' : '(min-width: 900px) 33rem, calc(100vw - 32px)';
@@ -37,7 +40,8 @@ const sizes = layout === 'row' ? '(min-width: 900px) 24rem, calc(100vw - 32px)' 
   <div class="body">
     <p class="kicker">
       <span><StatusPill status={status} /></span>
-      <span>{year(date)}</span>
+      <span>{kind ?? year(date)}</span>
+      {time && <span>{time}</span>}
       {draft && <span class="draft">Draft · not published</span>}
     </p>
     <Heading class="title"><a class="quiet-link" href={href}>{title}</a></Heading>
@@ -61,12 +65,17 @@ const sizes = layout === 'row' ? '(min-width: 900px) 24rem, calc(100vw - 32px)' 
     }
     <p class="actions">
       {
-        liveUrl && (
-          <a class="btn btn--primary" href={liveUrl} target="_blank" rel="noopener">
-            Open the project <span class="arrow" aria-hidden="true">↗</span>
-            <span class="visually-hidden">(opens {domainOf(liveUrl)} in a new tab)</span>
-          </a>
-        )
+        open &&
+          (open.external ? (
+            <a class="btn btn--primary" href={open.href} target="_blank" rel="noopener">
+              {open.label} <span class="arrow" aria-hidden="true">↗</span>
+              <span class="visually-hidden">(opens {domainOf(open.href)} in a new tab)</span>
+            </a>
+          ) : (
+            <a class="btn btn--primary" href={open.href}>
+              {open.label} <span class="arrow" aria-hidden="true">→</span>
+            </a>
+          ))
       }
       <a class="more" href={href}>Read the case study <span aria-hidden="true">→</span></a>
     </p>

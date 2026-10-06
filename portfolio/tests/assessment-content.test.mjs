@@ -114,7 +114,7 @@ describe('words', () => {
   });
 
   it('only uses placeholders the page knows how to fill', () => {
-    const known = new Set(['n', 'total', 'points', 'max', 'average', 'uncapped', 'dimension', 'weakStage', 'steps', 'count', 'framework', 'date', 'questions', 'thresholds', 'stage', 'next', 'min']);
+    const known = new Set(['n', 'total', 'points', 'max', 'average', 'uncapped', 'dimension', 'weakStage', 'steps', 'count', 'framework', 'play', 'date', 'questions', 'thresholds', 'stage', 'next', 'min']);
     for (const { path, text } of ALL) {
       for (const [, name] of text.matchAll(/\{(\w+)\}/g)) assert.ok(known.has(name), `${path} uses {${name}}, which the page doesn't fill`);
     }
@@ -132,6 +132,7 @@ describe('words', () => {
       ['results.gaps.heading.own', R.gaps.heading.own, ['count']],
       ['results.gaps.heading.shared', R.gaps.heading.shared, ['count']],
       ['results.gaps.read', R.gaps.read, ['framework']],
+      ['results.gaps.play', R.gaps.play, ['play']],
       ['results.about.thresholdFirst', R.about.thresholdFirst, ['stage', 'next']],
       ['results.about.thresholdOther', R.about.thresholdOther, ['stage', 'min']],
     ];

@@ -1,6 +1,6 @@
 /**
  * One share image per page, generated at build time:
- *   /og/site.png, /og/projects.png, /og/frameworks.png, /og/tools.png, /og/writing.png,
+ *   /og/site.png, /og/projects.png, /og/frameworks.png, /og/writing.png,
  *   /og/tools/how-boring-is-your-ai.png (the assessment), /og/playbook.png,
  *   /og/projects/<file>.png, /og/frameworks/<file>.png, /og/writing/<file>.png,
  *   /og/pages/<file>.png
@@ -41,7 +41,7 @@ export const getStaticPaths = (async () => {
         byline,
       },
     },
-    ...(['projects', 'frameworks', 'tools', 'writing'] as const).map((key) => ({
+    ...(['projects', 'frameworks', 'writing'] as const).map((key) => ({
       route: key,
       card: {
         kicker: [SITE.name, SITE.sections[key].label],

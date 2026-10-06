@@ -2,18 +2,19 @@
 /**
  * The top bar: wordmark, main navigation (from site.ts) and the theme toggle.
  * On phones the navigation sits on its own row under the wordmark; five short
- * labels fit in that row at 320px (with tighter spacing on phones), so there
- * is no menu button to open. A sixth would need re-measuring.
+ * labels fit in that row at 320px (with tighter spacing, and type that shrinks
+ * with the screen, on phones), so there is no menu button to open. A sixth, or
+ * a longer label, needs re-measuring.
  */
-import { SITE } from '../config/site';
+import { SITE, type NavItem } from '../config/site';
 import ThemeToggle from './ThemeToggle.astro';
 
 const path = Astro.url.pathname.replace(/\/+$/, '') || '/';
 
-/** "page" on the section's own page, "true" anywhere inside it (e.g. a single project). */
-function current(href: string): 'page' | 'true' | undefined {
-  if (path === href) return 'page';
-  if (path.startsWith(`${href}/`)) return 'true';
+/** "page" on the section's own page, "true" anywhere inside it (e.g. a single project) or under its `also` paths. */
+function current(item: NavItem): 'page' | 'true' | undefined {
+  if (path === item.href) return 'page';
+  if ([item.href, ...(item.also ?? [])].some((href) => path === href || path.startsWith(`${href}/`))) return 'true';
   return undefined;
 }
 ---
@@ -28,7 +29,7 @@ function current(href: string): 'page' | 'true' | undefined {
         {
           SITE.nav.map((item) => (
             <li>
-              <a href={item.href} aria-current={current(item.href)}>
+              <a href={item.href} aria-current={current(item)}>
                 {item.label}
               </a>
             </li>
@@ -129,8 +130,9 @@ function current(href: string): 'page' | 'true' | undefined {
   }
 
   /*
-   * Phones and small tablets: tighter spacing keeps all five labels in one row
-   * down to 320px, and every link stays at least 44px wide.
+   * Phones and small tablets: tighter spacing, and type that shrinks with the
+   * screen below about 400px, keep all five labels in one row down to 320px.
+   * Every link stays at least 44px wide.
    */
   @media (max-width: 799px) {
     nav {
@@ -141,6 +143,7 @@ function current(href: string): 'page' | 'true' | undefined {
       justify-content: center;
       min-width: 44px;
       padding: 0 0.2rem;
+      font-size: clamp(0.7rem, 3.7vw, 0.86rem);
     }
   }
 
@@ -151,7 +154,6 @@ function current(href: string): 'page' | 'true' | undefined {
 
     nav a {
       padding: 0 0.15rem;
-      font-size: 0.74rem;
     }
   }
 

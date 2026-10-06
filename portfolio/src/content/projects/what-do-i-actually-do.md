@@ -4,6 +4,9 @@ summary: "A two-minute tool that maps your work week into a one-page blueprint: 
 status: live
 date: 2026-09-26
 liveUrl: "https://mapyourworkflow.com"
+kind: "Workflow map"
+time: "2 minutes"
+action: "Map your work"
 cover: ./what-do-i-actually-do.png
 coverAlt: "The tool's share image: the headline You can't automate work you can't see, beside a blueprint of workflow steps with the stuck points circled in red."
 frameworks: [fix-first-ai-last]

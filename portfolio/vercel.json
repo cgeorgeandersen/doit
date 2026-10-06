@@ -36,6 +36,16 @@
       "source": "/og/writing/why-i-built-this-site.png",
       "destination": "/og/writing.png",
       "permanent": true
+    },
+    {
+      "source": "/tools",
+      "destination": "/projects",
+      "permanent": true
+    },
+    {
+      "source": "/og/tools.png",
+      "destination": "/og/projects.png",
+      "permanent": true
     }
   ]
 }
