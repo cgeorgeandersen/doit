@@ -1,8 +1,8 @@
 # George Andersen's portfolio: guide for maintainers
 
-A static Astro site: George's frameworks for making AI useful ("theory"), the live projects that prove them ("proof"), and free tools that put them to work, led by an AI readiness self-assessment ("How Boring Is Your AI?"). The audience is hiring managers and executives first, consulting clients later. The philosophy the site argues for is **"AI should be boring"**: production over pilots, measured results over demos, fit before tools, trust calibrated to reliability. Always phrase it that way, never as "Make AI boring": that construction echoes a political slogan, and it was renamed for that reason (the old `/frameworks/make-ai-boring` address redirects, see `vercel.json`). The site should practice it too: plain, current, honest about its gaps.
+A static Astro site: George's frameworks for making AI useful ("theory"), a two-page playbook that puts them together as the ideal state of a company (the centerpiece), and the live projects that prove them ("proof"), several of them free tools, among them an AI readiness self-assessment ("How Boring Is Your AI?"). The audience is hiring managers and executives first, consulting clients later. The philosophy the site argues for is **"AI should be boring"**: production over pilots, measured results over demos, fit before tools, trust calibrated to reliability. Always phrase it that way, never as "Make AI boring": that construction echoes a political slogan, and it was renamed for that reason (the old `/frameworks/make-ai-boring` address redirects, see `vercel.json`). The site should practice it too: plain, current, honest about its gaps.
 
-The owner is not a full-time developer. **Adding a project, framework, post, tool or page must stay one Markdown file (plus an optional image)**, with no edits to components, layouts or routing. Protect that above everything else. `HOW-TO-ADD-CONTENT.md` is the owner's guide; keep it in sync with any change to the content model.
+The owner is not a full-time developer. **Adding a project, framework, post or page must stay one Markdown file (plus an optional image)**, with no edits to components, layouts or routing. Protect that above everything else. `HOW-TO-ADD-CONTENT.md` is the owner's guide; keep it in sync with any change to the content model.
 
 ## Commands (run in `portfolio/`, Node 22)
 
@@ -11,9 +11,10 @@ npm ci                   # install
 npm run dev              # http://localhost:4321, drafts visible
 npm run build            # astro check (types) + static build to dist/; must pass with 0 errors
 npm run preview          # serve dist/
-npm test                 # the assessment's tests (Node's own test runner, no packages): scoring, share links, content, email
+npm test                 # the assessment's and the playbook's tests (Node's own test runner): scoring, share links, content, email
 npm run check:reviews    # frameworks/posts past the 180-day review window (--strict exits 1)
-npm run drafts           # the assessment's words still marked TODO REVIEW
+npm run drafts           # the assessment's and the playbook's words still marked TODO REVIEW
+npm run playbook:pdf     # build, then print /playbook to public/playbook.pdf (Chromium for Playwright once: npx playwright-core install chromium)
 ```
 
 ## Layout
@@ -22,7 +23,7 @@ npm run drafts           # the assessment's words still marked TODO REVIEW
 portfolio/
   astro.config.ts          site URL resolution, sitemap, Markdown comment stripping
   src/config/site.ts       ALL site-wide text (name, role, thesis, section titles, bio, nav, contact, footer, review window)
-  src/content.config.ts    Zod schemas for projects, frameworks, writing, tools, pages
+  src/content.config.ts    Zod schemas for projects, frameworks, writing, pages
   src/content/             the Markdown content (one file per item; project covers sit next to their .md)
   src/lib/content.ts       getSite(): loads, filters drafts, sorts, derives links, numbers and symbols, checks links
   src/lib/dates.ts         UTC-safe formatting and the review-window test
@@ -32,28 +33,30 @@ portfolio/
   src/og-fonts/            static font cuts for share images (build-time only) + OFL licences
   src/assessment/          the AI readiness assessment: content.ts (ALL its words), scoring, share links,
                            the question and results screens, email adapter (stub), assessment.css
+  src/playbook/            the playbook: content.ts (ALL its words), model.ts, playbook.css, pdf.ts (is the
+                           PDF current?), pdf.json (the fingerprint the PDF was printed from)
   src/styles/              tokens.css (palette, type, spacing) and global.css (base, prose, layout)
   src/layouts/BaseLayout.astro   head, fonts, theme pre-paint, header, footer, analytics
   src/components/          SiteHeader, SiteFooter, ThemeToggle, ReviewStamp, StatusPill, ProjectCard,
                            FrameworkCard, ElementTile, FailureModes, LinkPreview, ProjectFilter, PostList,
-                           ContactBand, ThroughLine, Seo, ToolCard, Assessment
-  src/pages/               index, 404, [page] (About etc.), projects/, frameworks/, writing/, tools/
-                           (index, how-boring-is-your-ai/ and its results page), rss.xml.ts, robots.txt.ts,
-                           og/[...route].png.ts
-  scripts/                 check-reviews.mjs, list-drafts.mjs, make-og-fonts.py (one-time)
-  tests/                   the assessment's tests (*.test.mjs, run by npm test)
+                           ContactBand, ThroughLine, Seo, Assessment
+  src/pages/               index, 404, [page] (About etc.), playbook, projects/, frameworks/, writing/,
+                           tools/how-boring-is-your-ai/ (the assessment and its results page), rss.xml.ts,
+                           robots.txt.ts, og/[...route].png.ts
+  public/playbook.pdf      the playbook, printed (made by npm run playbook:pdf, never by hand)
+  scripts/                 check-reviews.mjs, list-drafts.mjs, make-playbook-pdf.mjs, make-og-fonts.py (one-time)
+  tests/                   the assessment's and the playbook's tests (*.test.mjs, run by npm test)
 ```
 
 ## Content model
 
-Five collections (`src/content.config.ts`), each a folder of `.md` files; the file name is the id and the URL slug.
+Four collections (`src/content.config.ts`), each a folder of `.md` files; the file name is the id and the URL slug.
 
 | Collection | Required fields | Optional fields |
 | --- | --- | --- |
-| `projects` | `title`, `summary` (≤160), `status` (`live` / `in progress` / `archived`), `date` | `tags`, `cover` + `coverAlt`, `liveUrl` (required if live), `frameworks` (references), `note` (an aside under the summary on the project page), `featured`, `order` (default 100), `draft` |
+| `projects` | `title`, `summary` (≤160), `status` (`live` / `in progress` / `archived`), `date` | `tags`, `cover` + `coverAlt`, `liveUrl` (required if live), `kind` ("Self-assessment") and `time` ("5 minutes", both shown above the title on cards), `action` (the button's words, default "Open the project"), `frameworks` (references), `note` (an aside under the summary on the project page), `featured`, `order` (default 100), `draft` |
 | `frameworks` | `title`, `thesis` (≤200), `date`, `lastReviewed`, `failureModes` (≥1 × `name` / `risk` / `precaution`) | `relatedProjects`, `kind` (`method` / `philosophy`), `question`, `order`, `symbol` (`Ct`), `reaction` (`inputs` ≥2, `output`), `draft` |
 | `writing` (shown as "Lab notes") | `title`, `date` | `summary` (subtitle and list text; without it, `openingOf()` gives search and link previews the note's opening sentences), `frameworks` (references), `tags`, `lastReviewed`, `draft` |
-| `tools` (shown as "Tools & resources") | `title`, `summary` (≤160), `kind` ("Self-assessment"), `href` (https://… or a path on this site), `action` (the button's words) | `time` ("5 minutes"), `frameworks` (references), `project` (reference: the case study; its cover shows on the card), `order`, `draft` |
 | `pages` | `title`, `description` | `image` + `imageAlt` (a photo beside the title), `draft` |
 
 Rules that matter:
@@ -63,7 +66,7 @@ Rules that matter:
 - **Lab notes** are the `writing` collection under another name: the URL stays `/writing`, the words come from `SITE.sections.writing` and `nav`. `getSite().entryOf()` numbers them 001, 002… from the oldest, so backdating a post renumbers the ones after it.
 - **Always read content through `getSite()`**, not `getCollection()` directly: it drops drafts in builds, sorts, and runs the link checks.
 - **Link checks:** Astro 7 only logs a misspelled `reference()` and exits 0. `checkLinks()` in `src/lib/content.ts` throws instead (for projects, frameworks, lab notes and tools), naming the file and suggesting the closest id. Keep it.
-- **Tools** are cards on `/tools` that link wherever the tool lives (another site, or a page here). The card shows the `project`'s cover, so covers are never stored twice; `getSite().projectOf(tool)` returns the project only if it's published. The band on top is the framework's color, or the four-color stripe when a tool lists several frameworks.
+- **Projects are the tools.** There was a separate Tools & resources section, but every tool had a project and every project was a tool, so they're one section (`/tools` redirects to `/projects`). A project's button is `openLink()` in `src/lib/content.ts`: its `action` words, the same tab when `liveUrl` is on this site (the assessment), a new tab, saying so, when it's another site. `LinkPreview` follows the same rule.
 - **Error messages are part of the UX.** Every schema field uses `explain()` so a missing field reads "summary: Required: one line describing the project, under 160 characters". Keep new fields to the same standard.
 - **Drafts** (`draft: true`) render in `npm run dev` with a "Draft · not published" label and are excluded from builds, feeds, sitemap and share images.
 - **Standalone pages:** any file in `src/content/pages/` becomes `/<id>` via `src/pages/[page].astro`. Slugs that would shadow a section (`projects`, `frameworks`, `writing`, `og`, …) fail the build.
@@ -73,13 +76,12 @@ Rules that matter:
 - **Project:** `src/content/projects/<slug>.md` (+ optional `<slug>.png` cover next to it). Link frameworks by file name. The body is an experiment write-up with four `##` sections, numbered by CSS on the project page: Hypothesis (its first paragraph is the claim, set as a lede) / Method / Result / What I'd change.
 - **Framework:** `src/content/frameworks/<slug>.md` with two body sections, The idea / Why it works, and its failure modes in frontmatter (rendered by `FailureModes.astro` after the body). An opening paragraph before the first heading is set as a lede (AI Should Be Boring uses this for the alchemy history). If the number of methods changes, update `home.methodsIntro` in `site.ts` (it says "Four methods").
 - **Lab note:** `src/content/writing/<slug>.md`. George writes these himself: publish them as written, formatting only. Don't add a summary, tags, framework links or other words he didn't ask for. The Lab notes page promises the notes are "mostly me", with AI only for basic editing and polish (`sections.writing.note` in `site.ts`): never draft a lab note for him.
-- **Tool or resource:** `src/content/tools/<slug>.md`, frontmatter only (a body, if any, shows on the card).
-- **Page:** `src/content/pages/<slug>.md`, then a `nav` entry in `site.ts` (and optionally `contact.cta`).
+- **Page:** `src/content/pages/<slug>.md`, then a `nav` entry in `site.ts` (and optionally `contact.cta`). The nav is full at five labels on phones; see Header below.
 - **A new content type** (rare): add a collection with `explain()` messages, load it in `getSite()`, add index/detail pages, add share-image cards in `src/pages/og/[...route].png.ts`, add it to RSS if it's dated, and document it in both guides.
 
 ## The AI readiness assessment ("How Boring Is Your AI?")
 
-A free self-assessment at `/tools/how-boring-is-your-ai`, linked from the home hero (`thesis.cta` in `site.ts`) and the Tools page. Eighteen questions in six dimensions, each built on a framework; four answer options per question describing what someone could see happening, scored 0 to 3; stages Magic → Alchemy → Chemistry → Boring from the average answer, held to one step above the weakest dimension; the three biggest gaps with one next step each, linked to their framework.
+A free self-assessment at `/tools/how-boring-is-your-ai`, linked from the home hero (`thesis.cta` in `site.ts`), the playbook and its project card. It's a project: its kicker links to Projects, and the nav marks Projects as current anywhere under `/tools/` (the `also` paths on a nav item). Eighteen questions in six dimensions, each built on a framework; four answer options per question describing what someone could see happening, scored 0 to 3; stages Magic → Alchemy → Chemistry → Boring from the average answer, held to one step above the weakest dimension; the three biggest gaps with one next step each, linked to their play in the playbook and to their framework.
 
 - **Its words are the exception to "content lives in Markdown":** structured content (questions with scored options) lives in `src/assessment/content.ts`, one file, written for the owner to edit, with a comment at the top explaining the rules. Drafts are marked `// TODO REVIEW`; `npm run drafts` lists them. Never hard-code its words elsewhere.
 - **Framework facts are never copied:** a dimension names its framework by file name; `Assessment.astro` resolves titles, symbols, colors and pages from `getSite()` (stopping the build on a misspelling), hands them to the browser in `data-frameworks`, and renders one `ElementTile` chip per framework in a `<template>` for the browser to copy, so chips are the real component.
@@ -87,6 +89,16 @@ A free self-assessment at `/tools/how-boring-is-your-ai`, linked from the home h
 - **Results live after the #:** `/tools/how-boring-is-your-ai/results#v=1&m=d&a=…&t=…` (`share.ts`). That page is `noindex`, left out of the sitemap, and counted as its own page view, so analytics shows starts and finishes. Nothing after `#` is ever sent to analytics (`webAnalyticsBeforeSend` in `BaseLayout.astro`). Bump `shareVersion` in `content.ts` when questions or options are added, removed or reordered.
 - **Email** goes through an adapter (`src/assessment/email.ts`). The default stub sends nothing and keeps the form off the published site; HOW-TO-ADD-CONTENT.md says how to connect a service.
 - **Tests** (`tests/*.test.mjs`, `npm test`, also in CI) cover the scoring rules, share links, the email adapters, and the content's structure and tone (no emoji, no hype words, no agree/disagree scales, no comparisons with other organizations).
+
+## The playbook ("What boring AI looks like")
+
+The site's centerpiece, at `/playbook`: first in the nav, a band under the home hero (`index.astro`), and the target of every assessment gap. A two-page cheat sheet of the ideal state: six plays, the responsible-AI guardrails, the AI champion network, and a pointer to the assessment.
+
+- **Its words are all in `src/playbook/content.ts`** (shapes in `model.ts`), like the assessment's, with `// TODO REVIEW` drafts. Stage names come from the assessment and framework names, symbols and colors from the collection; never type them into the playbook. A misspelled framework or dimension stops the build with a message.
+- **It's in step with the assessment:** play N answers dimension N (same ids, same order, framework taken from the dimension), and its "You'll know it's working when" list is the top answer to each of that dimension's questions, keyed by question id. A play's anchor is `/playbook#<dimension id>`. `tests/playbook-content.test.mjs` checks all of that, and that it still reads in the time its kicker promises ("5-minute read", at 238 words a minute, counting what the page shows).
+- **A document, on screen and on paper.** On screen it's a sheet on a `--paper-2` band (no frame below 640px): one column of plays on phones, two from 720px, three from 1100px. In print it's two pages that fit both Letter and A4 (A4's width, Letter's height): a 10.5px root (7.5pt body), plays 4–6 start page two (`.play:nth-child(4)`), framework colors kept with `print-color-adjust: exact`. Every page prints in the light palette, whatever the theme (`global.css`).
+- **The PDF** (`public/playbook.pdf`, "Download the PDF") is the page printed by `npm run playbook:pdf` (`scripts/make-playbook-pdf.mjs`: builds, serves `dist/` on a spare port, prints Letter with `playwright-core`, refuses anything but two pages, saves the page's fingerprint in `src/playbook/pdf.json`). `src/playbook/pdf.ts` fingerprints the words, the stage names, every framework's name, symbol and color, and the page's markup and styles (`src/pages/playbook.astro`, `src/playbook/playbook.css`). When that doesn't match the stamp, `/playbook` and the home band offer "Print or save as PDF" instead of the download, and the build log says why. **After any change to the playbook's words, markup or styles, run `npm run playbook:pdf` and commit the PDF and the stamp with it.**
+- Share image: `/og/playbook.png`.
 
 ## Design system: "Studio"
 
@@ -129,7 +141,7 @@ Clean and modern with a controlled burst of color: a white page, near-black type
 
 Keep it that way: no beakers, flasks, smoke, explosions or other clip art; no parchment, gilding or "magic" styling (gold as a framework color is fine) (except the struck-out word); and don't rename the plain sections (Projects, Frameworks, About). One well-placed metaphor is intriguing; a costume isn't. Every lab element must also make the content clearer: a testable hypothesis, a precaution per risk, a dated entry.
 
-**Header:** five nav labels. On phones they sit in their own row under the wordmark, with tighter spacing so they fit one row down to 320px, every link at least 44px wide; the one-row desktop header starts at 800px. A sixth label needs re-measuring (or a menu).
+**Header:** five nav labels (Playbook, Frameworks, Projects, Lab notes, About). On phones they sit in their own row under the wordmark, with tighter spacing and type that shrinks with the screen below about 400px (`clamp(0.7rem, 3.7vw, 0.86rem)`), so they fit one row down to 320px, every link at least 44px wide; the one-row desktop header starts at 800px. A sixth label, or a longer one, needs re-measuring (or a menu).
 
 **Layout:** `.wide` (70rem) for page structure, `.measure` (38rem) for reading; detail pages use `.detail` (text column + a margin column on ≥1100px; margin column first on phones). 16px minimum gutters; nothing may scroll sideways at 320px. Corners: `--radius` 12px, cards 16px, buttons 10px.
 
@@ -143,7 +155,7 @@ Keep it that way: no beakers, flasks, smoke, explosions or other clip art; no pa
 - Dates in frontmatter are calendar days parsed as UTC midnight. Format them with `src/lib/dates.ts` (UTC), never `toLocaleDateString()` without `timeZone: 'UTC'`, or they show a day early in the Americas.
 - Text fields in frontmatter pass through `typeset()` (curly quotes); Markdown bodies get smart punctuation from the processor.
 - Scripts are small, framework-free, and progressive enhancement: the page must work and read fully without JavaScript (the theme toggle and filters hide themselves when JS is off; the assessment's first screen reads without it and says it needs JavaScript to add up answers).
-- Keep dependencies minimal. There is no CMS, database, backend or UI framework, and there shouldn't be.
+- Keep dependencies minimal. There is no CMS, database, backend or UI framework, and there shouldn't be. `playwright-core` is a dev dependency only for `npm run playbook:pdf`; nothing from it ships.
 - Accessibility bar: semantic landmarks and one `h1` per page; visible `:focus-visible` ring; 24px+ targets (44px on phones); `aria-current` in nav; external links that open a new tab say so to screen readers; images need alt text (`coverAlt` is enforced).
 
 ## Gotchas (learned the hard way)
@@ -157,6 +169,7 @@ Keep it that way: no beakers, flasks, smoke, explosions or other clip art; no pa
 - **Analytics** (`@vercel/analytics/astro`) renders only when `VERCEL=1`, so local builds and Lighthouse runs don't request a script that 404s off Vercel.
 - **The assessment's modules run in Node too** (its tests use Node's own runner, which strips TypeScript types itself): imports inside `src/assessment/` keep their `.ts` extensions, and nothing there may touch `import.meta.env` when it loads (`email.ts` reads it only inside a function, with `?.`).
 - **Analytics and the #:** the Astro analytics component sends one page view per load (auto-tracking is off) and calls `window.webAnalyticsBeforeSend`, set in BaseLayout's inline script. The assessment adds one page view itself when someone finishes.
+- **The dev server keeps its content store.** Astro 7 runs `astro dev` as a background daemon (`npx astro dev stop` stops it). After adding a field to a collection's schema, restart it, or the new field reads as `undefined` until you do.
 - **Stopping a background dev/preview server:** `pkill -f` matches its own command line if the same shell command also contains the pattern; stop servers by PID or in a separate command.
 
 ## Before you push
@@ -164,7 +177,8 @@ Keep it that way: no beakers, flasks, smoke, explosions or other clip art; no pa
 1. `npm test` passes, and `npm run build` passes: 0 type errors, 0 warnings.
 2. `npm run check:reviews` shows nothing unexpectedly due.
 3. Look at changed pages at 375px and 1280px, in light and dark: no sideways scrolling, focus visible, stamps and pills readable.
-4. If you touched the content model, update `HOW-TO-ADD-CONTENT.md` and this file.
+4. Touched the playbook (its words, `src/pages/playbook.astro` or `src/playbook/playbook.css`)? Run `npm run playbook:pdf` and commit `public/playbook.pdf` and `src/playbook/pdf.json` with the change.
+5. If you touched the content model, update `HOW-TO-ADD-CONTENT.md` and this file.
 
 ## Deploying
 

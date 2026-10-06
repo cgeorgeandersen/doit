@@ -1,8 +1,8 @@
 # George Andersen: portfolio
 
-Frameworks for making AI useful, the live projects that prove them, and free tools that put them to work, including an AI readiness self-assessment, [How Boring Is Your AI?](https://www.georgeandersen.net/tools/how-boring-is-your-ai). A static site built with [Astro](https://astro.build): no backend, no database, no CMS, no cookies.
+Frameworks for making AI useful, a two-page playbook that puts them together, [What boring AI looks like](https://www.georgeandersen.net/playbook), and the live projects that prove them, including an AI readiness self-assessment, [How Boring Is Your AI?](https://www.georgeandersen.net/tools/how-boring-is-your-ai). A static site built with [Astro](https://astro.build): no backend, no database, no CMS, no cookies.
 
-- **Adding content:** [`HOW-TO-ADD-CONTENT.md`](HOW-TO-ADD-CONTENT.md): one Markdown file per project, framework, post, tool or page, with copy-paste templates, and how to edit the assessment's words (all in `src/assessment/content.ts`).
+- **Adding content:** [`HOW-TO-ADD-CONTENT.md`](HOW-TO-ADD-CONTENT.md): one Markdown file per project, framework, post or page, with copy-paste templates, and how to edit the assessment's and the playbook's words (in `src/assessment/content.ts` and `src/playbook/content.ts`).
 - **Maintaining the code:** [`CLAUDE.md`](CLAUDE.md): structure, content model, design system and gotchas.
 
 ## Run it
@@ -14,9 +14,10 @@ cd portfolio
 npm ci
 npm run dev             # http://localhost:4321
 npm run build           # type-checks, then builds the static site into dist/
-npm test                # the assessment's tests: scoring, share links, content
+npm test                # the assessment's and the playbook's tests
 npm run check:reviews   # which frameworks and posts are due for review
-npm run drafts          # the assessment's words still marked TODO REVIEW
+npm run drafts          # the assessment's and the playbook's words still marked TODO REVIEW
+npm run playbook:pdf    # remake public/playbook.pdf after changing the playbook
 ```
 
 ## Deploy on Vercel
