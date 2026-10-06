@@ -110,119 +110,189 @@
   text-decoration-thickness: 2px;
 }
 
-.playbook .pb-start {
-  max-width: 46rem;
+/* ---------- Why boring? ---------- */
+
+.playbook .pb-panel-title {
+  font-family: var(--font-display);
+  font-weight: 750;
+  font-size: clamp(1.45rem, 2.4vw, 1.65rem);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+}
+
+.playbook .pb-why {
+  display: grid;
+  gap: 1rem 2.5rem;
+  padding: 1.4rem 1.4rem 1.5rem;
+  border-radius: 16px;
+  background:
+    linear-gradient(90deg, var(--fw-0) 0 25%, var(--fw-1) 25% 50%, var(--fw-2) 50% 75%, var(--fw-3) 75% 100%) no-repeat 0 0 / 100% 5px,
+    var(--paper-2);
+}
+
+.playbook .pb-why-text {
+  display: grid;
+  gap: 0.6rem;
+  align-content: start;
+}
+
+.playbook .pb-why-text p {
+  color: var(--ink-2);
+  line-height: 1.5;
+}
+
+.playbook .pb-why-points {
+  display: grid;
+  gap: 0.55rem;
+  margin: 0;
+  align-content: start;
+}
+
+.playbook .pb-why-points div {
+  padding: 0.6rem 0.8rem;
+  border-radius: 10px;
+  background: var(--paper);
+}
+
+.playbook .pb-why-points dt {
+  font-family: var(--font-display);
+  font-weight: 750;
+  font-size: 1.05rem;
+  letter-spacing: -0.015em;
+}
+
+.playbook .pb-why-points dd {
+  margin: 0.1rem 0 0;
+  font-size: 0.92rem;
+  line-height: 1.4;
   color: var(--ink-2);
 }
 
-/* ---------- The four stages ---------- */
-
-.playbook .pb-stages {
-  display: grid;
-  gap: 0.75rem;
+@media (min-width: 640px) {
+  .playbook .pb-why-points {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
-.playbook .pb-stages ol {
+@media (min-width: 900px) {
+  .playbook .pb-why {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  }
+}
+
+/* ---------- Start here: the first 90 days ---------- */
+
+.playbook .pb-start {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.playbook .timeline {
+  display: grid;
   gap: 0.6rem;
   margin: 0;
   padding: 0;
   list-style: none;
+  counter-reset: step;
 }
 
-.playbook .pb-stage {
+.playbook .timeline li {
   position: relative;
   display: grid;
   gap: 0.25rem;
   align-content: start;
-  padding: 0.8rem 0.9rem 0.9rem;
+  padding: 0.85rem 0.9rem 0.9rem 2.6rem;
   border: 1px solid var(--rule);
   border-radius: var(--radius);
+  counter-increment: step;
 }
 
-.playbook .pb-stage--goal {
-  border-color: var(--ink);
-}
-
-.playbook .pb-stage-num {
-  font-family: var(--font-label);
-  font-size: var(--step--2);
-  font-weight: 500;
-  letter-spacing: 0.1em;
-  color: var(--ink-3);
-}
-
-.playbook .pb-stage-name {
-  font-family: var(--font-display);
-  font-weight: 750;
-  font-size: 1.3rem;
-  line-height: 1.1;
-  letter-spacing: -0.03em;
-}
-
-.playbook .pb-stage-goal {
+.playbook .timeline li::before {
+  content: counter(step);
   position: absolute;
   top: 0.8rem;
-  right: 0.9rem;
+  left: 0.85rem;
+  display: grid;
+  place-items: center;
+  width: 1.35rem;
+  height: 1.35rem;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-label);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.playbook .timeline .when {
   font-family: var(--font-label);
   font-size: var(--step--2);
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
+  color: var(--ink-3);
 }
 
-.playbook .pb-stage-gloss {
-  font-size: 0.9rem;
-  line-height: 1.4;
+.playbook .timeline .what {
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+.playbook .timeline .owner {
+  font-size: 0.82rem;
+  color: var(--ink-3);
+}
+
+.playbook .timeline .owner::before {
+  content: 'Owner: ';
+  content: 'Owner: ' / 'Owner: ';
+  font-weight: 600;
+}
+
+@media (min-width: 1100px) {
+  .playbook .timeline {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .playbook .timeline li {
+    padding: 2.4rem 0.9rem 0.9rem;
+  }
+
+  .playbook .timeline li::before {
+    top: 0.85rem;
+    left: 0.9rem;
+  }
+}
+
+.playbook .roles {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.3rem 1.2rem;
+  font-size: 0.92rem;
   color: var(--ink-2);
 }
 
-/* Wide enough for one row: an arrow in each gap reads the stages in order. */
-@media (min-width: 720px) {
-  .playbook .pb-stages ol {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 1.4rem;
-  }
-
-  .playbook .pb-stage + .pb-stage::before {
-    content: '→';
-    content: '→' / '';
-    position: absolute;
-    top: 50%;
-    left: calc(-0.7rem - 1px);
-    transform: translate(-50%, -50%);
-    font-size: 0.95rem;
-    color: var(--ink-3);
-  }
+.playbook .roles strong {
+  color: var(--ink);
 }
 
-/* ---------- The frameworks it puts into practice ---------- */
+/* ---------- The plays heading ---------- */
 
-.playbook .pb-built {
+.playbook .pb-plays-block {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.playbook .pb-plays-head {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  gap: 0.35rem 1.1rem;
-  margin-top: -0.6rem;
+  align-items: baseline;
+  gap: 0.3rem 1rem;
 }
 
-.playbook .pb-built ul {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.2rem 1.1rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.playbook .pb-built a {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5em;
-  min-height: 32px;
-  font-size: 0.9rem;
-  font-weight: 600;
+.playbook .pb-plays-head p {
+  color: var(--ink-2);
 }
 
 /* ---------- The plays ---------- */
@@ -259,44 +329,18 @@
 
 .playbook .play-top {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
+  align-items: baseline;
+  gap: 0.7rem;
 }
 
 .playbook .play-num {
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: 2.3rem;
+  font-size: 1.9rem;
   line-height: 1;
   letter-spacing: -0.05em;
   color: var(--fw-ink);
   font-variant-numeric: tabular-nums;
-}
-
-.playbook .play-fw {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5em;
-  min-height: 32px;
-  font-family: var(--font-label);
-  font-size: var(--step--2);
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  line-height: 1.3;
-  text-align: right;
-  text-transform: uppercase;
-  color: var(--ink-3);
-  text-decoration-color: var(--rule-strong);
-}
-
-.playbook .play-fw:hover {
-  color: var(--ink);
-  text-decoration-color: var(--accent);
-}
-
-.playbook .play-fw .el {
-  text-transform: none;
 }
 
 .playbook .play-title {
@@ -605,10 +649,11 @@
 }
 
 /* Number, chip and the rule's first line share a baseline. */
+/* Number and rule share a baseline. */
 .playbook .rules li {
   display: grid;
-  grid-template-columns: 1.1rem auto minmax(0, 1fr);
-  column-gap: 0.6rem;
+  grid-template-columns: 1.1rem minmax(0, 1fr);
+  column-gap: 0.5rem;
   align-items: baseline;
   line-height: 1.45;
   counter-increment: rule;
@@ -621,13 +666,6 @@
   font-weight: 600;
   color: var(--ink-3);
   font-variant-numeric: tabular-nums;
-}
-
-.playbook .rule-fw {
-  display: inline-flex;
-  align-items: center;
-  min-height: 24px;
-  text-decoration: none;
 }
 
 /* Two routes the news takes, each a chain. */
@@ -654,26 +692,39 @@
 
 /* ---------- The close and the foot ---------- */
 
-.playbook .pb-close {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem 2rem;
+.playbook .pb-ends {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 900px) {
+  .playbook .pb-ends {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+
+.playbook .pb-close,
+.playbook .pb-about {
+  display: grid;
+  gap: 0.6rem;
+  align-content: start;
+  justify-items: start;
   padding: 1.35rem 1.4rem 1.4rem;
   border-radius: 16px;
+}
+
+.playbook .pb-close {
   background:
     linear-gradient(90deg, var(--fw-0) 0 25%, var(--fw-1) 25% 50%, var(--fw-2) 50% 75%, var(--fw-3) 75% 100%) no-repeat 0 0 / 100% 5px,
     var(--paper-2);
 }
 
-.playbook .pb-close > div {
-  display: grid;
-  gap: 0.35rem;
-  max-width: 40rem;
+.playbook .pb-about {
+  border: 1px solid var(--rule);
 }
 
-.playbook .pb-close p {
+.playbook .pb-close p,
+.playbook .pb-about p {
   color: var(--ink-2);
 }
 
@@ -684,6 +735,12 @@
 .playbook .pb-foot {
   padding-top: 1.1rem;
   border-top: 1px solid var(--rule);
+}
+
+.playbook .pb-built {
+  margin-bottom: 0.6rem;
+  font-size: 0.88rem;
+  color: var(--ink-2);
 }
 
 .playbook .pb-credit {
@@ -699,7 +756,7 @@
 
   /* Sized so both pages fit Letter and A4 alike: the narrower width of A4, the shorter height of Letter. */
   html {
-    font-size: 10.5px;
+    font-size: 10.3px;
   }
 
   /* The wordmark above the title lines up with the sheet, which fills the page's width. */
@@ -717,15 +774,15 @@
 
   .playbook .sheet {
     width: 100%;
-    gap: 1.2rem;
+    gap: 1rem;
   }
 
   .playbook .pb-head {
-    gap: 0.7rem;
+    gap: 0.6rem;
   }
 
   .playbook .pb-title {
-    font-size: 4rem;
+    font-size: 3.6rem;
   }
 
   .playbook .pb-dek {
@@ -734,30 +791,73 @@
   }
 
   .playbook .pb-actions,
-  .playbook .pb-start a,
   .playbook .pb-close .btn,
-  .contact {
+  .playbook .pb-about .more {
     display: none !important;
   }
 
-  .playbook .pb-stages ol {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 1.4rem;
+  .playbook .pb-panel-title {
+    font-size: 1.55rem;
   }
 
-  .playbook .pb-stage + .pb-stage::before {
-    content: '→';
-    content: '→' / '';
-    position: absolute;
-    top: 50%;
-    left: calc(-0.7rem - 1px);
-    transform: translate(-50%, -50%);
-    color: var(--ink-3);
+  .playbook .pb-why {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: 0.8rem 1.6rem;
+    padding: 1.1rem 1.1rem 1.15rem;
+  }
+
+  .playbook .pb-why-points {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.45rem;
+  }
+
+  .playbook .pb-why-points div {
+    padding: 0.5rem 0.65rem;
+  }
+
+  .playbook .pb-start {
+    gap: 0.6rem;
+  }
+
+  .playbook .timeline {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+
+  /* The step's number sits on the line with its timing. */
+  .playbook .timeline li {
+    gap: 0.2rem;
+    padding: 0.6rem 0.7rem 0.65rem;
+  }
+
+  .playbook .timeline li::before {
+    top: 0.5rem;
+    left: 0.7rem;
+    width: 1.2rem;
+    height: 1.2rem;
+  }
+
+  .playbook .timeline .when {
+    padding-left: 1.6rem;
+    line-height: 1.25rem;
+  }
+
+  .playbook .roles {
+    font-size: 0.88rem;
+  }
+
+  .playbook .timeline .what {
+    font-size: 0.92rem;
+    line-height: 1.38;
+  }
+
+  .playbook .pb-plays-block {
+    gap: 0.6rem;
   }
 
   .playbook .pb-plays {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 1rem;
+    gap: 0.8rem;
   }
 
   /* Plays 4–6 start the second page. */
@@ -768,30 +868,50 @@
   .playbook .play,
   .playbook .pb-panel,
   .playbook .pb-close,
-  .playbook .pb-stage {
+  .playbook .pb-about,
+  .playbook .pb-why,
+  .playbook .timeline li {
     break-inside: avoid;
   }
 
   .playbook .play {
-    gap: 0.5rem;
-    padding: 1.1rem 1rem 1.15rem;
+    gap: 0.45rem;
+    padding: 0.95rem 0.9rem 1rem;
+  }
+
+  .playbook .play-num {
+    font-size: 1.6rem;
+  }
+
+  .playbook .play-title {
+    font-size: 1.45rem;
+  }
+
+  .playbook .play-model {
+    font-size: 1.1rem;
   }
 
   .playbook .signs {
-    gap: 0.3rem;
-    line-height: 1.38;
+    gap: 0.25rem;
+    font-size: 0.92rem;
+    line-height: 1.36;
+  }
+
+  .playbook .play-why {
+    font-size: 0.92rem;
+    line-height: 1.4;
   }
 
   .playbook .play-label {
-    margin-top: 0.15rem;
+    margin-top: 0.1rem;
   }
 
   .playbook .fig {
-    padding: 0.6rem 0.7rem 0.65rem;
+    padding: 0.55rem 0.65rem 0.6rem;
   }
 
   .playbook .fig-steps {
-    gap: 0.3rem;
+    gap: 0.25rem;
   }
 
   .playbook .pb-extras {
@@ -799,36 +919,26 @@
   }
 
   .playbook .rules {
-    gap: 0.4rem;
+    gap: 0.35rem;
   }
 
   .playbook .pb-panel {
-    gap: 0.6rem;
-    padding: 1.1rem 1rem;
+    gap: 0.55rem;
+    padding: 1rem 1rem;
   }
 
-  /* The close shrinks to a strip: the question, then where to find the assessment. */
-  .playbook .pb-close {
-    padding: 0.9rem 1rem 0.85rem;
+  .playbook .pb-ends {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   }
 
-  .playbook .pb-close > div {
-    display: block;
-    max-width: none;
-  }
-
-  .playbook .pb-close h2 {
-    display: inline;
-    margin-right: 0.5rem;
-    font-size: 1.35rem;
-  }
-
-  .playbook .pb-close p {
-    display: inline;
+  .playbook .pb-close,
+  .playbook .pb-about {
+    gap: 0.4rem;
+    padding: 0.9rem 1rem;
   }
 
   .playbook .pb-foot {
-    padding-top: 0.7rem;
+    padding-top: 0.6rem;
   }
 
   .playbook .print-only {
@@ -840,11 +950,13 @@
   .playbook .play,
   .playbook .pb-panel,
   .playbook .pb-close,
+  .playbook .pb-why,
+  .playbook .pb-why-points div,
+  .playbook .timeline li::before,
   .playbook .fig,
   .playbook .fig-grid td,
   .playbook .fig-steps li::before,
-  .playbook .emphasis,
-  .playbook .el {
+  .playbook .emphasis {
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }

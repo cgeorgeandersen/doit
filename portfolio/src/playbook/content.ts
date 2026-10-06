@@ -1,7 +1,10 @@
 /**
  * EVERY WORD IN THE PLAYBOOK ("What boring AI looks like", /playbook) LIVES
- * IN THIS FILE, apart from the stage names and the framework names, which come
- * from the assessment and the frameworks themselves.
+ * IN THIS FILE, apart from the framework names in its footer, which come from
+ * the frameworks themselves.
+ *
+ * It's written to be the first thing someone sees: it explains itself, and
+ * uses no term from the rest of the site without saying what it means.
  *
  * Edit the text between the quotes and save; `npm run dev` shows the change.
  * A few rules keep the page working:
@@ -35,12 +38,12 @@ export const PLAYBOOK = {
   meta: {
     // TODO REVIEW
     description:
-      "What a company looks like when AI is in production, measured, and trusted exactly as far as it's reliable: six plays, the signs you're there, and how to close the gap. Free PDF.",
+      "A two-page guide to getting AI out of pilots and into everyday work, safely: what good looks like, where to start, and the first 90 days. Free PDF.",
     /** The share image's description, under the title. Keep it to two lines (about 110 characters). */
     // TODO REVIEW
-    imageDek: "Six plays for getting AI into production: what good looks like, and how to close the gap.",
+    imageDek: "Getting AI out of pilots and into everyday work: where to start, and what good looks like.",
     /** The line at the bottom of the share image. */
-    imageNote: "Six plays · Free PDF",
+    imageNote: "Six plays · The first 90 days · Free PDF",
   },
 
   // ---------------------------------------------------------------------------
@@ -55,37 +58,57 @@ export const PLAYBOOK = {
     title: "What boring AI looks like",
     emphasis: "boring",
     // TODO REVIEW
-    dek: "Six plays for a company where AI is in production, measured, and trusted exactly as far as it's reliable.",
-    // TODO REVIEW: the weakest-link rule, as in the assessment.
-    start: "Start with your weakest play. You're only as boring as your weakest link.",
-    assessmentLink: "Find yours in five minutes",
+    dek: "A two-page guide to getting AI out of pilots and into everyday work, safely.",
     download: "Download the PDF",
     /** Beside the download button: what you get. */
     downloadNote: "Two pages, free to share",
     print: "Print",
     /** The button when the PDF is out of date (see the top of this file). */
     printOnly: "Print or save as PDF",
-    frameworksHeading: "Puts into practice",
   },
 
-  /** The four stages from the assessment, each in a few words. Keyed by the stage's id there. */
-  stagesHeading: "The four stages",
-  goalLabel: "The goal",
-  // TODO REVIEW
-  stages: {
-    magic: "Demos and personal experiments.",
-    alchemy: "Impressive once, hard to repeat.",
-    chemistry: "A method, not yet everywhere.",
-    boring: "In production, measured, and trusted as far as it's reliable.",
+  /** What "boring" means, for someone who has never seen the site. */
+  // TODO REVIEW: the case for "boring", in four lines.
+  boring: {
+    heading: "Why boring?",
+    text: "The most useful technologies end up boring. Nobody gets excited about electricity or spreadsheets; people just rely on them. Most AI isn't there yet: it impresses in demos and stalls in pilots. Boring AI is AI you can depend on:",
+    points: [
+      { term: "In production", text: "part of everyday work, not a pilot or a demo" },
+      { term: "Measured", text: "judged by a number agreed up front" },
+      { term: "Fit to the work", text: "added after the process is fixed" },
+      { term: "Trusted as far as it's reliable", text: "checked as much as a mistake would cost" },
+    ],
+  },
+
+  /** Where to start: a plan anyone can follow, and who does what. */
+  // TODO REVIEW: the first 90 days, and the roles.
+  start: {
+    heading: "Start here: the first 90 days",
+    steps: [
+      { when: "Weeks 1–2", text: "Set ground rules: what may go into AI tools, and one place to ask before trying a new one.", owner: "AI lead and security" },
+      { when: "Weeks 3–4", text: "List every AI tool in use: its owner, its data, its risk.", owner: "AI lead" },
+      { when: "Month 2", text: "Pick one internal task where mistakes are cheap. Fix the process, measure the start, then add one tool.", owner: "A team lead" },
+      { when: "Month 3", text: "Have an expert grade 20 outputs. Then scale it, change it or stop.", owner: "Sponsor" },
+    ],
+    rolesHeading: "Who's who",
+    roles: [
+      { name: "Sponsor", text: "an executive who funds the work and decides on pilots" },
+      { name: "AI lead", text: "runs the tool list and the place to ask" },
+      { name: "Security", text: "reviews anything touching customer data" },
+    ],
   },
 
   /** The headings inside every play. */
   labels: {
     play: "Play {n}",
     working: "You'll know it's working when",
-    notYet: "Not there yet when",
-    bridge: "Bridge the gap",
+    notYet: "Watch out for",
+    bridge: "First move",
   },
+
+  /** Above the six plays. */
+  playsHeading: "The six plays",
+  playsIntro: "Each shows what good looks like, a warning sign and a first move.",
 
   // ---------------------------------------------------------------------------
   // The six plays, in the assessment's order
@@ -95,28 +118,21 @@ export const PLAYBOOK = {
     {
       title: "Sequence by risk",
       dimension: "priorities",
-      model: "Build the muscle where mistakes are cheap.",
-      why: "Catching AI's mistakes is a skill. Practice it inside first.",
+      model: "Build skill where mistakes are cheap.",
       working: [
         { question: "choose", text: "Ideas are sorted by risk first, then by return within each tier." },
         { question: "risk", text: "Risk means the data a tool touches and what it can do on its own." },
-        { question: "track-record", text: "Internal tools are in daily use, and their lessons shape what comes next." },
+        { question: "track-record", text: "Internal tools are in daily use, and teach what to try next." },
       ],
-      notYet: [
-        "Ideas move when someone senior gets excited.",
-        "The first big bet faces customers.",
-      ],
-      bridge: [
-        "Sort ideas into the three tiers, then rank by return within each.",
-        "Put one tool into daily use where mistakes are cheap and easy to spot.",
-      ],
+      notYet: ["The first big AI bet faces customers."],
+      bridge: ["Sort your AI ideas into the three tiers, then rank by return within each."],
       figure: {
         kind: "steps",
         label: "Three tiers, light review to heavy",
         steps: [
-          { term: "Internal productivity", then: "a person sees every output" },
-          { term: "Operations", then: "mistakes reach colleagues" },
-          { term: "Customer-facing", then: "mistakes reach customers" },
+          { term: "Help with people's own work", then: "a person sees every output" },
+          { term: "AI inside a business process", then: "mistakes reach colleagues" },
+          { term: "Anything customers see", then: "mistakes reach customers" },
         ],
       },
     },
@@ -125,20 +141,14 @@ export const PLAYBOOK = {
       title: "Fix the work first",
       dimension: "workflow",
       model: "Don't automate the jam.",
-      why: "AI on a broken process just makes the mess faster.",
+      why: "AI added to a broken process just makes the mess faster.",
       working: [
         { question: "mapped", text: "Processes are mapped step by step, with chasing, waiting and redoing marked." },
-        { question: "fix", text: "Causes get fixed first, then simple rules. AI gets the reading and writing left." },
-        { question: "data", text: "Data sits in systems approved tools can reach, with an owner keeping it accurate." },
+        { question: "fix", text: "Causes are fixed first, then rules; AI gets the reading and writing left." },
+        { question: "data", text: "Data is in systems approved tools can reach, and someone keeps it accurate." },
       ],
-      notYet: [
-        "A tool is proposed before anyone knows the cause.",
-        "The real process lives in a few people's heads.",
-      ],
-      bridge: [
-        "Map one process this week. Circle the chasing, waiting and redoing.",
-        "Put each stuck step through the four questions. The first yes decides.",
-      ],
+      notYet: ["A new tool is proposed before anyone knows why the work is slow."],
+      bridge: ["Put each slow step through the four questions. The first yes decides."],
       figure: {
         kind: "steps",
         label: "The four questions, in order",
@@ -154,21 +164,15 @@ export const PLAYBOOK = {
     {
       title: "Govern in proportion",
       dimension: "governance",
-      model: "One door, two speeds.",
-      why: "Heavy review for everything teaches people to route around it.",
+      model: "One front door, two speeds.",
+      why: "Heavy review for everything teaches people to go around it.",
       working: [
-        { question: "intake", text: "One place to ask: low-risk requests get a quick yes, riskier ones a closer look." },
-        { question: "security", text: "Security reviews tools that touch customer data before the build, on a set turnaround." },
-        { question: "register", text: "A current register lists every AI tool, its risk tier, data and owner." },
+        { question: "intake", text: "One place to ask: a quick yes for low risk, a closer look for the rest." },
+        { question: "security", text: "Security reviews customer-data tools before they're built, on a set turnaround." },
+        { question: "register", text: "A current one-page list shows every AI tool's risk, data and owner." },
       ],
-      notYet: [
-        "People use tools nobody approved.",
-        "Security first sees a tool after it's built.",
-      ],
-      bridge: [
-        "Open one place to ask, with a promised turnaround.",
-        "Start a one-page register: tool, purpose, data, tier, owner. Review it monthly.",
-      ],
+      notYet: ["People use AI tools nobody approved."],
+      bridge: ["Promise a turnaround for requests, and keep it."],
       figure: {
         kind: "grid",
         label: "Two speeds",
@@ -185,59 +189,47 @@ export const PLAYBOOK = {
       title: "Trust the track record",
       dimension: "trust",
       model: "Use AI where checking is cheaper than doing.",
-      why: "AI sounds just as sure when it's wrong. Fluency isn't truth.",
+      why: "AI sounds just as sure when it's wrong.",
       working: [
         { question: "unchecked", text: "Each use is placed by the cost of a mistake and the ease of checking." },
         { question: "checker", text: "An expert checks the output, as a step that can't be skipped." },
         { question: "error-rate", text: "Tools are tested on real examples before launch, and sampled after." },
       ],
-      notYet: [
-        "Output goes out because it reads well.",
-        "Errors surface as complaints, not as a number.",
-      ],
-      bridge: [
-        "Put your five most common AI uses on the trust map.",
-        "Have an expert grade 20 outputs: right, fixable or wrong. Repeat monthly.",
-      ],
+      notYet: ["Output goes out because it reads well."],
+      bridge: ["Place your five most common AI uses on this grid."],
       figure: {
         kind: "grid",
-        label: "The trust map",
+        label: "How far to rely on it",
         corner: "If a mistake is",
         columns: ["Easy to check", "Hard to check"],
         rows: [
-          { name: "Minor", cells: ["Delegate freely", "Ideas only"] },
+          { name: "Minor", cells: ["Let it run", "Ideas only"] },
           { name: "Costly", cells: ["Use, then verify", "Keep it human"] },
         ],
       },
     },
     // TODO REVIEW: play 5, all of it.
     {
-      title: "Keep the judgment",
+      title: "Keep people in charge",
       dimension: "people",
-      model: "Hand off the hauling, keep the reins.",
-      why: "Judgment is a muscle. Every call you just approve is a skipped rep.",
+      model: "AI does the work. People make the call.",
+      why: "Approving isn't the same as judging.",
       working: [
-        { question: "final-call", text: "Which calls stay human is agreed in advance, and a named person makes each one." },
+        { question: "final-call", text: "The calls that stay human are agreed in advance, each with a named owner." },
         { question: "skills", text: "Training is on real tasks: when to use AI, how to check it, what to keep." },
         { question: "champions", text: "Named champions have time set aside, share what works and report what breaks." },
       ],
-      notYet: [
-        "Signing off means approving whatever the tool suggested.",
-        "Training means one session on features.",
-      ],
-      bridge: [
-        "Before the work starts, name who makes the final call.",
-        "Before anything goes out, ask: could I defend this without \"the AI suggested it\"?",
-      ],
+      notYet: ["Signing off means approving whatever the tool suggested."],
+      bridge: ["Before anything goes out, ask: could I defend this without saying \"the AI suggested it\"?"],
       figure: {
         kind: "grid",
-        label: "Be the centaur",
+        label: "Split the work",
         corner: "The work",
-        columns: ["Centaur", "Reverse centaur"],
+        columns: ["AI", "People"],
         rows: [
-          { name: "Thinking", cells: ["Augmented", "Outsourced"] },
-          { name: "Doing", cells: ["Outsourced", "Kept"] },
-          { name: "Judging", cells: ["Kept", "Outsourced"] },
+          { name: "Thinking", cells: ["Suggests, challenges", "Decide what matters"] },
+          { name: "Doing", cells: ["Drafts, sorts", "Check, finish"] },
+          { name: "Deciding", cells: ["Never alone", "Make the call"] },
         ],
       },
     },
@@ -246,44 +238,41 @@ export const PLAYBOOK = {
       title: "Prove it with a number",
       dimension: "measurement",
       model: "Agree the number before you build.",
-      why: "A demo shows AI at its best. A number shows an ordinary Tuesday.",
+      why: "A demo shows AI at its best. A number shows an ordinary day.",
       working: [
         { question: "baseline", text: "A baseline and a target are agreed before the build, with whoever judges success." },
-        { question: "tracking", text: "The number is tracked against the baseline on a schedule, by a named owner." },
+        { question: "tracking", text: "A named owner tracks the number against the baseline." },
         { question: "pilots", text: "Every pilot has a decision date: scale, change or stop, on the number." },
       ],
-      notYet: [
-        "Success is reported in logins and licenses.",
-        "Pilots run on because nobody decided to stop them.",
-      ],
-      bridge: [
-        "Before the next project, pick one number it should move, and measure it today.",
-        "Give every pilot a decision date. Decide with the number in front of you.",
-      ],
+      notYet: ["Success is reported in logins and licenses."],
+      bridge: ["Measure one number before the next project starts."],
       figure: {
         kind: "steps",
-        label: "Every pilot's path",
+        label: "Good first numbers",
         steps: [
-          { term: "Baseline" },
-          { term: "Target" },
-          { term: "Decision date" },
-          { term: "Scale, change or stop" },
+          { term: "Hours a week", then: "spent on the task" },
+          { term: "Error rate", then: "in graded samples" },
+          { term: "Turnaround", then: "from request to done" },
         ],
       },
     },
   ] satisfies Play[],
 
   // ---------------------------------------------------------------------------
-  // Responsible AI: the rules that hold at every tier
+  // Responsible AI: the rules that hold everywhere
   // ---------------------------------------------------------------------------
   guardrails: {
-    heading: "Responsible AI guardrails",
+    heading: "Responsible AI: six rules",
     // TODO REVIEW
-    intro: "Six rules for every tier.",
-    // TODO REVIEW: rules 5 and 6 go a step past the frameworks as written; keep, change or cut them.
+    intro: "For every AI tool.",
+    // TODO REVIEW: rule 6 goes a step past the frameworks as written; keep, change or cut it.
     rules: [
       {
-        text: "Anything acting on customer data, or sending it outside, gets security review before the build.",
+        text: "Write down what data may go into AI tools, and what never may.",
+        framework: "risk-tiered-adoption",
+      },
+      {
+        text: "Anything acting on customer data, or sending it outside, gets security review before it's built.",
         framework: "risk-tiered-adoption",
       },
       {
@@ -291,7 +280,7 @@ export const PLAYBOOK = {
         framework: "calibrated-trust",
       },
       {
-        text: "Every AI tool has a named owner and a line in the register.",
+        text: "Every AI tool has a named owner and a line on the list.",
         framework: "risk-tiered-adoption",
       },
       {
@@ -301,10 +290,6 @@ export const PLAYBOOK = {
       {
         text: "When AI decides about people, check its errors group by group: an average can hide who it fails.",
         framework: "calibrated-trust",
-      },
-      {
-        text: "Say where AI did the work: it's a tool, not a secret.",
-        framework: "keep-it-human",
       },
     ] satisfies Guardrail[],
   },
@@ -319,18 +304,9 @@ export const PLAYBOOK = {
     framework: "keep-it-human",
     model: "Champions are sensors, not cheerleaders.",
     points: [
-      "One named champion per team, with a few hours a month.",
-      "Every month, two questions: what's working that others should copy? What's breaking that someone should fix?",
-      "They teach on real tasks, not features.",
+      "One per team, with a few hours a month for it.",
+      "Every month they ask two questions: what's working that others should copy? What's breaking that someone should fix?",
     ],
-    /** The diagram: how each kind of news travels, as a chain of who passes it on. */
-    flow: {
-      label: "How the news travels",
-      routes: [
-        { name: "What breaks", path: ["Team", "Champion", "Tool owner"] },
-        { name: "What works", path: ["Team", "Champion", "Every team"] },
-      ],
-    },
   },
 
   // ---------------------------------------------------------------------------
@@ -340,12 +316,21 @@ export const PLAYBOOK = {
     // TODO REVIEW
     heading: "Where do you stand?",
     // TODO REVIEW
-    text: "Score all six plays and get your three biggest gaps.",
+    text: "A free five-minute assessment scores all six plays and shows where to start.",
     action: "Take the assessment",
+  },
+
+  /** Who made it: for someone who found the PDF without the site. */
+  // TODO REVIEW: how you'd like to be introduced.
+  about: {
+    heading: "Who made this",
+    text: "George Andersen helps lead AI enablement for a large commercial organization. These plays come from that work.",
+    action: "Talk to me on LinkedIn",
   },
 
   footer: {
     updated: "Updated {date}",
+    builtOn: "Built on five frameworks",
     // TODO REVIEW: how you'd like it shared.
     share: "Free to share, with credit.",
   },

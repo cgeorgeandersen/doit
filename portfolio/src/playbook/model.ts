@@ -46,8 +46,8 @@ export interface Play {
   title: string;
   /** The line to remember at work on an ordinary Tuesday. */
   model: string;
-  /** Why the play works, in a sentence or two. */
-  why: string;
+  /** Why the play works, in a sentence, when the line to remember doesn't say it already. */
+  why?: string;
   /** The ideal: one sign for each of the dimension's three questions, in the assessment's order. */
   working: readonly Sign[];
   /** What it looks like before you get there. */
