@@ -53,10 +53,6 @@ describe('in step with the assessment', () => {
     }
   });
 
-  it('describes every stage, and only those', () => {
-    assert.deepEqual(Object.keys(PLAYBOOK.stages).sort(), ASSESSMENT.stages.map((s) => s.id).sort());
-  });
-
   it('names frameworks that exist', () => {
     for (const rule of PLAYBOOK.guardrails.rules) {
       assert.ok(frameworkFiles.includes(rule.framework), `a guardrail names "${rule.framework}", but there's no src/content/frameworks/${rule.framework}.md`);
@@ -82,11 +78,20 @@ describe('shape', () => {
     for (const play of PLAYBOOK.plays) {
       assert.ok(play.title.length <= 28, `play "${play.title}": shorten the title`);
       assert.ok(play.model.length <= 60, `play "${play.title}": shorten the line to remember (${play.model.length} characters)`);
-      assert.ok(play.why.length <= 110, `play "${play.title}": shorten "why" (${play.why.length} characters)`);
+      assert.ok((play.why ?? "").length <= 110, `play "${play.title}": shorten "why" (${play.why?.length} characters)`);
       for (const text of [...play.working.map((s) => s.text), ...play.notYet, ...play.bridge]) {
         assert.ok(text.length <= 125, `play "${play.title}": shorten "${text.slice(0, 40)}…" (${text.length} characters)`);
       }
     }
+  });
+
+  it('explains itself to someone who has never seen the site', () => {
+    assert.ok(PLAYBOOK.boring.text.length > 0 && PLAYBOOK.boring.points.length === 4, 'say what "boring" means, in four points');
+    assert.ok(PLAYBOOK.start.steps.length >= 3 && PLAYBOOK.start.steps.length <= 6, 'the starting plan needs three to six steps');
+    for (const step of PLAYBOOK.start.steps) assert.ok(step.owner.trim() && step.when.trim(), `"${step.text.slice(0, 30)}…" needs a time and an owner`);
+    // Words that only make sense after reading the rest of the site.
+    const insider = /\b(centaur|holdout|passenger|alchemy|chemistry|reverse centaur|trust map)\b/i;
+    for (const { path, text } of SHOWN) assert.doesNotMatch(text, insider, `${path} uses a term from the site that a new reader won't know`);
   });
 
   it('puts the emphasized word in the headline', () => {
@@ -100,13 +105,11 @@ describe('words', () => {
     assert.ok(promised > 0, 'the kicker should say how long it takes to read, like "5-minute read"');
     // What the page shows: the content, the labels repeated in every play, and the stage and framework names.
     const labels = strings(PLAYBOOK.labels).reduce((n, s) => n + words(s.text), 0);
-    const names = [
-      ...ASSESSMENT.stages.map((s) => s.name),
-      ...playFrameworks.map(titleOf),
-      ...[...new Set([...playFrameworks, ...PLAYBOOK.guardrails.rules.map((r) => r.framework), PLAYBOOK.champions.framework])].map(titleOf),
-    ];
-    // Plus what the page adds around them: play and stage numbers, the byline and the month in the footer. "Play {n}" is for screen readers only.
-    const around = PLAYBOOK.plays.length + ASSESSMENT.stages.length + words(SITE.name) + 2 + 3 - words(PLAYBOOK.labels.play) * PLAYBOOK.plays.length;
+    // Framework names appear once, in the footer.
+    const names = [...new Set([...playFrameworks, ...PLAYBOOK.guardrails.rules.map((r) => r.framework), PLAYBOOK.champions.framework])].map(titleOf);
+    // Plus what the page adds around them: play and step numbers, "Owner:" on each step, the byline, the address and the month in the footer. "Play {n}" is for screen readers only.
+    const steps = PLAYBOOK.start.steps.length;
+    const around = PLAYBOOK.plays.length + steps * 2 + words(SITE.name) + 2 + 3 - words(PLAYBOOK.labels.play) * PLAYBOOK.plays.length;
     const total =
       SHOWN.reduce((n, s) => n + words(s.text), 0) + labels * (PLAYBOOK.plays.length - 1) + names.reduce((n, name) => n + words(name), 0) + around;
     // 238 words a minute: the average for reading non-fiction silently (Brysbaert, 2019).

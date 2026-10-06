@@ -149,7 +149,7 @@ The results page can offer "Email me this result" with an optional, unticked box
 
 ## Edit the playbook
 
-The playbook, "What boring AI looks like" (`/playbook`), is a two-page cheat sheet: six plays, the responsible-AI guardrails and the AI champion network. **All of its words are in `src/playbook/content.ts`**, apart from the stage names (from the assessment) and the framework names, symbols and colors (from the frameworks themselves). The top of that file explains the rules.
+The playbook, "What boring AI looks like" (`/playbook`), is a two-page guide written for someone who has never seen your site: why "boring", the first 90 days, six plays, the responsible-AI rules, the AI champion network and who made it. **All of its words are in `src/playbook/content.ts`**, apart from the framework names in its footer. The top of that file explains the rules. Keep it self-contained: if a word only makes sense after reading the rest of the site, explain it or leave it out.
 
 - **Drafts:** words you haven't rewritten in your own voice are marked `// TODO REVIEW`. `npm run drafts` lists them, with the assessment's.
 - **Check it:** run `npm test`. It says what to fix if the plays fall out of step with the assessment (one play per dimension, one "working" sign per question, in the same order), if it no longer reads in the five minutes its kicker promises, or if a hype word slipped in.
