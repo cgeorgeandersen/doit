@@ -1,0 +1,851 @@
+/*
+ * The playbook (/playbook): a document. On screen it's a sheet on a gray band,
+ * one column on phones, two on tablets, three on wide screens. On paper it's
+ * two pages, Letter or A4: the title, the stages and plays 1–3 on the first,
+ * plays 4–6, the guardrails, the champion network and the close on the second.
+ * `npm run playbook:pdf` prints it to public/playbook.pdf; any change here
+ * makes that PDF out of date until it's remade (see src/playbook/pdf.ts).
+ *
+ * Everything is scoped under .playbook. Framework colors come from data-fw on
+ * each play and panel (--fw marks, --fw-ink text), never typed here.
+ */
+
+/* ---------- The band and the sheet ---------- */
+
+.playbook {
+  padding-block: clamp(1.25rem, 3.5vw, 2.75rem) clamp(2.5rem, 6vw, 4.5rem);
+  background: var(--paper-2);
+  border-bottom: 1px solid var(--rule);
+}
+
+.playbook .sheet {
+  display: grid;
+  gap: clamp(1.75rem, 4vw, 2.75rem);
+  width: min(var(--wide), 100% - 2 * var(--gutter));
+  margin-inline: auto;
+  padding: clamp(1.5rem, 4vw, 3.25rem);
+  border: 1px solid var(--rule);
+  border-radius: 20px;
+  background: var(--paper);
+}
+
+/* Phones: no frame, the sheet is the page. */
+@media (max-width: 639px) {
+  .playbook {
+    padding-block: clamp(2.25rem, 8vw, 3rem) 2.5rem;
+    background: var(--paper);
+  }
+
+  .playbook .sheet {
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+  }
+}
+
+/* The site's signature: the four-color stripe under the key word. */
+.playbook .emphasis {
+  padding-bottom: 0.06em;
+  background: linear-gradient(90deg, var(--fw-0) 0 25%, var(--fw-1) 25% 50%, var(--fw-2) 50% 75%, var(--fw-3) 75% 100%)
+    no-repeat 0 96% / 100% 0.1em;
+}
+
+/* ---------- The head ---------- */
+
+.playbook .pb-head {
+  display: grid;
+  gap: 1.1rem;
+  justify-items: start;
+}
+
+.playbook .pb-title {
+  margin-top: 0.2rem;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2.7rem, 8.5vw, 5.2rem);
+  line-height: 0.98;
+  letter-spacing: -0.045em;
+}
+
+.playbook .pb-dek {
+  max-width: 38ch;
+}
+
+.playbook .pb-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+  margin-top: 0.35rem;
+}
+
+.playbook .pb-actions:empty {
+  display: none;
+}
+
+/* The download arrow nudges down, not up and to the right like the site's other buttons. */
+.playbook .pb-actions .btn:hover .arrow {
+  transform: translateY(2px);
+}
+
+.playbook .pb-note {
+  font-size: var(--step--1);
+  color: var(--ink-3);
+}
+
+/* "Print" beside the download: a text button in the style of the site's "more" links. */
+.playbook .pb-print {
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-underline-offset: 0.2em;
+  cursor: pointer;
+}
+
+.playbook .pb-print:hover {
+  text-decoration-thickness: 2px;
+}
+
+.playbook .pb-start {
+  max-width: 46rem;
+  color: var(--ink-2);
+}
+
+/* ---------- The four stages ---------- */
+
+.playbook .pb-stages {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.playbook .pb-stages ol {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.playbook .pb-stage {
+  position: relative;
+  display: grid;
+  gap: 0.25rem;
+  align-content: start;
+  padding: 0.8rem 0.9rem 0.9rem;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+}
+
+.playbook .pb-stage--goal {
+  border-color: var(--ink);
+}
+
+.playbook .pb-stage-num {
+  font-family: var(--font-label);
+  font-size: var(--step--2);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: var(--ink-3);
+}
+
+.playbook .pb-stage-name {
+  font-family: var(--font-display);
+  font-weight: 750;
+  font-size: 1.3rem;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+.playbook .pb-stage-goal {
+  position: absolute;
+  top: 0.8rem;
+  right: 0.9rem;
+  font-family: var(--font-label);
+  font-size: var(--step--2);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.playbook .pb-stage-gloss {
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: var(--ink-2);
+}
+
+/* Wide enough for one row: an arrow in each gap reads the stages in order. */
+@media (min-width: 720px) {
+  .playbook .pb-stages ol {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.4rem;
+  }
+
+  .playbook .pb-stage + .pb-stage::before {
+    content: '→';
+    content: '→' / '';
+    position: absolute;
+    top: 50%;
+    left: calc(-0.7rem - 1px);
+    transform: translate(-50%, -50%);
+    font-size: 0.95rem;
+    color: var(--ink-3);
+  }
+}
+
+/* ---------- The frameworks it puts into practice ---------- */
+
+.playbook .pb-built {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 1.1rem;
+  margin-top: -0.6rem;
+}
+
+.playbook .pb-built ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 1.1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.playbook .pb-built a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  min-height: 32px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+/* ---------- The plays ---------- */
+
+.playbook .pb-plays {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 720px) {
+  .playbook .pb-plays {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1100px) {
+  .playbook .pb-plays {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.playbook .play {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-width: 0;
+  padding: 1.25rem 1.2rem 1.35rem;
+  border: 1px solid var(--rule);
+  border-radius: 16px;
+  background: var(--paper);
+  box-shadow: inset 0 5px 0 var(--fw);
+  scroll-margin-top: 1rem;
+}
+
+.playbook .play-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.playbook .play-num {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 2.3rem;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  color: var(--fw-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.playbook .play-fw {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  min-height: 32px;
+  font-family: var(--font-label);
+  font-size: var(--step--2);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  line-height: 1.3;
+  text-align: right;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  text-decoration-color: var(--rule-strong);
+}
+
+.playbook .play-fw:hover {
+  color: var(--ink);
+  text-decoration-color: var(--accent);
+}
+
+.playbook .play-fw .el {
+  text-transform: none;
+}
+
+.playbook .play-title {
+  font-family: var(--font-display);
+  font-weight: 750;
+  font-size: clamp(1.45rem, 2.4vw, 1.65rem);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+}
+
+/* The line to remember, on the framework's color. */
+.playbook .play-model {
+  padding-left: 0.75rem;
+  border-left: 3px solid var(--fw);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.16rem;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+}
+
+.playbook .play-why {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+/* ---------- Figures: steps, chains and grids ---------- */
+
+.playbook .fig {
+  margin: 0.15rem 0;
+  padding: 0.8rem 0.85rem 0.85rem;
+  border-radius: 10px;
+  background: var(--paper-2);
+}
+
+.playbook .fig-label {
+  margin-bottom: 0.55rem;
+  padding: 0;
+  text-align: left;
+  font-family: var(--font-label);
+  font-size: var(--step--2);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  line-height: 1.3;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+/* Numbered steps, each with what follows from it. */
+.playbook .fig-steps {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+}
+
+.playbook .fig-steps li {
+  position: relative;
+  padding-left: 1.85rem;
+  font-size: 0.9rem;
+  line-height: 1.35;
+  counter-increment: step;
+}
+
+.playbook .fig-steps li::before {
+  content: counter(step);
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: grid;
+  place-items: center;
+  width: 1.3rem;
+  height: 1.3rem;
+  border: 1px solid var(--rule-strong);
+  border-radius: 50%;
+  background: var(--paper);
+  font-family: var(--font-label);
+  font-size: 0.7rem;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--ink-2);
+}
+
+.playbook .fig-term {
+  font-weight: 650;
+}
+
+/* What follows from the step, on its own line under it. */
+.playbook .fig-then {
+  display: block;
+  color: var(--ink-2);
+}
+
+.playbook .fig-arrow {
+  font-weight: 600;
+  color: var(--fw-ink);
+}
+
+/* A chain: steps in a row, joined by arrows, wrapping when they must. */
+.playbook .chain {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.3rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.playbook .chain li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.86rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.playbook .chain li + li::before {
+  content: '→';
+  content: '→' / '';
+  font-weight: 600;
+  color: var(--fw-ink, var(--ink-3));
+}
+
+/* A grid: row names down the side, column names along the top. */
+.playbook .fig-grid {
+  border-collapse: separate;
+  border-spacing: 3px;
+  margin: -3px;
+  width: calc(100% + 6px);
+  table-layout: fixed;
+  font-size: 0.86rem;
+  line-height: 1.3;
+}
+
+.playbook .fig-grid caption {
+  caption-side: top;
+  margin: 0 3px 0.35rem;
+}
+
+.playbook .fig-grid th,
+.playbook .fig-grid td {
+  padding: 0.4rem 0.45rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.playbook .fig-grid thead th {
+  padding-block: 0 0.15rem;
+  font-family: var(--font-label);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  line-height: 1.25;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  vertical-align: bottom;
+}
+
+.playbook .fig-grid .fig-corner {
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  font-family: var(--font-text);
+  font-size: 0.74rem;
+}
+
+.playbook .fig-grid tbody th {
+  padding-left: 0;
+  font-weight: 650;
+}
+
+.playbook .fig-grid td {
+  border-radius: 6px;
+  background: var(--paper);
+  font-weight: 600;
+}
+
+.playbook .fig-grid--dense {
+  font-size: 0.8rem;
+}
+
+/* ---------- The signs and the moves ---------- */
+
+.playbook .play-label {
+  margin-top: 0.3rem;
+  font-family: var(--font-label);
+  font-size: var(--step--2);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  line-height: 1.3;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.playbook .signs {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+.playbook .signs li {
+  position: relative;
+  padding-left: 1.45rem;
+}
+
+.playbook .signs li::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.playbook .signs--working li::before {
+  content: '✓';
+  content: '✓' / '';
+  color: var(--fw-ink);
+}
+
+.playbook .signs--not-yet li {
+  color: var(--ink-2);
+}
+
+.playbook .signs--not-yet li::before {
+  content: '○';
+  content: '○' / '';
+  font-weight: 400;
+  color: var(--ink-3);
+}
+
+.playbook .signs--bridge li::before {
+  content: '→';
+  content: '→' / '';
+  color: var(--fw-ink);
+}
+
+.playbook .signs--points li::before {
+  content: '•';
+  content: '•' / '';
+  color: var(--fw-ink);
+}
+
+/* ---------- Guardrails and the champion network ---------- */
+
+.playbook .pb-extras {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 900px) {
+  .playbook .pb-extras {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  }
+}
+
+.playbook .pb-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  padding: 1.4rem 1.3rem 1.4rem;
+  border: 1px solid var(--rule);
+  border-radius: 16px;
+  background: var(--paper);
+}
+
+/* The guardrails cross every framework: the four-color stripe, not one color. */
+.playbook .pb-guardrails {
+  background:
+    linear-gradient(90deg, var(--fw-0) 0 25%, var(--fw-1) 25% 50%, var(--fw-2) 50% 75%, var(--fw-3) 75% 100%) no-repeat 0 0 / 100% 5px,
+    var(--paper);
+}
+
+.playbook .pb-champions {
+  box-shadow: inset 0 5px 0 var(--fw);
+}
+
+.playbook .pb-panel-title {
+  font-family: var(--font-display);
+  font-weight: 750;
+  font-size: clamp(1.45rem, 2.4vw, 1.65rem);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+}
+
+.playbook .pb-panel-intro {
+  color: var(--ink-2);
+}
+
+.playbook .rules {
+  display: grid;
+  gap: 0.65rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: rule;
+}
+
+.playbook .rules li {
+  display: grid;
+  grid-template-columns: 1.1rem auto minmax(0, 1fr);
+  column-gap: 0.6rem;
+  align-items: start;
+  line-height: 1.45;
+  counter-increment: rule;
+}
+
+.playbook .rules li::before {
+  content: counter(rule);
+  padding-top: 0.1rem;
+  font-family: var(--font-label);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+
+.playbook .rule-fw {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  text-decoration: none;
+}
+
+/* Two routes the news takes, each a chain. */
+.playbook .routes {
+  display: grid;
+  gap: 0.55rem;
+  margin: 0;
+}
+
+.playbook .route {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.playbook .route dt {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ink-2);
+}
+
+.playbook .route dd {
+  margin: 0;
+}
+
+/* ---------- The close and the foot ---------- */
+
+.playbook .pb-close {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+  padding: 1.35rem 1.4rem 1.4rem;
+  border-radius: 16px;
+  background:
+    linear-gradient(90deg, var(--fw-0) 0 25%, var(--fw-1) 25% 50%, var(--fw-2) 50% 75%, var(--fw-3) 75% 100%) no-repeat 0 0 / 100% 5px,
+    var(--paper-2);
+}
+
+.playbook .pb-close > div {
+  display: grid;
+  gap: 0.35rem;
+  max-width: 40rem;
+}
+
+.playbook .pb-close p {
+  color: var(--ink-2);
+}
+
+.playbook .print-only {
+  display: none;
+}
+
+.playbook .pb-foot {
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--rule);
+}
+
+.playbook .pb-credit {
+  font-size: 0.68rem;
+}
+
+/* ---------- Paper: two pages, Letter or A4 ---------- */
+
+@media print {
+  @page {
+    margin: 11mm 12mm;
+  }
+
+  /* Sized so both pages fit Letter and A4 alike: the narrower width of A4, the shorter height of Letter. */
+  html {
+    font-size: 10.5px;
+  }
+
+  /* The wordmark above the title lines up with the sheet, which fills the page's width. */
+  .site-header .wide {
+    width: 100%;
+  }
+
+  .playbook,
+  .playbook .sheet {
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+  }
+
+  .playbook .sheet {
+    width: 100%;
+    gap: 1.2rem;
+  }
+
+  .playbook .pb-head {
+    gap: 0.7rem;
+  }
+
+  .playbook .pb-title {
+    font-size: 4rem;
+  }
+
+  .playbook .pb-dek {
+    max-width: 60ch;
+    font-size: 1.45rem;
+  }
+
+  .playbook .pb-actions,
+  .playbook .pb-start a,
+  .playbook .pb-close .btn,
+  .contact {
+    display: none !important;
+  }
+
+  .playbook .pb-stages ol {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.4rem;
+  }
+
+  .playbook .pb-stage + .pb-stage::before {
+    content: '→';
+    content: '→' / '';
+    position: absolute;
+    top: 50%;
+    left: calc(-0.7rem - 1px);
+    transform: translate(-50%, -50%);
+    color: var(--ink-3);
+  }
+
+  .playbook .pb-plays {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  /* Plays 4–6 start the second page. */
+  .playbook .play:nth-child(4) {
+    break-before: page;
+  }
+
+  .playbook .play,
+  .playbook .pb-panel,
+  .playbook .pb-close,
+  .playbook .pb-stage {
+    break-inside: avoid;
+  }
+
+  .playbook .play {
+    gap: 0.5rem;
+    padding: 1.1rem 1rem 1.15rem;
+  }
+
+  .playbook .signs {
+    gap: 0.3rem;
+    line-height: 1.38;
+  }
+
+  .playbook .play-label {
+    margin-top: 0.15rem;
+  }
+
+  .playbook .fig {
+    padding: 0.6rem 0.7rem 0.65rem;
+  }
+
+  .playbook .fig-steps {
+    gap: 0.3rem;
+  }
+
+  .playbook .pb-extras {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  }
+
+  .playbook .rules {
+    gap: 0.4rem;
+  }
+
+  .playbook .pb-panel {
+    gap: 0.6rem;
+    padding: 1.1rem 1rem;
+  }
+
+  /* The close shrinks to a strip: the question, then where to find the assessment. */
+  .playbook .pb-close {
+    padding: 0.9rem 1rem 0.85rem;
+  }
+
+  .playbook .pb-close > div {
+    display: block;
+    max-width: none;
+  }
+
+  .playbook .pb-close h2 {
+    display: inline;
+    margin-right: 0.5rem;
+    font-size: 1.35rem;
+  }
+
+  .playbook .pb-close p {
+    display: inline;
+  }
+
+  .playbook .pb-foot {
+    padding-top: 0.7rem;
+  }
+
+  .playbook .print-only {
+    display: inline;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .playbook .play,
+  .playbook .pb-panel,
+  .playbook .pb-close,
+  .playbook .fig,
+  .playbook .fig-grid td,
+  .playbook .fig-steps li::before,
+  .playbook .emphasis,
+  .playbook .el {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}

@@ -531,6 +531,34 @@ button {
 }
 
 @media print {
+  /* Always the light palette on paper, whatever the screen's theme. */
+  html:root:not([data-print]) {
+    color-scheme: light;
+    --paper: #ffffff;
+    --paper-2: #f4f5f7;
+    --paper-3: #e9ebef;
+    --ink: #111318;
+    --ink-2: #3e4450;
+    --ink-3: #5c6370;
+    --rule: #e2e5ea;
+    --rule-strong: #c9ced6;
+    --fw-0: #6b45f0;
+    --fw-0-ink: #5733d9;
+    --fw-1: #2759f5;
+    --fw-1-ink: #1d47cf;
+    --fw-2: #f2553a;
+    --fw-2-ink: #c23a21;
+    --fw-3: #0fa08e;
+    --fw-3-ink: #0a7568;
+    --fw-4: #e0a400;
+    --fw-4-ink: #806000;
+    --accent-wash: rgb(39 89 245 / 0.08);
+    --fresh: #0a7568;
+    --stale: #ad721c;
+    --stale-ink: #7b510d;
+    --stale-wash: rgb(173 114 28 / 0.1);
+  }
+
   .site-header nav,
   .theme-toggle,
   .site-footer {
