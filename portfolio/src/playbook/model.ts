@@ -10,6 +10,9 @@
  * checks they stay in step.
  */
 
+/** Where the playbook lives (src/pages/playbook.astro). Each play is at /playbook#<its dimension's id>. */
+export const PLAYBOOK_PATH = '/playbook';
+
 /** A small diagram inside a play: an ordered list of steps, or a grid. */
 export type Figure =
   | {

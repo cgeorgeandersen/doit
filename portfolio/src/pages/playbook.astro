@@ -24,8 +24,8 @@ import { SITE } from '../config/site';
 import { getSite, type Framework } from '../lib/content';
 import { formatMonth, isoDate } from '../lib/dates';
 import { PLAYBOOK as P } from '../playbook/content';
-import type { Play } from '../playbook/model';
-import { fingerprintOf, pdfStatus, PDF_PATH } from '../playbook/pdf';
+import { PLAYBOOK_PATH, type Play } from '../playbook/model';
+import { pdfStatus, PDF_PATH } from '../playbook/pdf';
 
 const site = await getSite();
 const FILE = 'src/playbook/content.ts';
@@ -70,12 +70,7 @@ const chip = (f: Framework) => ({ element: site.elementOf(f), color: site.colorO
 const updated = new Date(P.updated);
 
 // The PDF is offered only while it matches this page (see src/playbook/pdf.ts).
-const fingerprint = fingerprintOf({
-  playbook: P,
-  stages,
-  frameworks: builtOn.map((f) => [f.id, f.data.title, site.elementOf(f).symbol, site.colorOf(f)]),
-});
-const pdf = pdfStatus(fingerprint);
+const pdf = pdfStatus(site);
 if (!pdf.ready && import.meta.env.PROD) console.warn(`[playbook] Offering "Print or save as PDF" instead of the download: ${pdf.reason}. Run npm run playbook:pdf to remake it.`);
 
 const origin = new URL(Astro.site ?? 'http://localhost:4321');
@@ -88,14 +83,14 @@ const jsonLd = {
   headline: title,
   description: tx(P.meta.description),
   dateModified: isoDate(updated),
-  url: new URL('/playbook', origin).href,
+  url: new URL(PLAYBOOK_PATH, origin).href,
   author: { '@type': 'Person', name: SITE.name },
   ...(pdf.ready && { encoding: { '@type': 'MediaObject', contentUrl: new URL(PDF_PATH, origin).href, encodingFormat: 'application/pdf' } }),
 };
 ---
 
 <BaseLayout title={P.name} description={tx(P.meta.description)} image="/og/playbook.png" imageAlt={`${P.name}: ${title}`} jsonLd={jsonLd}>
-  <div class="playbook" data-fingerprint={fingerprint}>
+  <div class="playbook" data-fingerprint={pdf.fingerprint}>
     <article class="sheet" aria-labelledby="playbook-title">
       <header class="pb-head">
         <p class="kicker">
@@ -321,7 +316,7 @@ const jsonLd = {
         <p class="kicker pb-credit">
           <span>{P.name}</span>
           <span>{SITE.name}</span>
-          <span><a href="/playbook">{shortUrl('/playbook')}</a></span>
+          <span><a href={PLAYBOOK_PATH}>{shortUrl(PLAYBOOK_PATH)}</a></span>
           <span><time datetime={isoDate(updated)}>{tx(P.footer.updated, { date: formatMonth(updated) })}</time></span>
           <span>{tx(P.footer.share)}</span>
         </p>

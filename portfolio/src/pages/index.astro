@@ -1,8 +1,9 @@
 ---
 /**
- * Home: the thesis, the methods ("How I think") with the projects that prove
- * each one, the featured projects with the methods each puts into practice,
- * a short bio, recent writing and contact. Everything below the thesis is
+ * Home: the thesis, the playbook (its six plays, each with its line to
+ * remember), the methods ("How I think") with the projects that prove each
+ * one, the featured projects with the methods each puts into practice, a
+ * short bio, recent writing and contact. Everything below the thesis is
  * derived from the content, so new Markdown files show up here on their own.
  */
 import { Image } from 'astro:assets';
@@ -14,8 +15,13 @@ import PostList from '../components/PostList.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import ReviewStamp from '../components/ReviewStamp.astro';
 import ThroughLine from '../components/ThroughLine.astro';
+import { ASSESSMENT } from '../assessment/content';
+import { tx } from '../assessment/text';
 import { SITE } from '../config/site';
 import { getSite, reviewedSince } from '../lib/content';
+import { PLAYBOOK } from '../playbook/content';
+import { PLAYBOOK_PATH } from '../playbook/model';
+import { pdfStatus, PDF_PATH } from '../playbook/pdf';
 
 const site = await getSite();
 const { philosophy, methods, projects, posts } = site;
@@ -26,6 +32,13 @@ const featured = projects.filter((p) => p.data.featured);
 const proof = featured.length > 0 ? featured : projects.slice(0, 2);
 const liveCount = projects.filter((p) => p.data.status === 'live').length;
 const since = reviewedSince(site.frameworks);
+
+// The playbook band: each play in its framework's color, linking to it on the playbook page.
+const plays = PLAYBOOK.plays.map((play, i) => {
+  const framework = site.frameworks.find((f) => f.id === ASSESSMENT.dimensions.find((d) => d.id === play.dimension)?.framework);
+  return { ...play, n: String(i + 1).padStart(2, '0'), color: framework ? site.colorOf(framework) : 0 };
+});
+const pdf = pdfStatus(site);
 // The line above the headline: {braced} words are crossed out, so they sit at the odd positions.
 const leadParts = SITE.thesis.lead ? SITE.thesis.lead.split(/\{([^}]*)\}/) : [];
 const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
@@ -116,6 +129,51 @@ const personLd = {
         )
       }
     </ul>
+  </section>
+
+  <section class="section playbook-band" aria-labelledby="playbook-title">
+    <div class="wide band">
+      <div class="band-text">
+        <p class="kicker">
+          <span>{PLAYBOOK.intro.label}</span>
+          {PLAYBOOK.intro.kicker.map((item) => <span>{tx(item)}</span>)}
+        </p>
+        <h2 id="playbook-title" class="section-title">
+          {tx(PLAYBOOK.intro.title)}
+        </h2>
+        <p class="band-dek">{tx(PLAYBOOK.intro.dek)}</p>
+        <p class="band-start">{tx(PLAYBOOK.intro.start)}</p>
+        <p class="band-actions">
+          <a class="btn btn--primary" href={PLAYBOOK_PATH}>
+            {SITE.home.playbookLink} <span class="arrow" aria-hidden="true">→</span>
+          </a>
+          {
+            pdf.ready && (
+              <a class="more" href={PDF_PATH} download={`${PLAYBOOK.name} (${SITE.name}).pdf`}>
+                {PLAYBOOK.intro.download} <span aria-hidden="true">↓</span>
+              </a>
+            )
+          }
+        </p>
+      </div>
+      <ol class="band-plays">
+        {
+          plays.map((play) => (
+            <li data-fw={play.color}>
+              <a href={`${PLAYBOOK_PATH}#${play.dimension}`}>
+                <span class="band-num" aria-hidden="true">
+                  {play.n}
+                </span>
+                <span class="band-play">
+                  <span class="band-title">{tx(play.title)}</span>
+                  <span class="band-model">{tx(play.model)}</span>
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
   </section>
 
   {
@@ -463,6 +521,113 @@ const personLd = {
         transform: translateY(10px);
       }
     }
+  }
+
+  /* The playbook: the site's centerpiece, on a band of its own under the hero. */
+  .playbook-band {
+    background: var(--paper-2);
+  }
+
+  .band {
+    display: grid;
+    gap: 2rem;
+    align-items: center;
+  }
+
+  @media (min-width: 900px) {
+    .band {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+      column-gap: clamp(2.5rem, 6vw, 5rem);
+    }
+  }
+
+  .band-text {
+    display: grid;
+    gap: 1rem;
+    justify-items: start;
+  }
+
+  .band-dek {
+    max-width: 34rem;
+    font-size: var(--step-1);
+    line-height: 1.45;
+    color: var(--ink-2);
+  }
+
+  .band-start {
+    max-width: 34rem;
+    color: var(--ink-2);
+  }
+
+  .band-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 1.5rem;
+    margin-top: 0.4rem;
+  }
+
+  /* The six plays, like the sheet itself: numbers in their framework's color, the line to remember under each title. */
+  .band-plays {
+    display: grid;
+    margin: 0;
+    padding: 0.4rem 1.3rem;
+    list-style: none;
+    border: 1px solid var(--rule);
+    border-radius: 16px;
+    background:
+      linear-gradient(90deg, var(--fw-0) 0 25%, var(--fw-1) 25% 50%, var(--fw-2) 50% 75%, var(--fw-3) 75% 100%) no-repeat 0 0 / 100% 5px,
+      var(--paper);
+  }
+
+  .band-plays li + li {
+    border-top: 1px solid var(--rule);
+  }
+
+  .band-plays a {
+    display: grid;
+    grid-template-columns: 2.6rem minmax(0, 1fr);
+    align-items: baseline;
+    gap: 0.9rem;
+    padding: 0.85rem 0;
+    text-decoration: none;
+  }
+
+  .band-num {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.6rem;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: var(--fw-ink);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .band-play {
+    display: grid;
+    gap: 0.15rem;
+  }
+
+  .band-title {
+    font-family: var(--font-display);
+    font-weight: 750;
+    font-size: 1.2rem;
+    line-height: 1.15;
+    letter-spacing: -0.025em;
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-underline-offset: 0.18em;
+    transition: text-decoration-color 140ms var(--ease);
+  }
+
+  .band-plays a:hover .band-title,
+  .band-plays a:focus-visible .band-title {
+    text-decoration-color: var(--accent);
+  }
+
+  .band-model {
+    color: var(--ink-2);
+    line-height: 1.4;
   }
 
   .methods {

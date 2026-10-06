@@ -8,6 +8,8 @@
  * framework's symbol, the points as text ("6 of 9"), the bar's length and
  * its stage in words. Gaps are tagged "Gap 1", "Gap 2"… in text too.
  */
+import { PLAYBOOK } from '../playbook/content.ts';
+import { PLAYBOOK_PATH } from '../playbook/model.ts';
 import { ASSESSMENT } from './content.ts';
 import { announce, h } from './dom.ts';
 import { looksLikeEmail, type EmailAdapter, type EmailRequest } from './email.ts';
@@ -152,6 +154,8 @@ function dimensions(result: Result, frameworks: Frameworks): HTMLElement {
 // ---------- The gaps ----------
 
 function gapCard(d: DimensionScore, n: number, mode: Mode, frameworks: Frameworks): HTMLElement {
+  // The dimension's play in the playbook: what good looks like there, and how to close the gap.
+  const play = PLAYBOOK.plays.find((p) => p.dimension === d.dimension.id);
   const framework = frameworks.info(d.dimension.framework);
   const { question, answer } = d.weakest;
   const option = question.options[answer];
@@ -177,7 +181,12 @@ function gapCard(d: DimensionScore, n: number, mode: Mode, frameworks: Framework
       ),
       h('div', { class: 'gap-step' }, h('p', { class: 'key' }, tx(R.gaps.step)), h('p', null, tx(say(question.nextStep, mode)))),
     ),
-    h('p', { class: 'gap-read' }, moreLink(framework.path, tx(R.gaps.read, { framework: framework.title }))),
+    h(
+      'p',
+      { class: 'gap-read' },
+      play ? moreLink(`${PLAYBOOK_PATH}#${play.dimension}`, tx(R.gaps.play, { play: play.title })) : null,
+      moreLink(framework.path, tx(R.gaps.read, { framework: framework.title })),
+    ),
   );
 }
 
