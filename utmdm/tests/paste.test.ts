@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { parseUtms, splitLine } from '../src/core/paste';
+import { tableCsv } from '../src/core/csv';
+import { createDemoWorkspace } from '../src/core/demo';
+import { CSV_TEMPLATE, parseUtms, splitLine } from '../src/core/paste';
+import { resolve } from '../src/core/table';
+import { addUtms, latest, openBook } from '../src/core/workspace';
 
 describe('pasting UTMs', () => {
   it('reads tagged links, decoding spaces and ignoring other parameters', () => {
@@ -38,5 +42,39 @@ describe('pasting UTMs', () => {
 
   it('splits CSV with quotes', () => {
     expect(splitLine('a,"b, c","say ""hi""", d ', ',')).toEqual(['a', 'b, c', 'say "hi"', 'd']);
+  });
+
+  it('reads files saved by Excel: a byte-order mark, Windows line ends, and semicolons', () => {
+    const { rows } = parseUtms('\uFEFFUTM Source;UTM-Medium;Campaign\r\nfb;paid_social;"summer; cup"\r\n');
+    expect(rows).toEqual([{ source: 'fb', medium: 'paid_social', campaign: 'summer; cup', content: '', term: '' }]);
+  });
+
+  it('reads a column of links inside a CSV straight from the link', () => {
+    const { rows } = parseUtms('url,owner\nhttps://zestify.example/?utm_source=sms&utm_medium=sms&utm_campaign=order_confirmation,Ana');
+    expect(rows).toEqual([{ source: 'sms', medium: 'sms', campaign: 'order_confirmation', content: '', term: '' }]);
+    expect(parseUtms('url,owner\nhttps://zestify.example/?utm_source=sms&utm_campaign=x,Ana').skipped).toEqual(['url,owner']);
+    // a link with a raw comma in a value is still one link
+    expect(parseUtms('https://zestify.example/?utm_source=ig&utm_content=red,blue&utm_campaign=c').rows[0]).toMatchObject({ content: 'red,blue', campaign: 'c' });
+  });
+
+  it('reads the downloadable template', () => {
+    expect(parseUtms(CSV_TEMPLATE)).toEqual({
+      rows: [
+        { source: 'facebook', medium: 'paid_social', campaign: 'summer_cup_2026', content: 'video_15s', term: '' },
+        { source: 'google', medium: 'cpc', campaign: 'summer_cup_2026', content: 'rsa_1', term: 'zestify soda' },
+        { source: 'newsletter', medium: 'email', campaign: 'welcome_series', content: 'hero_banner', term: '' },
+      ],
+      skipped: [],
+    });
+  });
+
+  it('takes back a CSV exported from UTMDM without duplicating anything', () => {
+    const book = openBook(createDemoWorkspace('2026-10-07T12:00:00.000Z'));
+    const t = latest(book);
+    const exported = tableCsv(t, resolve(t), 8);
+    const { rows, skipped } = parseUtms(exported);
+    expect(skipped).toEqual([]);
+    expect(rows).toHaveLength(t.utms.length);
+    expect(addUtms(t, rows).added).toEqual([]);
   });
 });

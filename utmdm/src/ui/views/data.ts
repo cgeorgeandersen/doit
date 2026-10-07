@@ -69,7 +69,9 @@ export function dataView(ctx: Ctx): HTMLElement {
       h('div', { class: 'data-grid' },
         card('upload', 'Paste or upload', 'ready',
           [h('p', null, 'Tagged links, rows copied from a spreadsheet, or a CSV file. UTMs already in the table are merged, not duplicated, and your rules classify the new ones as they arrive.')],
-          linkButton('Add UTMs', hashFor('table', { add: '1' }), { icon: 'plus', kind: 'primary' })),
+          h('div', { class: 'data-actions' },
+            linkButton('Add UTMs', hashFor('table', { add: '1' }), { icon: 'plus', kind: 'primary' }),
+            linkButton('How to format a CSV', hashFor('table', { add: '1' }), { kind: 'ghost' }))),
 
         card('chart', 'UTMs from Google Analytics 4', 'soon',
           [

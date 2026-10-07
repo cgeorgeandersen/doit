@@ -28,6 +28,10 @@ The dashboard at the top shows how much is fully classified (a value in every co
 
 Everything in the demo is fictional: Zestify is a made-up beverage brand, and so are its team and their UTMs.
 
+## Uploading a CSV
+
+One UTM per row, with a header row: `utm_source,utm_medium,utm_campaign,utm_content,utm_term` (or `source`, `medium` and so on; any capitals, any order). Leave out the parts a UTM doesn't use. Other columns are ignored, so UTMDM's own export can come back in; values in classification columns aren't imported yet. Without a header the columns are read in that order. A column of tagged links works too, and commas, semicolons or tabs all separate columns. The Add UTMs panel shows this guide, an example, and a template to download, and previews what an upload will add before anything is saved.
+
 ## Try it
 
 The demo opens two weeks into a team's use: 102 UTMs, three columns (Channel, Campaign, Type), 17 rules, a few typed values, and 41% fully classified. The tip box suggests a first rule: *if campaign contains "cup", then Type is Marketing* fills 15 empty cells and takes the table to 54%. History shows four teammates' changes, including a paste of Fall Kickoff links that the existing rules classified as they arrived.
