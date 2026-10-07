@@ -1740,3 +1740,69 @@ textarea {
     justify-self: start;
   }
 }
+
+/* ── before sign-in ────────────────────────────────────────────────────── */
+
+.landing {
+  display: grid;
+  gap: 40px;
+  padding-top: clamp(32px, 8vh, 96px);
+}
+.landing-hero {
+  display: grid;
+  gap: 16px;
+  max-width: 720px;
+}
+.landing-hero h1 {
+  font-size: clamp(32px, 4.5vw, 52px);
+  letter-spacing: -0.02em;
+}
+.landing-lead {
+  font-size: 18px;
+  color: var(--ink-2);
+}
+.landing-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.landing-problem {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 10px 14px;
+  border-radius: var(--radius);
+  background: var(--warning-tint);
+}
+.landing-points {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: 16px;
+}
+.landing-points li {
+  padding: 18px 20px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-l);
+  background: var(--surface);
+  color: var(--ink-2);
+}
+.landing-points strong {
+  color: var(--ink);
+}
+.loading {
+  padding: 48px var(--gutter);
+  color: var(--ink-2);
+}
+.saved.is-failed,
+.saved.is-conflict,
+.saved.is-signed-out {
+  color: var(--danger-ink);
+}
+.saved.is-failed .icon,
+.saved.is-conflict .icon,
+.saved.is-signed-out .icon {
+  color: var(--danger-ink);
+}

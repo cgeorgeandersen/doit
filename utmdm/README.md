@@ -48,6 +48,25 @@ npm test           # Vitest: the engine, versions, pasting, the demo, export, GA
 npm run build      # type-check, then build to dist/
 ```
 
+## On AWS
+
+Live at https://main.d3mrdsid7s74hi.amplifyapp.com/ (project account 243031803448, us-east-2). Visitors see a home page with **Sign in** and **Create an account**; once signed in, their workspace is loaded from and saved to their own account.
+
+| Piece | What it is |
+| --- | --- |
+| Hosting | AWS Amplify Hosting, app `utmdm`, branch `main`, deployed by uploading the build (no Git connection yet) |
+| Sign-in | Amazon Cognito user pool `utmdm-users` (email and password, email verification) with Cognito's hosted sign-in pages, authorization code flow with PKCE (`src/cloud/auth.ts`) |
+| Data | DynamoDB table `utmdm-workspaces`: one item per version (`pk` = `USER#<Cognito sub>`, `sk` = `C#<version>`) plus a `META` item. Point-in-time recovery and deletion protection are on |
+| API | API Gateway HTTP API with a Cognito JWT authorizer, in front of the Lambda `utmdm-api` (`infra/api.js`): `GET /workspace`, `POST /workspace/changes` (append; a version that already exists is a 409), `PUT /workspace` (replace) |
+
+Everything is in `infra/template.yaml` (stack `utmdm`). To deploy, sign in to the AWS CLI (`aws login --profile utmdm`), then from `utmdm/` run:
+
+```bash
+scripts/deploy-aws.sh
+```
+
+It updates the stack, builds the site, writes `dist/config.json` (the API and sign-in addresses), and uploads it to Amplify. Without a `config.json` (as in `npm run dev`), the app runs on its own with the workspace in the browser, as before.
+
 ## Deploy it on Vercel
 
 1. In Vercel, **Add New → Project** and import this repository.

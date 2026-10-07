@@ -1,6 +1,7 @@
 import { createDemoWorkspace } from '../core/demo';
 import type { Workspace } from '../core/model';
-import type { Store } from '../core/store';
+import type { Account } from '../cloud/auth';
+import type { SaveStatus, Store } from '../core/store';
 import { resolve, type Grid } from '../core/table';
 import { latest, openBook, record, undo, versionOf, type Book } from '../core/workspace';
 import { button } from './components';
@@ -13,8 +14,34 @@ import { historyView } from './views/history';
 import { rulesView } from './views/rules';
 import { tableView } from './views/table';
 
-export function startApp(root: HTMLElement, store: Store, clock: () => string = () => new Date().toISOString()): void {
-  let book: Book = open(store.load() ?? createDemoWorkspace(clock()));
+export interface AppOptions {
+  /** The signed-in account, when the workspace is kept in the cloud. */
+  account?: Account;
+  clock?: () => string;
+}
+
+export function startApp(root: HTMLElement, store: Store, options: AppOptions = {}): void {
+  const clock = options.clock ?? (() => new Date().toISOString());
+  const { account: signedIn } = options;
+  const fresh = (): Workspace => {
+    const ws = createDemoWorkspace(clock());
+    return signedIn ? { ...ws, user: signedIn.email.split('@')[0] ?? ws.user } : ws;
+  };
+  let book: Book = open(store.load() ?? fresh());
+  let saveStatus: SaveStatus = 'saved';
+  store.onStatus?.((status) => {
+    const was = saveStatus;
+    saveStatus = status;
+    paintSaved();
+    if (status === 'conflict' && was !== 'conflict') {
+      toast('This workspace was changed in another tab or by someone else. Reload to see the latest before editing.',
+        [{ label: 'Reload', run: () => location.reload() }]);
+    } else if (status === 'failed' && was !== 'failed') {
+      toast("Couldn't save that change to your account. Check your connection; the next change will try again.");
+    } else if (status === 'signed-out') {
+      toast('Your sign-in expired. Sign in again to keep saving.', [{ label: 'Sign in', run: () => location.reload() }]);
+    }
+  });
   let grid: Grid = resolve(latest(book));
   let route = parseRoute(location.hash);
   store.save(book.ws);
@@ -23,7 +50,7 @@ export function startApp(root: HTMLElement, store: Store, clock: () => string = 
     try {
       return openBook(ws);
     } catch {
-      return openBook(createDemoWorkspace(clock()));
+      return openBook(fresh());
     }
   }
 
@@ -137,17 +164,39 @@ export function startApp(root: HTMLElement, store: Store, clock: () => string = 
         { class: 'topbar-inner' },
         h('a', { class: 'brand', href: '#/' }, h('span', { class: 'logo', 'aria-hidden': 'true' }, icon('database', 18)),
           h('span', { class: 'brand-name' }, 'UTMDM')),
-        h('span', { class: 'workspace', title: 'The shared workspace. In this demo it lives in your browser.' },
+        h('span', { class: 'workspace', title: signedIn ? 'Your workspace, saved to your account' : 'The workspace. In this copy it lives in your browser.' },
           icon('columns', 14), book.ws.name),
         h('nav', { class: 'nav', 'aria-label': 'Main' },
           ...PAGES.map(({ page, label }) =>
             h('a', { href: hashFor(page), class: 'nav-link', 'aria-current': page === route.page ? 'page' : null }, label))),
         h('div', { class: 'topbar-actions' },
-          h('a', { class: 'saved', href: hashFor('history'), title: 'Every change is saved as a version' },
-            icon('check', 14), `Saved · v${versionOf(book)}`),
+          savedChip(),
           themeToggle(), account()),
       ),
     );
+  }
+
+  function savedChip(): HTMLElement {
+    const chip = h('a', { class: `saved is-${saveStatus}`, href: hashFor('history'), title: 'Every change is saved as a version' });
+    fillSaved(chip);
+    return chip;
+  }
+
+  function fillSaved(chip: Element): void {
+    const label = {
+      saved: `Saved · v${versionOf(book)}`,
+      saving: 'Saving…',
+      failed: 'Not saved',
+      conflict: 'Changed elsewhere',
+      'signed-out': 'Signed out',
+    }[saveStatus];
+    chip.className = `saved is-${saveStatus}`;
+    chip.replaceChildren(icon(saveStatus === 'saved' || saveStatus === 'saving' ? 'check' : 'outstanding', 14), label);
+  }
+
+  function paintSaved(): void {
+    const chip = root.querySelector('.saved');
+    if (chip) fillSaved(chip);
   }
 
   function account(): HTMLElement {
@@ -165,11 +214,15 @@ export function startApp(root: HTMLElement, store: Store, clock: () => string = 
       h(
         'form',
         { class: 'account-panel', onsubmit: save },
-        h('p', { class: 'account-title' }, icon('lock', 16), 'Just you, for now'),
-        h('p', null, 'Sign-in and a shared database come next, so your whole team works in this one table. ',
-          'Until then the workspace lives in this browser.'),
+        signedIn
+          ? [h('p', { class: 'account-title' }, icon('lock', 16), 'Signed in'),
+            h('p', null, signedIn.email, '. Your workspace is saved to your account, so it follows you to any browser.')]
+          : [h('p', { class: 'account-title' }, icon('lock', 16), 'Just you, for now'),
+            h('p', null, 'This copy of the demo keeps the workspace in this browser.')],
         h('label', { class: 'field' }, h('span', { class: 'field-label' }, 'Your name, as History shows it'), name),
-        button('Save name', { kind: 'primary', type: 'submit' }),
+        h('div', { class: 'form-actions' },
+          button('Save name', { kind: 'primary', type: 'submit' }),
+          signedIn ? button('Sign out', { onClick: () => signedIn.signOut() }) : null),
       ),
     );
   }
@@ -177,7 +230,7 @@ export function startApp(root: HTMLElement, store: Store, clock: () => string = 
   function footer(): HTMLElement {
     return h('footer', { class: 'footer' },
       h('p', null, h('strong', null, 'UTMDM'), ' demo. Zestify and its team are made up, and so are their UTMs. ',
-        'Everything you do here stays in this browser.'));
+        signedIn ? 'Your workspace is saved to your account.' : 'Everything you do here stays in this browser.'));
   }
 
   window.addEventListener('hashchange', () => {

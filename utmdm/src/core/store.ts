@@ -1,14 +1,19 @@
 import type { Workspace } from './model';
 
 /*
- * Where a workspace is kept. Today: this browser (localStorage). With sign-in,
- * a hosted database implements the same three methods and nothing else changes.
+ * Where a workspace is kept: this browser (localStorage) when running on its
+ * own, or the signed-in user's account (src/cloud/cloud-store.ts) on AWS. The
+ * cloud store fetches before the app starts, so load stays synchronous, and
+ * saves in the background, reporting how it went through onStatus.
  */
+
+export type SaveStatus = 'saving' | 'saved' | 'failed' | 'conflict' | 'signed-out';
 
 export interface Store {
   load(): Workspace | null;
   save(ws: Workspace): void;
   clear(): void;
+  onStatus?(listener: (status: SaveStatus) => void): void;
 }
 
 export const STORAGE_KEY = 'utmdm:workspace:v2';
