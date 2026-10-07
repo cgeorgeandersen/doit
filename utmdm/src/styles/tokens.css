@@ -1,0 +1,98 @@
+/*
+ * Design tokens. Teal is the brand and the meters (fill and track are two steps
+ * of the same teal). Status colors are fixed and reserved for state, and always
+ * come with an icon and a word: classified, outstanding, conflict.
+ */
+:root {
+  --font-sans: 'Public Sans Variable', 'Public Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --radius-s: 6px;
+  --radius: 10px;
+  --radius-l: 14px;
+  --page-w: 1200px;
+
+  --bg: #f4f6f5;
+  --surface: #ffffff;
+  --surface-2: #f7f9f8;
+  --surface-3: #edf1ef;
+  --ink: #13201c;
+  --ink-2: #44534d;
+  --ink-3: #66756f;
+  --line: #dfe6e2;
+  --line-strong: #c6d1cc;
+  --accent: #0b6e5a;
+  --accent-hover: #095c4b;
+  --accent-ink: #ffffff;
+  --accent-track: #cde8df;
+  --accent-tint: #e9f5f0;
+  --focus: #0b6e5a;
+
+  --good: #0ca30c;
+  --warning: #fab219;
+  --serious: #ec835a;
+  --critical: #d03b3b;
+  --good-tint: #e8f6e8;
+  --warning-tint: #fff5dd;
+  --serious-tint: #fdeee7;
+  --danger-ink: #b42c2c;
+
+  --shadow-1: 0 1px 2px rgba(19, 32, 28, 0.05), 0 2px 8px rgba(19, 32, 28, 0.05);
+  --shadow-2: 0 4px 12px rgba(19, 32, 28, 0.1), 0 24px 48px rgba(19, 32, 28, 0.16);
+  --backdrop: rgba(19, 32, 28, 0.28);
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --bg: #0d1311;
+    --surface: #141c19;
+    --surface-2: #18211e;
+    --surface-3: #1e2925;
+    --ink: #e5eeea;
+    --ink-2: #a9bab3;
+    --ink-3: #82958d;
+    --line: #25312d;
+    --line-strong: #34433d;
+    --accent: #3cc6a0;
+    --accent-hover: #62d5b4;
+    --accent-ink: #06231c;
+    --accent-track: #1b3f35;
+    --accent-tint: #15302a;
+    --focus: #62d5b4;
+    --good-tint: #13301a;
+    --warning-tint: #362a0e;
+    --serious-tint: #3a2219;
+    --danger-ink: #f08080;
+    --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-2: 0 8px 24px rgba(0, 0, 0, 0.45), 0 24px 64px rgba(0, 0, 0, 0.4);
+    --backdrop: rgba(0, 0, 0, 0.5);
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme='dark'] {
+  --bg: #0d1311;
+  --surface: #141c19;
+  --surface-2: #18211e;
+  --surface-3: #1e2925;
+  --ink: #e5eeea;
+  --ink-2: #a9bab3;
+  --ink-3: #82958d;
+  --line: #25312d;
+  --line-strong: #34433d;
+  --accent: #3cc6a0;
+  --accent-hover: #62d5b4;
+  --accent-ink: #06231c;
+  --accent-track: #1b3f35;
+  --accent-tint: #15302a;
+  --focus: #62d5b4;
+  --good-tint: #13301a;
+  --warning-tint: #362a0e;
+  --serious-tint: #3a2219;
+  --danger-ink: #f08080;
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-2: 0 8px 24px rgba(0, 0, 0, 0.45), 0 24px 64px rgba(0, 0, 0, 0.4);
+  --backdrop: rgba(0, 0, 0, 0.5);
+  color-scheme: dark;
+}

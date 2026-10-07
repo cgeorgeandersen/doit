@@ -1,6 +1,6 @@
 # doit
 
-This repository holds four websites, a data prototype and an old iOS app.
+This repository holds five websites, a data prototype and an old iOS app.
 
 | Folder | What it is | Live at |
 | --- | --- | --- |
@@ -8,6 +8,7 @@ This repository holds four websites, a data prototype and an old iOS app.
 | [`what-do-i-actually-do/`](what-do-i-actually-do/) | **What Do I Actually Do?** Map your work in two minutes and see what needs a fix, what a tool can take over and what needs you. | Vercel, from the repository root; also [GitHub Pages](https://cgeorgeandersen.github.io/doit/) |
 | [`confident-machine/`](confident-machine/) | **The Confident Machine**, an interactive essay on how to live and work with AI | [Vercel](https://doit-t17l.vercel.app), with Root Directory `confident-machine` |
 | [`flockwatch/`](flockwatch/) | **Track the Pole**: enter two addresses and see the Flock license plate cameras along the drive, how many would photograph your car, and who answers for each one | [trackthepole.com](https://trackthepole.com) (Vercel, with Root Directory `flockwatch`) |
+| [`utmdm/`](utmdm/) | **UTMDM**: UTM master data for marketers. One permanent table of every UTM, classified from controlled lists, every rule change a version, and what's still outstanding. A demo with fictional data that runs in the browser. | Vercel, with Root Directory `utmdm` (not yet set up) |
 | [`campaign-mapping/`](campaign-mapping/) | **Campaign Mapping Layer**: classifies messy UTM strings from independent operators with a versioned rule table, and reports how much of the data and spend the rules cover. Synthetic data only. | Not deployed yet |
 | `Doit/`, `Doit.xcodeproj/` | A 2019 iOS to-do app | Not deployed |
 
@@ -26,6 +27,10 @@ See [`confident-machine/README.md`](confident-machine/README.md).
 ## Track the Pole
 
 See [`flockwatch/README.md`](flockwatch/README.md).
+
+## UTMDM
+
+See [`utmdm/README.md`](utmdm/README.md).
 
 ## Campaign Mapping Layer
 

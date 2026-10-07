@@ -1,0 +1,36 @@
+# Checks UTMDM (utmdm/) on every push to master and pull request that touches it:
+# install, tests, and a type-checked production build. Hosting is on Vercel
+# (see utmdm/vercel.json); this workflow does not deploy.
+name: UTMDM
+
+on:
+  push:
+    branches: [master]
+    paths: ['utmdm/**', '.github/workflows/utmdm-ci.yml']
+  pull_request:
+    paths: ['utmdm/**', '.github/workflows/utmdm-ci.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: utmdm-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: utmdm
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: utmdm/package-lock.json
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
