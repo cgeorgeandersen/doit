@@ -1,8 +1,9 @@
-export type Page = 'table' | 'rules' | 'history';
+export type Page = 'table' | 'rules' | 'data' | 'history';
 
 export const PAGES: { page: Page; label: string }[] = [
   { page: 'table', label: 'Table' },
   { page: 'rules', label: 'Rules' },
+  { page: 'data', label: 'Import & export' },
   { page: 'history', label: 'History' },
 ];
 

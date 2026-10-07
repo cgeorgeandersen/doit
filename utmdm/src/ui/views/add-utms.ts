@@ -7,6 +7,7 @@ import type { Ctx } from '../ctx';
 import { fill, h } from '../dom';
 import { fmtInt, plural } from '../format';
 import { icon } from '../icons';
+import { hashFor } from '../routes';
 
 // Kept between renders, so the text survives a re-render.
 let pasted = '';
@@ -117,7 +118,8 @@ export function addUtmsDrawer(ctx: Ctx, closeHref: string): HTMLElement {
     h('div', { class: 'form-actions' }, addButton),
     h('section', { class: 'soon' },
       h('p', { class: 'soon-title' }, icon('chart', 16), 'Google Analytics 4', h('span', { class: 'badge' }, 'Coming next')),
-      h('p', null, 'Connect a GA4 property and a Refresh button pulls every UTM that brought traffic, with its sessions, straight into this table.'),
+      h('p', null, 'Connect a GA4 property and a Refresh button pulls every UTM that brought traffic, with its sessions, straight into this table. ',
+        h('a', { href: hashFor('data') }, 'See what\'s planned')),
       button('Connect GA4', { disabled: true, title: 'Arrives with sign-in' })),
   );
 }

@@ -12,6 +12,10 @@ The problem it solves first: marketing teams have no shared place to classify UT
 
 The dashboard at the top shows how much is fully classified (a value in every column) and what's still empty, and the **Needs values** filter lists what's left.
 
+**Who it's for:** data-focused marketers and marketing-focused data people, whoever owns the campaign naming and gets asked why two dashboards disagree.
+
+**Import & export** is where UTMs come in and the classified table goes out. Pasting links or spreadsheet rows, uploading a CSV, downloading the table as CSV and backups all work now. Pulling and deduplicating UTMs from GA4, importing GA4 sessions, and writing to Snowflake, Databricks, BigQuery, Redshift, PostgreSQL or SQL Server are placeholders that show what's coming, including the exact table definition a warehouse would get.
+
 | MDM idea | In UTMDM |
 | --- | --- |
 | **One record per thing** | One row per UTM. Spellings that differ only in capitals, spaces or URL encoding merge into it, and every spelling is kept. |
@@ -50,9 +54,9 @@ A static site: Vite and plain TypeScript, no framework, no server. The engine is
 
 | Folder | What's in it |
 | --- | --- |
-| `src/core/` | `model` (the shapes), `normalize`, `rules` (matching and the rule sentence), `table` (applying a change, filling cells, coverage, rule previews), `workspace` (turning what someone did into a saved version), `paste` (links, spreadsheet rows, CSV), `csv` (export), `store`, `demo` |
+| `src/core/` | `model` (the shapes), `normalize`, `rules` (matching and the rule sentence), `table` (applying a change, filling cells, coverage, rule previews), `workspace` (turning what someone did into a saved version), `paste` (links, spreadsheet rows, CSV), `csv` (export), `warehouse` (the table definition a warehouse gets), `store`, `demo` |
 | `src/sources/ga4.ts` | The GA4 Data API request and parser, for the refresh that comes later. Not used by the demo yet. |
-| `src/ui/` | The three screens: Table (with the column and Add UTMs panels), Rules (the sentence builder with a live preview), History |
+| `src/ui/` | The four screens: Table (with the column and Add UTMs panels), Rules (the sentence builder with a live preview), Import & export, History |
 
 **Versions are a list of changes.** A workspace stores what was done (add these UTMs, add this rule, type this value), not the table itself. The table at any version is those changes applied in order, the way a bank balance is the sum of its transactions. That's why any version can be rebuilt or restored, and why each change can say exactly who did what.
 
@@ -60,4 +64,5 @@ A static site: Vite and plain TypeScript, no framework, no server. The engine is
 
 - **Sign-in and a shared database.** Today the workspace lives in this browser (`localStorage`), with backup and restore on the History page. `src/core/store.ts` is the seam: a hosted database (Postgres, for example Neon through Vercel) implements the same `load` and `save` behind sign-in, and the list of changes becomes a `changes` table, one row per version. TODO: pick the auth provider; one workspace per team.
 - **The GA4 refresh, with sessions.** `src/sources/ga4.ts` already builds the Data API `runReport` request (`sessionSource`, `sessionMedium`, `sessionCampaignName`, `sessionManualAdContent`, `sessionManualTerm`, with sessions and key events) and keeps only UTM-tagged sessions. A Refresh button would add the new UTMs the same way a paste does, and sessions would become a column so the busiest UTMs get classified first. TODO: Google sign-in for an `analytics.readonly` token, the property id, and `https://analyticsdata.googleapis.com` in the Content-Security-Policy.
+- **Warehouse destinations.** Write `utmdm.utm_classifications` (see `src/core/warehouse.ts`) to Snowflake, Databricks, BigQuery, Redshift, PostgreSQL or SQL Server on every new version, upserting on `utm_key`, with the rules and the change history alongside.
 - **Roles.** Who may add columns or change rules, once there's more than one person.

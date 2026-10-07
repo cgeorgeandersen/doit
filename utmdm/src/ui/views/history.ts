@@ -1,40 +1,18 @@
-import { tableCsv } from '../../core/csv';
-import { createDemoWorkspace } from '../../core/demo';
-import { parseWorkspace } from '../../core/store';
 import { historyEntries, restore } from '../../core/workspace';
 import { button, pageHeader } from '../components';
 import type { Ctx } from '../ctx';
 import { h } from '../dom';
 import { fmtDateTime, fmtInt, fmtPct, plural, timeAgo } from '../format';
 import { icon } from '../icons';
-import { downloadText } from './download';
+import { hashFor } from '../routes';
 
 const PAGE = 30;
 let shown = PAGE;
 
 export function historyView(ctx: Ctx): HTMLElement {
-  const { ws, book } = ctx;
+  const { book } = ctx;
   const entries = historyEntries(book).reverse();
   const current = ctx.version;
-
-  const file = h('input', {
-    type: 'file',
-    accept: 'application/json,.json',
-    id: 'restore-file',
-    class: 'sr-only',
-    onchange: async (e: Event) => {
-      const chosen = (e.target as HTMLInputElement).files?.[0];
-      if (!chosen) return;
-      try {
-        const backup = parseWorkspace(await chosen.text());
-        if (window.confirm(`Replace this workspace with the backup of ${backup.name} (${plural(backup.changes.length, 'version')})?`)) {
-          ctx.replace(backup, `Restored the backup of ${backup.name}.`);
-        }
-      } catch (error) {
-        ctx.toast(error instanceof Error && error.message.startsWith('That file') ? error.message : "That file isn't a UTMDM backup.");
-      }
-    },
-  });
 
   return h(
     'div',
@@ -93,28 +71,12 @@ export function historyView(ctx: Ctx): HTMLElement {
       h(
         'section',
         { class: 'card split-side' },
-        h('h2', null, 'Your data'),
+        h('h2', null, 'How versions work'),
         h('p', { class: 'card-intro' },
-          'This demo keeps the workspace in this browser, so clearing the browser clears it. Export the table, or download a backup of every version, any time.'),
-        h('div', { class: 'data-actions' },
-          button('Export the table (CSV)', {
-            icon: 'download',
-            onClick: () => downloadText(tableCsv(ctx.table, ctx.grid, current), `utmdm-table-v${current}.csv`, 'text/csv'),
-          }),
-          button('Download a backup', {
-            icon: 'download',
-            onClick: () => downloadText(JSON.stringify(ws), `utmdm-backup-v${current}-${ctx.now().slice(0, 10)}.json`, 'application/json'),
-          }),
-          h('label', { class: 'button button-secondary', for: 'restore-file' }, icon('upload'), 'Restore a backup', file),
-          button('Start the demo over', {
-            kind: 'danger',
-            icon: 'restore',
-            onClick: () => {
-              if (!window.confirm('Start the demo over? Everything you changed in this browser goes.')) return;
-              shown = PAGE;
-              ctx.replace({ ...createDemoWorkspace(ctx.now()), user: ws.user }, 'The demo is back to where it started.');
-            },
-          })),
+          'UTMDM keeps a list of what was done: added these UTMs, added this rule, typed this value. Any version of the table is that list replayed up to that point, ' +
+          'the way a bank balance is the sum of its transactions.'),
+        h('p', { class: 'card-intro' }, 'That is why a restore never loses anything: it is one more entry on the list, and it can be undone like any other.'),
+        h('p', { class: 'card-intro' }, 'Backups and exports are on ', h('a', { href: hashFor('data') }, 'Import & export'), '.'),
       ),
     ),
   );
