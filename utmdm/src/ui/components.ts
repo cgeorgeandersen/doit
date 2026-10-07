@@ -1,26 +1,6 @@
-import type { Outcome, Status } from '../core/classify';
-import type { UtmParts } from '../core/model';
-import { UTM_PARTS } from '../core/model';
 import { h, type Child } from './dom';
 import { fmtPct, share } from './format';
 import { icon, type IconName } from './icons';
-
-const STATUS_LABEL: Record<Status, string> = {
-  classified: 'Classified',
-  outstanding: 'Outstanding',
-  conflict: 'Conflict',
-};
-
-/** A status always comes with an icon and a word, never color alone. */
-export function statusChip(status: Status, text = STATUS_LABEL[status]): HTMLElement {
-  return h('span', { class: `chip chip-${status}` }, icon(status, 14), text);
-}
-
-/** A classification cell: the value, or the state that needs attention. */
-export function outcomeCell(outcome: Outcome | undefined): HTMLElement {
-  if (outcome?.status === 'classified') return h('span', { class: 'cell-value' }, outcome.value);
-  return statusChip(outcome?.status ?? 'outstanding', outcome?.status === 'conflict' ? 'Conflict' : 'Needed');
-}
 
 /** A share against a whole: the fill and its track are two steps of the same color. */
 export function meter(part: number, whole: number, label: string, size: 'big' | 'small' = 'small'): HTMLElement {
@@ -41,22 +21,12 @@ export function meter(part: number, whole: number, label: string, size: 'big' | 
   );
 }
 
-export function statTile(label: string, value: string, detail?: Child | Child[], tone?: Status): HTMLElement {
-  return h(
-    'div',
-    { class: 'stat' },
-    h('p', { class: 'stat-label' }, tone ? icon(tone, 15) : null, label),
-    h('p', { class: 'stat-value' }, value),
-    detail ? h('p', { class: 'stat-detail' }, detail) : null,
-  );
-}
-
 export function pageHeader(title: string, subtitle: Child | Child[], ...actions: Child[]): HTMLElement {
   return h(
     'header',
     { class: 'page-header' },
     h('div', { class: 'page-heading' }, h('h1', null, title), h('p', { class: 'page-subtitle' }, subtitle)),
-    actions.length ? h('div', { class: 'page-actions' }, ...actions) : null,
+    actions.some(Boolean) ? h('div', { class: 'page-actions' }, ...actions) : null,
   );
 }
 
@@ -66,31 +36,31 @@ interface ButtonOptions {
   onClick?: (event: Event) => void;
   disabled?: boolean;
   title?: string;
+  label?: string;
   id?: string;
   type?: 'button' | 'submit';
-  busy?: boolean;
 }
 
-export function button(label: Child, options: ButtonOptions = {}): HTMLButtonElement {
+export function button(text: Child, options: ButtonOptions = {}): HTMLButtonElement {
   return h(
     'button',
     {
       type: options.type ?? 'button',
-      class: `button button-${options.kind ?? 'secondary'}${options.busy ? ' is-busy' : ''}`,
+      class: `button button-${options.kind ?? 'secondary'}${text ? '' : ' button-icon'}`,
       onclick: options.onClick,
       disabled: options.disabled,
       title: options.title,
+      'aria-label': options.label,
       id: options.id,
-      'aria-busy': options.busy ? 'true' : null,
     },
     options.icon ? icon(options.icon) : null,
-    label,
+    text,
   );
 }
 
-export function linkButton(label: Child, href: string, options: Pick<ButtonOptions, 'icon' | 'kind' | 'title'> = {}): HTMLAnchorElement {
-  return h('a', { href, class: `button button-${options.kind ?? 'secondary'}`, title: options.title }, label,
-    options.icon ? icon(options.icon) : null);
+export function linkButton(text: Child, href: string, options: Pick<ButtonOptions, 'icon' | 'kind' | 'title'> = {}): HTMLAnchorElement {
+  return h('a', { href, class: `button button-${options.kind ?? 'secondary'}`, title: options.title },
+    options.icon ? icon(options.icon) : null, text);
 }
 
 export function select(
@@ -109,20 +79,23 @@ export function field(label: string, control: HTMLElement, hint?: Child): HTMLEl
     hint ? h('span', { class: 'field-hint' }, hint) : null);
 }
 
-/** A UTM's parts in a row, as written: source / medium / campaign / content / term. */
-export function utmText(parts: UtmParts, className = 'utm'): HTMLElement {
-  const shown = [...UTM_PARTS];
-  while (shown.length > 3 && !parts[shown[shown.length - 1]!].trim()) shown.pop();
-  return h(
-    'span',
-    { class: className },
-    ...shown.flatMap((part, i) => [
-      i ? h('span', { class: 'utm-sep', 'aria-hidden': 'true' }, ' / ') : null,
-      h('span', { class: `utm-part${parts[part] ? '' : ' is-empty'}`, title: `utm_${part}` }, parts[part] || '–'),
-    ]),
-  );
+export function emptyState(title: string, text: Child | Child[], ...actions: Child[]): HTMLElement {
+  return h('div', { class: 'empty' }, h('p', { class: 'empty-title' }, title), h('p', null, text),
+    actions.length ? h('div', { class: 'empty-actions' }, ...actions) : null);
 }
 
-export function emptyState(title: string, text: Child): HTMLElement {
-  return h('div', { class: 'empty' }, icon('classified', 28), h('p', { class: 'empty-title' }, title), h('p', null, text));
+/** A panel that slides in from the right. Escape or the backdrop goes to `closeHref`. */
+export function drawer(title: Child, closeHref: string, ...body: Child[]): HTMLElement {
+  return h(
+    'div',
+    { class: 'drawer-layer' },
+    h('a', { class: 'drawer-backdrop', href: closeHref, 'aria-label': 'Close', tabindex: -1 }),
+    h(
+      'aside',
+      { class: 'drawer', role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'drawer-title' },
+      h('div', { class: 'drawer-head' }, h('h2', { class: 'drawer-title', id: 'drawer-title' }, title),
+        h('a', { class: 'button button-ghost drawer-close', href: closeHref, 'aria-label': 'Close', title: 'Close (Esc)' }, icon('close'))),
+      ...body,
+    ),
+  );
 }

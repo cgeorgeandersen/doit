@@ -1,102 +1,81 @@
-/**
- * The data UTMDM keeps. Everything here is plain JSON, so a workspace can be
- * saved in the browser today and in a database tomorrow without changing shape.
+/*
+ * The shapes UTMDM works with. A workspace is a list of changes; the table at
+ * any version is what you get by applying the changes up to it, in order.
  */
 
 export const UTM_PARTS = ['source', 'medium', 'campaign', 'content', 'term'] as const;
 export type UtmPart = (typeof UTM_PARTS)[number];
 export type UtmParts = Record<UtmPart, string>;
 
-/** What a rule reads: one UTM part, or all five together ("any"). */
-export type RuleTarget = UtmPart | 'any';
-
-export const MATCH_TYPES = ['contains', 'exact', 'starts_with', 'regex'] as const;
-export type MatchType = (typeof MATCH_TYPES)[number];
-
-/**
- * One UTM in the permanent table. Spellings that differ only in case, spacing
- * or URL encoding ("FB / Paid_Social" and "fb / paid_social") are the same UTM:
- * they merge into one record, and every spelling is kept.
- */
+/** One row of the table: a UTM, with spellings that differ only in case, spaces or URL encoding merged into it. */
 export interface Utm {
-  key: string;            // the normalized parts, joined: the record's identity
-  parts: UtmParts;        // normalized
-  raw: UtmParts;          // as first seen
-  spellings: string[];    // every distinct raw spelling seen, as "source / medium / …"
-  firstSeen: string;      // the first period it appeared in, e.g. "2026-03"
-  lastSeen: string;
-  sessions: number;
-  keyEvents: number;
+  key: string;
+  /** Normalized: what rules read. */
+  parts: UtmParts;
+  /** The first spelling seen: what people read. */
+  raw: UtmParts;
+  /** Every spelling seen, as "source / medium / campaign / content / term". */
+  spellings: string[];
 }
 
-/** A classification: a controlled list of values, so "Paid Social" can't drift into "paid-social". */
-export interface Field {
+/** A column the team classifies UTMs by, such as Channel or Type. */
+export interface Column {
   id: string;
   name: string;
-  target: UtmPart;        // the UTM part its rules usually read
-  description: string;
-  values: string[];
 }
 
-/** Rules are data, not code: when this part matches this pattern, this field gets this value. */
+export const MATCH_OPS = ['contains', 'is', 'starts', 'ends'] as const;
+export type MatchOp = (typeof MATCH_OPS)[number];
+
+export interface Condition {
+  part: UtmPart;
+  op: MatchOp;
+  text: string;
+}
+
+/** If every condition holds, the column gets the value. */
 export interface Rule {
-  id: string;             // R1, R2, … never reused
-  field: string;
-  target: RuleTarget;
-  match: MatchType;
-  pattern: string;
+  id: string;
+  column: string;
+  when: Condition[];
   value: string;
-  priority: number;       // lower wins; a tie that disagrees is a conflict
-  active: boolean;
-  author: string;
-  createdAt: string;
-  note: string;
 }
 
-export interface Coverage {
-  utms: number;
-  classified: number;     // every field has a value
-  conflicts: number;      // at least one field where rules tie and disagree
-  sessions: number;
-  classifiedSessions: number;
-}
-
-/** Every change to the rules is a new version: a full copy of the rules, plus how far they got. */
-export interface Version {
-  number: number;
-  at: string;
-  author: string;
-  message: string;
+/** The table at one version. */
+export interface Table {
+  utms: Utm[];
+  columns: Column[];
+  /** In order: within a column, the first rule that matches fills the cell. */
   rules: Rule[];
-  coverage: Coverage;
+  /** Values people typed, by column id, then UTM key. A typed value beats every rule. */
+  typed: Record<string, Record<string, string>>;
 }
 
-/** One pull of UTMs from a source (GA4, or the demo's sample). */
-export interface Refresh {
+export type Op =
+  | { type: 'addUtms'; rows: UtmParts[] }
+  | { type: 'addColumn'; column: Column }
+  | { type: 'renameColumn'; id: string; name: string }
+  | { type: 'deleteColumn'; id: string }
+  | { type: 'setCell'; column: string; utm: string; value: string | null }
+  | { type: 'addRule'; rule: Rule }
+  | { type: 'updateRule'; rule: Rule }
+  | { type: 'deleteRule'; id: string }
+  | { type: 'moveRule'; id: string; to: number }
+  | { type: 'restore'; version: number }
+  | { type: 'batch'; ops: Op[] };
+
+/** One saved change. Version n is the table after change n. */
+export interface Change {
+  version: number;
   at: string;
-  source: string;
-  period: string;
-  rows: number;
-  newUtms: number;
-  updatedUtms: number;
-  newKeys: string[];      // the UTMs this refresh added to the table
-  coverage: Coverage;
+  author: string;
+  summary: string;
+  op: Op;
 }
 
 export interface Workspace {
-  schema: 1;
+  schema: 2;
+  name: string;
   user: string;
-  fields: Field[];
-  utms: Utm[];
-  rules: Rule[];          // the current version's rules
-  versions: Version[];
-  refreshes: Refresh[];
-  sampleCursor: number;   // the next month the demo's sample source will return
-}
-
-/** One row as a source reports it: a UTM, a period, and its traffic. */
-export interface SourceRow extends UtmParts {
-  period: string;
-  sessions: number;
-  keyEvents: number;
+  changes: Change[];
 }

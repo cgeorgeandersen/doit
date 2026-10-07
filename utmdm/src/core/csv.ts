@@ -1,5 +1,5 @@
-import { utmStatus, type Results } from './classify';
-import { UTM_PARTS, type Workspace } from './model';
+import { UTM_PARTS, type Table } from './model';
+import { cellOf, sortedUtms, type Grid } from './table';
 
 function cell(value: string | number): string {
   const text = String(value);
@@ -8,35 +8,13 @@ function cell(value: string | number): string {
   return /[",\n\r]/.test(safe) ? `"${safe.replace(/"/g, '""')}"` : safe;
 }
 
-/** The UTM table with every classification, the rule behind it, and the rules version it came from. */
-export function utmTableCsv(ws: Workspace, results: Results): string {
-  const version = ws.versions.at(-1)?.number ?? 0;
-  const header = [
-    ...UTM_PARTS.map((part) => `utm_${part}`),
-    'first_seen',
-    'last_seen',
-    'sessions',
-    'key_events',
-    'status',
-    ...ws.fields.flatMap((field) => [field.name.toLowerCase(), `${field.name.toLowerCase()}_rule`]),
-    'rules_version',
-  ];
-  const rows = ws.utms.map((utm) => {
-    const classification = results.get(utm.key);
-    return [
-      ...UTM_PARTS.map((part) => utm.raw[part]),
-      utm.firstSeen,
-      utm.lastSeen,
-      utm.sessions,
-      utm.keyEvents,
-      utmStatus(classification),
-      ...ws.fields.flatMap((field) => {
-        const outcome = classification?.[field.id];
-        const value = outcome?.status === 'classified' ? outcome.value! : `[${outcome?.status ?? 'outstanding'}]`;
-        return [value, (outcome?.rules ?? []).map((rule) => rule.id).join(' ')];
-      }),
-      version,
-    ];
-  });
+/** The table as a spreadsheet: the UTM parts as first seen, every column's value, and the version. */
+export function tableCsv(table: Table, grid: Grid, version: number): string {
+  const header = [...UTM_PARTS.map((part) => `utm_${part}`), ...table.columns.map((c) => c.name), 'version'];
+  const rows = sortedUtms(table.utms).map((utm) => [
+    ...UTM_PARTS.map((part) => utm.raw[part]),
+    ...table.columns.map((c) => cellOf(grid, utm.key, c.id).value),
+    version,
+  ]);
   return [header, ...rows].map((row) => row.map(cell).join(',')).join('\n') + '\n';
 }

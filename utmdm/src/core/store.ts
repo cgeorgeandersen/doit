@@ -11,7 +11,7 @@ export interface Store {
   clear(): void;
 }
 
-export const STORAGE_KEY = 'utmdm:workspace:v1';
+export const STORAGE_KEY = 'utmdm:workspace:v2';
 
 export function memoryStore(initial: Workspace | null = null): Store {
   let kept = initial ? structuredClone(initial) : null;
@@ -68,12 +68,11 @@ export function parseWorkspace(text: string): Workspace {
   const data = JSON.parse(text) as Partial<Workspace>;
   const valid =
     data &&
-    data.schema === 1 &&
-    Array.isArray(data.fields) &&
-    Array.isArray(data.utms) &&
-    Array.isArray(data.rules) &&
-    Array.isArray(data.versions) &&
-    Array.isArray(data.refreshes);
+    data.schema === 2 &&
+    typeof data.name === 'string' &&
+    typeof data.user === 'string' &&
+    Array.isArray(data.changes) &&
+    data.changes.every((c, i) => c && c.version === i + 1 && typeof c.summary === 'string' && c.op && typeof c.op.type === 'string');
   if (!valid) throw new Error("That file isn't a UTMDM backup.");
   return data as Workspace;
 }

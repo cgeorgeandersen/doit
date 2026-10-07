@@ -1,12 +1,7 @@
-import type { Utm } from '../core/model';
-
 const integer = new Intl.NumberFormat('en-US');
-const compact = new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 1 });
 const relative = new Intl.RelativeTimeFormat('en-US', { numeric: 'auto' });
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 export const fmtInt = (n: number) => integer.format(Math.round(n));
-export const fmtCompact = (n: number) => (Math.abs(n) < 10_000 ? fmtInt(n) : compact.format(n));
 
 export function share(part: number, whole: number): number {
   return whole ? part / whole : 0;
@@ -18,15 +13,7 @@ export function fmtPct(part: number, whole: number): string {
   return value > 0 && value < 1 ? '<1%' : value > 99 && value < 100 ? '>99%' : `${Math.round(value)}%`;
 }
 
-export function fmtPeriod(period: string): string {
-  const [year, month] = period.split('-');
-  const name = MONTHS[Number(month) - 1];
-  return name && year ? `${name} ${year}` : period;
-}
-
-export function seenRange(utm: Pick<Utm, 'firstSeen' | 'lastSeen'>): string {
-  return utm.firstSeen === utm.lastSeen ? fmtPeriod(utm.firstSeen) : `${fmtPeriod(utm.firstSeen)} – ${fmtPeriod(utm.lastSeen)}`;
-}
+export const plural = (n: number, one: string, many = `${one}s`) => `${fmtInt(n)} ${n === 1 ? one : many}`;
 
 export function timeAgo(iso: string, now = Date.now()): string {
   const seconds = Math.round((new Date(iso).getTime() - now) / 1000);

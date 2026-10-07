@@ -1,7 +1,7 @@
 /*
  * Design tokens. Teal is the brand and the meters (fill and track are two steps
- * of the same teal). Status colors are fixed and reserved for state, and always
- * come with an icon and a word: classified, outstanding, conflict.
+ * of the same teal). Amber is reserved for "needs a value" and always comes
+ * with a mark and a word, never color alone.
  */
 :root {
   --font-sans: 'Public Sans Variable', 'Public Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
@@ -34,6 +34,7 @@
   --critical: #d03b3b;
   --good-tint: #e8f6e8;
   --warning-tint: #fff5dd;
+  --warning-ink: #a87300;
   --serious-tint: #fdeee7;
   --danger-ink: #b42c2c;
 
@@ -61,7 +62,8 @@
     --accent-tint: #15302a;
     --focus: #62d5b4;
     --good-tint: #13301a;
-    --warning-tint: #362a0e;
+    --warning-tint: #2c230f;
+    --warning-ink: #fab219;
     --serious-tint: #3a2219;
     --danger-ink: #f08080;
     --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.3);
@@ -88,7 +90,8 @@
   --accent-tint: #15302a;
   --focus: #62d5b4;
   --good-tint: #13301a;
-  --warning-tint: #362a0e;
+  --warning-tint: #2c230f;
+  --warning-ink: #fab219;
   --serious-tint: #3a2219;
   --danger-ink: #f08080;
   --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.3);

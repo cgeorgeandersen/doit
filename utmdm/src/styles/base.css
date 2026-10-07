@@ -49,7 +49,8 @@ textarea {
   color: inherit;
 }
 
-input:not([type='radio']):not([type='checkbox']):not([type='file']),
+/* :where() keeps this at element weight, so any class can restyle a field. */
+input:where(:not([type='radio'], [type='checkbox'], [type='file'])),
 select {
   width: 100%;
   min-height: 38px;

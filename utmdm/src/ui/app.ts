@@ -1,152 +1,181 @@
-import { classifyWorkspace, coverage, outstanding } from '../core/classify';
-import { createDemoWorkspace, nextSampleMonth, refreshFromSample } from '../core/demo';
+import { createDemoWorkspace } from '../core/demo';
+import type { Workspace } from '../core/model';
 import type { Store } from '../core/store';
-import { SAMPLE_SOURCE } from '../sources/sample';
+import { resolve, type Grid } from '../core/table';
+import { latest, openBook, record, undo, versionOf, type Book } from '../core/workspace';
 import { button } from './components';
-import type { Ctx } from './ctx';
+import type { Ctx, ToastAction } from './ctx';
 import { fill, h } from './dom';
-import { fmtInt } from './format';
 import { icon } from './icons';
-import { dashboardView } from './views/dashboard';
+import { PAGES, hashFor, parseRoute } from './routes';
 import { historyView } from './views/history';
 import { rulesView } from './views/rules';
-import { utmsView } from './views/utms';
-import { PAGES, hashFor, parseRoute } from './routes';
+import { tableView } from './views/table';
 
 export function startApp(root: HTMLElement, store: Store, clock: () => string = () => new Date().toISOString()): void {
-  let ws = store.load() ?? createDemoWorkspace(clock());
-  store.save(ws);
-  let results = classifyWorkspace(ws);
-  let refreshing = false;
+  let book: Book = open(store.load() ?? createDemoWorkspace(clock()));
+  let grid: Grid = resolve(latest(book));
   let route = parseRoute(location.hash);
+  store.save(book.ws);
+
+  function open(ws: Workspace): Book {
+    try {
+      return openBook(ws);
+    } catch {
+      return openBook(createDemoWorkspace(clock()));
+    }
+  }
 
   const toastRegion = h('div', { class: 'toasts', role: 'status', 'aria-live': 'polite' });
-  const toast = (message: string) => {
-    const note = h('div', { class: 'toast' }, icon('check', 16), h('span', null, message));
+  function toast(message: string, actions: ToastAction[] = []): void {
+    const note = h('div', { class: 'toast' }, icon('check', 16), h('span', { class: 'toast-text' }, message));
+    const dismiss = () => {
+      note.classList.add('is-leaving');
+      setTimeout(() => note.remove(), 300);
+    };
+    if (actions.length) {
+      note.append(h('span', { class: 'toast-actions' }, ...actions.map((a) =>
+        h('button', { type: 'button', class: 'toast-action', onclick: () => { dismiss(); a.run(); } }, a.label))));
+    }
+    toastRegion.querySelectorAll('.toast').forEach((old, i, all) => i < all.length - 1 && old.remove());
     toastRegion.append(note);
-    setTimeout(() => note.classList.add('is-leaving'), 4200);
-    setTimeout(() => note.remove(), 4600);
-  };
+    setTimeout(dismiss, actions.length ? 9000 : 4500);
+  }
+
+  // A change made while the pointer is down (an edit saved because you clicked
+  // somewhere else) re-renders once the click lands, so the click isn't lost.
+  let pointerDown = false;
+  let pending = false;
+  document.addEventListener('pointerdown', () => (pointerDown = true), true);
+  document.addEventListener('pointerup', () => {
+    pointerDown = false;
+    setTimeout(() => pending && render(), 0);
+  }, true);
+  const schedule = () => (pointerDown ? (pending = true) : render());
+
+  function set(next: Book): void {
+    book = next;
+    grid = resolve(latest(book));
+    store.save(book.ws);
+  }
 
   const ctx: Ctx = {
-    get ws() { return ws; },
-    get results() { return results; },
-    get refreshing() { return refreshing; },
+    get book() { return book; },
+    get ws() { return book.ws; },
+    get table() { return latest(book); },
+    get grid() { return grid; },
+    get version() { return versionOf(book); },
     get params() { return route.params; },
     now: clock,
-    commit(next, message) {
-      if (next === ws) {
-        toast('Nothing changed, so no new version.');
-        return;
+    commit(draft, options = {}) {
+      const next = record(book, draft, clock());
+      if (!next) {
+        schedule();
+        return null;
       }
-      ws = next;
-      results = classifyWorkspace(ws);
-      store.save(ws);
-      render();
-      if (message) toast(message);
+      set(next);
+      const version = versionOf(book);
+      schedule();
+      toast(options.message ?? `Saved as version ${version}. ${draft.summary}.`, [
+        { label: 'Undo', run: () => undoVersion(version) },
+        ...(options.actions ?? []),
+      ]);
+      return version;
     },
+    render: schedule,
     go(hash) {
-      if (location.hash === hash) render();
+      if (location.hash === hash || (hash === '#/' && !location.hash)) render();
       else location.hash = hash;
     },
     toast,
-    async refresh() {
-      const month = nextSampleMonth(ws);
-      if (refreshing) return;
-      if (!month) {
-        toast("The sample data ends in September 2026, so you're up to date.");
-        return;
-      }
-      refreshing = true;
+    setUser(name) {
+      set({ ...book, ws: { ...book.ws, user: name } });
       render();
-      await new Promise((resolve) => setTimeout(resolve, 700)); // the feel of a real pull
-      const next = refreshFromSample(ws, clock())!;
-      refreshing = false;
-      const pulled = next.refreshes.at(-1)!;
-      const nextResults = classifyWorkspace(next);
-      const newOpen = outstanding(next.utms.filter((u) => pulled.newKeys.includes(u.key)), nextResults).length;
-      ctx.commit(next, `Pulled ${month.label}: ${fmtInt(pulled.rows)} rows, ${fmtInt(pulled.newUtms)} new UTMs, ${fmtInt(newOpen)} of them outstanding.`);
+      toast(`Thanks, ${name}. Your changes will show your name in History.`);
     },
-    reset() {
-      if (!window.confirm('Start the demo over? Your rules, versions and refreshes in this browser will be replaced.')) return;
-      store.clear();
-      ctx.commit(createDemoWorkspace(clock()), 'The demo is back to its first day.');
+    replace(ws, message) {
+      set(open(ws));
+      render();
+      toast(message);
     },
   };
 
+  function undoVersion(version: number): void {
+    if (versionOf(book) !== version) {
+      toast(`Version ${version} isn't the latest any more. Restore an earlier version from History instead.`);
+      return;
+    }
+    const next = record(book, undo(book, version), clock());
+    if (!next) return;
+    set(next);
+    render();
+    toast(`Undone. That's saved too, as version ${versionOf(book)}.`);
+  }
+
   function render(): void {
+    pending = false;
     const focused = document.activeElement?.id;
+    const scrollLeft = root.querySelector('.table-wrap')?.scrollLeft ?? 0;
     route = parseRoute(location.hash);
-    const view = { dashboard: dashboardView, utms: utmsView, rules: rulesView, history: historyView }[route.page](ctx);
+    const view = { table: tableView, rules: rulesView, history: historyView }[route.page](ctx);
     fill(root, h('a', { class: 'skip', href: '#main' }, 'Skip to content'), topbar(), h('main', { id: 'main', class: 'page' }, view),
       footer(), toastRegion);
     document.title = `${PAGES.find((p) => p.page === route.page)!.label} · UTMDM`;
-    if (focused) document.getElementById(focused)?.focus();
+    const wrap = root.querySelector('.table-wrap');
+    if (wrap) wrap.scrollLeft = scrollLeft;
+    if (focused) document.getElementById(focused)?.focus({ preventScroll: true });
   }
 
   function topbar(): HTMLElement {
-    const next = nextSampleMonth(ws);
     return h(
       'header',
       { class: 'topbar' },
       h(
         'div',
         { class: 'topbar-inner' },
-        h('a', { class: 'brand', href: '#/' }, logo(), h('span', { class: 'brand-name' }, 'UTMDM'),
-          h('span', { class: 'brand-tag' }, 'UTM master data')),
+        h('a', { class: 'brand', href: '#/' }, h('span', { class: 'logo', 'aria-hidden': 'true' }, icon('database', 18)),
+          h('span', { class: 'brand-name' }, 'UTMDM')),
+        h('span', { class: 'workspace', title: 'The shared workspace. In this demo it lives in your browser.' },
+          icon('columns', 14), book.ws.name),
         h('nav', { class: 'nav', 'aria-label': 'Main' },
           ...PAGES.map(({ page, label }) =>
             h('a', { href: hashFor(page), class: 'nav-link', 'aria-current': page === route.page ? 'page' : null }, label))),
-        h(
-          'div',
-          { class: 'topbar-actions' },
-          route.page === 'dashboard' ? null : button(refreshing ? 'Pulling…' : next ? 'Refresh' : 'Up to date', {
-            icon: 'refresh',
-            kind: 'secondary',
-            busy: refreshing,
-            disabled: refreshing || !next,
-            onClick: () => void ctx.refresh(),
-            title: next ? `Pull ${next.label} from ${SAMPLE_SOURCE}` : 'The sample data ends in September 2026',
-          }),
-          themeToggle(),
-          account(),
-        ),
+        h('div', { class: 'topbar-actions' },
+          h('a', { class: 'saved', href: hashFor('history'), title: 'Every change is saved as a version' },
+            icon('check', 14), `Saved · v${versionOf(book)}`),
+          themeToggle(), account()),
       ),
     );
   }
 
   function account(): HTMLElement {
-    const name = h('input', { id: 'account-name', value: ws.user, maxlength: 40, 'aria-label': 'Your name' });
+    const name = h('input', { id: 'account-name', value: book.ws.user, maxlength: 40, 'aria-label': 'Your name' });
+    const save = (event: Event) => {
+      event.preventDefault();
+      const value = name.value.replace(/\s+/g, ' ').trim();
+      if (value && value !== book.ws.user) ctx.setUser(value);
+    };
     return h(
       'details',
       { class: 'account' },
-      h('summary', { class: 'account-chip', title: 'Account' }, h('span', { class: 'avatar' }, (ws.user[0] ?? 'Y').toUpperCase()),
-        h('span', { class: 'account-name' }, ws.user)),
+      h('summary', { class: 'account-chip', title: 'Account' }, h('span', { class: 'avatar' }, (book.ws.user[0] ?? 'Y').toUpperCase()),
+        h('span', { class: 'account-name' }, book.ws.user)),
       h(
-        'div',
-        { class: 'account-panel' },
-        h('p', { class: 'account-title' }, icon('lock', 16), 'Only you, for now'),
-        h('p', null, 'Sign-in arrives with the hosted database. Until then this workspace lives in this browser, and nobody else sees it.'),
-        h('label', { class: 'field' }, h('span', { class: 'field-label' }, 'Your name, as it appears on versions'), name),
-        button('Save name', {
-          kind: 'primary',
-          onClick: () => {
-            const value = name.value.replace(/\s+/g, ' ').trim();
-            if (value && value !== ws.user) ctx.commit({ ...ws, user: value }, `Saved. New versions will say ${value}.`);
-          },
-        }),
+        'form',
+        { class: 'account-panel', onsubmit: save },
+        h('p', { class: 'account-title' }, icon('lock', 16), 'Just you, for now'),
+        h('p', null, 'Sign-in and a shared database come next, so your whole team works in this one table. ',
+          'Until then the workspace lives in this browser.'),
+        h('label', { class: 'field' }, h('span', { class: 'field-label' }, 'Your name, as History shows it'), name),
+        button('Save name', { kind: 'primary', type: 'submit' }),
       ),
     );
   }
 
   function footer(): HTMLElement {
-    const cov = coverage(ws.utms, results);
-    return h(
-      'footer',
-      { class: 'footer' },
-      h('p', null, h('strong', null, 'UTMDM'), ` demo · ${fmtInt(cov.utms)} UTMs of fictional data for Zestify, a made-up brand · `,
-        'everything stays in this browser.'),
-    );
+    return h('footer', { class: 'footer' },
+      h('p', null, h('strong', null, 'UTMDM'), ' demo. Zestify and its team are made up, and so are their UTMs. ',
+        'Everything you do here stays in this browser.'));
   }
 
   window.addEventListener('hashchange', () => {
@@ -154,24 +183,22 @@ export function startApp(root: HTMLElement, store: Store, clock: () => string = 
     document.querySelector<HTMLElement>('.drawer [data-autofocus]')?.focus();
   });
   document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape' && route.params.size) {
-      const close = document.querySelector<HTMLAnchorElement>('.drawer .drawer-close');
-      if (close) location.hash = close.getAttribute('href') ?? '#/';
-    }
+    if (event.key !== 'Escape' || event.defaultPrevented) return;
+    const close = document.querySelector<HTMLAnchorElement>('.drawer .drawer-close');
+    if (close) location.hash = close.getAttribute('href') ?? '#/';
+    document.querySelectorAll('details[open]').forEach((d) => d.removeAttribute('open'));
   });
   render();
-}
-
-function logo(): HTMLElement {
-  return h('span', { class: 'logo', 'aria-hidden': 'true' }, icon('database', 18));
 }
 
 function themeToggle(): HTMLElement {
   const dark = () => document.documentElement.dataset.theme
     ? document.documentElement.dataset.theme === 'dark'
     : window.matchMedia('(prefers-color-scheme: dark)').matches;
-  const control = button(icon(dark() ? 'sun' : 'moon'), {
+  const control = button(null, {
     kind: 'ghost',
+    icon: dark() ? 'sun' : 'moon',
+    label: 'Switch light or dark theme',
     title: dark() ? 'Light theme' : 'Dark theme',
     onClick: () => {
       const theme = dark() ? 'light' : 'dark';
@@ -185,6 +212,5 @@ function themeToggle(): HTMLElement {
       control.title = theme === 'dark' ? 'Light theme' : 'Dark theme';
     },
   });
-  control.setAttribute('aria-label', 'Switch light or dark theme');
   return control;
 }

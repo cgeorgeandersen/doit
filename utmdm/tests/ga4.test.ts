@@ -21,8 +21,8 @@ describe('the GA4 refresh', () => {
   });
 
   it('keeps UTM-tagged sessions only, and reads "(not set)" as empty', () => {
-    expect(parseRunReport(response, '2026-05')).toEqual([
-      { source: 'fb', medium: 'paid_social', campaign: 'sc-26', content: 'video', term: '', period: '2026-05', sessions: 1204, keyEvents: 31 },
+    expect(parseRunReport(response)).toEqual([
+      { source: 'fb', medium: 'paid_social', campaign: 'sc-26', content: 'video', term: '', sessions: 1204, keyEvents: 31 },
     ]);
   });
 
@@ -32,7 +32,7 @@ describe('the GA4 refresh', () => {
       seen = { url, init };
       return new Response(JSON.stringify(response), { status: 200 });
     }) as unknown as typeof fetch;
-    const rows = await fetchGa4Rows('123456', 'token', { startDate: '2026-05-01', endDate: '2026-05-31', period: '2026-05' }, fake);
+    const rows = await fetchGa4Rows('123456', 'token', { startDate: '2026-05-01', endDate: '2026-05-31' }, fake);
     expect(rows).toHaveLength(1);
     expect(seen!.url).toBe('https://analyticsdata.googleapis.com/v1beta/properties/123456:runReport');
     expect((seen!.init.headers as Record<string, string>).Authorization).toBe('Bearer token');

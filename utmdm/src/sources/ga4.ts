@@ -1,9 +1,11 @@
-import type { SourceRow } from '../core/model';
+import type { UtmParts } from '../core/model';
 
 /*
- * The real GA4 refresh, ready except for sign-in. GA4's Data API reports a
- * session's UTM values as these five dimensions; this builds the request,
- * sends it, and turns the answer into the same rows the sample source returns.
+ * The GA4 refresh, for later: not wired into the demo yet. GA4's Data API
+ * reports a session's UTM values as these five dimensions; this builds the
+ * request, sends it, and turns the answer into UTM rows with their sessions.
+ * The rows go into the table the same way a paste does (an addUtms change);
+ * sessions per UTM become a column of their own.
  *
  * TODO(sign-in): get an OAuth access token with the analytics.readonly scope
  * (Google Identity Services can do this in the browser), store the GA4
@@ -23,6 +25,11 @@ export const GA4_METRICS = ['sessions', 'keyEvents'] as const;
 // GA4 fills these in for sessions that carried no UTM campaign at all.
 const NOT_A_UTM = new Set(['(direct)', '(organic)', '(referral)', '(not set)', '(none)', '']);
 
+export interface Ga4Row extends UtmParts {
+  sessions: number;
+  keyEvents: number;
+}
+
 export interface RunReportResponse {
   rows?: { dimensionValues?: { value?: string }[]; metricValues?: { value?: string }[] }[];
 }
@@ -36,8 +43,8 @@ export function runReportBody(startDate: string, endDate: string) {
   };
 }
 
-/** GA4's answer as source rows: UTM-tagged sessions only, "(not set)" read as empty. */
-export function parseRunReport(response: RunReportResponse, period: string): SourceRow[] {
+/** GA4's answer as UTM rows: UTM-tagged sessions only, "(not set)" read as empty. */
+export function parseRunReport(response: RunReportResponse): Ga4Row[] {
   return (response.rows ?? []).flatMap((row) => {
     const [source, medium, campaign, content, term] = GA4_DIMENSIONS.map((_, i) => row.dimensionValues?.[i]?.value ?? '');
     if (NOT_A_UTM.has(campaign!)) return [];
@@ -49,7 +56,6 @@ export function parseRunReport(response: RunReportResponse, period: string): Sou
       campaign: campaign!,
       content: blank(content!),
       term: blank(term!),
-      period,
       sessions: sessions!,
       keyEvents: keyEvents!,
     }];
@@ -59,14 +65,14 @@ export function parseRunReport(response: RunReportResponse, period: string): Sou
 export async function fetchGa4Rows(
   propertyId: string,
   accessToken: string,
-  range: { startDate: string; endDate: string; period: string },
+  range: { startDate: string; endDate: string },
   request: typeof fetch = fetch,
-): Promise<SourceRow[]> {
+): Promise<Ga4Row[]> {
   const response = await request(`https://analyticsdata.googleapis.com/v1beta/properties/${encodeURIComponent(propertyId)}:runReport`, {
     method: 'POST',
     headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
     body: JSON.stringify(runReportBody(range.startDate, range.endDate)),
   });
   if (!response.ok) throw new Error(`GA4 answered ${response.status}: ${await response.text()}`);
-  return parseRunReport((await response.json()) as RunReportResponse, range.period);
+  return parseRunReport((await response.json()) as RunReportResponse);
 }

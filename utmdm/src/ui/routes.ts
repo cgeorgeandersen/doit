@@ -1,20 +1,19 @@
-export type Page = 'dashboard' | 'utms' | 'rules' | 'history';
+export type Page = 'table' | 'rules' | 'history';
 
 export const PAGES: { page: Page; label: string }[] = [
-  { page: 'dashboard', label: 'Dashboard' },
-  { page: 'utms', label: 'UTM table' },
+  { page: 'table', label: 'Table' },
   { page: 'rules', label: 'Rules' },
   { page: 'history', label: 'History' },
 ];
 
 export function parseRoute(hash: string): { page: Page; params: URLSearchParams } {
   const [path = '', query = ''] = hash.replace(/^#\/?/, '').split('?');
-  const page = PAGES.find((p) => p.page === path)?.page ?? 'dashboard';
+  const page = PAGES.find((p) => p.page === path)?.page ?? 'table';
   return { page, params: new URLSearchParams(query) };
 }
 
-/** A link inside the app, e.g. hashFor('utms', { status: 'outstanding' }) → "#/utms?status=outstanding". */
+/** A link inside the app, e.g. hashFor('table', { show: 'open' }) → "#/?show=open". */
 export function hashFor(page: Page, params: Record<string, string | null | undefined> = {}): string {
   const query = new URLSearchParams(Object.entries(params).filter((e): e is [string, string] => Boolean(e[1]))).toString();
-  return `#/${page === 'dashboard' ? '' : page}${query ? `?${query}` : ''}`;
+  return `#/${page === 'table' ? '' : page}${query ? `?${query}` : ''}`;
 }

@@ -1,241 +1,310 @@
-import { fieldCoverage } from '../../core/classify';
-import { InvalidRule } from '../../core/match';
-import type { Field, Rule, RuleTarget } from '../../core/model';
-import {
-  DEFAULT_PRIORITY,
-  addRule,
-  addValue,
-  describeCondition,
-  isSingleUtmRule,
-  ruleReach,
-  updateRule,
-  type RuleDraft,
-} from '../../core/workspace';
-import { button, field as labeled, linkButton, meter, outcomeCell, pageHeader, select, utmText } from '../components';
+import type { Condition, MatchOp, Op, Rule, Table, UtmPart } from '../../core/model';
+import { MATCH_OPS, UTM_PARTS } from '../../core/model';
+import { displayUtm } from '../../core/normalize';
+import { OP_LABEL } from '../../core/rules';
+import { apply, cellOf, columnValues, coverage, previewRule, resolve, ruleReach, rulesFor, type Grid } from '../../core/table';
+import { addRule, deleteRule, draftRule, moveRule, newId, updateRule } from '../../core/workspace';
+import { button, emptyState, linkButton, pageHeader, select } from '../components';
 import type { Ctx } from '../ctx';
-import { h } from '../dom';
-import { fmtInt, fmtPct } from '../format';
+import { fill, h, type Child } from '../dom';
+import { fmtInt, fmtPct, plural } from '../format';
 import { icon } from '../icons';
 import { hashFor } from '../routes';
-import { MATCH_OPTIONS, PART_OPTIONS } from './utm-drawer';
 
-const NEW_VALUE = '__new__';
+interface Builder {
+  editing: string | null;
+  column: string;
+  when: Condition[];
+  value: string;
+}
+
+const PART_OPTIONS = UTM_PARTS.map((p) => [p, p] as const);
+const OP_OPTIONS = MATCH_OPS.map((o) => [o, OP_LABEL[o]] as const);
+const blankCondition = (part: UtmPart = 'campaign'): Condition => ({ part, op: 'contains', text: '' });
+
+// Kept between renders, so a half-written rule survives a save elsewhere.
+let builder: Builder | null = null;
+let prefilled = '';
 
 export function rulesView(ctx: Ctx): HTMLElement {
-  const { ws, results, params } = ctx;
-  const editing = ws.rules.find((rule) => rule.id === params.get('rule'));
-  const creating = ws.fields.find((f) => f.id === params.get('new'));
-  const coverageByField = new Map(fieldCoverage(ws.fields, ws.utms, results).map((fc) => [fc.field.id, fc]));
+  const { table, grid, params } = ctx;
+  prefill(table, params);
+  if (!builder || !table.columns.some((c) => c.id === builder!.column)) {
+    builder = { editing: null, column: table.columns[0]?.id ?? '', when: [blankCondition()], value: '' };
+  }
+  if (builder.editing && !table.rules.some((r) => r.id === builder!.editing)) builder.editing = null;
+
+  const cov = coverage(table, grid);
+  const reach = ruleReach(table, grid);
 
   return h(
     'div',
     { class: 'view view-rules' },
-    pageHeader(
-      'Rules',
-      'Rules are data, not code: when a UTM part matches a pattern, a classification gets a value. The lowest priority number wins, and a tie that disagrees is a conflict, never a guess. Every change saves a new version.',
-      linkButton('New rule', hashFor('rules', { new: ws.fields[0]?.id }), { icon: 'plus', kind: 'primary' }),
-    ),
-    ...ws.fields.map((f) => {
-      const fc = coverageByField.get(f.id)!;
-      const rules = ws.rules
-        .filter((rule) => rule.field === f.id)
-        .sort((a, b) => Number(b.active) - Number(a.active) || a.priority - b.priority || Number(a.id.slice(1)) - Number(b.id.slice(1)));
+    pageHeader('Rules',
+      'Write a rule once and it fills every matching UTM, including ones you add later. Within a column the rules are checked top to bottom, ' +
+      'and the first one that matches fills the cell. A value typed in the table always beats a rule.'),
+    table.columns.length
+      ? builderCard(ctx)
+      : emptyState('Add a column first', 'A rule fills a column, so start with one, like Channel or Type.',
+        linkButton('Add a column', hashFor('table', { column: 'new' }), { icon: 'plus', kind: 'primary' })),
+    ...table.columns.map((column) => {
+      const rules = rulesFor(table, column.id);
+      const c = cov.columns.find((x) => x.column.id === column.id)!;
       return h(
         'section',
-        { class: 'card rules-card' },
-        h(
-          'div',
-          { class: 'card-head' },
-          h('div', null, h('h2', null, f.name), h('p', { class: 'card-intro' }, f.description)),
-          h('div', { class: 'rules-card-cover' }, h('span', { class: 'field-row-pct' }, `${fmtPct(fc.classified, ws.utms.length)} classified`),
-            meter(fc.classified, ws.utms.length, `${f.name} classified`)),
-        ),
+        { class: 'card rule-group', id: `rules-${column.id}` },
+        h('div', { class: 'card-head' },
+          h('div', null, h('h2', null, column.name),
+            h('p', { class: 'card-intro' }, `${fmtPct(c.filled, cov.utms)} filled: ${fmtInt(c.byRule)} by rules, ${fmtInt(c.typed)} typed, `,
+              h('a', { href: hashFor('table', { empty: column.id }) }, `${fmtInt(cov.utms - c.filled)} empty`))),
+          button(`Rule for ${column.name}`, {
+            icon: 'plus',
+            kind: 'ghost',
+            onClick: () => {
+              builder = { editing: null, column: column.id, when: [blankCondition(rules[0]?.when[0]?.part)], value: '' };
+              ctx.render();
+              focusBuilder();
+            },
+          })),
         rules.length
-          ? h('div', { class: 'table-wrap' }, h(
-            'table',
-            { class: 'rules-table' },
-            h('thead', null, h('tr', null, h('th', null, 'Rule'), h('th', null, 'When'), h('th', null, 'Then'),
-              h('th', { class: 'num' }, 'Priority'), h('th', { class: 'num' }, 'Matches now'), h('th', null, 'On'), h('th', null, h('span', { class: 'sr-only' }, 'Edit')))),
-            h('tbody', null, ...rules.map((rule) => ruleRow(ctx, rule))),
-          ))
-          : h('p', { class: 'muted' }, 'No rules yet.'),
-        h(
-          'div',
-          { class: 'values' },
-          h('span', { class: 'field-label' }, 'Values'),
-          ...f.values.map((v) => h('span', { class: 'value-chip' }, v)),
-          valueAdder(ctx, f),
-          linkButton('Add rule', hashFor('rules', { new: f.id }), { icon: 'plus', kind: 'ghost' }),
-        ),
+          ? h('ol', { class: 'rule-list' }, ...rules.map((rule, i) => ruleRow(ctx, rule, i, rules.length, reach.get(rule.id)!)))
+          : h('p', { class: 'muted' }, `No rules yet, so every ${column.name} is typed by hand.`),
       );
     }),
-    editing || creating ? ruleEditor(ctx, editing ?? null, (editing ? ws.fields.find((f) => f.id === editing.field) : creating)!) : null,
   );
 }
 
-function ruleRow(ctx: Ctx, rule: Rule): HTMLElement {
-  const { ws, results } = ctx;
-  let matches = '–';
-  try {
-    matches = fmtInt(ruleReach(ws, results, rule).utms.length);
-  } catch {
-    // a rule that no longer compiles matches nothing
+function prefill(table: Table, params: URLSearchParams): void {
+  const key = params.toString();
+  if (!key) prefilled = '';
+  if (!key || key === prefilled) return;
+  prefilled = key;
+  const editing = table.rules.find((r) => r.id === params.get('edit'));
+  if (editing) {
+    builder = { editing: editing.id, column: editing.column, when: editing.when.map((c) => ({ ...c })), value: editing.value };
+    return;
   }
-  const toggle = h(
-    'button',
-    {
-      type: 'button',
-      class: 'switch',
-      role: 'switch',
-      'aria-checked': String(rule.active),
-      'aria-label': `${rule.active ? 'Turn off' : 'Turn on'} ${rule.id}`,
-      onclick: () =>
-        ctx.commit(updateRule(ws, rule.id, { active: !rule.active }, ctx.now()),
-          `${rule.id} is ${rule.active ? 'off' : 'on'}. That's version ${ws.versions.at(-1)!.number + 1}.`),
-    },
-    h('span', { class: 'switch-knob' }),
-  );
-  return h(
-    'tr',
-    { class: rule.active ? '' : 'is-off' },
-    h('td', null, h('code', null, rule.id)),
-    h('td', { class: 'rule-when' }, isSingleUtmRule(rule) ? h('span', null, 'this UTM only: ', utmText(keyParts(rule.pattern))) : describeCondition(rule)),
-    h('td', null, h('strong', null, rule.value)),
-    h('td', { class: 'num' }, fmtInt(rule.priority)),
-    h('td', { class: 'num' }, matches),
-    h('td', null, toggle),
-    h('td', null, h('a', { href: hashFor('rules', { rule: rule.id }), class: 'link' }, 'Edit')),
-  );
+  const column = params.get('column');
+  if (!table.columns.some((c) => c.id === column)) return;
+  const part = (UTM_PARTS as readonly string[]).includes(params.get('part') ?? '') ? params.get('part') as UtmPart : 'campaign';
+  const op = (MATCH_OPS as readonly string[]).includes(params.get('op') ?? '') ? params.get('op') as MatchOp : 'contains';
+  builder = { editing: null, column: column!, when: [{ part, op, text: params.get('text') ?? '' }], value: params.get('value') ?? '' };
 }
 
-function keyParts(key: string) {
-  const [source = '', medium = '', campaign = '', content = '', term = ''] = key.split(' | ');
-  return { source, medium, campaign, content, term };
-}
-
-function valueAdder(ctx: Ctx, f: Field): HTMLElement {
-  const input = h('input', { id: `add-value-${f.id}`, placeholder: 'New value', 'aria-label': `New ${f.name} value`, maxlength: 60 });
-  const add = () => {
-    try {
-      ctx.commit(addValue(ctx.ws, f.id, input.value), `Added "${input.value.trim()}" to ${f.name}.`);
-    } catch (e) {
-      ctx.toast((e as Error).message);
-    }
-  };
-  input.addEventListener('keydown', (event) => {
-    if (event.key === 'Enter') add();
+function focusBuilder(): void {
+  requestAnimationFrame(() => {
+    const card = document.getElementById('builder');
+    card?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    const empty = [...(card?.querySelectorAll<HTMLInputElement>('input') ?? [])].find((i) => !i.value);
+    (empty ?? card?.querySelector<HTMLInputElement>('input'))?.focus();
   });
-  return h('span', { class: 'value-adder' }, input, button('Add', { onClick: add }));
 }
 
-function ruleEditor(ctx: Ctx, rule: Rule | null, f: Field): HTMLElement {
-  const { ws, results } = ctx;
-  const close = hashFor('rules');
-  const fieldSelect = select(ws.fields.map((x) => [x.id, x.name] as const), f.id, {
-    id: 'rule-field',
-    disabled: Boolean(rule),
-    onchange: () => ctx.go(hashFor('rules', { new: fieldSelect.value })),
-  });
-  const part = select(PART_OPTIONS, rule?.target ?? f.target, { id: 'rule-part', onchange: () => update() });
-  const match = select(MATCH_OPTIONS, rule?.match ?? 'contains', { id: 'rule-match', onchange: () => update() });
-  const pattern = h('input', { id: 'rule-pattern', value: rule?.pattern ?? '', placeholder: 'summer cup', oninput: () => update(), 'data-autofocus': true });
-  const valueSelect = select([['', 'Choose a value…'], ...f.values.map((v) => [v, v] as const), [NEW_VALUE, '+ New value…']], rule?.value ?? '',
-    { id: 'rule-value', onchange: () => update() });
-  const newValue = h('input', { id: 'rule-new-value', placeholder: `New ${f.name.toLowerCase()} value`, oninput: () => update() });
-  const newWrap = h('div', { class: 'new-value', hidden: true }, newValue);
-  const priority = h('input', { id: 'rule-priority', type: 'number', min: 0, step: 1, value: rule?.priority ?? DEFAULT_PRIORITY, oninput: () => update() });
-  const note = h('input', { id: 'rule-note', value: rule?.note ?? '', placeholder: 'Why this rule exists (optional)' });
-  const test = h('div', { class: 'rule-test', 'aria-live': 'polite' });
+/** "If [campaign] [contains] [cup] then [Type] is [Marketing]", with a live preview of what it would do. */
+function builderCard(ctx: Ctx): HTMLElement {
+  const { table, grid } = ctx;
+  const b = builder!;
+  const preview = h('div', { class: 'preview', 'aria-live': 'polite' });
   const error = h('p', { class: 'form-error', role: 'alert' });
-  const save = button(rule ? 'Save changes' : 'Save rule', { kind: 'primary', icon: 'check', id: 'rule-save' });
+  const values = h('datalist', { id: 'rule-values' });
+  const fillValues = () => fill(values, ...columnValues(table, b.column).map((v) => h('option', { value: v })));
+  fillValues();
 
-  const draft = (): RuleDraft => ({
-    field: f.id,
-    target: part.value as RuleTarget,
-    match: match.value as RuleDraft['match'],
-    pattern: pattern.value,
-    value: valueSelect.value === NEW_VALUE ? newValue.value.trim() : valueSelect.value,
-    priority: Number(priority.value),
-    note: note.value,
+  const draft = (): Rule => draftRule(table, b, b.editing ?? newId(ctx.book, 'r'));
+  const update = () => {
+    error.textContent = '';
+    renderPreview(preview, table, grid, draft());
+  };
+  const rebuild = (focus?: string) => {
+    const next = builderCard(ctx);
+    document.getElementById('builder')?.replaceWith(next);
+    if (focus) next.querySelector<HTMLElement>(focus)?.focus();
+  };
+
+  const conditionRows = b.when.map((condition, i) => h(
+    'div',
+    { class: 'sentence-row' },
+    h('span', { class: 'word' }, i === 0 ? 'If' : 'and'),
+    select(PART_OPTIONS, condition.part, {
+      'aria-label': `Condition ${i + 1}: which part of the UTM`,
+      onchange: (e: Event) => {
+        condition.part = (e.target as HTMLSelectElement).value as UtmPart;
+        update();
+      },
+    }),
+    select(OP_OPTIONS, condition.op, {
+      'aria-label': `Condition ${i + 1}: how it matches`,
+      onchange: (e: Event) => {
+        condition.op = (e.target as HTMLSelectElement).value as MatchOp;
+        update();
+      },
+    }),
+    h('input', {
+      class: `cond-text cond-${i}`,
+      value: condition.text,
+      placeholder: i === 0 ? 'cup' : 'text',
+      autocomplete: 'off',
+      spellcheck: 'false',
+      'aria-label': `Condition ${i + 1}: text`,
+      oninput: (e: Event) => {
+        condition.text = (e.target as HTMLInputElement).value;
+        update();
+      },
+    }),
+    b.when.length > 1
+      ? button(null, {
+        kind: 'ghost', icon: 'close', label: `Remove condition ${i + 1}`, title: 'Remove this condition',
+        onClick: () => {
+          b.when.splice(i, 1);
+          rebuild('.cond-0');
+        },
+      })
+      : null,
+  ));
+
+  const columnSelect = select(ctx.table.columns.map((c) => [c.id, c.name] as const), b.column, {
+    'aria-label': 'Column the rule fills',
+    onchange: (e: Event) => {
+      b.column = (e.target as HTMLSelectElement).value;
+      fillValues();
+      update();
+    },
+  });
+  const valueInput = h('input', {
+    class: 'rule-value',
+    value: b.value,
+    list: 'rule-values',
+    placeholder: 'Marketing',
+    autocomplete: 'off',
+    'aria-label': 'Value the rule fills in',
+    oninput: (e: Event) => {
+      b.value = (e.target as HTMLInputElement).value;
+      update();
+    },
   });
 
-  function update(): void {
-    newWrap.hidden = valueSelect.value !== NEW_VALUE;
-    error.textContent = '';
-    const d = draft();
-    if (!d.pattern.trim()) {
-      test.replaceChildren(h('p', { class: 'muted' }, 'Type a pattern to see which UTMs it matches.'));
-      save.disabled = true;
+  const save = (event: Event) => {
+    event.preventDefault();
+    const result = b.editing ? updateRule(table, b.editing, b) : addRule(ctx.book, b);
+    if (result.problem) {
+      error.textContent = result.problem;
       return;
     }
-    try {
-      const r = ruleReach(ws, results, d);
-      test.replaceChildren(
-        h('p', { class: 'reach' }, icon('spark', 14),
-          `Matches ${fmtInt(r.utms.length)} ${r.utms.length === 1 ? 'UTM' : 'UTMs'} (${fmtInt(r.sessions)} sessions); `
-          + `${fmtInt(r.open)} of them don't have a ${f.name.toLowerCase()} yet.`),
-        r.utms.length
-          ? h('ul', { class: 'test-list' }, ...r.utms.slice(0, 8).map((u) =>
-            h('li', null, utmText(u.raw), h('span', { class: 'test-now' }, outcomeCell(results.get(u.key)?.[f.id])))))
-          : h('p', { class: 'muted' }, 'Nothing in the table matches it yet. It will catch future UTMs that do.'),
-      );
-      save.disabled = !d.value;
-    } catch (e) {
-      test.replaceChildren();
-      error.textContent = (e as Error).message;
-      save.disabled = true;
+    const delta = filledDelta(table, grid, result.op, result.rule.column);
+    const effect = delta > 0 ? ` It fills ${plural(delta, 'more cell')}.` : delta < 0 ? ` ${plural(-delta, 'cell')} went back to empty.` : '';
+    const kept = builder;
+    builder = { editing: null, column: b.column, when: [blankCondition(b.when[0]?.part)], value: '' };
+    if (ctx.params.size) ctx.go(hashFor('rules'));
+    const version = ctx.commit(result, { message: `Saved as version ${ctx.version + 1}. ${result.summary}.${effect}` });
+    if (version === null) {
+      builder = kept;
+      ctx.toast('That rule is already there, unchanged.');
     }
-  }
+  };
 
-  save.addEventListener('click', () => {
-    try {
-      const d = draft();
-      let next = ws;
-      if (valueSelect.value === NEW_VALUE) next = addValue(next, f.id, d.value);
-      next = rule ? updateRule(next, rule.id, d, ctx.now()) : addRule(next, d, ctx.now());
-      if (next === ws) {
-        ctx.toast('Nothing changed, so no new version.');
-        return;
-      }
-      ctx.commit(next, `Version ${next.versions.at(-1)!.number} saved.`);
-      ctx.go(close);
-    } catch (e) {
-      error.textContent = e instanceof InvalidRule ? e.message : `Couldn't save: ${(e as Error).message}`;
-    }
-  });
-
-  const panel = h(
-    'div',
-    { class: 'drawer-layer' },
-    h('a', { class: 'drawer-backdrop', href: close, 'aria-label': 'Close', tabindex: -1 }),
-    h(
-      'aside',
-      { class: 'drawer', role: 'dialog', 'aria-labelledby': 'editor-title' },
-      h('div', { class: 'drawer-head' },
-        h('div', null, h('p', { class: 'eyebrow' }, rule ? `${rule.id} · written by ${rule.author}` : 'New rule'),
-          h('h2', { id: 'editor-title', class: 'drawer-title' }, rule ? 'Edit rule' : `New ${f.name.toLowerCase()} rule`)),
-        h('a', { class: 'drawer-close button button-ghost', href: close, 'aria-label': 'Close' }, icon('close', 18))),
-      h('div', { class: 'form' },
-        labeled('Classification', fieldSelect),
-        h('fieldset', { class: 'scope' }, h('legend', { class: 'field-label' }, 'When'), h('div', { class: 'scope-rule' }, part, match, pattern)),
-        labeled('Then set it to', valueSelect),
-        newWrap,
-        labeled('Priority', priority, 'Lower wins. 100 for general patterns, 10 for decisions about specific UTMs.'),
-        labeled('Note', note),
-        h('h3', { class: 'test-title' }, 'Test this rule'),
-        test,
-        error,
-        h('div', { class: 'form-actions' }, save,
-          rule ? button(rule.active ? 'Turn off' : 'Turn on', {
-            onClick: () => {
-              ctx.commit(updateRule(ws, rule.id, { active: !rule.active }, ctx.now()), `${rule.id} is ${rule.active ? 'off' : 'on'}.`);
-              ctx.go(close);
-            },
-          }) : null,
-          h('a', { class: 'button button-ghost', href: close }, 'Cancel')),
-      ),
-    ),
+  const card = h(
+    'form',
+    { class: `card builder${b.editing ? ' is-editing' : ''}`, id: 'builder', onsubmit: save },
+    h('div', { class: 'card-head' }, h('h2', null, b.editing ? 'Edit rule' : 'New rule'),
+      h('p', { class: 'card-intro' }, 'Matching ignores capitals, spaces and URL encoding.')),
+    h('div', { class: 'sentence' },
+      ...conditionRows,
+      h('div', { class: 'sentence-row' },
+        button('and…', {
+          kind: 'ghost', icon: 'plus', title: 'Add a condition: every condition has to match',
+          onClick: () => {
+            b.when.push(blankCondition(b.when.at(-1)?.part === 'campaign' ? 'medium' : 'campaign'));
+            rebuild(`.cond-${b.when.length - 1}`);
+          },
+        })),
+      h('div', { class: 'sentence-row' }, h('span', { class: 'word' }, 'then'), columnSelect, h('span', { class: 'word' }, 'is'), valueInput, values)),
+    preview,
+    error,
+    h('div', { class: 'form-actions' },
+      button(b.editing ? 'Save rule' : 'Add rule', { kind: 'primary', type: 'submit', icon: b.editing ? 'check' : 'plus' }),
+      b.editing || b.when.some((c) => c.text) || b.value
+        ? button(b.editing ? 'Cancel' : 'Clear', {
+          kind: 'ghost',
+          onClick: () => {
+            builder = { editing: null, column: b.column, when: [blankCondition()], value: '' };
+            if (ctx.params.size) ctx.go(hashFor('rules'));
+            else rebuild();
+          },
+        })
+        : null),
   );
-  update();
-  return panel;
+  renderPreview(preview, table, grid, draft());
+  return card;
+}
+
+/** How many more cells in the column have a value after the change (negative: fewer). */
+function filledDelta(table: Table, grid: Grid, op: Op, column: string): number {
+  const next = apply(table, op, () => undefined);
+  const nextGrid = resolve(next);
+  const filled = (t: Table, g: Grid) => t.utms.filter((u) => cellOf(g, u.key, column).from !== 'empty').length;
+  return filled(next, nextGrid) - filled(table, grid);
+}
+
+function renderPreview(host: HTMLElement, table: Table, grid: Grid, rule: Rule): void {
+  const ready = !rule.when.some((c) => !c.text) && rule.value;
+  if (!rule.when.some((c) => c.text)) {
+    fill(host, h('p', { class: 'muted' }, 'Type what the UTM should contain to see which UTMs it matches.'));
+    return;
+  }
+  const p = previewRule(table, grid, rule);
+  const column = table.columns.find((c) => c.id === rule.column)?.name ?? '';
+  const lines: Child[] = [];
+  if (!p.matches.length) {
+    fill(host, h('p', { class: 'preview-head' }, icon('outstanding', 14), 'Matches no UTMs yet. It will still fill any that arrive later.'));
+    return;
+  }
+  if (ready) {
+    lines.push(h('li', null, h('strong', null, plural(p.fillsEmpty, 'empty cell')), ` would get ${rule.value}`));
+    if (p.changes) lines.push(h('li', null, h('strong', null, plural(p.changes, 'cell')), ' would change from another value'));
+    if (p.completes) lines.push(h('li', null, h('strong', null, plural(p.completes, 'UTM')), ' would become fully classified'));
+  }
+  if (p.takenAbove) lines.push(h('li', null, `${plural(p.takenAbove, 'match', 'matches')} keep${p.takenAbove === 1 ? 's' : ''} the value from a rule above it`,
+    ' (move this rule up to make it win)'));
+  if (p.typed) lines.push(h('li', null, `${plural(p.typed, 'match', 'matches')} keep${p.typed === 1 ? 's' : ''} a typed value`));
+  const broad = p.matches.length === table.utms.length && table.utms.length > 3;
+  fill(
+    host,
+    h('p', { class: 'preview-head' }, icon('bolt', 14), `Matches ${plural(p.matches.length, 'UTM')}${ready ? '' : '. Add the value to see what it fills'}.`),
+    lines.length ? h('ul', { class: 'preview-lines' }, ...lines) : null,
+    broad ? h('p', { class: 'preview-warn' }, icon('outstanding', 14), `It matches every UTM. A rule this broad fills ${column} for things it was never meant to.`) : null,
+    h('ul', { class: 'preview-examples' }, ...p.matches.slice(0, 6).map((u) => {
+      const now = cellOf(grid, u.key, rule.column);
+      return h('li', null, h('span', { class: 'utm' }, displayUtm(u.raw)),
+        h('span', { class: 'preview-now' }, now.value ? `now ${now.value}` : 'now empty'));
+    }), p.matches.length > 6 ? h('li', { class: 'muted' }, `and ${fmtInt(p.matches.length - 6)} more`) : null),
+  );
+}
+
+function ruleRow(ctx: Ctx, rule: Rule, i: number, count: number, reach: { matches: number; fills: number }): HTMLElement {
+  const { table } = ctx;
+  const shadowed = reach.matches - reach.fills;
+  return h(
+    'li',
+    { class: `rule-row${builder?.editing === rule.id ? ' is-editing' : ''}` },
+    h('span', { class: 'rule-n', 'aria-hidden': 'true' }, String(i + 1)),
+    h('p', { class: 'rule-sentence' },
+      ...rule.when.flatMap((c, j) => [j ? ' and ' : 'If ', h('b', null, c.part), ` ${OP_LABEL[c.op]} `, h('code', null, c.text)]),
+      ' → ', h('strong', { class: 'rule-value-text' }, rule.value)),
+    h('span', {
+      class: 'rule-reach',
+      title: `Matches ${plural(reach.matches, 'UTM')}. ${shadowed ? `${fmtInt(shadowed)} of them keep a value from a rule above or a typed value.` : 'It fills every one.'}`,
+    }, `fills ${fmtInt(reach.fills)}`, shadowed ? h('span', { class: 'muted' }, ` of ${fmtInt(reach.matches)}`) : null),
+    h('span', { class: 'rule-actions' },
+      button(null, { kind: 'ghost', icon: 'up', label: 'Move up', title: 'Move up', disabled: i === 0, onClick: () => ctx.commit(moveRule(table, rule.id, -1)) }),
+      button(null, { kind: 'ghost', icon: 'down', label: 'Move down', title: 'Move down', disabled: i === count - 1, onClick: () => ctx.commit(moveRule(table, rule.id, 1)) }),
+      button('Edit', {
+        kind: 'ghost',
+        onClick: () => {
+          builder = { editing: rule.id, column: rule.column, when: rule.when.map((c) => ({ ...c })), value: rule.value };
+          ctx.render();
+          focusBuilder();
+        },
+      }),
+      button(null, { kind: 'ghost', icon: 'trash', label: 'Delete rule', title: 'Delete', onClick: () => ctx.commit(deleteRule(table, rule.id)) })),
+  );
 }

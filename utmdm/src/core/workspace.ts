@@ -1,270 +1,189 @@
-import { classifyWorkspace, coverage, type Results } from './classify';
-import { InvalidRule, compilePattern } from './match';
-import {
-  MATCH_TYPES,
-  UTM_PARTS,
-  type Field,
-  type MatchType,
-  type Rule,
-  type RuleTarget,
-  type SourceRow,
-  type Utm,
-  type Workspace,
-} from './model';
-import { SEPARATOR, displayUtm, normalizeParts, partText, utmKey } from './normalize';
+import type { Change, Condition, Op, Rule, Table, Utm, UtmParts, Workspace } from './model';
+import { displayUtm, normalizeParts, normalizeText, tidy, utmKey } from './normalize';
+import { describeRule, ruleProblem } from './rules';
+import { apply, canonicalValue, coverage, replay, resolve, rulesFor, sameTable } from './table';
 
 /*
- * Every change goes through these functions, and each returns a new workspace,
- * so the UI can't half-apply anything. Two promises hold throughout:
- *   - the UTM table only grows: a refresh adds UTMs and traffic, never removes;
- *   - every change to the rules is a new version, with a full copy of the rules.
+ * A workspace and every version of its table. Each function below turns
+ * something a person did into a Draft: the operation plus a sentence for
+ * History. `record` saves it as the next version, unless nothing changed.
  */
 
-export const DEFAULT_PRIORITY = 100;
-export const OVERRIDE_PRIORITY = 10; // a decision about specific UTMs beats a broad pattern
-
-export function emptyWorkspace(fields: Field[], user = 'You'): Workspace {
-  return { schema: 1, user, fields, utms: [], rules: [], versions: [], refreshes: [], sampleCursor: 0 };
+export interface Book {
+  ws: Workspace;
+  /** tables[n] is version n; tables[0] is the empty table. */
+  tables: Table[];
 }
 
-// ── the permanent table ─────────────────────────────────────────────────────
-
-export interface IngestOptions {
-  source: string;
-  period: string;
-  at: string;
+export interface Draft {
+  op: Op;
+  summary: string;
 }
 
-/** Adds a source's rows to the table: new UTMs are created, known ones gain traffic and spellings. */
-export function ingest(ws: Workspace, rows: SourceRow[], { source, period, at }: IngestOptions): Workspace {
-  const table = new Map(ws.utms.map((utm) => [utm.key, utm]));
-  const created = new Set<string>();
-  const updated = new Set<string>();
+export function openBook(ws: Workspace): Book {
+  return { ws, tables: replay(ws.changes) };
+}
+
+export function emptyWorkspace(name: string, user: string): Workspace {
+  return { schema: 2, name, user, changes: [] };
+}
+
+export const latest = (book: Book): Table => book.tables.at(-1)!;
+export const versionOf = (book: Book): number => book.ws.changes.length;
+
+/** Saves a draft as the next version. Returns null when it would change nothing. */
+export function record(book: Book, draft: Draft, at: string, author = book.ws.user): Book | null {
+  const before = latest(book);
+  const after = apply(before, draft.op, (v) => book.tables[v]);
+  if (sameTable(before, after)) return null;
+  const change: Change = { version: versionOf(book) + 1, at, author, summary: draft.summary, op: draft.op };
+  return { ws: { ...book.ws, changes: [...book.ws.changes, change] }, tables: [...book.tables, after] };
+}
+
+/** An id that is never reused: the version that creates the thing, plus a counter within it. */
+export function newId(book: Book, prefix: string, index = 0): string {
+  return `${prefix}${versionOf(book) + 1}${index ? `-${index}` : ''}`;
+}
+
+const plural = (n: number, one: string, many = `${one}s`) => `${n.toLocaleString('en-US')} ${n === 1 ? one : many}`;
+
+/* ── UTMs ──────────────────────────────────────────────────────────────── */
+
+export interface AddUtms extends Draft {
+  added: Utm[];
+  /** Rows that are already in the table (or repeat another pasted row). */
+  known: number;
+}
+
+export function addUtms(table: Table, rows: UtmParts[], from = 'a paste'): AddUtms {
+  const seen = new Set(table.utms.map((u) => u.key));
+  const added: Utm[] = [];
+  let known = 0;
   for (const row of rows) {
     const parts = normalizeParts(row);
-    if (UTM_PARTS.every((part) => !parts[part])) continue;
+    if (Object.values(parts).every((p) => !p)) continue;
     const key = utmKey(parts);
-    const spelling = displayUtm(row);
-    const known = table.get(key);
-    if (!known) {
-      created.add(key);
-      table.set(key, {
-        key,
-        parts,
-        raw: Object.fromEntries(UTM_PARTS.map((part) => [part, row[part] ?? ''])) as Utm['raw'],
-        spellings: [spelling],
-        firstSeen: row.period,
-        lastSeen: row.period,
-        sessions: row.sessions,
-        keyEvents: row.keyEvents,
-      });
+    if (seen.has(key)) {
+      known++;
       continue;
     }
-    if (!created.has(key)) updated.add(key);
-    table.set(key, {
-      ...known,
-      spellings: known.spellings.includes(spelling) ? known.spellings : [...known.spellings, spelling],
-      firstSeen: row.period < known.firstSeen ? row.period : known.firstSeen,
-      lastSeen: row.period > known.lastSeen ? row.period : known.lastSeen,
-      sessions: known.sessions + row.sessions,
-      keyEvents: known.keyEvents + row.keyEvents,
-    });
+    seen.add(key);
+    added.push({ key, parts, raw: row, spellings: [displayUtm(row)] });
   }
-  const next = { ...ws, utms: [...table.values()] };
-  const refresh = {
-    at,
-    source,
-    period,
-    rows: rows.length,
-    newUtms: created.size,
-    updatedUtms: updated.size,
-    newKeys: [...created],
-    coverage: coverage(next.utms, classifyWorkspace(next)),
-  };
-  return { ...next, refreshes: [...ws.refreshes, refresh] };
+  const summary = `Added ${plural(added.length, 'UTM')} from ${from}${known ? ` (${plural(known, 'row')} already in the table)` : ''}`;
+  return { op: { type: 'addUtms', rows }, summary, added, known };
 }
 
-/** UTMs the latest refresh added. Empty until there has been a refresh after the first load. */
-export function latestNewKeys(ws: Workspace): Set<string> {
-  return new Set(ws.refreshes.length > 1 ? ws.refreshes.at(-1)!.newKeys : []);
-}
+/* ── columns ───────────────────────────────────────────────────────────── */
 
-// ── vocabulary ──────────────────────────────────────────────────────────────
-
-/** Adds a value to a field's list. Values are never renamed or removed: rules and history point at them. */
-export function addValue(ws: Workspace, fieldId: string, value: string): Workspace {
-  const field = getField(ws, fieldId);
-  const name = value.replace(/\s+/g, ' ').trim();
-  if (!name) throw new InvalidRule('A value needs a name.');
-  if (field.values.some((v) => v.toLowerCase() === name.toLowerCase())) {
-    throw new InvalidRule(`${field.name} already has "${name}".`);
+export function columnNameProblem(table: Table, name: string, except?: string): string | null {
+  const clean = tidy(name);
+  if (!clean) return 'Give the column a name.';
+  if (clean.length > 40) return 'Keep the name under 40 characters.';
+  if (table.columns.some((c) => c.id !== except && normalizeText(c.name) === normalizeText(clean))) {
+    return `There's already a column called ${clean}.`;
   }
-  return { ...ws, fields: ws.fields.map((f) => (f.id === fieldId ? { ...f, values: [...f.values, name] } : f)) };
+  return null;
 }
 
-export function getField(ws: Workspace, fieldId: string): Field {
-  const field = ws.fields.find((f) => f.id === fieldId);
-  if (!field) throw new InvalidRule(`There's no "${fieldId}" classification.`);
-  return field;
+export function addColumn(book: Book, name: string): Draft & { id: string } {
+  const id = newId(book, 'c');
+  return { id, op: { type: 'addColumn', column: { id, name: tidy(name) } }, summary: `Added column ${tidy(name)}` };
 }
 
-// ── rules and versions ──────────────────────────────────────────────────────
-
-export interface RuleDraft {
-  field: string;
-  target: RuleTarget;
-  match: MatchType;
-  pattern: string;
-  value: string;
-  priority?: number;
-  note?: string;
+export function renameColumn(table: Table, id: string, name: string): Draft {
+  const old = table.columns.find((c) => c.id === id)?.name ?? '';
+  return { op: { type: 'renameColumn', id, name: tidy(name) }, summary: `Renamed column ${old} to ${tidy(name)}` };
 }
 
-/** Checks a rule and returns it with the value spelled as the field spells it. */
-export function checkRule<T extends RuleDraft>(ws: Workspace, draft: T): T {
-  const field = getField(ws, draft.field);
-  if (draft.target !== 'any' && !UTM_PARTS.includes(draft.target)) throw new InvalidRule(`Unknown UTM part "${draft.target}".`);
-  if (!MATCH_TYPES.includes(draft.match)) throw new InvalidRule(`Unknown match type "${draft.match}".`);
-  compilePattern(draft.match, draft.pattern);
-  const value = field.values.find((v) => v.toLowerCase() === draft.value.trim().toLowerCase());
-  if (!value) throw new InvalidRule(`"${draft.value}" isn't a ${field.name} value yet. Add it first.`);
-  const priority = draft.priority ?? DEFAULT_PRIORITY;
-  if (!Number.isInteger(priority) || priority < 0) throw new InvalidRule('Priority is a whole number, 0 or more. Lower wins.');
-  return { ...draft, value, priority };
+export function deleteColumn(table: Table, id: string): Draft {
+  const name = table.columns.find((c) => c.id === id)?.name ?? '';
+  const rules = rulesFor(table, id).length;
+  const typed = Object.keys(table.typed[id] ?? {}).length;
+  const lost = [rules ? plural(rules, 'rule') : '', typed ? plural(typed, 'typed value') : ''].filter(Boolean).join(' and ');
+  return { op: { type: 'deleteColumn', id }, summary: `Deleted column ${name}${lost ? `, with its ${lost}` : ''}` };
 }
 
-/** Makes `rules` the current rules as a new version. Returns the workspace unchanged if nothing changed. */
-export function commitRules(ws: Workspace, rules: Rule[], message: string, at: string): Workspace {
-  if (JSON.stringify(rules) === JSON.stringify(ws.rules)) return ws;
-  const version = {
-    number: (ws.versions.at(-1)?.number ?? 0) + 1,
-    at,
-    author: ws.user,
-    message,
-    rules,
-    coverage: coverage(ws.utms, classifyWorkspace(ws, rules)),
-  };
-  return { ...ws, rules, versions: [...ws.versions, version] };
-}
+/* ── cells ─────────────────────────────────────────────────────────────── */
 
-export function nextRuleId(ws: Workspace): string {
-  const ids = [...ws.rules, ...ws.versions.flatMap((v) => v.rules)].map((rule) => Number(rule.id.slice(1)) || 0);
-  return `R${Math.max(0, ...ids) + 1}`;
-}
-
-export function addRule(ws: Workspace, draft: RuleDraft, at: string, message?: string): Workspace {
-  const checked = checkRule(ws, draft);
-  const rule: Rule = {
-    id: nextRuleId(ws),
-    field: checked.field,
-    target: checked.target,
-    match: checked.match,
-    pattern: checked.pattern,
-    value: checked.value,
-    priority: checked.priority!,
-    active: true,
-    author: ws.user,
-    createdAt: at,
-    note: checked.note ?? '',
-  };
-  return commitRules(ws, [...ws.rules, rule], message ?? `Add ${rule.id}: ${describeRule(rule, ws.fields)}`, at);
-}
-
-export function updateRule(
-  ws: Workspace,
-  id: string,
-  changes: Partial<RuleDraft & { active: boolean }>,
-  at: string,
-  message?: string,
-): Workspace {
-  const current = ws.rules.find((rule) => rule.id === id);
-  if (!current) throw new InvalidRule(`There's no rule ${id}.`);
-  const merged = checkRule(ws, { ...current, ...changes });
-  const rule: Rule = { ...current, ...merged, priority: merged.priority!, note: merged.note ?? current.note };
-  const verb = changes.active === false ? 'Turn off' : changes.active === true && !current.active ? 'Turn on' : 'Edit';
-  return commitRules(ws, ws.rules.map((r) => (r.id === id ? rule : r)), message ?? `${verb} ${id}`, at);
-}
-
-export function restoreVersion(ws: Workspace, number: number, at: string): Workspace {
-  const version = ws.versions.find((v) => v.number === number);
-  if (!version) throw new InvalidRule(`There's no version ${number}.`);
-  return commitRules(ws, version.rules, `Restore the rules of version ${number}`, at);
-}
-
-// ── reading rules ───────────────────────────────────────────────────────────
-
-const MATCH_WORDS: Record<MatchType, string> = {
-  contains: 'contains',
-  exact: 'is',
-  starts_with: 'starts with',
-  regex: 'matches',
-};
-
-export function isSingleUtmRule(rule: Pick<Rule, 'target' | 'match'>): boolean {
-  return rule.target === 'any' && rule.match === 'exact';
-}
-
-/** A rule in plain words: utm_campaign contains "summer cup" → Campaign: Summer Cup 2026. */
-export function describeRule(rule: Pick<Rule, 'field' | 'target' | 'match' | 'pattern' | 'value'>, fields: Field[]): string {
-  const field = fields.find((f) => f.id === rule.field)?.name ?? rule.field;
-  return `${describeCondition(rule)} → ${field}: ${rule.value}`;
-}
-
-export function describeCondition(rule: Pick<Rule, 'target' | 'match' | 'pattern'>): string {
-  if (isSingleUtmRule(rule)) return `this UTM only (${displayUtm(keyToParts(rule.pattern))})`;
-  const subject = rule.target === 'any' ? 'any part' : `utm_${rule.target}`;
-  const pattern = rule.match === 'regex' ? `/${rule.pattern}/` : `"${rule.pattern}"`;
-  return `${subject} ${MATCH_WORDS[rule.match]} ${pattern}`;
-}
-
-export function keyToParts(key: string): Partial<Utm['parts']> {
-  const values = key.split(SEPARATOR);
-  return Object.fromEntries(UTM_PARTS.map((part, i) => [part, values[i] ?? '']));
-}
-
-export interface Reach {
-  utms: Utm[];
-  sessions: number;
-  open: number; // of those, not yet classified on this field
-}
-
-/** "Test this rule": what a pattern matches right now, before precedence. */
-export function ruleReach(ws: Workspace, results: Results, draft: Pick<RuleDraft, 'field' | 'target' | 'match' | 'pattern'>): Reach {
-  const test = compilePattern(draft.match, draft.pattern);
-  const utms = ws.utms
-    .filter((utm) => test(partText(utm.parts, draft.target)))
-    .sort((a, b) => b.sessions - a.sessions);
+/** Typing in a cell. An empty value clears what was typed, so the rules fill the cell again. */
+export function setCell(table: Table, utm: Utm, column: string, text: string): Draft {
+  const name = table.columns.find((c) => c.id === column)?.name ?? '';
+  const value = text.trim() ? canonicalValue(table, column, text) : null;
+  const where = displayUtm(utm.raw);
   return {
-    utms,
-    sessions: utms.reduce((sum, utm) => sum + utm.sessions, 0),
-    open: utms.filter((utm) => results.get(utm.key)?.[draft.field]?.status !== 'classified').length,
+    op: { type: 'setCell', column, utm: utm.key, value },
+    summary: value ? `Typed ${value} in ${name} for ${where}` : `Cleared the typed ${name} for ${where}`,
   };
 }
 
-export interface RuleChange {
-  kind: 'added' | 'removed' | 'changed';
-  id: string;
-  before?: Rule;
-  after?: Rule;
-  changed: string[];
+/* ── rules ─────────────────────────────────────────────────────────────── */
+
+export interface RuleInput {
+  column: string;
+  when: Condition[];
+  value: string;
 }
 
-const COMPARED: (keyof Rule)[] = ['field', 'target', 'match', 'pattern', 'value', 'priority', 'active', 'note'];
+export function draftRule(table: Table, input: RuleInput, id: string): Rule {
+  return {
+    id,
+    column: input.column,
+    when: input.when.map((c) => ({ ...c, text: tidy(c.text) })),
+    value: canonicalValue(table, input.column, input.value),
+  };
+}
 
-export function diffRules(before: Rule[], after: Rule[]): RuleChange[] {
-  const old = new Map(before.map((rule) => [rule.id, rule]));
-  const now = new Map(after.map((rule) => [rule.id, rule]));
-  const ids = [...new Set([...old.keys(), ...now.keys()])].sort((a, b) => Number(a.slice(1)) - Number(b.slice(1)));
-  const changes: RuleChange[] = [];
-  for (const id of ids) {
-    const a = old.get(id);
-    const b = now.get(id);
-    if (!a && b) changes.push({ kind: 'added', id, after: b, changed: [] });
-    else if (a && !b) changes.push({ kind: 'removed', id, before: a, changed: [] });
-    else if (a && b) {
-      const changed = COMPARED.filter((key) => a[key] !== b[key]);
-      if (changed.length) changes.push({ kind: 'changed', id, before: a, after: b, changed });
-    }
-  }
-  return changes;
+export function addRule(book: Book, input: RuleInput): Draft & { rule: Rule; problem: string | null } {
+  const table = latest(book);
+  const rule = draftRule(table, input, newId(book, 'r'));
+  return { rule, problem: ruleProblem(rule, table), op: { type: 'addRule', rule }, summary: `Added rule: ${describeRule(rule, table)}` };
+}
+
+export function updateRule(table: Table, id: string, input: RuleInput): Draft & { rule: Rule; problem: string | null } {
+  const old = table.rules.find((r) => r.id === id);
+  const rule = draftRule(table, input, id);
+  const was = old ? ` (was: ${describeRule(old, table)})` : '';
+  return { rule, problem: ruleProblem(rule, table), op: { type: 'updateRule', rule }, summary: `Changed rule: ${describeRule(rule, table)}${was}` };
+}
+
+export function deleteRule(table: Table, id: string): Draft {
+  const rule = table.rules.find((r) => r.id === id);
+  return { op: { type: 'deleteRule', id }, summary: `Deleted rule: ${rule ? describeRule(rule, table) : id}` };
+}
+
+export function moveRule(table: Table, id: string, by: -1 | 1): Draft {
+  const rule = table.rules.find((r) => r.id === id)!;
+  const index = rulesFor(table, rule.column).findIndex((r) => r.id === id);
+  return {
+    op: { type: 'moveRule', id, to: index + by },
+    summary: `Moved a rule ${by < 0 ? 'up' : 'down'}: ${describeRule(rule, table)}`,
+  };
+}
+
+/* ── history ───────────────────────────────────────────────────────────── */
+
+export function restore(version: number): Draft {
+  return { op: { type: 'restore', version }, summary: `Restored version ${version}` };
+}
+
+export function undo(book: Book, version: number): Draft {
+  const change = book.ws.changes[version - 1];
+  return { op: { type: 'restore', version: version - 1 }, summary: `Undid version ${version}${change ? `: ${change.summary}` : ''}` };
+}
+
+export interface HistoryEntry {
+  change: Change;
+  /** UTMs with a value in every column after this change, the total, and how many columns there were. */
+  complete: number;
+  utms: number;
+  columns: number;
+}
+
+export function historyEntries(book: Book): HistoryEntry[] {
+  return book.ws.changes.map((change) => {
+    const table = book.tables[change.version]!;
+    const cov = coverage(table, resolve(table));
+    return { change, complete: cov.complete, utms: cov.utms, columns: table.columns.length };
+  });
 }
