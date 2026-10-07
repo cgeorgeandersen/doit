@@ -8,7 +8,7 @@ const auth = { accessToken: async () => 'token' } as unknown as Auth;
 const demo = createDemoWorkspace('2026-10-07T12:00:00.000Z');
 
 function server(initial: unknown, answer: (method: string, path: string) => number = () => 200) {
-  const calls: { method: string; path: string; body: any; auth: string }[] = [];
+  const calls: { method: string; path: string; body: any; auth: string | undefined }[] = [];
   vi.stubGlobal('fetch', async (url: string, init: RequestInit) => {
     const path = url.replace('https://api.example', '');
     const method = init.method ?? 'GET';
