@@ -649,6 +649,64 @@
   transform: translate(var(--hold-x, 0), var(--hold-y, 0));
 }
 
+/* Column resizing: a grab handle on each header's right edge. */
+.col-resizer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1;
+  width: 10px;
+  height: 100%;
+  cursor: col-resize;
+  touch-action: none;
+}
+.col-resizer::after {
+  content: '';
+  position: absolute;
+  top: 25%;
+  bottom: 25%;
+  right: 3px;
+  width: 1px;
+  border-radius: 2px;
+  background: var(--line-strong);
+}
+.col-resizer:hover::after,
+.col-resizer:focus-visible::after,
+body.is-resizing .col-resizer:active::after {
+  top: 0;
+  bottom: 0;
+  right: 2px;
+  width: 3px;
+  background: var(--accent);
+}
+.col-resizer:focus-visible {
+  outline: none;
+}
+body.is-resizing,
+body.is-resizing * {
+  cursor: col-resize !important;
+  user-select: none;
+}
+.reset-widths {
+  min-height: 30px;
+  padding: 3px 8px;
+  font-size: 13px;
+}
+.col-head,
+.col-name {
+  min-width: 0;
+  overflow: hidden;
+}
+.col-name {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.cell-text {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .spellings {
   flex: none;
   padding: 0 5px;

@@ -20,6 +20,9 @@ const PAGE_SIZE = 200;
 // The campaign is the UTM's name, so it comes first and stays put while the other columns scroll.
 const PARTS: UtmPart[] = ['campaign', 'source', 'medium', 'content', 'term'];
 const TIP_KEY = 'utmdm-tip-hidden';
+const WIDTHS_KEY = 'utmdm-column-widths';
+const MIN_WIDTH = 70;
+const MAX_WIDTH = 900;
 
 // Kept between renders, so a save doesn't lose your place.
 let query = '';
@@ -31,6 +34,25 @@ let resizeWatch: ResizeObserver | null = null;
 let fitTable: (() => void) | null = null;
 // Set once this browser has been seen not to pin the first column on its own.
 let heldByHand = false;
+// Column widths someone dragged, by column: a preference of this browser, not a change to the table.
+let widths: Record<string, number> = loadWidths();
+
+function loadWidths(): Record<string, number> {
+  try {
+    const saved = JSON.parse(localStorage.getItem(WIDTHS_KEY) ?? '{}') as unknown;
+    return saved && typeof saved === 'object' ? saved as Record<string, number> : {};
+  } catch {
+    return {};
+  }
+}
+
+function saveWidths(): void {
+  try {
+    localStorage.setItem(WIDTHS_KEY, JSON.stringify(widths));
+  } catch {
+    // kept for this visit
+  }
+}
 if (typeof window !== 'undefined') window.addEventListener('resize', () => fitTable?.());
 
 export function tableView(ctx: Ctx): HTMLElement {
@@ -82,7 +104,8 @@ export function tableView(ctx: Ctx): HTMLElement {
       'div',
       { class: 'sheet', role: 'table', 'aria-label': 'UTM table', 'aria-rowcount': visible.length + 1 },
       h('div', { class: 'sheet-row sheet-head', role: 'row' },
-        ...PARTS.map((part, i) => h('div', { role: 'columnheader', class: `sheet-cell head col-utm${i === 0 ? ' col-freeze' : ''}` }, `utm_${part}`)),
+        ...PARTS.map((part, i) => h('div', { role: 'columnheader', class: `sheet-cell head col-utm${i === 0 ? ' col-freeze' : ''}` },
+          h('span', { class: 'clip' }, `utm_${part}`), resizer(`utm_${part}`, `utm_${part}`))),
         ...table.columns.map((c, i) => columnHead(c, i)),
         h('div', { role: 'columnheader', class: 'sheet-cell head col-add' },
           h('a', { class: 'button button-ghost', href: hashFor('table', { column: 'new' }), title: 'Add a column' },
@@ -99,13 +122,83 @@ export function tableView(ctx: Ctx): HTMLElement {
         h('div', { class: 'sheet-cell col-add', role: 'cell' }),
       )),
     );
-    el.style.gridTemplateColumns = [
-      'var(--freeze-col)',
-      ...PARTS.slice(1).map(() => 'minmax(90px, max-content)'),
-      ...table.columns.map(() => 'minmax(150px, 1fr)'),
+    el.style.gridTemplateColumns = template();
+    return el;
+  }
+
+  /** Each column's track: the width someone dragged it to, or its natural size. */
+  function template(): string {
+    const track = (key: string, natural: string) => (widths[key] ? `${widths[key]}px` : natural);
+    return [
+      ...PARTS.map((part, i) => track(`utm_${part}`, i === 0 ? 'var(--freeze-col)' : 'minmax(90px, max-content)')),
+      ...table.columns.map((c) => track(`col:${c.id}`, 'minmax(150px, 1fr)')),
       '48px',
     ].join(' ');
-    return el;
+  }
+
+  function setWidth(key: string, width: number | null): void {
+    if (width === null) delete widths[key];
+    else widths[key] = Math.round(Math.min(MAX_WIDTH, Math.max(MIN_WIDTH, width)));
+    const sheetEl = tableHost.querySelector<HTMLElement>('.sheet');
+    if (sheetEl) sheetEl.style.gridTemplateColumns = template();
+    resetWidths.hidden = !Object.keys(widths).length;
+  }
+
+  function finishResize(): void {
+    // Forget widths of columns that no longer exist, then remember the rest.
+    const keys = new Set([...PARTS.map((p) => `utm_${p}`), ...table.columns.map((c) => `col:${c.id}`)]);
+    for (const key of Object.keys(widths)) if (!keys.has(key)) delete widths[key];
+    saveWidths();
+    syncScroll();
+  }
+
+  /** The grab handle on a header's right edge: drag it, use the arrow keys, or double-click to reset. */
+  function resizer(key: string, label: string): HTMLElement {
+    const handle = h('span', {
+      class: 'col-resizer',
+      role: 'separator',
+      'aria-orientation': 'vertical',
+      'aria-label': `Resize the ${label} column`,
+      tabindex: 0,
+      title: 'Drag to resize, double-click to reset. Arrow keys work too.',
+    });
+    const current = () => handle.parentElement?.getBoundingClientRect().width ?? 0;
+    handle.addEventListener('pointerdown', (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      const start = current();
+      const x0 = event.clientX;
+      handle.setPointerCapture(event.pointerId);
+      document.body.classList.add('is-resizing');
+      const move = (e: PointerEvent) => setWidth(key, start + e.clientX - x0);
+      const end = () => {
+        handle.removeEventListener('pointermove', move);
+        document.body.classList.remove('is-resizing');
+        finishResize();
+      };
+      handle.addEventListener('pointermove', move);
+      handle.addEventListener('pointerup', end, { once: true });
+      handle.addEventListener('pointercancel', end, { once: true });
+    });
+    handle.addEventListener('click', (event) => event.stopPropagation());
+    handle.addEventListener('dblclick', (event) => {
+      event.preventDefault();
+      setWidth(key, null);
+      finishResize();
+    });
+    handle.addEventListener('keydown', (event) => {
+      const step = event.shiftKey ? 64 : 16;
+      if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+        event.preventDefault();
+        setWidth(key, current() + (event.key === 'ArrowRight' ? step : -step));
+        finishResize();
+      } else if (event.key === 'Delete' || event.key === 'Backspace' || event.key === 'Home') {
+        event.preventDefault();
+        setWidth(key, null);
+        finishResize();
+      }
+    });
+    return handle;
   }
 
   function columnHead(column: Column, i: number): HTMLElement {
@@ -113,7 +206,8 @@ export function tableView(ctx: Ctx): HTMLElement {
     return h('div', { role: 'columnheader', class: `sheet-cell head col-class${i === 0 ? ' first' : ''}` },
       h('a', { class: 'col-head', href: hashFor('table', { show: show === 'all' ? null : show, column: column.id }), title: `${column.name}: rename, see its rules, or delete it` },
         h('span', { class: 'col-name' }, column.name, icon('down', 12)),
-        h('span', { class: 'col-fill' }, meter(c.filled, cov.utms, `${column.name} filled`), fmtPct(c.filled, cov.utms))));
+        h('span', { class: 'col-fill' }, meter(c.filled, cov.utms, `${column.name} filled`), fmtPct(c.filled, cov.utms))),
+      resizer(`col:${column.id}`, column.name));
   }
 
   function partCell(utm: Utm, part: UtmPart, i: number): HTMLElement {
@@ -238,6 +332,18 @@ export function tableView(ctx: Ctx): HTMLElement {
   const scrollLeftButton = button(null, { kind: 'ghost', icon: 'left', label: 'Scroll columns left', title: 'Scroll left (or Shift + scroll wheel)', onClick: () => slide(-1) });
   const scrollRightButton = button(null, { kind: 'ghost', icon: 'right', label: 'Scroll columns right', title: 'Scroll right (or Shift + scroll wheel)', onClick: () => slide(1) });
   const scroller = h('span', { class: 'scroller' }, scrollLeftButton, scrollRightButton);
+  const resetWidths = button('Reset widths', {
+    kind: 'ghost',
+    title: 'Put every column back to its natural width',
+    onClick: () => {
+      widths = {};
+      saveWidths();
+      setWidth('', null);
+      syncScroll();
+    },
+  });
+  resetWidths.classList.add('reset-widths');
+  resetWidths.hidden = !Object.keys(widths).length;
   function frozenWidth(): number {
     return tableHost.querySelector<HTMLElement>('.head.col-freeze')?.offsetWidth ?? 0;
   }
@@ -356,6 +462,7 @@ export function tableView(ctx: Ctx): HTMLElement {
         h('span', { class: 'legend-item' }, h('span', { class: 'legend-swatch cell-rule' }, icon('bolt', 12)), 'filled by a rule'),
         h('span', { class: 'legend-item' }, h('span', { class: 'legend-swatch cell-typed' }, icon('pencil', 12)), 'typed'),
         h('span', { class: 'legend-item' }, h('span', { class: 'legend-swatch cell-empty' }, '–'), 'needs a value')),
+      resetWidths,
       scroller),
     table.utms.length
       ? tableHost

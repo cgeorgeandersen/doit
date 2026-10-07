@@ -10,6 +10,8 @@ The problem it solves first: marketing teams have no shared place to classify UT
 2. **Write a rule.** If *[campaign] [contains] [cup]* then *[Type]* is *[Marketing]*. One rule fills every matching UTM, including UTMs added later, and shows what it will do before you save it.
 3. **Add a column.** Region, Agency, Budget owner: anything the team needs to know about a UTM, filled by typing, by rules, or both.
 
+Columns resize like a spreadsheet's: drag a header's right edge, double-click it to reset, or focus it and use the arrow keys. Widths are remembered in your browser and aren't a change to the table, so they don't make versions.
+
 The dashboard at the top shows how much is fully classified (a value in every column) and what's still empty, and the **Needs values** filter lists what's left.
 
 **Who it's for:** data-focused marketers and marketing-focused data people, whoever owns the campaign naming and gets asked why two dashboards disagree.
