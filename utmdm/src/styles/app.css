@@ -558,73 +558,99 @@
   border: 1px solid var(--line);
   border-radius: var(--radius-l);
 }
-table {
-  width: 100%;
-  border-collapse: collapse;
+/* The sheet: one CSS grid. Each row's cells sit straight in the grid (the row
+   element is display: contents), so every column lines up. */
+.sheet {
+  display: grid;
+  width: max-content;
+  min-width: 100%;
   font-size: 14px;
 }
-th {
+.sheet-row {
+  display: contents;
+}
+.sheet-cell {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  min-height: 38px;
+  padding: 0 10px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+.sheet-row:last-child > .sheet-cell {
+  border-bottom: 0;
+}
+.sheet-cell.head {
   position: sticky;
   top: 0;
   z-index: 2;
+  align-items: flex-end;
   padding: 8px 10px;
   background: var(--surface-2);
-  box-shadow: inset 0 -1px 0 var(--line);
+  border-bottom-color: var(--line-strong);
   color: var(--ink-2);
   font-size: 12.5px;
   font-weight: 650;
-  text-align: left;
-  white-space: nowrap;
-  vertical-align: bottom;
 }
-td {
-  padding: 0 10px;
-  height: 38px;
-  border-bottom: 1px solid var(--line);
-  vertical-align: middle;
-}
-tbody tr:last-child td {
-  border-bottom: 0;
-}
-.utm-table th.col-utm {
+.sheet-cell.col-utm {
   font-family: var(--font-mono);
-  font-weight: 500;
-}
-.utm-table td.col-utm {
-  max-width: 180px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
   font-size: 13px;
 }
-.utm-table td.is-empty {
+.sheet-cell.head.col-utm {
+  font-weight: 500;
+}
+.sheet-cell.is-empty {
   color: var(--ink-3);
 }
+.clip {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 /* The campaign column stays put while the rest scroll under it. */
-.utm-table .col-freeze {
+.table-wrap {
+  --freeze-col: minmax(160px, 260px);
+}
+.sheet-cell.col-freeze {
   --edge: inset -1px 0 0 var(--line);
   position: sticky;
   left: 0;
   z-index: 1;
-  max-width: 240px;
-  background: var(--surface);
   box-shadow: var(--edge);
   font-weight: 500;
 }
-.utm-table th.col-freeze {
+.sheet-cell.head.col-freeze {
   z-index: 3;
-  background: var(--surface-2);
-  box-shadow: var(--edge), inset 0 -1px 0 var(--line);
 }
 .table-wrap.is-scrolled .col-freeze {
   --edge: inset -1px 0 0 var(--line-strong), 10px 0 12px -10px var(--freeze-shadow);
 }
-.utm-table tbody tr.is-open td.col-freeze {
+.sheet-row.is-open > .col-freeze {
   box-shadow: inset 3px 0 0 var(--warning), var(--edge);
 }
+/* The safety net, for a browser that won't pin them itself (see holdFrozen in table.ts). */
+.table-wrap.hold .col-freeze,
+.table-wrap.hold .head {
+  position: relative;
+  left: auto;
+  top: auto;
+}
+.table-wrap.hold .col-freeze {
+  transform: translateX(var(--hold-x, 0));
+}
+.table-wrap.hold .head {
+  transform: translateY(var(--hold-y, 0));
+}
+.table-wrap.hold .head.col-freeze {
+  transform: translate(var(--hold-x, 0), var(--hold-y, 0));
+}
+
 .spellings {
-  display: inline-block;
-  margin-right: 6px;
+  flex: none;
   padding: 0 5px;
   border-radius: 4px;
   background: var(--surface-3);
@@ -634,16 +660,16 @@ tbody tr:last-child td {
   font-weight: 700;
   line-height: 1.6;
 }
-.utm-table .first {
+.sheet-cell.first {
   border-left: 2px solid var(--line-strong);
 }
-.utm-table th.col-class {
-  min-width: 150px;
+.sheet-cell.head.col-class {
   padding: 6px 8px;
 }
 .col-head {
   display: grid;
   gap: 4px;
+  width: 100%;
   padding: 4px 6px;
   border-radius: var(--radius-s);
   color: var(--ink);
@@ -674,19 +700,22 @@ tbody tr:last-child td {
 .col-fill .meter {
   height: 5px;
 }
-.col-add {
-  width: 44px;
+.sheet-cell.col-add {
+  justify-content: center;
   padding: 4px;
-  text-align: center;
 }
-th.col-add .button {
+.col-add .button {
   padding: 6px 8px;
   min-height: 32px;
 }
 
 .cell {
   padding: 0;
-  min-width: 150px;
+  align-items: stretch;
+}
+.cell > * {
+  flex: 1;
+  min-width: 0;
 }
 .cell-button {
   display: flex;
@@ -1305,9 +1334,10 @@ textarea {
     max-width: none;
     flex-basis: 100%;
   }
-  .utm-table td.col-freeze,
-  .utm-table th.col-freeze {
-    max-width: 136px;
+  .table-wrap {
+    --freeze-col: minmax(112px, 136px);
+  }
+  .sheet-cell.col-freeze {
     font-size: 12px;
   }
   .toolbar > .button {

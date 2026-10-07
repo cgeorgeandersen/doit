@@ -29,6 +29,8 @@ let focusAfter: { utm: string; column: string } | null = null;
 let detachEditor: (() => void) | null = null;
 let resizeWatch: ResizeObserver | null = null;
 let fitTable: (() => void) | null = null;
+// Set once this browser has been seen not to pin the first column on its own.
+let heldByHand = false;
 if (typeof window !== 'undefined') window.addEventListener('resize', () => fitTable?.());
 
 export function tableView(ctx: Ctx): HTMLElement {
@@ -57,27 +59,9 @@ export function tableView(ctx: Ctx): HTMLElement {
     fill(
       tableHost,
       table.columns.map((c) => h('datalist', { id: `values-${c.id}` }, ...columnValues(table, c.id).map((v) => h('option', { value: v })))),
-      h(
-        'table',
-        { class: 'utm-table' },
-        h('thead', null, h('tr', null,
-          ...PARTS.map((part, i) => h('th', { scope: 'col', class: `col-utm${i === 0 ? ' col-freeze' : ''}` }, `utm_${part}`)),
-          ...table.columns.map((c, i) => columnHead(c, i)),
-          h('th', { class: 'col-add' }, h('a', { class: 'button button-ghost', href: hashFor('table', { column: 'new' }), title: 'Add a column' },
-            icon('plus'), h('span', { class: 'sr-only' }, 'Add a column'))))),
-        h('tbody', null,
-          ...visible.map((utm, r) => h(
-            'tr',
-            { class: complete(utm) ? 'is-done' : 'is-open' },
-            ...PARTS.map((part, i) => partCell(utm, part, i)),
-            ...table.columns.map((column, c) => classCell(utm, column, cellOf(grid, utm.key, column.id), {
-              down: visible[r + 1]?.key,
-              right: table.columns[c + 1]?.id,
-              left: table.columns[c - 1]?.id,
-            })),
-            h('td', { class: 'col-add' }),
-          ))),
-      ),
+      // A grid of plain blocks rather than an HTML table: browsers pin a column of
+      // blocks reliably, where pinning table cells varies from one browser to the next.
+      sheet(visible),
       rows.length > shown
         ? h('div', { class: 'table-more' }, button(`Show ${fmtInt(Math.min(PAGE_SIZE, rows.length - shown))} more`, {
           onClick: () => {
@@ -93,9 +77,40 @@ export function tableView(ctx: Ctx): HTMLElement {
     );
   };
 
+  function sheet(visible: Utm[]): HTMLElement {
+    const el = h(
+      'div',
+      { class: 'sheet', role: 'table', 'aria-label': 'UTM table', 'aria-rowcount': visible.length + 1 },
+      h('div', { class: 'sheet-row sheet-head', role: 'row' },
+        ...PARTS.map((part, i) => h('div', { role: 'columnheader', class: `sheet-cell head col-utm${i === 0 ? ' col-freeze' : ''}` }, `utm_${part}`)),
+        ...table.columns.map((c, i) => columnHead(c, i)),
+        h('div', { role: 'columnheader', class: 'sheet-cell head col-add' },
+          h('a', { class: 'button button-ghost', href: hashFor('table', { column: 'new' }), title: 'Add a column' },
+            icon('plus'), h('span', { class: 'sr-only' }, 'Add a column')))),
+      ...visible.map((utm, r) => h(
+        'div',
+        { class: `sheet-row ${complete(utm) ? 'is-done' : 'is-open'}`, role: 'row' },
+        ...PARTS.map((part, i) => partCell(utm, part, i)),
+        ...table.columns.map((column, c) => classCell(utm, column, cellOf(grid, utm.key, column.id), {
+          down: visible[r + 1]?.key,
+          right: table.columns[c + 1]?.id,
+          left: table.columns[c - 1]?.id,
+        })),
+        h('div', { class: 'sheet-cell col-add', role: 'cell' }),
+      )),
+    );
+    el.style.gridTemplateColumns = [
+      'var(--freeze-col)',
+      ...PARTS.slice(1).map(() => 'minmax(90px, max-content)'),
+      ...table.columns.map(() => 'minmax(150px, 1fr)'),
+      '48px',
+    ].join(' ');
+    return el;
+  }
+
   function columnHead(column: Column, i: number): HTMLElement {
     const c = cov.columns.find((x) => x.column.id === column.id)!;
-    return h('th', { scope: 'col', class: `col-class${i === 0 ? ' first' : ''}` },
+    return h('div', { role: 'columnheader', class: `sheet-cell head col-class${i === 0 ? ' first' : ''}` },
       h('a', { class: 'col-head', href: hashFor('table', { show: show === 'all' ? null : show, column: column.id }), title: `${column.name}: rename, see its rules, or delete it` },
         h('span', { class: 'col-name' }, column.name, icon('down', 12)),
         h('span', { class: 'col-fill' }, meter(c.filled, cov.utms, `${column.name} filled`), fmtPct(c.filled, cov.utms))));
@@ -104,13 +119,13 @@ export function tableView(ctx: Ctx): HTMLElement {
   function partCell(utm: Utm, part: UtmPart, i: number): HTMLElement {
     const value = utm.raw[part];
     const others = utm.spellings.length > 1 ? `Also written as:\n${utm.spellings.slice(1).join('\n')}` : undefined;
-    return h('td', { class: `col-utm${i === 0 ? ' col-freeze' : ''}${value ? '' : ' is-empty'}`, title: i === 0 && others ? `${value}\n\n${others}` : value || undefined },
+    return h('div', { role: i === 0 ? 'rowheader' : 'cell', class: `sheet-cell col-utm${i === 0 ? ' col-freeze' : ''}${value ? '' : ' is-empty'}`, title: i === 0 && others ? `${value}\n\n${others}` : value || undefined },
       i === 0 && utm.spellings.length > 1 ? h('span', { class: 'spellings', title: others }, `×${utm.spellings.length}`) : null,
-      value || '–');
+      h('span', { class: 'clip' }, value || '–'));
   }
 
   function classCell(utm: Utm, column: Column, cell: Cell, next: { down?: string; right?: string; left?: string }): HTMLElement {
-    const td = h('td', { class: `col-class cell cell-${cell.from}${column.id === table.columns[0]?.id ? ' first' : ''}`, 'data-utm': utm.key, 'data-col': column.id });
+    const td = h('div', { role: 'cell', class: `sheet-cell col-class cell cell-${cell.from}${column.id === table.columns[0]?.id ? ' first' : ''}`, 'data-utm': utm.key, 'data-col': column.id });
     if (editing?.utm === utm.key && editing.column === column.id) {
       td.append(editor(utm, column, cell, next));
       return td;
@@ -224,7 +239,7 @@ export function tableView(ctx: Ctx): HTMLElement {
   const scrollRightButton = button(null, { kind: 'ghost', icon: 'right', label: 'Scroll columns right', title: 'Scroll right (or Shift + scroll wheel)', onClick: () => slide(1) });
   const scroller = h('span', { class: 'scroller' }, scrollLeftButton, scrollRightButton);
   function frozenWidth(): number {
-    return tableHost.querySelector<HTMLElement>('thead .col-freeze')?.offsetWidth ?? 0;
+    return tableHost.querySelector<HTMLElement>('.head.col-freeze')?.offsetWidth ?? 0;
   }
   function slide(direction: -1 | 1): void {
     const step = Math.max(160, (tableHost.clientWidth - frozenWidth()) * 0.8);
@@ -232,14 +247,33 @@ export function tableView(ctx: Ctx): HTMLElement {
   }
   function syncScroll(): void {
     const max = tableHost.scrollWidth - tableHost.clientWidth;
+    holdFrozen();
     tableHost.classList.toggle('is-scrolled', tableHost.scrollLeft > 0);
     scroller.hidden = max <= 1;
     scrollLeftButton.disabled = tableHost.scrollLeft <= 0;
     scrollRightButton.disabled = tableHost.scrollLeft >= max - 1;
     // Keep focused cells clear of the frozen column and the header row.
     tableHost.style.scrollPaddingLeft = `${frozenWidth()}px`;
-    tableHost.style.scrollPaddingTop = `${tableHost.querySelector<HTMLElement>('thead')?.offsetHeight ?? 0}px`;
+    tableHost.style.scrollPaddingTop = `${tableHost.querySelector<HTMLElement>('.head')?.offsetHeight ?? 0}px`;
   }
+  // The safety net: if this browser doesn't keep the first column and the header row
+  // pinned while the table scrolls, hold them in place by hand.
+  function holdFrozen(): void {
+    const corner = tableHost.querySelector<HTMLElement>('.head.col-freeze');
+    if (!corner) return;
+    if (!tableHost.classList.contains('hold')) {
+      const box = tableHost.getBoundingClientRect();
+      const at = corner.getBoundingClientRect();
+      const slipped = (tableHost.scrollLeft > 0 && Math.abs(at.left - box.left - tableHost.clientLeft) > 2)
+        || (tableHost.scrollTop > 0 && Math.abs(at.top - box.top - tableHost.clientTop) > 2);
+      if (!slipped) return;
+      tableHost.classList.add('hold');
+      heldByHand = true;
+    }
+    tableHost.style.setProperty('--hold-x', `${tableHost.scrollLeft}px`);
+    tableHost.style.setProperty('--hold-y', `${tableHost.scrollTop}px`);
+  }
+  if (heldByHand) tableHost.classList.add('hold');
   // On a big enough screen the table fills the rest of it, so its sideways scrollbar is in view from the start.
   // On a small one it's one screen tall, and the page scrolls to it.
   fitTable = () => {
@@ -261,7 +295,7 @@ export function tableView(ctx: Ctx): HTMLElement {
       if (input && !editing.initial) input.select();
       else if (input) input.setSelectionRange(input.value.length, input.value.length);
     } else if (focusAfter) {
-      tableHost.querySelector<HTMLElement>(`td[data-utm="${CSS.escape(focusAfter.utm)}"][data-col="${CSS.escape(focusAfter.column)}"] .cell-button`)?.focus();
+      tableHost.querySelector<HTMLElement>(`[data-utm="${CSS.escape(focusAfter.utm)}"][data-col="${CSS.escape(focusAfter.column)}"] .cell-button`)?.focus();
       focusAfter = null;
     }
   });
