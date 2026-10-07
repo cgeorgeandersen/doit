@@ -44,10 +44,15 @@ export function rulesView(ctx: Ctx): HTMLElement {
       'Write a rule once and it fills every matching UTM, including ones you add later. Within a column the rules are checked top to bottom, ' +
       'and the first one that matches fills the cell. A value typed in the table always beats a rule.'),
     table.columns.length
-      ? builderCard(ctx)
+      ? h('div', { class: 'split' },
+        h('div', { class: 'split-side' }, builderCard(ctx)),
+        h('div', { class: 'split-main' }, ...groups()))
       : emptyState('Add a column first', 'A rule fills a column, so start with one, like Channel or Type.',
         linkButton('Add a column', hashFor('table', { column: 'new' }), { icon: 'plus', kind: 'primary' })),
-    ...table.columns.map((column) => {
+  );
+
+  function groups(): HTMLElement[] {
+    return table.columns.map((column) => {
       const rules = rulesFor(table, column.id);
       const c = cov.columns.find((x) => x.column.id === column.id)!;
       return h(
@@ -70,8 +75,8 @@ export function rulesView(ctx: Ctx): HTMLElement {
           ? h('ol', { class: 'rule-list' }, ...rules.map((rule, i) => ruleRow(ctx, rule, i, rules.length, reach.get(rule.id)!)))
           : h('p', { class: 'muted' }, `No rules yet, so every ${column.name} is typed by hand.`),
       );
-    }),
-  );
+    });
+  }
 }
 
 function prefill(table: Table, params: URLSearchParams): void {

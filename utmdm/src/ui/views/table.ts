@@ -1,6 +1,6 @@
 import { tableCsv } from '../../core/csv';
 import type { Column, Utm } from '../../core/model';
-import { UTM_PARTS, type UtmPart } from '../../core/model';
+import type { UtmPart } from '../../core/model';
 import { displayUtm, normalizeText } from '../../core/normalize';
 import { describeRule } from '../../core/rules';
 import { canonicalValue, cellOf, columnValues, coverage, isComplete, rulesFor, sortedUtms, type Cell } from '../../core/table';
@@ -16,7 +16,9 @@ import { columnDrawer } from './column-drawer';
 import { downloadText } from './download';
 
 type Show = 'all' | 'open' | 'done';
-const PAGE_SIZE = 100;
+const PAGE_SIZE = 200;
+// The campaign is the UTM's name, so it comes first and stays put while the other columns scroll.
+const PARTS: UtmPart[] = ['campaign', 'source', 'medium', 'content', 'term'];
 const TIP_KEY = 'utmdm-tip-hidden';
 
 // Kept between renders, so a save doesn't lose your place.
@@ -25,10 +27,14 @@ let shown = PAGE_SIZE;
 let editing: { utm: string; column: string; initial?: string } | null = null;
 let focusAfter: { utm: string; column: string } | null = null;
 let detachEditor: (() => void) | null = null;
+let resizeWatch: ResizeObserver | null = null;
+let fitTable: (() => void) | null = null;
+if (typeof window !== 'undefined') window.addEventListener('resize', () => fitTable?.());
 
 export function tableView(ctx: Ctx): HTMLElement {
   detachEditor?.();
   detachEditor = null;
+  resizeWatch?.disconnect();
   const { table, grid, params } = ctx;
   const show: Show = params.get('show') === 'open' ? 'open' : params.get('show') === 'done' ? 'done' : 'all';
   const emptyIn = table.columns.find((c) => c.id === params.get('empty'));
@@ -55,7 +61,7 @@ export function tableView(ctx: Ctx): HTMLElement {
         'table',
         { class: 'utm-table' },
         h('thead', null, h('tr', null,
-          ...UTM_PARTS.map((part) => h('th', { scope: 'col', class: 'col-utm' }, `utm_${part}`)),
+          ...PARTS.map((part, i) => h('th', { scope: 'col', class: `col-utm${i === 0 ? ' col-freeze' : ''}` }, `utm_${part}`)),
           ...table.columns.map((c, i) => columnHead(c, i)),
           h('th', { class: 'col-add' }, h('a', { class: 'button button-ghost', href: hashFor('table', { column: 'new' }), title: 'Add a column' },
             icon('plus'), h('span', { class: 'sr-only' }, 'Add a column'))))),
@@ -63,7 +69,7 @@ export function tableView(ctx: Ctx): HTMLElement {
           ...visible.map((utm, r) => h(
             'tr',
             { class: complete(utm) ? 'is-done' : 'is-open' },
-            ...UTM_PARTS.map((part, i) => partCell(utm, part, i)),
+            ...PARTS.map((part, i) => partCell(utm, part, i)),
             ...table.columns.map((column, c) => classCell(utm, column, cellOf(grid, utm.key, column.id), {
               down: visible[r + 1]?.key,
               right: table.columns[c + 1]?.id,
@@ -98,7 +104,7 @@ export function tableView(ctx: Ctx): HTMLElement {
   function partCell(utm: Utm, part: UtmPart, i: number): HTMLElement {
     const value = utm.raw[part];
     const others = utm.spellings.length > 1 ? `Also written as:\n${utm.spellings.slice(1).join('\n')}` : undefined;
-    return h('td', { class: `col-utm${value ? '' : ' is-empty'}`, title: i === 0 && others ? others : value || undefined },
+    return h('td', { class: `col-utm${i === 0 ? ' col-freeze' : ''}${value ? '' : ' is-empty'}`, title: i === 0 && others ? `${value}\n\n${others}` : value || undefined },
       i === 0 && utm.spellings.length > 1 ? h('span', { class: 'spellings', title: others }, `×${utm.spellings.length}`) : null,
       value || '–');
   }
@@ -212,7 +218,43 @@ export function tableView(ctx: Ctx): HTMLElement {
   }
 
   renderTable();
+
+  // Sideways scrolling: buttons beside the table, and a shadow on the frozen column once it has something under it.
+  const scrollLeftButton = button(null, { kind: 'ghost', icon: 'left', label: 'Scroll columns left', title: 'Scroll left (or Shift + scroll wheel)', onClick: () => slide(-1) });
+  const scrollRightButton = button(null, { kind: 'ghost', icon: 'right', label: 'Scroll columns right', title: 'Scroll right (or Shift + scroll wheel)', onClick: () => slide(1) });
+  const scroller = h('span', { class: 'scroller' }, scrollLeftButton, scrollRightButton);
+  function frozenWidth(): number {
+    return tableHost.querySelector<HTMLElement>('thead .col-freeze')?.offsetWidth ?? 0;
+  }
+  function slide(direction: -1 | 1): void {
+    const step = Math.max(160, (tableHost.clientWidth - frozenWidth()) * 0.8);
+    tableHost.scrollBy({ left: direction * step, behavior: 'smooth' });
+  }
+  function syncScroll(): void {
+    const max = tableHost.scrollWidth - tableHost.clientWidth;
+    tableHost.classList.toggle('is-scrolled', tableHost.scrollLeft > 0);
+    scroller.hidden = max <= 1;
+    scrollLeftButton.disabled = tableHost.scrollLeft <= 0;
+    scrollRightButton.disabled = tableHost.scrollLeft >= max - 1;
+    // Keep focused cells clear of the frozen column and the header row.
+    tableHost.style.scrollPaddingLeft = `${frozenWidth()}px`;
+    tableHost.style.scrollPaddingTop = `${tableHost.querySelector<HTMLElement>('thead')?.offsetHeight ?? 0}px`;
+  }
+  // On a big enough screen the table fills the rest of it, so its sideways scrollbar is in view from the start.
+  // On a small one it's one screen tall, and the page scrolls to it.
+  fitTable = () => {
+    const room = window.innerHeight - (tableHost.getBoundingClientRect().top + window.scrollY) - 24;
+    tableHost.style.maxHeight = room >= 420 ? `${Math.floor(room)}px` : '';
+  };
+  tableHost.addEventListener('scroll', syncScroll, { passive: true });
+  if (typeof ResizeObserver !== 'undefined') {
+    resizeWatch = new ResizeObserver(syncScroll);
+    resizeWatch.observe(tableHost);
+  }
+
   requestAnimationFrame(() => {
+    fitTable?.();
+    syncScroll();
     if (editing) {
       const input = tableHost.querySelector<HTMLInputElement>('.cell-input');
       input?.focus();
@@ -262,8 +304,7 @@ export function tableView(ctx: Ctx): HTMLElement {
           `utmdm-${ctx.ws.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-v${ctx.version}.csv`, 'text/csv'),
       }),
     ),
-    summary(),
-    tip(),
+    h('div', { class: 'table-top' }, summary(), tip()),
     h('div', { class: 'toolbar' },
       h('nav', { class: 'segmented', 'aria-label': 'Filter UTMs' },
         ...([['all', 'All'], ['open', 'Needs values'], ['done', 'Complete']] as const).map(([s, label]) =>
@@ -279,7 +320,8 @@ export function tableView(ctx: Ctx): HTMLElement {
       h('p', { class: 'legend' },
         h('span', { class: 'legend-item' }, h('span', { class: 'legend-swatch cell-rule' }, icon('bolt', 12)), 'filled by a rule'),
         h('span', { class: 'legend-item' }, h('span', { class: 'legend-swatch cell-typed' }, icon('pencil', 12)), 'typed'),
-        h('span', { class: 'legend-item' }, h('span', { class: 'legend-swatch cell-empty' }, '–'), 'needs a value'))),
+        h('span', { class: 'legend-item' }, h('span', { class: 'legend-swatch cell-empty' }, '–'), 'needs a value')),
+      scroller),
     table.utms.length
       ? tableHost
       : emptyState('No UTMs yet', 'Paste tagged links or rows from a spreadsheet to start your table.',
@@ -336,7 +378,7 @@ export function tableView(ctx: Ctx): HTMLElement {
             } catch {
               // hidden for this visit
             }
-            box.remove();
+            ctx.render();
           },
         })),
       h(

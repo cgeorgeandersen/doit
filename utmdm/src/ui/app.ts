@@ -115,14 +115,15 @@ export function startApp(root: HTMLElement, store: Store, clock: () => string = 
   function render(): void {
     pending = false;
     const focused = document.activeElement?.id;
-    const scrollLeft = root.querySelector('.table-wrap')?.scrollLeft ?? 0;
+    const kept = root.querySelector('.table-wrap');
+    const [scrollLeft, scrollTop] = [kept?.scrollLeft ?? 0, kept?.scrollTop ?? 0];
     route = parseRoute(location.hash);
     const view = { table: tableView, rules: rulesView, history: historyView }[route.page](ctx);
     fill(root, h('a', { class: 'skip', href: '#main' }, 'Skip to content'), topbar(), h('main', { id: 'main', class: 'page' }, view),
       footer(), toastRegion);
     document.title = `${PAGES.find((p) => p.page === route.page)!.label} · UTMDM`;
     const wrap = root.querySelector('.table-wrap');
-    if (wrap) wrap.scrollLeft = scrollLeft;
+    if (wrap) wrap.scrollTo({ left: scrollLeft, top: scrollTop });
     if (focused) document.getElementById(focused)?.focus({ preventScroll: true });
   }
 

@@ -21,9 +21,9 @@
   border-bottom: 1px solid var(--line);
 }
 .topbar-inner {
-  max-width: var(--page-w);
+  max-width: var(--page-max);
   margin: 0 auto;
-  padding: 10px 24px;
+  padding: 10px var(--gutter);
   display: flex;
   align-items: center;
   gap: 24px;
@@ -158,9 +158,9 @@
 }
 
 .page {
-  max-width: var(--page-w);
+  max-width: var(--page-max);
   margin: 0 auto;
-  padding: 28px 24px 48px;
+  padding: 28px var(--gutter) 48px;
 }
 .view {
   display: grid;
@@ -168,9 +168,9 @@
   gap: 20px;
 }
 .footer {
-  max-width: var(--page-w);
+  max-width: var(--page-max);
   margin: 0 auto;
-  padding: 0 24px 32px;
+  padding: 0 var(--gutter) 32px;
   color: var(--ink-3);
   font-size: 13px;
 }
@@ -317,6 +317,42 @@
   height: 100%;
   border-radius: 999px;
   background: var(--accent);
+}
+
+/* ── wide screens: side by side ───────────────────────────────────────── */
+
+.table-top,
+.split {
+  display: grid;
+  gap: 20px;
+  align-items: start;
+}
+.split-main,
+.split-side {
+  display: grid;
+  gap: 20px;
+  min-width: 0;
+}
+@media (min-width: 1440px) {
+  .table-top:has(> .tip) {
+    grid-template-columns: minmax(0, 3fr) minmax(360px, 2fr);
+    align-items: stretch;
+  }
+  .split {
+    grid-template-columns: minmax(440px, 5fr) minmax(0, 7fr);
+  }
+  .split-side {
+    position: sticky;
+    top: 84px;
+    max-height: calc(100dvh - 100px);
+    overflow-y: auto;
+  }
+  .split-wide {
+    grid-template-columns: minmax(0, 3fr) minmax(320px, 1fr);
+  }
+  .split-wide > .split-side {
+    order: 2;
+  }
 }
 
 /* ── the summary ───────────────────────────────────────────────────────── */
@@ -470,9 +506,8 @@
 }
 .table-meta {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  gap: 12px;
+  gap: 8px 16px;
   flex-wrap: wrap;
   margin-bottom: -8px;
 }
@@ -480,7 +515,17 @@
   font-size: 14px;
   color: var(--ink-2);
 }
+.scroller {
+  display: inline-flex;
+  gap: 2px;
+}
+.scroller .button {
+  min-height: 30px;
+  padding: 3px 8px;
+  border-color: var(--line-strong);
+}
 .legend {
+  margin-left: auto;
   display: flex;
   gap: 14px;
   flex-wrap: wrap;
@@ -503,7 +548,12 @@
 
 .table-wrap {
   position: relative; /* keeps visually hidden labels inside the scroll area */
-  overflow-x: auto;
+  /* The table scrolls inside a box the height of the screen, so its sideways
+     scrollbar and its header row are always in view. */
+  max-height: calc(100dvh - 92px);
+  min-height: 240px;
+  overflow: auto;
+  overscroll-behavior-x: contain; /* a sideways swipe scrolls the table, not the browser's history */
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius-l);
@@ -514,9 +564,12 @@ table {
   font-size: 14px;
 }
 th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
   padding: 8px 10px;
   background: var(--surface-2);
-  border-bottom: 1px solid var(--line);
+  box-shadow: inset 0 -1px 0 var(--line);
   color: var(--ink-2);
   font-size: 12.5px;
   font-weight: 650;
@@ -547,8 +600,27 @@ tbody tr:last-child td {
 .utm-table td.is-empty {
   color: var(--ink-3);
 }
-.utm-table tbody tr.is-open td:first-child {
-  box-shadow: inset 3px 0 0 var(--warning);
+/* The campaign column stays put while the rest scroll under it. */
+.utm-table .col-freeze {
+  --edge: inset -1px 0 0 var(--line);
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  max-width: 240px;
+  background: var(--surface);
+  box-shadow: var(--edge);
+  font-weight: 500;
+}
+.utm-table th.col-freeze {
+  z-index: 3;
+  background: var(--surface-2);
+  box-shadow: var(--edge), inset 0 -1px 0 var(--line);
+}
+.table-wrap.is-scrolled .col-freeze {
+  --edge: inset -1px 0 0 var(--line-strong), 10px 0 12px -10px var(--freeze-shadow);
+}
+.utm-table tbody tr.is-open td.col-freeze {
+  box-shadow: inset 3px 0 0 var(--warning), var(--edge);
 }
 .spellings {
   display: inline-block;
@@ -1203,7 +1275,6 @@ textarea {
   .topbar-inner {
     flex-wrap: wrap;
     gap: 10px;
-    padding: 10px 16px;
   }
   .nav {
     order: 3;
@@ -1211,10 +1282,7 @@ textarea {
     overflow-x: auto;
   }
   .page {
-    padding: 20px 16px 40px;
-  }
-  .footer {
-    padding: 0 16px 24px;
+    padding-top: 20px;
   }
   .summary {
     padding: 18px;
@@ -1236,6 +1304,11 @@ textarea {
     min-width: 0;
     max-width: none;
     flex-basis: 100%;
+  }
+  .utm-table td.col-freeze,
+  .utm-table th.col-freeze {
+    max-width: 136px;
+    font-size: 12px;
   }
   .toolbar > .button {
     margin-left: 0;
