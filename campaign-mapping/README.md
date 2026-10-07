@@ -4,7 +4,9 @@ A prototype that takes the messy UTM strings independent operators already send 
 
 Every name in it is fictional: **Zestify** is an invented beverage brand, and its five operators (Northgate Beverage, Pinecrest Bottling, Harborline Distributing, Sunvale Drinks, Redrock Beverage) are invented bottlers. All data is synthetic.
 
-**Status:** Stage 1 of 4 (data model and engine) is built. Not deployed yet; see [Deploying](#deploying-later).
+**Status:** Stages 1–3 of 4 are built: the data model and engine, the synthetic data, and the Streamlit app. Stage 4 (evaluation against ground truth) is next. Not deployed yet; see [Deploying](#deploying-later).
+
+![The review queue: unrecognized strings ranked by spend, each with suggestions and a one-click rule](docs/screenshots/review-queue.png)
 
 ## Success criteria
 
@@ -32,10 +34,11 @@ Requires Python 3.11 or newer.
 cd campaign-mapping
 python3 -m venv .venv && . .venv/bin/activate
 pip install -r requirements-dev.txt
-python -m pytest
+streamlit run app/Home.py      # http://localhost:8501
+python -m pytest               # every test, the app's pages included
 ```
 
-Stage 3 adds the app (`streamlit run app/Home.py`).
+The first start builds `data/demo.db` (about a second): the Zestify taxonomy, the 4,998 synthetic rows and the starter ruleset. **Reset the demo** in the sidebar rebuilds it. `python scripts/generate_data.py` regenerates the data files (the same bytes every time for the same seed), and `python -m campaign_mapping.demo` rebuilds the database from them.
 
 ## Layout
 
@@ -52,7 +55,17 @@ campaign-mapping/
 │   ├── taxonomy.py        operators, dimensions, values, campaigns
 │   ├── rulesets.py        versioned rule changes, load or diff any version, revert
 │   ├── runs.py            import raw strings, run and store, reproduce a run
-│   └── seed.py            the fictional Zestify network
+│   ├── seed.py            the fictional Zestify network
+│   ├── demo.py            build the demo database from data/
+│   ├── reports.py         coverage, review queue and export tables (pandas)
+│   └── suggest.py         review-queue suggestions (rapidfuzz)
+├── app/                   the Streamlit app: Home.py and one file per page in views/
+├── scripts/
+│   └── generate_data.py   the synthetic data and its ground truth
+├── data/
+│   ├── utm_strings.csv    4,998 rows the app imports
+│   ├── ground_truth.csv   the true campaign and type of every row; evaluation only, never imported
+│   └── starter_rules.csv  the starter ruleset, as data
 └── tests/
 ```
 
@@ -117,13 +130,45 @@ For each string, dimension and lens:
 ## Stages
 
 1. **Data model and engine** (done): schema, engine, versioning, diffs, reproducibility, tests.
-2. **Synthetic data generator** (`scripts/generate_data.py`): about 5,000 spend-weighted rows across the five operators, each with its own habits; a separate ground truth file; seeded and deterministic. Also the starter ruleset.
-3. **Streamlit app**: Import, Rules, Coverage, Review queue, Versions, Export.
-4. **Evaluation**: precision, recall and F1 per campaign against ground truth, spend-weighted coverage, and the naive baseline, with the results written up here.
+2. **Synthetic data generator** (done): see [The synthetic data](#the-synthetic-data).
+3. **Streamlit app** (done): see [The app](#the-app).
+4. **Evaluation** (next): precision, recall and F1 per campaign against ground truth, spend-weighted coverage, and the naive baseline, with the results written up here.
+
+## The synthetic data
+
+`scripts/generate_data.py` writes 4,998 rows (2,067 distinct strings as written, $3.2M of spend), one per placement per week for the weeks of 5 January to 28 September 2026, seeded and byte-for-byte reproducible. Each operator has its own habits, the way real teams do: a few campaign spellings it keeps reusing, and its own names for sources and mediums.
+
+| Operator | Habits |
+| --- | --- |
+| Northgate Beverage | SHOUTING_SNAKE_CASE, `FB` / `fb_paid` / `FACEBOOK`, brand prefixes (`ZST-SummerCup`), house abbreviations (`SC26_Launch`) |
+| Pinecrest Bottling | Abbreviations everywhere (`sc_26`, `fk26`, `sr26_promo`), `paidsocial`, terse notices (`ord_conf`, `rte_chg_notice`) |
+| Harborline Distributing | Title Case with spaces, URL-encoded spaces (`Spring+Refresh%202026`), typos (`witer_warmup`, `fal kickoff`) |
+| Sunvale Drinks | Mostly email and SMS, `_newsletter` / `_blast` suffixes, and the most operational and transactional sends (receipts, reminders, holiday hours) |
+| Redrock Beverage | kebab-case (`sc-26`, `summer-cup-26`), CamelCase, `meta` / `facebook` / `fb` |
+
+A paid-media row is typically $200 to $2,100 for its week (up to about $7,800); email and SMS rows carry their send volume and a cost per send, so receipts and reminders are many rows but little spend. A few placements name two campaigns at once (`SUMMER_CUP_TO_FALL_KICKOFF_BRIDGE`), and some rows arrive twice, the way a double export does. `data/ground_truth.csv` holds each row's true campaign and type, joined on `row_id`; nothing in the app reads it.
+
+**The starter ruleset** (`data/starter_rules.csv`, 20 rules) is what a network team writes first: the obvious spellings of each campaign, the flagship's house abbreviation, receipts and confirmations. It covers **67.6% of spend** on campaign, and where it fires it is right 99.9% of the time by spend. What it misses is the long tail: other abbreviations, typos, the two local campaigns and most operational notices: 40 values waiting in the review queue, two of them conflicts (5 rows).
+
+## The app
+
+| Page | What it does |
+| --- | --- |
+| **Overview** | Spend and row coverage against the 90% target, coverage by dimension, the biggest gaps. |
+| **Review queue** | Unclassified and conflicted strings grouped by one field's value, biggest spend first. Each shows its suggestions (fuzzy matches against classified strings, rule patterns and value names, plus initials: `sr` spells **S**pring **R**efresh) with a score and the reason, a preview of the rule it will write and how much it reaches, and three actions: accept a suggestion, assign any value (or add a new one), or mark ignore. Every action writes a rule (exact match, priority 10 by default, all of it adjustable), so the decision is versioned and holds for every future import. |
+| **Coverage** | Percent of rows and of spend classified per dimension and per operator, through the network lens or each operator's own; the top 20 unrecognized strings by spend; every conflict with its tied rules; and **Record run**, which stores the run with its fingerprint. |
+| **Rules** | The current ruleset in a table where priority, owner and active can be edited in place (all edits save as one version); forms to add and edit a rule with a live **test this rule** panel (rows, distinct strings, spend and not-yet-classified spend it would reach, and the strings themselves); and each campaign's product lineup per lens. |
+| **Import** | Upload CSV or Excel, map columns (guessed from their names), and check before loading: rows, distinct strings, spend, duplicate rows within the file, and rows already loaded (skipped by default, so spend is never counted twice). Every load is a numbered batch. |
+| **Versions** | Every version with its author and reason; any two compared rule by rule and lineup by lineup; what that did to the results (coverage before and after, outcomes gained, lost and reassigned, the spend that moved, every changed string); revert as a new version; and **Reproduce** for any recorded run. |
+| **Export** | The mapping table (each raw string with every dimension's value and the rule that set it) as CSV and Excel, and a roll-up by campaign with dates and product lineup. Every file names its ruleset version (`campaign_mapping_v7.xlsx`), and the workbook's About sheet says how to rebuild it exactly. |
+
+One decision shows the loop: accepting the top suggestion (`sc-26` → Summer Cup 2026) moves campaign spend coverage from 67.6% to 77.9%, and product coverage follows through the campaign's lineup.
+
+![Versions: one review decision, compared with the starter ruleset](docs/screenshots/versions.png)
 
 ## Not built yet (on purpose)
 
-- **Auth and roles.** "Admin" is a flag on `create_dimension()`, not a login. TODO: real users, roles, and approval before a rule change goes live.
+- **Auth and roles.** "Admin" is a flag on `create_dimension()`, not a login, and "Your name" in the sidebar is whatever you type. TODO: real users, roles, and approval before a rule change goes live.
 - **Connectors.** No GA4, BigQuery or ad-platform imports; strings come in from CSV or Excel. TODO: a GA4/BigQuery import that writes to `raw_strings` through the same `import_rows()` path.
 - **An API.** The engine is pure Python for this reason. TODO: a small HTTP API over `classify()`, `preview_rule()` and `explain()`.
 - **Date-aware rules.** Campaigns have dates, but rules don't use them yet. TODO: flag strings classified to a campaign outside its dates.
@@ -132,4 +177,4 @@ For each string, dimension and lens:
 
 ## Deploying (later)
 
-Streamlit can't run on Vercel: Vercel serves short-lived functions, while a Streamlit app is a long-running server holding a WebSocket per browser, and Vercel doesn't keep a SQLite file between requests. The plan is Streamlit Community Cloud (free; deploys from this repository with `campaign-mapping` as the app folder) for the live app, rebuilding its demo database on start, and a page on the portfolio linking to it. Later, the pure engine can move behind an API on Vercel with a hosted database.
+Streamlit can't run on Vercel: Vercel serves short-lived functions, while a Streamlit app is a long-running server holding a WebSocket per browser, and Vercel doesn't keep a SQLite file between requests. The plan is Streamlit Community Cloud (free; deploys from this repository with `campaign-mapping/app/Home.py` as the entry point) for the live app, and a page on the portfolio linking to it. The app is ready for a disk that doesn't survive restarts: it rebuilds its demo database from `data/` on start. Later, the pure engine can move behind an API on Vercel with a hosted database.

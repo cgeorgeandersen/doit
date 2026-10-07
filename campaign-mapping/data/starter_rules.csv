@@ -1,0 +1,21 @@
+dimension,field,match_type,pattern,value,priority,workspace,action,owner,note
+campaign,campaign,regex,summer[ _-]?cup,Summer Cup 2026,100,,assign,network-ops,The obvious spellings of the flagship campaign
+campaign,campaign,contains,sc26,Summer Cup 2026,100,,assign,network-ops,The flagship's house abbreviation
+campaign,campaign,regex,fall[ _-]?kick[ _-]?off,Fall Kickoff 2026,100,,assign,network-ops,
+campaign,campaign,regex,winter[ _-]?warm[ _-]?up,Winter Warmup 2026,100,,assign,network-ops,
+campaign,campaign,regex,spring[ _-]?refresh,Spring Refresh 2026,100,,assign,network-ops,
+campaign,campaign,contains,receipt,Non-campaign,50,,assign,network-ops,Receipts belong to no campaign
+campaign,campaign,regex,order[ _-]?confirmation,Non-campaign,50,,assign,network-ops,
+type,medium,regex,paid|cpc|ppc|social|display,Marketing,100,,assign,network-ops,Paid media is marketing by definition
+type,campaign,contains,receipt,Transactional,50,,assign,network-ops,
+type,campaign,regex,order[ _-]?confirmation,Transactional,50,,assign,network-ops,
+type,campaign,contains,reminder,Operational,50,,assign,network-ops,
+objective,content,contains,awareness,Awareness,100,,assign,network-ops,
+objective,content,regex,(^|_)rt_|retarget,Conversion,100,,assign,network-ops,Retargeting
+objective,content,contains,coupon,Conversion,100,,assign,network-ops,
+objective,content,contains,recipe,Consideration,100,,assign,network-ops,
+objective,content,contains,loyalty,Retention,100,,assign,network-ops,
+product,content,contains,lime,Zestify Lime,100,,assign,network-ops,Creative that names a product
+product,content,contains,zero,Zestify Zero,100,,assign,network-ops,
+product,content,contains,berry,Zestify Berry,100,,assign,network-ops,
+product,content,contains,ginger,Zestify Ginger,100,,assign,network-ops,

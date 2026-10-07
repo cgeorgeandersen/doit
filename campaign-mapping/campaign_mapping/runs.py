@@ -62,20 +62,26 @@ class Reproduction:
 
 # ── raw strings ─────────────────────────────────────────────────────────────
 
-def import_rows(
-    conn: sqlite3.Connection,
-    rows: Iterable[Mapping[str, object]],
-    *,
-    source_name: str,
-    imported_by: str,
-    note: str = "",
-) -> ImportResult:
-    """Store rows exactly as they arrived, as one import batch.
+@dataclass(frozen=True)
+class PreparedRow:
+    """One validated row, ready to store: what import_rows() writes, and what an import preview inspects."""
+
+    source_row: int
+    workspace_id: int
+    utm: tuple[str, str, str, str, str]
+    activity_date: str | None
+    spend: float
+    sends: int | None
+    row_hash: str
+
+
+def prepare_rows(conn: sqlite3.Connection, rows: Iterable[Mapping[str, object]]) -> list[PreparedRow]:
+    """Validate rows without storing them. Raises ValueError (or LookupError) naming the first bad row.
 
     Each row needs an `operator` (id, slug or name) and may have the five
     `utm_*` fields, `spend`, `sends`, `activity_date` (YYYY-MM-DD) and
-    `source_row`. UTM values are stored verbatim, so "  FB " stays "  FB ";
-    a missing one is stored as empty text. Either every row is stored or none is.
+    `source_row`. UTM values are kept verbatim, so "  FB " stays "  FB ";
+    a missing one becomes empty text.
     """
     operators: dict[object, int] = {}
     prepared = []
@@ -93,8 +99,20 @@ def import_rows(
         spend = _spend(row.get("spend"), where)
         sends = _count(row.get("sends"), where)
         row_hash = _row_hash(workspace_id, utm, activity_date, spend, sends)
-        prepared.append((source_row, workspace_id, *utm, activity_date, spend, sends, row_hash))
+        prepared.append(PreparedRow(source_row, workspace_id, utm, activity_date, spend, sends, row_hash))
+    return prepared
 
+
+def existing_hashes(conn: sqlite3.Connection, hashes: Iterable[str]) -> set[str]:
+    """Which of these row hashes are already stored: rows that were imported before."""
+    wanted = set(hashes)
+    return {row[0] for row in conn.execute("SELECT DISTINCT row_hash FROM raw_strings") if row[0] in wanted}
+
+
+def import_prepared(
+    conn: sqlite3.Connection, prepared: list[PreparedRow], *, source_name: str, imported_by: str, note: str = ""
+) -> ImportResult:
+    """Store prepared rows as one import batch. Either every row is stored or none is."""
     with transaction(conn):
         batch_id = conn.execute(
             "INSERT INTO import_batches (source_name, row_count, note, imported_by, imported_at) VALUES (?, ?, ?, ?, ?)",
@@ -104,9 +122,24 @@ def import_rows(
             """INSERT INTO raw_strings (batch_id, source_row, workspace_id, utm_source, utm_medium, utm_campaign,
                                         utm_content, utm_term, activity_date, spend, sends, row_hash)
                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
-            [(batch_id, *row) for row in prepared],
+            [
+                (batch_id, r.source_row, r.workspace_id, *r.utm, r.activity_date, r.spend, r.sends, r.row_hash)
+                for r in prepared
+            ],
         )
     return ImportResult(batch_id, len(prepared))
+
+
+def import_rows(
+    conn: sqlite3.Connection,
+    rows: Iterable[Mapping[str, object]],
+    *,
+    source_name: str,
+    imported_by: str,
+    note: str = "",
+) -> ImportResult:
+    """Validate and store rows exactly as they arrived, as one import batch (see prepare_rows)."""
+    return import_prepared(conn, prepare_rows(conn, rows), source_name=source_name, imported_by=imported_by, note=note)
 
 
 def load_records(conn: sqlite3.Connection, *, max_raw_string_id: int | None = None) -> list[UtmRecord]:

@@ -68,6 +68,10 @@ class NormalizedUtm:
     def of(cls, record: _HasUtmFields) -> NormalizedUtm:
         return cls(*(normalize_text(getattr(record, name)) for name in UTM_FIELDS))
 
+    @classmethod
+    def of_fields(cls, source: object, medium: object, campaign: object, content: object, term: object) -> NormalizedUtm:
+        return cls(*(normalize_text(value) for value in (source, medium, campaign, content, term)))
+
     @property
     def full(self) -> str:
         """All five fields in a fixed order, which is what a rule on field "any" reads."""
