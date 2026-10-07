@@ -1,0 +1,11 @@
+[project]
+name = "campaign-mapping"
+version = "0.1.0"
+description = "Classify messy UTM strings with a versioned rule table and report how much of the data, and the spend, the rules cover."
+readme = "README.md"
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-q"

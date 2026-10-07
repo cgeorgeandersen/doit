@@ -1,0 +1,6 @@
+# The app's runtime stack, pinned so the demo behaves the same everywhere.
+# The engine itself (campaign_mapping/) needs only the standard library.
+streamlit==1.65.0
+pandas==3.0.6
+rapidfuzz==3.14.6
+openpyxl==3.1.5

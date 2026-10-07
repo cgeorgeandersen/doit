@@ -1,0 +1,38 @@
+# Checks the Campaign Mapping Layer (campaign-mapping/) on every push to master and
+# pull request that touches it: install the pinned stack, then run the tests on the
+# oldest and newest Python it supports. It does not deploy.
+name: Campaign Mapping Layer
+
+on:
+  push:
+    branches: [master]
+    paths: ['campaign-mapping/**', '.github/workflows/campaign-mapping-ci.yml']
+  pull_request:
+    paths: ['campaign-mapping/**', '.github/workflows/campaign-mapping-ci.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: campaign-mapping-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.11', '3.13']
+    defaults:
+      run:
+        working-directory: campaign-mapping
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: campaign-mapping/requirements*.txt
+      - run: pip install -r requirements-dev.txt
+      - run: python -m pytest

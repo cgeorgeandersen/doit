@@ -1,6 +1,6 @@
 # This repository
 
-Four independent projects share this repository. Each deploys as its own Vercel project with its own Root Directory; changing one never requires touching another.
+Five independent projects share this repository. Changing one never requires touching another. The four websites each deploy as their own Vercel project with their own Root Directory; the Campaign Mapping Layer is a Python app that isn't deployed yet (Streamlit can't run on Vercel; see its README).
 
 | Folder | What it is | Guide |
 | --- | --- | --- |
@@ -8,6 +8,7 @@ Four independent projects share this repository. Each deploys as its own Vercel 
 | `confident-machine/` | The Confident Machine, an interactive essay (Vite, vanilla TypeScript) | [`confident-machine/README.md`](confident-machine/README.md), [`confident-machine/DESIGN.md`](confident-machine/DESIGN.md) |
 | `what-do-i-actually-do/` | What Do I Actually Do?, a single-page tool | [`README.md`](README.md) |
 | `flockwatch/` | Track the Pole (trackthepole.com; working name FlockWatch), a map of the Flock license plate cameras on any drive (Vite, vanilla TypeScript, MapLibre) | [`flockwatch/README.md`](flockwatch/README.md) |
+| `campaign-mapping/` | Campaign Mapping Layer, a prototype that classifies messy UTM strings with a versioned rule table and reports coverage; synthetic data only (Python, SQLite; Streamlit app to come). The engine in `campaign_mapping/` must never import Streamlit | [`campaign-mapping/README.md`](campaign-mapping/README.md) |
 | `Doit/`, `Doit.xcodeproj/` | A 2019 iOS app, not deployed | — |
 
 - The root `vercel.json` serves `what-do-i-actually-do/`. Don't repoint it; the other sites set their Root Directory in Vercel instead.
