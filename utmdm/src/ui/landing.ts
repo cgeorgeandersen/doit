@@ -86,11 +86,14 @@ export function landingView(root: HTMLElement, apiUrl: string, problem?: string)
       h('section', { class: 'how', id: 'how', 'aria-labelledby': 'how-title' },
         h('div', { class: 'section-head' },
           h('p', { class: 'eyebrow' }, 'How it works'),
-          h('h2', { id: 'how-title' }, 'From messy UTMs to a trusted table in three steps')),
+          h('h2', { id: 'how-title' }, 'Set it up once. Every new campaign arrives classified.'),
+          h('p', { class: 'section-lead' }, 'Five steps from messy GA4 data to a mapping your whole stack trusts. You do the first three once; the last two keep running.')),
         h('ol', { class: 'steps' },
-          step('chart', 'Connect Google Analytics', 'Sign in with Google and pick a property. TagFluent reads your tagged campaigns, read-only, and merges spellings that differ only in capitals, spaces or encoding.'),
-          step('bolt', 'Classify with rules', 'Add the columns your team reports on and write rules that fill them. Type a value wherever a rule can\'t decide. Coverage shows what\'s left.'),
-          step('upload', 'Send it where reports are built', 'Download the mapping, or send it to Snowflake, Databricks, BigQuery and other warehouses so every dashboard joins to the same values.'))),
+          step('chart', 'Connect GA4', 'Sign in with Google and pick a property. Every tagged campaign comes in, read-only, with spellings like fb and Facebook merged.'),
+          step('columns', 'Define your taxonomy', 'Add the columns your reports group by: Channel, Campaign, Type, Region, or anything your team needs.'),
+          step('pencil', 'Classify with rules or by hand', 'Write rules in plain sentences, type a value where a rule can\'t decide, and remove the rows you never want to see.'),
+          step('refresh', 'New data classifies itself', 'Next month\'s campaigns arrive already classified by the rules you wrote. Only the truly new ones need a person.', 'Automatic'),
+          step('database', 'Sync to your warehouse', 'The mapping lands in Snowflake, BigQuery or your warehouse, keyed and versioned, so every dashboard joins to the same values.', 'Automatic'))),
 
       h('section', { class: 'control', id: 'control', 'aria-labelledby': 'control-title' },
         h('div', { class: 'section-head' },
@@ -118,8 +121,10 @@ function point(iconName: IconName, title: string, text: string): HTMLElement {
   return h('li', null, h('span', { class: 'point-icon' }, icon(iconName, 14)), h('span', null, h('strong', null, title), ' ', text));
 }
 
-function step(iconName: IconName, title: string, text: string): HTMLElement {
-  return h('li', { class: 'step' }, h('span', { class: 'step-icon' }, icon(iconName, 18)), h('h3', null, title), h('p', null, text));
+function step(iconName: IconName, title: string, text: string, badge?: string): HTMLElement {
+  return h('li', { class: `step${badge ? ' step-auto' : ''}` },
+    h('span', { class: 'step-top' }, h('span', { class: 'step-icon' }, icon(iconName, 18)), badge ? h('span', { class: 'step-badge' }, badge) : null),
+    h('h3', null, title), h('p', null, text));
 }
 
 function fact(iconName: IconName, title: string, text: string): HTMLElement {

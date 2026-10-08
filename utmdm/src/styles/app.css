@@ -2068,26 +2068,63 @@ textarea {
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 22px;
   counter-reset: step;
 }
 .step {
+  position: relative;
   counter-increment: step;
   display: grid;
   gap: 10px;
   align-content: start;
-  padding: 22px;
+  padding: 20px;
   border-top: 2px solid var(--accent);
   background: var(--surface);
   border-radius: 0 0 var(--radius-l) var(--radius-l);
   color: var(--ink-2);
+  font-size: 14.5px;
+}
+/* The flow: an arrow between each step and the next. */
+.step:not(:last-child)::after {
+  content: '→';
+  position: absolute;
+  top: 22px;
+  right: -19px;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 16px;
+  color: var(--ink-3);
+  font-size: 16px;
+}
+.step-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 22px;
+}
+.step-badge {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--mint-tint);
+  color: var(--mint-ink);
+  font-size: 11.5px;
+  font-weight: 650;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.step-auto {
+  border-top-color: var(--mint);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--mint-tint) 70%, var(--surface)) 0%, var(--surface) 60%);
 }
 .step h3 {
   color: var(--ink);
   display: flex;
   align-items: baseline;
   gap: 10px;
+  text-wrap: balance;
 }
 .step h3::before {
   content: counter(step);
@@ -2097,8 +2134,41 @@ textarea {
   color: var(--accent);
   line-height: 1;
 }
+.step-auto h3::before {
+  color: var(--mint-ink);
+}
 .step-icon {
   color: var(--mint-ink);
+}
+@media (max-width: 1180px) {
+  .steps {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+  .step {
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: 16px;
+    border-top: 0;
+    border-left: 2px solid var(--accent);
+    border-radius: 0 var(--radius-l) var(--radius-l) 0;
+  }
+  .step-auto {
+    border-left-color: var(--mint);
+    background: linear-gradient(90deg, color-mix(in srgb, var(--mint-tint) 70%, var(--surface)) 0%, var(--surface) 60%);
+  }
+  .step-top {
+    grid-row: 1 / span 2;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+  .step:not(:last-child)::after {
+    content: '↓';
+    top: auto;
+    bottom: -14px;
+    right: auto;
+    left: 26px;
+  }
 }
 
 .control {
