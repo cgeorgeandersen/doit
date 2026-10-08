@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Privacy · TagFluent</title>
+    <meta name="description" content="What TagFluent collects, where it is kept, who can see it, and how to have it deleted." />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#f4f2f7" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <script src="/theme-init.js"></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="topbar-inner">
+        <a class="brand" href="/" aria-label="TagFluent home"><span class="wordmark">Tag<em>Fluent</em></span></a>
+        <div class="topbar-actions push-right" id="privacy-actions"></div>
+      </div>
+    </header>
+    <main class="page legal" id="main">
+      <p class="eyebrow">Privacy</p>
+      <h1>How TagFluent handles your data</h1>
+      <p class="legal-lead">
+        TagFluent is a tool for classifying marketing UTMs. This page says what it collects, where that is kept, who can see it,
+        and how to have it deleted. The short version: we collect what the product needs to work, we keep it in Amazon Web Services
+        in the United States, and we never sell it or use it for advertising.
+      </p>
+      <p class="legal-updated">Last updated October 8, 2026</p>
+
+      <section>
+        <h2>Who we are</h2>
+        <p>
+          TagFluent (tagfluent.com) is operated by George Andersen. Questions about this page or your data go to
+          <span class="legal-email">cgeorgeandersen@outlook.com</span>.
+        </p>
+      </section>
+
+      <section>
+        <h2>What we collect</h2>
+        <dl class="legal-list">
+          <dt>Your account</dt>
+          <dd>
+            Your email address and password, kept by Amazon Cognito, the sign-in service TagFluent uses. Cognito stores passwords
+            in a form no one can read back, including us. New accounts are reviewed before they open, so when you sign up we
+            receive an email with your address.
+          </dd>
+          <dt>Your workspace</dt>
+          <dd>
+            The UTMs you add, the columns and rules you create, the values you type, the name you give yourself, and the history
+            of every change. This is the product, so it is kept until you ask us to delete it.
+          </dd>
+          <dt>Demo requests</dt>
+          <dd>
+            If you book a demo, the name, work email, company, team and message you enter are emailed to us. They are not stored
+            in TagFluent's database.
+          </dd>
+          <dt>Things your browser remembers</dt>
+          <dd>
+            Your browser keeps your sign-in session, your light or dark choice, and your column widths, so you don't have to set
+            them again. TagFluent uses no advertising or tracking cookies and no third-party analytics.
+          </dd>
+          <dt>Error logs</dt>
+          <dd>Our servers keep basic error logs for 30 days so we can fix problems.</dd>
+        </dl>
+      </section>
+
+      <section>
+        <h2>Google Analytics</h2>
+        <p>
+          You can choose to connect a Google Analytics 4 property to import your UTMs. When you do, Google asks you to allow
+          read-only access to your Analytics data (the <code>analytics.readonly</code> permission). TagFluent then reads the list
+          of properties you can see and, for the property and dates you pick, the campaign source, medium, name, content and term
+          of your sessions with session and key event counts. It does not read anything about individual visitors.
+        </p>
+        <p>
+          The access Google grants stays in your browser tab for about an hour and is never sent to or stored on TagFluent's
+          servers. Only the UTMs you choose to add are saved, to your workspace. TagFluent cannot change anything in Google
+          Analytics. You can remove its access at any time at
+          <a href="https://myaccount.google.com/permissions" rel="noopener">myaccount.google.com/permissions</a>.
+        </p>
+        <p>
+          TagFluent's use and transfer of information received from Google APIs adheres to the
+          <a href="https://developers.google.com/terms/api-services-user-data-policy" rel="noopener">Google API Services User Data Policy</a>,
+          including the Limited Use requirements. We use Google data only to show and import your UTMs, never for advertising, never
+          to train AI models, and we don't let anyone read it except as needed for security, to comply with the law, or with your
+          permission.
+        </p>
+      </section>
+
+      <section>
+        <h2>How we use it</h2>
+        <p>
+          To run the product: to sign you in, save and show your workspace, import your UTMs, answer your demo request and
+          support questions, and keep the service secure. We may email you about your account or your demo request. We will not
+          add you to a marketing list without asking.
+        </p>
+        <p>We do not sell your data, use it for advertising, or use your workspace or Google data to train AI models.</p>
+      </section>
+
+      <section>
+        <h2>Where it's kept and who can see it</h2>
+        <p>
+          Everything is kept in Amazon Web Services in the United States (Ohio). Your workspace is stored in Amazon DynamoDB,
+          encrypted at rest, with continuous backups kept for 35 days. Everything travels over HTTPS. Each workspace is tied to its
+          own account, and only that account can read or change it through TagFluent.
+        </p>
+        <p>We use these service providers, which handle data only to provide their service to us:</p>
+        <ul>
+          <li><strong>Amazon Web Services</strong>: hosting, sign-in (Cognito), storage (DynamoDB) and notification emails.</li>
+          <li><strong>Google</strong>: only if you connect Google Analytics, under Google's own privacy policy.</li>
+        </ul>
+        <p>We share data with no one else, except when the law requires it.</p>
+      </section>
+
+      <section>
+        <h2>Keeping and deleting your data</h2>
+        <p>
+          Your account and workspace are kept while your account exists. You can download a full backup of your workspace at any
+          time from Import &amp; export, and clear it with Start with an empty table. To delete your account and everything in it,
+          email us from the address you signed up with. We delete it within 30 days, and it leaves our backups within a further
+          35 days. Demo request emails are deleted when they are no longer needed to follow up.
+        </p>
+      </section>
+
+      <section>
+        <h2>Your rights</h2>
+        <p>
+          You can ask to see, correct, export or delete the personal data we hold about you, and to object to how we use it.
+          Email us and we will answer within 30 days. If you are in the European Union or the United Kingdom, you can also complain
+          to your local data protection authority.
+        </p>
+      </section>
+
+      <section>
+        <h2>Children</h2>
+        <p>TagFluent is a business tool and is not meant for anyone under 16. We don't knowingly collect their data.</p>
+      </section>
+
+      <section>
+        <h2>Changes</h2>
+        <p>
+          If we change how TagFluent handles data, we will update this page and its date, and for significant changes we will
+          email account holders before they take effect.
+        </p>
+      </section>
+
+      <p class="legal-back"><a href="/">Back to TagFluent</a></p>
+    </main>
+    <script type="module" src="/src/privacy.ts"></script>
+  </body>
+</html>

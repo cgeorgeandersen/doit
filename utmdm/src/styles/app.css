@@ -2253,8 +2253,9 @@ textarea {
 }
 .landing-footer p {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 12px;
+  gap: 4px 12px;
 }
 .landing-footer .wordmark {
   font-size: 18px;
@@ -2718,4 +2719,92 @@ select.joiner {
   color: var(--ink-3);
   font-size: 13px;
   margin-left: 6px;
+}
+
+/* ── the privacy page ──────────────────────────────────────────────────── */
+
+.footer-link {
+  color: var(--ink-3);
+  text-underline-offset: 3px;
+}
+.footer-link:hover {
+  color: var(--ink);
+}
+.legal {
+  max-width: 760px;
+  display: grid;
+  gap: 18px;
+  padding-top: clamp(28px, 5vw, 56px);
+  padding-bottom: 72px;
+  color: var(--ink-2);
+  font-size: 16px;
+  line-height: 1.65;
+}
+.legal h1 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(32px, 4.4vw, 48px);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  text-wrap: balance;
+}
+.legal-lead {
+  font-size: 18px;
+  max-width: 64ch;
+}
+.legal-updated {
+  font-size: 13.5px;
+  color: var(--ink-3);
+}
+.legal section {
+  display: grid;
+  gap: 10px;
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+}
+.legal h2 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 24px;
+  color: var(--ink);
+}
+.legal p,
+.legal li,
+.legal dd {
+  max-width: 68ch;
+}
+.legal ul {
+  margin: 0;
+  padding-left: 20px;
+  display: grid;
+  gap: 6px;
+}
+.legal-list {
+  margin: 0;
+  display: grid;
+  gap: 4px;
+}
+.legal-list dt {
+  margin-top: 10px;
+  color: var(--ink);
+  font-weight: 650;
+}
+.legal-list dd {
+  margin: 0;
+}
+.legal strong {
+  color: var(--ink);
+}
+.legal-email {
+  font-family: var(--font-mono);
+  font-size: 14.5px;
+  color: var(--ink);
+  user-select: all;
+}
+.legal-back {
+  padding-top: 12px;
+}
+.push-right {
+  margin-left: auto;
 }

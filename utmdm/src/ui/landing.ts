@@ -112,7 +112,7 @@ export function landingView(root: HTMLElement, apiUrl: string, problem?: string)
         h('div', { class: 'cta-actions' }, demoButton(), h('a', { class: 'button button-on-band', href: '#/signup' }, 'Create an account')))),
     h('footer', { class: 'footer landing-footer' },
       h('p', null, wordmark(), h('span', null, 'Your marketing source of truth.')),
-      h('p', null, 'Sign-in by Amazon Cognito. Google Analytics access is read-only.')),
+      h('p', null, 'Sign-in by Amazon Cognito. Google Analytics access is read-only.', h('a', { class: 'footer-link', href: '/privacy.html' }, 'Privacy'))),
     demo.element,
   );
 }
