@@ -1,5 +1,5 @@
 import { describeWhen } from '../../core/rules';
-import { cellOf, coverage, rulesFor } from '../../core/table';
+import { cellOf, coverage, keptUtms, rulesFor } from '../../core/table';
 import { addColumn, columnNameProblem, deleteColumn, renameColumn } from '../../core/workspace';
 import { button, drawer, field, linkButton, meter } from '../components';
 import type { Ctx } from '../ctx';
@@ -15,10 +15,11 @@ export function columnDrawer(ctx: Ctx, id: string, closeHref: string): HTMLEleme
   if (!column) return null;
 
   const cov = coverage(table, grid).columns.find((c) => c.column.id === id)!;
-  const total = table.utms.length;
+  const utms = keptUtms(table);
+  const total = utms.length;
   const empty = total - cov.filled;
   const counts = new Map<string, number>();
-  for (const utm of table.utms) {
+  for (const utm of utms) {
     const value = cellOf(grid, utm.key, id).value;
     if (value) counts.set(value, (counts.get(value) ?? 0) + 1);
   }

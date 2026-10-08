@@ -1,7 +1,7 @@
 import type { Change, Column, Op, Rule, Table, Utm, UtmParts } from './model';
-import { UTM_PARTS } from './model';
+import { REMOVE, UTM_PARTS } from './model';
 import { displayUtm, normalizeParts, normalizeText, tidy, utmKey } from './normalize';
-import { matcher } from './rules';
+import { matcher, needsText, removes } from './rules';
 
 /*
  * The table is never edited in place. Each change is an operation applied to
@@ -56,7 +56,7 @@ export function apply(table: Table, op: Op, past: (version: number) => Table | u
       return { ...table, typed: { ...table.typed, [op.column]: value ? { ...rest, [op.utm]: value } : rest } };
     }
     case 'addRule':
-      if (!table.columns.some((c) => c.id === op.rule.column)) return table;
+      if (!removes(op.rule) && !table.columns.some((c) => c.id === op.rule.column)) return table;
       return { ...table, rules: [...table.rules, cleanRule(op.rule)] };
     case 'updateRule': {
       const old = table.rules.find((r) => r.id === op.rule.id);
@@ -85,7 +85,13 @@ export function apply(table: Table, op: Op, past: (version: number) => Table | u
 }
 
 function cleanRule(rule: Rule): Rule {
-  return { ...rule, value: tidy(rule.value), when: rule.when.map((c) => ({ ...c, text: tidy(c.text) })) };
+  const { match, ...rest } = rule;
+  return {
+    ...rest,
+    value: removes(rule) ? '' : tidy(rule.value),
+    when: rule.when.map((c) => ({ ...c, text: needsText(c.op) ? tidy(c.text) : '' })),
+    ...(match === 'any' ? { match } : {}),
+  };
 }
 
 /** Every version of the table, from 0 (empty) to the latest. */
@@ -119,13 +125,40 @@ export function rulesFor(table: Table, column: string): Rule[] {
   return table.rules.filter((r) => r.column === column);
 }
 
+// Tables never change once made, so what their remove rules take out is worked out once per table.
+const removedCache = new WeakMap<Table, Map<string, string>>();
+
+/** UTMs a remove rule takes out of the table, by UTM key, with the first remove rule that matches it. */
+export function removedBy(table: Table): Map<string, string> {
+  let removed = removedCache.get(table);
+  if (!removed) {
+    removed = new Map();
+    const rules = rulesFor(table, REMOVE).map((rule) => ({ rule, test: matcher(rule.when, rule.match) }));
+    if (rules.length) {
+      for (const utm of table.utms) {
+        const hit = rules.find((r) => r.test(utm.parts));
+        if (hit) removed.set(utm.key, hit.rule.id);
+      }
+    }
+    removedCache.set(table, removed);
+  }
+  return removed;
+}
+
+/** The UTMs in the table: every one added, minus those a remove rule takes out. */
+export function keptUtms(table: Table): Utm[] {
+  const removed = removedBy(table);
+  return removed.size ? table.utms.filter((u) => !removed.has(u.key)) : table.utms;
+}
+
 /** Fills every cell: a typed value first, then the first rule that matches, otherwise empty. */
 export function resolve(table: Table): Grid {
-  const grid: Grid = new Map(table.utms.map((u) => [u.key, {}]));
+  const utms = keptUtms(table);
+  const grid: Grid = new Map(utms.map((u) => [u.key, {}]));
   for (const column of table.columns) {
-    const rules = rulesFor(table, column.id).map((rule) => ({ rule, test: matcher(rule.when) }));
+    const rules = rulesFor(table, column.id).map((rule) => ({ rule, test: matcher(rule.when, rule.match) }));
     const typed = table.typed[column.id] ?? {};
-    for (const utm of table.utms) {
+    for (const utm of utms) {
       const rule = rules.find((r) => r.test(utm.parts))?.rule;
       const value = typed[utm.key];
       grid.get(utm.key)![column.id] = value
@@ -153,7 +186,10 @@ export interface ColumnCoverage {
 }
 
 export interface Coverage {
+  /** UTMs in the table, not counting removed ones. */
   utms: number;
+  /** UTMs a remove rule takes out. */
+  removed: number;
   complete: number;
   cells: number;
   byRule: number;
@@ -163,22 +199,24 @@ export interface Coverage {
 }
 
 export function coverage(table: Table, grid: Grid): Coverage {
+  const utms = keptUtms(table);
   const columns = table.columns.map((column) => {
     let byRule = 0;
     let typed = 0;
-    for (const utm of table.utms) {
+    for (const utm of utms) {
       const from = cellOf(grid, utm.key, column.id).from;
       if (from === 'rule') byRule++;
       else if (from === 'typed') typed++;
     }
     return { column, filled: byRule + typed, byRule, typed };
   });
-  const cells = table.utms.length * table.columns.length;
+  const cells = utms.length * table.columns.length;
   const byRule = columns.reduce((n, c) => n + c.byRule, 0);
   const typed = columns.reduce((n, c) => n + c.typed, 0);
   return {
-    utms: table.utms.length,
-    complete: table.utms.filter((u) => isComplete(table, grid, u)).length,
+    utms: utms.length,
+    removed: table.utms.length - utms.length,
+    complete: utms.filter((u) => isComplete(table, grid, u)).length,
     cells,
     byRule,
     typed,
@@ -190,19 +228,25 @@ export function coverage(table: Table, grid: Grid): Coverage {
 export interface RuleReach {
   /** UTMs the conditions match. */
   matches: number;
-  /** Cells this rule fills: matches not taken by a rule above it or a typed value. */
+  /** Cells this rule fills (matches not taken by a rule above it or a typed value), or for a remove rule, the UTMs it removes. */
   fills: number;
 }
 
 export function ruleReach(table: Table, grid: Grid): Map<string, RuleReach> {
   const reach = new Map<string, RuleReach>();
+  const removed = removedBy(table);
+  const kept = keptUtms(table);
   for (const rule of table.rules) {
-    const test = matcher(rule.when);
+    const test = matcher(rule.when, rule.match);
     let matches = 0;
     let fills = 0;
-    for (const utm of table.utms) {
+    for (const utm of removes(rule) ? table.utms : kept) {
       if (!test(utm.parts)) continue;
       matches++;
+      if (removes(rule)) {
+        if (removed.get(utm.key) === rule.id) fills++;
+        continue;
+      }
       const cell = cellOf(grid, utm.key, rule.column);
       if (cell.from === 'rule' && cell.rule?.id === rule.id) fills++;
     }
@@ -223,6 +267,8 @@ export interface RulePreview {
   typed: number;
   /** UTMs that would have a value in every column afterwards, that don't now. */
   completes: number;
+  /** For a remove rule: UTMs in the table now that it would take out. */
+  removes: number;
 }
 
 /** What a new or edited rule would do, before it's saved. */
@@ -233,9 +279,19 @@ export function previewRule(table: Table, grid: Grid, draft: Rule): RulePreview 
     rules: existing ? table.rules.map((r) => (r.id === draft.id ? draft : r)) : [...table.rules, draft],
   };
   const nextGrid = resolve(next);
-  const test = matcher(draft.when);
-  const preview: RulePreview = { matches: [], fillsEmpty: 0, changes: 0, takenAbove: 0, typed: 0, completes: 0 };
-  for (const utm of table.utms) {
+  const test = matcher(draft.when, draft.match);
+  const preview: RulePreview = { matches: [], fillsEmpty: 0, changes: 0, takenAbove: 0, typed: 0, completes: 0, removes: 0 };
+  if (removes(draft)) {
+    const before = removedBy(table);
+    const after = removedBy(next);
+    for (const utm of table.utms) {
+      if (!test(utm.parts)) continue;
+      preview.matches.push(utm);
+      if (!before.has(utm.key) && after.has(utm.key)) preview.removes++;
+    }
+    return preview;
+  }
+  for (const utm of keptUtms(table)) {
     if (!isComplete(table, grid, utm) && isComplete(next, nextGrid, utm)) preview.completes++;
     if (!test(utm.parts)) continue;
     preview.matches.push(utm);

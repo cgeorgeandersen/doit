@@ -2613,3 +2613,30 @@ textarea {
   color: var(--ink-2);
   font-size: 13.5px;
 }
+
+/* ── rules that remove rows ────────────────────────────────────────────── */
+
+.removed-note {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--ink-3);
+  font-size: 13px;
+  text-decoration: none;
+}
+.removed-note:hover {
+  color: var(--ink);
+  text-decoration: underline;
+}
+.rule-remove-text {
+  color: var(--danger-ink);
+}
+.rule-group-remove {
+  border-style: dashed;
+}
+select.joiner {
+  width: auto;
+  min-width: 64px;
+  font-weight: 600;
+  color: var(--accent);
+}

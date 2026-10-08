@@ -9,7 +9,7 @@ The problem it solves first: marketing teams have no shared place to classify UT
 ## How it works
 
 1. **Type in a cell.** Click any cell, type a value and press Enter. It applies to that one UTM.
-2. **Write a rule.** If *[campaign] [contains] [cup]* then *[Type]* is *[Marketing]*. One rule fills every matching UTM, including UTMs added later, and shows what it will do before you save it.
+2. **Write a rule.** If *[campaign] [contains] [cup]* then *[Type]* is *[Marketing]*. One rule fills every matching UTM, including UTMs added later, and shows what it will do before you save it. Conditions combine with **and** (every one matches) or **or** (any one does), and can test whether a part **is blank** or **is not blank**. A rule can also **remove the row**: *if campaign is blank and content is blank, then remove the row* takes those UTMs out of the table, its coverage and its exports. They stay stored, so deleting the rule brings them back.
 3. **Add a column.** Region, Agency, Budget owner: anything the team needs to know about a UTM, filled by typing, by rules, or both.
 
 Columns resize like a spreadsheet's: drag a header's right edge, double-click it to reset, or focus it and use the arrow keys. Widths are remembered in your browser and aren't a change to the table, so they don't make versions.

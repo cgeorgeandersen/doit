@@ -1,6 +1,6 @@
-import type { Change, Condition, Op, Rule, Table, Utm, UtmParts, Workspace } from './model';
+import { REMOVE, type Change, type Condition, type Op, type Rule, type Table, type Utm, type UtmParts, type Workspace } from './model';
 import { displayUtm, normalizeParts, normalizeText, tidy, utmKey } from './normalize';
-import { describeRule, ruleProblem } from './rules';
+import { describeRule, needsText, ruleProblem } from './rules';
 import { apply, canonicalValue, coverage, replay, resolve, rulesFor, sameTable } from './table';
 
 /*
@@ -125,17 +125,20 @@ export function setCell(table: Table, utm: Utm, column: string, text: string): D
 /* ── rules ─────────────────────────────────────────────────────────────── */
 
 export interface RuleInput {
+  /** A column id, or REMOVE for a rule that removes matching rows. */
   column: string;
   when: Condition[];
   value: string;
+  match?: 'all' | 'any';
 }
 
 export function draftRule(table: Table, input: RuleInput, id: string): Rule {
   return {
     id,
     column: input.column,
-    when: input.when.map((c) => ({ ...c, text: tidy(c.text) })),
-    value: canonicalValue(table, input.column, input.value),
+    when: input.when.map((c) => ({ ...c, text: needsText(c.op) ? tidy(c.text) : '' })),
+    value: input.column === REMOVE ? '' : canonicalValue(table, input.column, input.value),
+    ...(input.match === 'any' ? { match: 'any' as const } : {}),
   };
 }
 

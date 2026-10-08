@@ -3,7 +3,7 @@ import type { Column, Utm } from '../../core/model';
 import type { UtmPart } from '../../core/model';
 import { displayUtm, normalizeText } from '../../core/normalize';
 import { describeRule } from '../../core/rules';
-import { canonicalValue, cellOf, columnValues, coverage, isComplete, rulesFor, sortedUtms, type Cell } from '../../core/table';
+import { canonicalValue, cellOf, columnValues, coverage, isComplete, keptUtms, rulesFor, sortedUtms, type Cell } from '../../core/table';
 import { setCell } from '../../core/workspace';
 import { button, emptyState, linkButton, meter, pageHeader } from '../components';
 import type { Ctx } from '../ctx';
@@ -66,13 +66,17 @@ export function tableView(ctx: Ctx): HTMLElement {
   const cov = coverage(table, grid);
   const complete = (utm: Utm) => isComplete(table, grid, utm);
   const inShow = (utm: Utm, s: Show) => s === 'all' || (s === 'done') === complete(utm);
-  const base = sortedUtms(table.utms).filter((u) => !emptyIn || cellOf(grid, u.key, emptyIn.id).from === 'empty');
+  const base = sortedUtms(keptUtms(table)).filter((u) => !emptyIn || cellOf(grid, u.key, emptyIn.id).from === 'empty');
   const here = (s: Show, extra: Record<string, string | null> = {}) =>
     hashFor('table', { show: s === 'all' ? null : s, empty: emptyIn?.id, ...extra });
   const open = cov.utms - cov.complete;
 
   const tableHost = h('div', { class: 'table-wrap' });
   const countLine = h('p', { class: 'table-count', 'aria-live': 'polite' });
+  const removedNote = cov.removed
+    ? h('a', { class: 'removed-note', href: `${hashFor('rules')}`, title: 'See the rules that remove rows' },
+      icon('trash', 13), `${plural(cov.removed, 'UTM')} removed by rules`)
+    : null;
 
   const renderTable = () => {
     const needle = normalizeText(query);
@@ -458,16 +462,19 @@ export function tableView(ctx: Ctx): HTMLElement {
     emptyIn
       ? h('p', { class: 'filter-note' }, `Showing UTMs with no ${emptyIn.name} yet. `, h('a', { href: hashFor('table', { show: show === 'all' ? null : show }) }, 'Show every UTM'))
       : null,
-    h('div', { class: 'table-meta' }, countLine,
+    h('div', { class: 'table-meta' }, countLine, removedNote,
       h('p', { class: 'legend' },
         h('span', { class: 'legend-item' }, h('span', { class: 'legend-swatch cell-rule' }, icon('bolt', 12)), 'filled by a rule'),
         h('span', { class: 'legend-item' }, h('span', { class: 'legend-swatch cell-typed' }, icon('pencil', 12)), 'typed'),
         h('span', { class: 'legend-item' }, h('span', { class: 'legend-swatch cell-empty' }, '–'), 'needs a value')),
       resetWidths,
       scroller),
-    table.utms.length
+    cov.utms
       ? tableHost
-      : emptyState('No UTMs yet', 'Paste tagged links or rows from a spreadsheet, upload a CSV, or bring them in from Google Analytics 4.',
+      : cov.removed
+        ? emptyState('Every UTM is removed by a rule', 'A removal rule matches every UTM in the table. Edit or delete it to bring them back.',
+          linkButton('See the rules', hashFor('rules'), { icon: 'bolt', kind: 'primary' }))
+        : emptyState('No UTMs yet', 'Paste tagged links or rows from a spreadsheet, upload a CSV, or bring them in from Google Analytics 4.',
         linkButton('Add UTMs', hashFor('table', { add: '1' }), { icon: 'plus', kind: 'primary' }),
         linkButton('Import from GA4', hashFor('data'), { icon: 'chart' })),
     drawerEl,

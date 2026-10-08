@@ -24,8 +24,10 @@ export interface Column {
   name: string;
 }
 
-export const MATCH_OPS = ['contains', 'is', 'starts', 'ends'] as const;
+export const MATCH_OPS = ['contains', 'is', 'starts', 'ends', 'blank', 'notBlank'] as const;
 export type MatchOp = (typeof MATCH_OPS)[number];
+/** Ops that look at whether a part is empty, so they take no text. */
+export const TEXTLESS_OPS: readonly MatchOp[] = ['blank', 'notBlank'];
 
 export interface Condition {
   part: UtmPart;
@@ -33,12 +35,21 @@ export interface Condition {
   text: string;
 }
 
-/** If every condition holds, the column gets the value. */
+/** A rule's `column` when the rule removes matching rows instead of filling a column. */
+export const REMOVE = '@remove';
+
+/**
+ * If the conditions hold (every one, or with `match: 'any'` at least one), the
+ * column gets the value. A rule whose column is REMOVE takes matching UTMs out of
+ * the table instead: they stay stored, and come back if the rule goes.
+ */
 export interface Rule {
   id: string;
   column: string;
   when: Condition[];
   value: string;
+  /** How the conditions combine. Missing means 'all', as rules saved before this existed. */
+  match?: 'all' | 'any';
 }
 
 /** The table at one version. */
