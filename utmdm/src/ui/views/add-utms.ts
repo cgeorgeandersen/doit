@@ -51,26 +51,27 @@ export function addUtmsDrawer(ctx: Ctx, closeHref: string): HTMLElement {
     }
     const next = apply(table, draft.op, () => undefined);
     const grid = resolve(next);
-    const added = new Set(draft.added.map((u) => u.key));
+    const added = new Set(draft.fresh.map((u) => u.key));
     const newRows = next.utms.filter((u) => added.has(u.key));
     const cells = newRows.length * next.columns.length;
     const filled = coverage({ ...next, utms: newRows }, grid).byRule;
     const complete = newRows.filter((u) => isComplete(next, grid, u)).length;
-    addButton.disabled = !draft.added.length;
-    addButton.lastChild!.textContent = draft.added.length ? `Add ${plural(draft.added.length, 'UTM')}` : 'Nothing new to add';
-    message = draft.added.length && cells
+    addButton.disabled = !draft.fresh.length;
+    addButton.lastChild!.textContent = draft.fresh.length ? `Add ${plural(draft.fresh.length, 'UTM')}` : 'Nothing new to add';
+    message = draft.fresh.length && cells
       ? `Your rules filled ${fmtInt(filled)} of their ${fmtInt(cells)} cells${complete ? `, and ${fmtInt(complete)} arrived fully classified` : ''}.`
       : '';
     fill(
       preview,
       h('p', { class: 'paste-count' }, icon('check', 14),
-        `${plural(parsed.rows.length, 'UTM')} found: ${fmtInt(draft.added.length)} new`,
+        `${plural(parsed.rows.length, 'UTM')} found: ${fmtInt(draft.fresh.length)} new`,
         draft.known ? `, ${fmtInt(draft.known)} already in the table (kept, not duplicated)` : '',
+        draft.removed ? `, ${fmtInt(draft.removed)} removed by your rules` : '',
         draft.repeats ? `, ${plural(draft.repeats, 'repeated spelling')} merged` : '', '.'),
       message ? h('p', { class: 'paste-rules' }, icon('bolt', 14), message.replace('Your rules filled', 'Your rules will fill').replace('arrived', 'arrive')) : null,
-      draft.added.length
-        ? h('ul', { class: 'paste-list' }, ...draft.added.slice(0, 8).map((u) => h('li', { class: 'utm' }, displayUtm(u.raw))),
-          draft.added.length > 8 ? h('li', { class: 'muted' }, `and ${fmtInt(draft.added.length - 8)} more`) : null)
+      draft.fresh.length
+        ? h('ul', { class: 'paste-list' }, ...draft.fresh.slice(0, 8).map((u) => h('li', { class: 'utm' }, displayUtm(u.raw))),
+          draft.fresh.length > 8 ? h('li', { class: 'muted' }, `and ${fmtInt(draft.fresh.length - 8)} more`) : null)
         : null,
       parsed.skipped.length ? skippedNote(parsed.skipped) : null,
     );
@@ -78,8 +79,8 @@ export function addUtmsDrawer(ctx: Ctx, closeHref: string): HTMLElement {
   area.addEventListener('input', update);
 
   addButton.addEventListener('click', () => {
-    if (!draft?.added.length) return;
-    const count = draft.added.length;
+    if (!draft?.fresh.length) return;
+    const count = draft.fresh.length;
     pasted = '';
     ctx.go(closeHref);
     ctx.commit(draft, { message: `Added ${plural(count, 'UTM')}. ${message}` });

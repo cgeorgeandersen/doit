@@ -259,14 +259,19 @@ function builderCard(ctx: Ctx): HTMLElement {
       h('p', { class: 'card-intro' }, 'Matching ignores capitals, spaces and URL encoding.')),
     h('div', { class: 'sentence' },
       ...conditionRows,
-      h('div', { class: 'sentence-row' },
-        button(b.match === 'any' ? 'or…' : 'and…', {
-          kind: 'ghost', icon: 'plus', title: 'Add a condition',
+      h('div', { class: 'sentence-row add-condition' },
+        // With one condition, either way is open. After that a rule is all "and" or all "or"; the word between conditions switches it.
+        ...(b.when.length === 1 ? (['all', 'any'] as const) : [b.match]).map((match) => button(match === 'any' ? 'or' : 'and', {
+          kind: 'ghost',
+          icon: 'plus',
+          title: match === 'any' ? 'Add a condition: any one of them is enough' : 'Add a condition: every one has to match',
           onClick: () => {
+            b.match = match;
             b.when.push(blankCondition(b.when.at(-1)?.part === 'campaign' ? 'medium' : 'campaign'));
             rebuild(`.cond-${b.when.length - 1}`);
           },
         })),
+        b.when.length > 1 ? h('span', { class: 'add-condition-hint' }, b.match === 'any' ? 'Any one condition is enough.' : 'Every condition has to match.') : null),
       b.column === REMOVE
         ? h('div', { class: 'sentence-row' }, h('span', { class: 'word' }, 'then'), columnSelect)
         : h('div', { class: 'sentence-row' }, h('span', { class: 'word' }, 'then'), columnSelect, h('span', { class: 'word' }, 'is'), valueInput, values)),

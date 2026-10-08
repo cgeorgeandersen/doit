@@ -128,13 +128,13 @@ export function ga4Import(ctx: Ctx, beforeAdd?: () => void): HTMLElement {
     const merged = draft.repeats;
     const next = apply(table, draft.op, () => undefined);
     const grid = resolve(next);
-    const added = new Set(draft.added.map((u) => u.key));
+    const added = new Set(draft.fresh.map((u) => u.key));
     const newRows = next.utms.filter((u) => added.has(u.key));
     const cells = newRows.length * next.columns.length;
     const filled = coverage({ ...next, utms: newRows }, grid).byRule;
     const complete = newRows.filter((u) => isComplete(next, grid, u)).length;
-    const top = [...draft.added].sort((a, b) => (sessions.get(b.key) ?? 0) - (sessions.get(a.key) ?? 0)).slice(0, 8);
-    const message = draft.added.length && cells
+    const top = [...draft.fresh].sort((a, b) => (sessions.get(b.key) ?? 0) - (sessions.get(a.key) ?? 0)).slice(0, 8);
+    const message = draft.fresh.length && cells
       ? `Your rules filled ${fmtInt(filled)} of their ${fmtInt(cells)} cells${complete ? `, and ${fmtInt(complete)} arrived fully classified` : ''}.`
       : '';
 
@@ -146,20 +146,21 @@ export function ga4Import(ctx: Ctx, beforeAdd?: () => void): HTMLElement {
       h('p', { class: 'paste-count' }, icon('check', 14),
         `${plural(found.rows.length, 'row')} from GA4 became ${plural(distinct, 'UTM')}`,
         merged ? ` (${fmtInt(merged)} spelling${merged === 1 ? '' : 's'} merged)` : '',
-        `: ${fmtInt(draft.added.length)} new, ${fmtInt(draft.known)} already in the table.`),
+        `: ${fmtInt(draft.fresh.length)} new, ${fmtInt(draft.known)} already in the table`,
+        draft.removed ? `, ${fmtInt(draft.removed)} removed by your rules` : '', '.'),
       message ? h('p', { class: 'paste-rules' }, icon('bolt', 14), message.replace('filled', 'will fill').replace('arrived', 'arrive')) : null,
       top.length
         ? h('ul', { class: 'paste-list ga4-list' }, ...top.map((u) => h('li', null, h('span', { class: 'utm' }, displayUtm(u.raw)),
           h('span', { class: 'muted' }, `${fmtInt(sessions.get(u.key) ?? 0)} sessions`))),
-          draft.added.length > top.length ? h('li', { class: 'muted' }, `and ${fmtInt(draft.added.length - top.length)} more`) : null)
+          draft.fresh.length > top.length ? h('li', { class: 'muted' }, `and ${fmtInt(draft.fresh.length - top.length)} more`) : null)
         : null,
       h('div', { class: 'form-actions' },
-        button(draft.added.length ? `Add ${plural(draft.added.length, 'UTM')}` : 'Nothing new to add', {
+        button(draft.fresh.length ? `Add ${plural(draft.fresh.length, 'UTM')}` : 'Nothing new to add', {
           kind: 'primary',
           icon: 'plus',
-          disabled: !draft.added.length,
+          disabled: !draft.fresh.length,
           onClick: () => {
-            const count = draft.added.length;
+            const count = draft.fresh.length;
             fetched = null;
             beforeAdd?.();
             ctx.commit(draft, { message: `Added ${plural(count, 'UTM')} from Google Analytics 4. ${message}` });

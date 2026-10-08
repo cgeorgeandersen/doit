@@ -1,7 +1,7 @@
 import { REMOVE, type Change, type Condition, type Op, type Rule, type Table, type Utm, type UtmParts, type Workspace } from './model';
 import { displayUtm, normalizeParts, normalizeText, tidy, utmKey } from './normalize';
-import { describeRule, needsText, ruleProblem } from './rules';
-import { apply, canonicalValue, coverage, replay, resolve, rulesFor, sameTable } from './table';
+import { describeRule, matcher, needsText, ruleProblem } from './rules';
+import { apply, canonicalValue, coverage, removedBy, replay, resolve, rulesFor, sameTable } from './table';
 
 /*
  * A workspace and every version of its table. Each function below turns
@@ -50,18 +50,28 @@ const plural = (n: number, one: string, many = `${one}s`) => `${n.toLocaleString
 /* ── UTMs ──────────────────────────────────────────────────────────────── */
 
 export interface AddUtms extends Draft {
+  /** UTMs not stored yet. Some may be ones a removal rule takes straight out (see `removed`). */
   added: Utm[];
-  /** Distinct UTMs that are already in the table. */
+  /** New UTMs that will show in the table: `added` minus those a removal rule takes out. */
+  fresh: Utm[];
+  /** Distinct UTMs that are already in the table and showing. */
   known: number;
+  /** Distinct UTMs a removal rule takes out, whether already stored or new. */
+  removed: number;
   /** Rows that repeat another row of the same import (another spelling of the same UTM). */
   repeats: number;
 }
 
 export function addUtms(table: Table, rows: UtmParts[], from = 'a paste'): AddUtms {
   const existing = new Set(table.utms.map((u) => u.key));
+  const removedNow = removedBy(table);
+  const removals = rulesFor(table, REMOVE).map((r) => matcher(r.when, r.match));
   const imported = new Set<string>();
   const added: Utm[] = [];
+  const fresh: Utm[] = [];
   let repeats = 0;
+  let known = 0;
+  let removed = 0;
   for (const row of rows) {
     const parts = normalizeParts(row);
     if (Object.values(parts).every((p) => !p)) continue;
@@ -71,12 +81,23 @@ export function addUtms(table: Table, rows: UtmParts[], from = 'a paste'): AddUt
       continue;
     }
     imported.add(key);
-    if (!existing.has(key)) added.push({ key, parts, raw: row, spellings: [displayUtm(row)] });
+    if (existing.has(key)) {
+      if (removedNow.has(key)) removed++;
+      else known++;
+      continue;
+    }
+    const utm = { key, parts, raw: row, spellings: [displayUtm(row)] };
+    added.push(utm);
+    if (removals.some((test) => test(parts))) removed++;
+    else fresh.push(utm);
   }
-  const known = imported.size - added.length;
-  const notes = [known ? `${plural(known, 'UTM')} already in the table` : '', repeats ? `${plural(repeats, 'spelling')} merged` : ''].filter(Boolean);
-  const summary = `Added ${plural(added.length, 'UTM')} from ${from}${notes.length ? ` (${notes.join(', ')})` : ''}`;
-  return { op: { type: 'addUtms', rows }, summary, added, known, repeats };
+  const notes = [
+    known ? `${plural(known, 'UTM')} already in the table` : '',
+    removed ? `${plural(removed, 'UTM')} removed by your rules` : '',
+    repeats ? `${plural(repeats, 'spelling')} merged` : '',
+  ].filter(Boolean);
+  const summary = `Added ${plural(fresh.length, 'UTM')} from ${from}${notes.length ? ` (${notes.join(', ')})` : ''}`;
+  return { op: { type: 'addUtms', rows }, summary, added, fresh, known, removed, repeats };
 }
 
 /* ── columns ───────────────────────────────────────────────────────────── */

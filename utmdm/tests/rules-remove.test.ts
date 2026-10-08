@@ -3,7 +3,7 @@ import { REMOVE, type Rule, type Table, type UtmParts } from '../src/core/model'
 import { tableCsv } from '../src/core/csv';
 import { describeRule, matcher, ruleProblem } from '../src/core/rules';
 import { apply, coverage, emptyTable, keptUtms, previewRule, removedBy, resolve, ruleReach } from '../src/core/table';
-import { draftRule } from '../src/core/workspace';
+import { addUtms, draftRule } from '../src/core/workspace';
 
 const utm = (source: string, medium: string, campaign: string, content = '', term = ''): UtmParts => ({ source, medium, campaign, content, term });
 const none = () => undefined;
@@ -86,4 +86,18 @@ describe('rules that remove rows', () => {
     const drafted = draftRule(t, { column: REMOVE, value: 'ignored', match: 'any', when: [{ part: 'campaign', op: 'blank', text: 'x' }] }, 'x3');
     expect(drafted).toEqual({ id: 'x3', column: REMOVE, value: '', match: 'any', when: [{ part: 'campaign', op: 'blank', text: '' }] });
   });
+
+  it('says which UTMs in an import your rules remove, already stored or new, and leaves them out of "new"', () => {
+    const t = apply(seed(), { type: 'addRule', rule: removeBlank }, none);
+    const draft = addUtms(t, [
+      utm('google', 'cpc', '', ''), // stored, and removed by the rule
+      utm('facebook', 'paid_social', 'summer_cup', 'video'), // stored and showing
+      utm('yahoo', 'cpc', '', ''), // new, but the rule removes it
+      utm('tiktok', 'paid_social', 'fall_kickoff', 'clip'), // new and showing
+    ]);
+    expect(draft).toMatchObject({ known: 1, removed: 2 });
+    expect(draft.fresh.map((u) => u.parts.source)).toEqual(['tiktok']);
+    expect(draft.summary).toBe('Added 1 UTM from a paste (1 UTM already in the table, 2 UTMs removed by your rules)');
+  });
 });
+

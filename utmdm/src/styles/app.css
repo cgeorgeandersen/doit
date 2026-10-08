@@ -2640,3 +2640,12 @@ select.joiner {
   font-weight: 600;
   color: var(--accent);
 }
+
+.add-condition {
+  gap: 4px;
+}
+.add-condition-hint {
+  color: var(--ink-3);
+  font-size: 13px;
+  margin-left: 6px;
+}
