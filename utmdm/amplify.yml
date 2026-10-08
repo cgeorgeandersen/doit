@@ -1,0 +1,22 @@
+# How Amplify builds and deploys UTMDM on every push to main.
+# The backend (Cognito, DynamoDB, the API) is deployed separately by scripts/deploy-infra.sh;
+# its addresses reach this build as the app's environment variables, which write-config turns into config.json.
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - nvm install 22 && nvm use 22
+        - npm ci
+    build:
+      commands:
+        - npm test
+        - npm run build
+        - node scripts/write-config.mjs
+  artifacts:
+    baseDirectory: dist
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - node_modules/**/*

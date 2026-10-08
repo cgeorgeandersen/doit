@@ -1,11 +1,13 @@
 /*
- * Design tokens. Teal is the brand and the meters (fill and track are two steps
- * of the same teal). Amber is reserved for "needs a value" and always comes
- * with a mark and a word, never color alone.
+ * TagFluent design tokens: Ink & Mint. Aubergine ink is the brand and the
+ * action color; mint means "classified" (cells a rule filled, the wordmark's
+ * highlight); lilac marks what a person typed. Amber is reserved for "needs a
+ * value" and always comes with a mark and a word, never color alone.
  */
 :root {
-  --font-sans: 'Public Sans Variable', 'Public Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --font-display: 'Gloock', Georgia, 'Times New Roman', serif;
+  --font-sans: 'Hanken Grotesk Variable', 'Hanken Grotesk', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'Fragment Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
   --radius-s: 6px;
   --radius: 10px;
@@ -14,93 +16,76 @@
   --page-max: 2400px;
   --gutter: clamp(16px, 2.5vw, 48px);
 
-  --bg: #f4f6f5;
-  --surface: #ffffff;
-  --surface-2: #f7f9f8;
-  --surface-3: #edf1ef;
-  --ink: #13201c;
-  --ink-2: #44534d;
-  --ink-3: #66756f;
-  --line: #dfe6e2;
-  --line-strong: #c6d1cc;
-  --accent: #0b6e5a;
-  --accent-hover: #095c4b;
-  --accent-ink: #ffffff;
-  --accent-track: #cde8df;
-  --accent-tint: #e9f5f0;
-  --focus: #0b6e5a;
-
-  --good: #0ca30c;
-  --warning: #fab219;
+  --good: #1fa86b;
+  --warning: #f0a81c;
   --serious: #ec835a;
   --critical: #d03b3b;
-  --good-tint: #e8f6e8;
-  --warning-tint: #fff5dd;
-  --warning-ink: #a87300;
+  --bg: #f4f2f7;
+  --surface: #ffffff;
+  --surface-2: #faf8fc;
+  --surface-3: #efeaf5;
+  --ink: #231a2e;
+  --ink-2: #5a5266;
+  --ink-3: #756d82;
+  --line: #e3deea;
+  --line-strong: #cdc5d8;
+  --accent: #3b2557;
+  --accent-hover: #2c1b42;
+  --accent-ink: #ffffff;
+  --accent-track: #e3dbee;
+  --accent-tint: #f1ecf8;
+  --focus: #6b45a0;
+  --mint: #3ddc97;
+  --mint-tint: #e4f8ee;
+  --mint-ink: #11704a;
+  --lilac: #ece4f6;
+  --lilac-ink: #3b2557;
+  --band: #2a1a3f;
+  --band-ink: #f4eefb;
+  --good-tint: #e4f8ee;
+  --warning-tint: #fff6e0;
+  --warning-ink: #8a5d00;
   --serious-tint: #fdeee7;
   --danger-ink: #b42c2c;
-
-  --shadow-1: 0 1px 2px rgba(19, 32, 28, 0.05), 0 2px 8px rgba(19, 32, 28, 0.05);
-  --shadow-2: 0 4px 12px rgba(19, 32, 28, 0.1), 0 24px 48px rgba(19, 32, 28, 0.16);
-  --backdrop: rgba(19, 32, 28, 0.28);
-  --freeze-shadow: rgba(19, 32, 28, 0.16);
+  --shadow-1: 0 1px 2px rgba(35, 26, 46, 0.05), 0 2px 10px rgba(35, 26, 46, 0.05);
+  --shadow-2: 0 4px 12px rgba(35, 26, 46, 0.1), 0 24px 48px rgba(35, 26, 46, 0.18);
+  --backdrop: rgba(35, 26, 46, 0.32);
+  --freeze-shadow: rgba(35, 26, 46, 0.16);
   color-scheme: light;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) {
-    --bg: #0d1311;
-    --surface: #141c19;
-    --surface-2: #18211e;
-    --surface-3: #1e2925;
-    --ink: #e5eeea;
-    --ink-2: #a9bab3;
-    --ink-3: #82958d;
-    --line: #25312d;
-    --line-strong: #34433d;
-    --accent: #3cc6a0;
-    --accent-hover: #62d5b4;
-    --accent-ink: #06231c;
-    --accent-track: #1b3f35;
-    --accent-tint: #15302a;
-    --focus: #62d5b4;
-    --good-tint: #13301a;
-    --warning-tint: #2c230f;
-    --warning-ink: #fab219;
-    --serious-tint: #3a2219;
-    --danger-ink: #f08080;
-    --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.3);
-    --shadow-2: 0 8px 24px rgba(0, 0, 0, 0.45), 0 24px 64px rgba(0, 0, 0, 0.4);
-    --backdrop: rgba(0, 0, 0, 0.5);
-    --freeze-shadow: rgba(0, 0, 0, 0.55);
-    color-scheme: dark;
-  }
-}
-
+/* Light is the default for everyone; dark applies only when someone picks it with the toggle. */
 :root[data-theme='dark'] {
-  --bg: #0d1311;
-  --surface: #141c19;
-  --surface-2: #18211e;
-  --surface-3: #1e2925;
-  --ink: #e5eeea;
-  --ink-2: #a9bab3;
-  --ink-3: #82958d;
-  --line: #25312d;
-  --line-strong: #34433d;
-  --accent: #3cc6a0;
-  --accent-hover: #62d5b4;
-  --accent-ink: #06231c;
-  --accent-track: #1b3f35;
-  --accent-tint: #15302a;
-  --focus: #62d5b4;
-  --good-tint: #13301a;
-  --warning-tint: #2c230f;
-  --warning-ink: #fab219;
+  --bg: #15111b;
+  --surface: #1e1826;
+  --surface-2: #231c2c;
+  --surface-3: #2a2234;
+  --ink: #eee8f5;
+  --ink-2: #b6adc3;
+  --ink-3: #958ca3;
+  --line: #2f2839;
+  --line-strong: #43394f;
+  --accent: #cdb6f0;
+  --accent-hover: #ddcdf6;
+  --accent-ink: #231a2e;
+  --accent-track: #3a2f4b;
+  --accent-tint: #2a2236;
+  --focus: #cdb6f0;
+  --mint: #5be6a9;
+  --mint-tint: #173a2b;
+  --mint-ink: #7eedba;
+  --lilac: #2f2540;
+  --lilac-ink: #dccbf5;
+  --band: #0f0b14;
+  --band-ink: #eee8f5;
+  --good-tint: #173a2b;
+  --warning-tint: #2c2410;
+  --warning-ink: #f1c863;
   --serious-tint: #3a2219;
-  --danger-ink: #f08080;
-  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --shadow-2: 0 8px 24px rgba(0, 0, 0, 0.45), 0 24px 64px rgba(0, 0, 0, 0.4);
-  --backdrop: rgba(0, 0, 0, 0.5);
+  --danger-ink: #f08a8a;
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --shadow-2: 0 8px 24px rgba(0, 0, 0, 0.5), 0 24px 64px rgba(0, 0, 0, 0.45);
+  --backdrop: rgba(0, 0, 0, 0.55);
   --freeze-shadow: rgba(0, 0, 0, 0.55);
   color-scheme: dark;
 }

@@ -1,20 +1,13 @@
-# This repository
+# UTMDM
 
-Six independent projects share this repository. Changing one never requires touching another. The five websites each deploy as their own Vercel project with their own Root Directory; the Campaign Mapping Layer is a Python app that isn't deployed (Streamlit can't run on Vercel; see its README).
+A shared, versioned table for classifying a team's UTMs by typing in cells or with sentence rules, with columns the team adds. Vite and plain TypeScript, no framework. See [README.md](README.md).
 
-| Folder | What it is | Guide |
-| --- | --- | --- |
-| `portfolio/` | George Andersen's portfolio site (Astro, static), including the playbook "What boring AI looks like" (`/playbook`; its words are in `portfolio/src/playbook/content.ts`) and the AI readiness self-assessment "How Boring Is Your AI?" (`/tools/how-boring-is-your-ai`; its words are in `portfolio/src/assessment/content.ts`) | [`portfolio/CLAUDE.md`](portfolio/CLAUDE.md), and [`portfolio/HOW-TO-ADD-CONTENT.md`](portfolio/HOW-TO-ADD-CONTENT.md) for adding content |
-| `confident-machine/` | The Confident Machine, an interactive essay (Vite, vanilla TypeScript) | [`confident-machine/README.md`](confident-machine/README.md), [`confident-machine/DESIGN.md`](confident-machine/DESIGN.md) |
-| `what-do-i-actually-do/` | What Do I Actually Do?, a single-page tool | [`README.md`](README.md) |
-| `flockwatch/` | Track the Pole (trackthepole.com; working name FlockWatch), a map of the Flock license plate cameras on any drive (Vite, vanilla TypeScript, MapLibre) | [`flockwatch/README.md`](flockwatch/README.md) |
-| `campaign-mapping/` | Campaign Mapping Layer, a prototype that classifies messy UTM strings with a versioned rule table and reports coverage; synthetic data only (Python, SQLite, Streamlit). The engine in `campaign_mapping/` must never import Streamlit | [`campaign-mapping/README.md`](campaign-mapping/README.md) |
-| `utmdm/` | TagFluent (formerly UTMDM, live at tagfluent.com), a shared, versioned table for classifying a team's UTMs by typing in cells or with sentence rules, with columns the team adds, a GA4 import, and placeholders for warehouse delivery (Vite, vanilla TypeScript). Hosted on AWS Amplify; sign-in is Cognito (TagFluent's own pages, new accounts need the owner's approval), each user's workspace is in DynamoDB behind a Lambda API, and demo requests are emailed through SNS (`infra/template.yaml`). Without a `config.json` it runs browser-only. Its engine in `src/core/` has no DOM code, and the workspace is a list of changes that a `Store` saves | [`utmdm/README.md`](utmdm/README.md) |
-| `Doit/`, `Doit.xcodeproj/` | A 2019 iOS app, not deployed | — |
-
-- The root `vercel.json` serves `what-do-i-actually-do/`. Don't repoint it; the other sites set their Root Directory in Vercel instead.
-- Work inside the folder of the project you're changing, and run its own install, checks and build from there.
-- CI lives in `.github/workflows/`, one workflow per project, filtered by path. None of them deploy.
+- `src/core/` is the engine and has no DOM code. The workspace is a list of changes; any version is those changes replayed (`replay` in `table.ts`).
+- `src/cloud/` is sign-in (Cognito) and the `Store` that saves to the API. Without a `config.json` the app runs browser-only.
+- `src/ui/` is the screens. Words people read live in the views; keep them plain.
+- `infra/` is the AWS backend (`template.yaml`, the Lambda in `api.js`, which must stay under 4096 characters). Deploy it with `scripts/deploy-infra.sh <amplify-app-id>`.
+- Pushing to `main` deploys the site through Amplify (`amplify.yml`), after `npm test` and a type-checked build. Run `npm test` and `npm run build` before pushing.
+- Demo data is fictional (Zestify and its team). Don't use real company or brand names in data or tests.
 
 <!-- BEGIN AWS Agent Toolkit rules -->
 

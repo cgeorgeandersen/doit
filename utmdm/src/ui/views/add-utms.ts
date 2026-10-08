@@ -7,8 +7,8 @@ import type { Ctx } from '../ctx';
 import { fill, h } from '../dom';
 import { fmtInt, plural } from '../format';
 import { icon } from '../icons';
-import { hashFor } from '../routes';
 import { downloadText } from './download';
+import { ga4Import } from './ga4-import';
 
 // Kept between renders, so the text survives a re-render.
 let pasted = '';
@@ -65,7 +65,8 @@ export function addUtmsDrawer(ctx: Ctx, closeHref: string): HTMLElement {
       preview,
       h('p', { class: 'paste-count' }, icon('check', 14),
         `${plural(parsed.rows.length, 'UTM')} found: ${fmtInt(draft.added.length)} new`,
-        draft.known ? `, ${fmtInt(draft.known)} already in the table (merged, not duplicated)` : '', '.'),
+        draft.known ? `, ${fmtInt(draft.known)} already in the table (kept, not duplicated)` : '',
+        draft.repeats ? `, ${plural(draft.repeats, 'repeated spelling')} merged` : '', '.'),
       message ? h('p', { class: 'paste-rules' }, icon('bolt', 14), message.replace('Your rules filled', 'Your rules will fill').replace('arrived', 'arrive')) : null,
       draft.added.length
         ? h('ul', { class: 'paste-list' }, ...draft.added.slice(0, 8).map((u) => h('li', { class: 'utm' }, displayUtm(u.raw))),
@@ -117,12 +118,12 @@ export function addUtmsDrawer(ctx: Ctx, closeHref: string): HTMLElement {
       })),
     preview,
     h('div', { class: 'form-actions' }, addButton),
+    h('section', { class: 'drawer-ga4', 'aria-labelledby': 'drawer-ga4-title' },
+      h('p', { class: 'soon-title', id: 'drawer-ga4-title' }, icon('chart', 16), 'Or bring them in from Google Analytics 4'),
+      h('p', null, 'Every UTM that brought traffic to a GA4 property in a date range, merged with what\'s already here.'),
+      ga4Import(ctx, () => ctx.go(closeHref))),
     guide(),
-    h('section', { class: 'soon' },
-      h('p', { class: 'soon-title' }, icon('chart', 16), 'Google Analytics 4', h('span', { class: 'badge' }, 'Coming next')),
-      h('p', null, 'Connect a GA4 property and a Refresh button pulls every UTM that brought traffic, with its sessions, straight into this table. ',
-        h('a', { href: hashFor('data') }, 'See what\'s planned')),
-      button('Connect GA4', { disabled: true, title: 'Arrives with sign-in' })),
+
   );
   panel.querySelector('.drawer')?.classList.add('drawer-wide');
   return panel;
@@ -149,7 +150,7 @@ function guide(): HTMLElement {
       h('li', null, h('strong', null, 'Header names: '), h('code', null, 'utm_source'), ' or ', h('code', null, 'source'),
         ', and the same for medium, campaign, content and term. Capitals don\'t matter, and the columns can be in any order.'),
       h('li', null, h('strong', null, 'Only what you have: '), 'leave a cell blank, or leave a column out, when a UTM doesn\'t use that part. Content and term are often empty.'),
-      h('li', null, h('strong', null, 'Other columns are ignored, '), 'like a date or an owner, so a CSV exported from UTMDM can come back in. Values in your own columns, like Channel, aren\'t imported (yet).'),
+      h('li', null, h('strong', null, 'Other columns are ignored, '), 'like a date or an owner, so a CSV exported from TagFluent can come back in. Values in your own columns, like Channel, aren\'t imported (yet).'),
       h('li', null, h('strong', null, 'No header? '), 'Then the columns are read in order: source, medium, campaign, content, term.'),
       h('li', null, h('strong', null, 'Links work too: '), 'a column of tagged links (', h('code', null, '…?utm_source=…&utm_campaign=…'), ') is read straight from the link.'),
       h('li', null, h('strong', null, 'Commas, semicolons or tabs '), 'between columns are all fine. Wrap a value that contains one in double quotes.')),

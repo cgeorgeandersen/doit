@@ -1,52 +1,28 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: >-
-  UTMDM on AWS: Amplify hosting, Cognito sign-in, and a DynamoDB table of each
-  user's workspace behind an API that only accepts signed-in requests.
-  Deployed by scripts/deploy-aws.sh, which inlines infra/api.js as the Lambda code.
+  UTMDM's backend: Cognito sign-in, and a DynamoDB table of each user's
+  workspace behind an API that only accepts signed-in requests. The site itself
+  is an Amplify app connected to GitHub (amplify.yml). Deployed by
+  scripts/deploy-infra.sh, which inlines infra/api.js as the Lambda code.
 
 Parameters:
+  DemoEmail:
+    Type: String
+    Default: cgeorgeandersen@outlook.com
+    Description: Where "Book a demo" requests are emailed (the address confirms an SNS subscription once).
   AppName:
     Type: String
     Default: utmdm
+  AppOrigin:
+    Type: String
+    Description: The site's address without a trailing slash, e.g. https://main.d1234.amplifyapp.com
+    AllowedPattern: https://[^/]+
   LocalDevUrl:
     Type: String
     Default: http://localhost:5173/
     Description: Where `npm run dev` serves the app, so sign-in also works locally.
 
 Resources:
-  # ── hosting ───────────────────────────────────────────────────────────
-  App:
-    Type: AWS::Amplify::App
-    Properties:
-      Name: !Ref AppName
-      Platform: WEB
-      Description: UTMDM, deployed from the doit repository by scripts/deploy-aws.sh
-      CustomHeaders: |
-        customHeaders:
-          - pattern: '**/*'
-            headers:
-              - key: Content-Security-Policy
-                value: "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://*.execute-api.us-east-2.amazonaws.com https://*.auth.us-east-2.amazoncognito.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self' https://*.auth.us-east-2.amazoncognito.com"
-              - key: Strict-Transport-Security
-                value: max-age=31536000; includeSubDomains
-              - key: X-Content-Type-Options
-                value: nosniff
-              - key: Referrer-Policy
-                value: strict-origin-when-cross-origin
-              - key: Permissions-Policy
-                value: camera=(), microphone=(), geolocation=()
-          - pattern: 'assets/**'
-            headers:
-              - key: Cache-Control
-                value: public, max-age=31536000, immutable
-
-  MainBranch:
-    Type: AWS::Amplify::Branch
-    Properties:
-      AppId: !GetAtt App.AppId
-      BranchName: main
-      Stage: PRODUCTION
-
   # ── sign-in ───────────────────────────────────────────────────────────
   UserPool:
     Type: AWS::Cognito::UserPool
@@ -72,6 +48,8 @@ Resources:
           Required: true
           Mutable: true
       DeletionProtection: ACTIVE
+      LambdaConfig:
+        PostConfirmation: !GetAtt ApprovalFunction.Arn
     DeletionPolicy: Retain
     UpdateReplacePolicy: Retain
 
@@ -92,12 +70,12 @@ Resources:
       AllowedOAuthScopes: [openid, email, profile]
       SupportedIdentityProviders: [COGNITO]
       CallbackURLs:
-        - !Sub https://main.${App.DefaultDomain}/
+        - !Sub ${AppOrigin}/
         - !Ref LocalDevUrl
       LogoutURLs:
-        - !Sub https://main.${App.DefaultDomain}/
+        - !Sub ${AppOrigin}/
         - !Ref LocalDevUrl
-      ExplicitAuthFlows: [ALLOW_REFRESH_TOKEN_AUTH]
+      ExplicitAuthFlows: [ALLOW_USER_PASSWORD_AUTH, ALLOW_REFRESH_TOKEN_AUTH] # TagFluent's own sign-in page
       PreventUserExistenceErrors: ENABLED
       EnableTokenRevocation: true
       AccessTokenValidity: 1
@@ -107,6 +85,63 @@ Resources:
         AccessToken: hours
         IdToken: hours
         RefreshToken: days
+
+  # ── account approval (new sign-ups wait until the owner enables them) ───
+  ApprovalRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal: { Service: lambda.amazonaws.com }
+            Action: sts:AssumeRole
+            Condition:
+              StringEquals: { aws:SourceAccount: !Ref AWS::AccountId }
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: disable-new-users
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: cognito-idp:AdminDisableUser
+                # By pattern, not !GetAtt UserPool.Arn: the pool refers to this function, so naming it here would be circular.
+                Resource: !Sub arn:aws:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/*
+              - Effect: Allow
+                Action: sns:Publish
+                Resource: !Ref DemoTopic
+
+  ApprovalFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub ${AppName}-approve-signup
+      Runtime: nodejs22.x
+      Handler: index.handler
+      Role: !GetAtt ApprovalRole.Arn
+      MemorySize: 128
+      Timeout: 10
+      Environment:
+        Variables:
+          TOPIC: !Ref DemoTopic
+      Code:
+        ZipFile: __APPROVE_CODE__
+
+  ApprovalLogs:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${AppName}-approve-signup
+      RetentionInDays: 30
+
+  ApprovalPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref ApprovalFunction
+      Action: lambda:InvokeFunction
+      Principal: cognito-idp.amazonaws.com
+      SourceAccount: !Ref AWS::AccountId
+      SourceArn: !GetAtt UserPool.Arn
 
   # ── data ──────────────────────────────────────────────────────────────
   Table:
@@ -183,7 +218,9 @@ Resources:
       ProtocolType: HTTP
       CorsConfiguration:
         AllowOrigins:
-          - !Sub https://main.${App.DefaultDomain}
+          - !Ref AppOrigin
+          - https://tagfluent.com
+          - https://www.tagfluent.com
           - http://localhost:5173
         AllowMethods: [GET, POST, PUT, OPTIONS]
         AllowHeaders: [authorization, content-type]
@@ -235,8 +272,90 @@ Resources:
       AuthorizerId: !Ref Authorizer
       Target: !Sub integrations/${Integration}
 
+  # ── demo requests (the home page's "Book a demo" form, no sign-in) ───────
+  DemoTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: !Sub ${AppName}-demo-requests
+      DisplayName: TagFluent demo requests
+
+  DemoSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      TopicArn: !Ref DemoTopic
+      Protocol: email
+      Endpoint: !Ref DemoEmail
+
+  DemoRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal: { Service: lambda.amazonaws.com }
+            Action: sts:AssumeRole
+            Condition:
+              StringEquals: { aws:SourceAccount: !Ref AWS::AccountId }
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: demo-topic
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: sns:Publish
+                Resource: !Ref DemoTopic
+
+  DemoFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub ${AppName}-demo-request
+      Runtime: nodejs22.x
+      Handler: index.handler
+      Role: !GetAtt DemoRole.Arn
+      MemorySize: 128
+      Timeout: 10
+      Environment:
+        Variables:
+          TOPIC: !Ref DemoTopic
+      Code:
+        ZipFile: __DEMO_CODE__
+
+  DemoLogs:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${AppName}-demo-request
+      RetentionInDays: 30
+
+  DemoIntegration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref HttpApi
+      IntegrationType: AWS_PROXY
+      IntegrationUri: !GetAtt DemoFunction.Arn
+      PayloadFormatVersion: '2.0'
+
+  DemoRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref HttpApi
+      RouteKey: POST /demo-request
+      AuthorizationType: NONE
+      Target: !Sub integrations/${DemoIntegration}
+
+  DemoInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref DemoFunction
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${HttpApi}/*
+
   Stage:
     Type: AWS::ApiGatewayV2::Stage
+    DependsOn: DemoRoute
     Properties:
       ApiId: !Ref HttpApi
       StageName: $default
@@ -244,6 +363,10 @@ Resources:
       DefaultRouteSettings:
         ThrottlingBurstLimit: 50
         ThrottlingRateLimit: 20
+      RouteSettings:
+        POST /demo-request:
+          ThrottlingBurstLimit: 5
+          ThrottlingRateLimit: 1
 
   InvokePermission:
     Type: AWS::Lambda::Permission
@@ -254,10 +377,8 @@ Resources:
       SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${HttpApi}/*
 
 Outputs:
-  AppId:
-    Value: !GetAtt App.AppId
-  AppUrl:
-    Value: !Sub https://main.${App.DefaultDomain}/
+  DemoTopicArn:
+    Value: !Ref DemoTopic
   ApiUrl:
     Value: !GetAtt HttpApi.ApiEndpoint
   UserPoolId:

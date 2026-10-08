@@ -38,6 +38,18 @@ describe('versions', () => {
     expect(latest(respelled).utms[0]!.spellings).toEqual(['fb / paid_social / summer_cup', 'FB / Paid_Social / Summer_Cup']);
   });
 
+  it('counts UTMs already in the table apart from spellings repeated within one import', () => {
+    const book = start();
+    const draft = addUtms(latest(book), [
+      utm('FB', 'Paid_Social', 'Summer_Cup'), // already in the table
+      utm('meta', 'paid', 'back_to_school'),
+      utm('Meta', 'Paid', 'Back_To_School'), // the same new UTM again
+    ], 'Google Analytics 4');
+    expect(draft).toMatchObject({ known: 1, repeats: 1 });
+    expect(draft.added.map((u) => u.raw.source)).toEqual(['meta']);
+    expect(draft.summary).toBe('Added 1 UTM from Google Analytics 4 (1 UTM already in the table, 1 spelling merged)');
+  });
+
   it('turns "if campaign contains kickoff, then Type is Marketing" into a rule that classifies every match', () => {
     let book = start();
     const draft = addRule(book, { column: 'c2', when: [{ part: 'campaign', op: 'contains', text: 'KICKOFF' }], value: 'Marketing' });
@@ -148,7 +160,7 @@ describe('export and storage', () => {
     store.save(ws);
     expect(store.load()).toEqual(ws);
     expect(parseWorkspace(JSON.stringify(ws))).toEqual(ws);
-    expect(() => parseWorkspace('{"schema":1,"fields":[]}')).toThrow("That file isn't a UTMDM backup.");
+    expect(() => parseWorkspace('{"schema":1,"fields":[]}')).toThrow("That file isn't a TagFluent backup.");
     expect(() => parseWorkspace(JSON.stringify({ ...ws, changes: [{ ...ws.changes[0], version: 7 }] }))).toThrow();
   });
 });

@@ -3,7 +3,7 @@ import { parseWorkspace, type SaveStatus, type Store } from '../core/store';
 import type { Auth } from './auth';
 
 /*
- * The signed-in user's workspace, kept in DynamoDB through the UTMDM API.
+ * The signed-in user's workspace, kept in DynamoDB through the TagFluent API.
  * The workspace is fetched once before the app starts; after that every save
  * sends only the versions the server doesn't have yet. When the history was
  * replaced (a restored backup, the demo started over) the whole workspace goes.
@@ -12,7 +12,7 @@ import type { Auth } from './auth';
 class ApiError extends Error {
   readonly status: number;
   constructor(status: number) {
-    super(`The UTMDM API answered ${status}.`);
+    super(`The TagFluent API answered ${status}.`);
     this.status = status;
   }
 }

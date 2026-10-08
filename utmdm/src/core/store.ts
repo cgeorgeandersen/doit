@@ -78,6 +78,6 @@ export function parseWorkspace(text: string): Workspace {
     typeof data.user === 'string' &&
     Array.isArray(data.changes) &&
     data.changes.every((c, i) => c && c.version === i + 1 && typeof c.summary === 'string' && c.op && typeof c.op.type === 'string');
-  if (!valid) throw new Error("That file isn't a UTMDM backup.");
+  if (!valid) throw new Error("That file isn't a TagFluent backup.");
   return data as Workspace;
 }

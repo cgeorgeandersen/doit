@@ -51,27 +51,32 @@ const plural = (n: number, one: string, many = `${one}s`) => `${n.toLocaleString
 
 export interface AddUtms extends Draft {
   added: Utm[];
-  /** Rows that are already in the table (or repeat another pasted row). */
+  /** Distinct UTMs that are already in the table. */
   known: number;
+  /** Rows that repeat another row of the same import (another spelling of the same UTM). */
+  repeats: number;
 }
 
 export function addUtms(table: Table, rows: UtmParts[], from = 'a paste'): AddUtms {
-  const seen = new Set(table.utms.map((u) => u.key));
+  const existing = new Set(table.utms.map((u) => u.key));
+  const imported = new Set<string>();
   const added: Utm[] = [];
-  let known = 0;
+  let repeats = 0;
   for (const row of rows) {
     const parts = normalizeParts(row);
     if (Object.values(parts).every((p) => !p)) continue;
     const key = utmKey(parts);
-    if (seen.has(key)) {
-      known++;
+    if (imported.has(key)) {
+      repeats++;
       continue;
     }
-    seen.add(key);
-    added.push({ key, parts, raw: row, spellings: [displayUtm(row)] });
+    imported.add(key);
+    if (!existing.has(key)) added.push({ key, parts, raw: row, spellings: [displayUtm(row)] });
   }
-  const summary = `Added ${plural(added.length, 'UTM')} from ${from}${known ? ` (${plural(known, 'row')} already in the table)` : ''}`;
-  return { op: { type: 'addUtms', rows }, summary, added, known };
+  const known = imported.size - added.length;
+  const notes = [known ? `${plural(known, 'UTM')} already in the table` : '', repeats ? `${plural(repeats, 'spelling')} merged` : ''].filter(Boolean);
+  const summary = `Added ${plural(added.length, 'UTM')} from ${from}${notes.length ? ` (${notes.join(', ')})` : ''}`;
+  return { op: { type: 'addUtms', rows }, summary, added, known, repeats };
 }
 
 /* ── columns ───────────────────────────────────────────────────────────── */

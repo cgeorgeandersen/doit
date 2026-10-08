@@ -9,7 +9,8 @@ import { button, emptyState, linkButton, meter, pageHeader } from '../components
 import type { Ctx } from '../ctx';
 import { fill, h } from '../dom';
 import { fmtInt, fmtPct, plural } from '../format';
-import { icon, type IconName } from '../icons';
+import { isSample, startEmpty } from '../fresh-start';
+import { icon } from '../icons';
 import { hashFor } from '../routes';
 import { addUtmsDrawer } from './add-utms';
 import { columnDrawer } from './column-drawer';
@@ -435,8 +436,8 @@ export function tableView(ctx: Ctx): HTMLElement {
     'div',
     { class: 'view view-table' },
     pageHeader(
-      'UTM table',
-      'One shared, versioned table where your team classifies every UTM, so every report agrees on what a campaign was.',
+      'Your marketing source of truth',
+      'Every UTM your team uses, classified once and shared by marketing and analytics, so every report agrees on what a campaign was.',
       linkButton('Add UTMs', hashFor('table', { add: '1' }), { icon: 'plus', kind: 'primary' }),
       button('Export CSV', {
         icon: 'download',
@@ -444,7 +445,7 @@ export function tableView(ctx: Ctx): HTMLElement {
           `utmdm-${ctx.ws.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-v${ctx.version}.csv`, 'text/csv'),
       }),
     ),
-    about(),
+    isSample(ctx.ws) ? sampleNote() : null,
     h('div', { class: 'table-top' }, summary(), tip()),
     h('div', { class: 'toolbar' },
       h('nav', { class: 'segmented', 'aria-label': 'Filter UTMs' },
@@ -466,10 +467,18 @@ export function tableView(ctx: Ctx): HTMLElement {
       scroller),
     table.utms.length
       ? tableHost
-      : emptyState('No UTMs yet', 'Paste tagged links or rows from a spreadsheet to start your table.',
-        linkButton('Add UTMs', hashFor('table', { add: '1' }), { icon: 'plus', kind: 'primary' })),
+      : emptyState('No UTMs yet', 'Paste tagged links or rows from a spreadsheet, upload a CSV, or bring them in from Google Analytics 4.',
+        linkButton('Add UTMs', hashFor('table', { add: '1' }), { icon: 'plus', kind: 'primary' }),
+        linkButton('Import from GA4', hashFor('data'), { icon: 'chart' })),
     drawerEl,
   );
+
+  function sampleNote(): HTMLElement {
+    return h('section', { class: 'sample-note card', 'aria-label': 'Sample data' },
+      h('p', null, h('strong', null, "You're looking at sample data. "),
+        'Zestify is a made-up brand, and so are its UTMs, columns and rules. Try things here, then clear it out to start your own table.'),
+      button('Start with an empty table', { kind: 'primary', onClick: () => startEmpty(ctx) }));
+  }
 
   function summary(): HTMLElement {
     const rules = table.rules.length;
@@ -537,21 +546,6 @@ export function tableView(ctx: Ctx): HTMLElement {
     );
     return box;
   }
-}
-
-/** What UTMDM is for, who it's for, and why it helps: the first thing a new visitor reads. */
-function about(): HTMLElement {
-  const item = (iconName: IconName, title: string, text: string) =>
-    h('div', { class: 'about-item' }, h('h2', null, icon(iconName, 16), title), h('p', null, text));
-  return h('section', { class: 'about', 'aria-label': 'About UTMDM' },
-    item('columns', "What it's for",
-      'UTMs are typed by hand, so one campaign turns up as fb, Facebook and FB_Paid. UTMDM turns them into clean, agreed values ' +
-      '(Channel, Campaign, Type, or any column you add) that reports can group and join on.'),
-    item('user', "Who it's for",
-      'Data-focused marketers and marketing-focused data people: whoever owns the campaign naming, and gets asked why two dashboards disagree.'),
-    item('check', 'Why it helps',
-      'One place instead of private spreadsheets. Rules classify new UTMs as they arrive, typed fixes stick, and every change is versioned ' +
-      'with who made it, so a number in a report can be traced back and trusted.'));
 }
 
 function stat(iconName: 'bolt' | 'pencil' | 'outstanding', label: string, value: string, detail: string): HTMLElement {

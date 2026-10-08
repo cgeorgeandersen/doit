@@ -68,7 +68,7 @@ describe('pasting UTMs', () => {
     });
   });
 
-  it('takes back a CSV exported from UTMDM without duplicating anything', () => {
+  it('takes back a CSV exported from TagFluent without duplicating anything', () => {
     const book = openBook(createDemoWorkspace('2026-10-07T12:00:00.000Z'));
     const t = latest(book);
     const exported = tableCsv(t, resolve(t), 8);

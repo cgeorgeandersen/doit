@@ -17,7 +17,7 @@ describe('the warehouse table', () => {
   it('defines one row per UTM, one column per classification, and the version', () => {
     const t = latest(openBook(createDemoWorkspace('2026-10-07T12:00:00.000Z')));
     const ddl = warehouseDdl(t);
-    expect(ddl.startsWith('create table utmdm.utm_classifications (')).toBe(true);
+    expect(ddl.startsWith('create table tagfluent.utm_classifications (')).toBe(true);
     for (const name of ['utm_key', 'utm_source', 'utm_term', 'channel', 'campaign', 'type', 'rules_version', 'exported_at']) {
       expect(ddl).toMatch(new RegExp(`\\n  ${name}\\s+(varchar|integer|timestamp)`));
     }

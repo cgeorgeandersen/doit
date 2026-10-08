@@ -1,5 +1,4 @@
 import { tableCsv } from '../../core/csv';
-import { createDemoWorkspace } from '../../core/demo';
 import { parseWorkspace } from '../../core/store';
 import { WAREHOUSE_TABLE, warehouseDdl } from '../../core/warehouse';
 import { GA4_DIMENSIONS, GA4_METRICS } from '../../sources/ga4';
@@ -7,9 +6,11 @@ import { button, linkButton, pageHeader, select } from '../components';
 import type { Ctx } from '../ctx';
 import { h, type Child } from '../dom';
 import { fmtInt, plural } from '../format';
+import { isSample, loadSample, startEmpty } from '../fresh-start';
 import { icon, type IconName } from '../icons';
 import { hashFor } from '../routes';
 import { downloadText } from './download';
+import { ga4Import } from './ga4-import';
 
 const GA4_RANGES = [['28', 'Last 28 days'], ['90', 'Last 90 days'], ['365', 'Last 12 months']] as const;
 
@@ -51,7 +52,7 @@ export function dataView(ctx: Ctx): HTMLElement {
           ctx.replace(backup, `Restored the backup of ${backup.name}.`);
         }
       } catch (error) {
-        ctx.toast(error instanceof Error && error.message.startsWith('That file') ? error.message : "That file isn't a UTMDM backup.");
+        ctx.toast(error instanceof Error && error.message.startsWith('That file') ? error.message : "That file isn't a TagFluent backup.");
       }
     },
   });
@@ -61,7 +62,7 @@ export function dataView(ctx: Ctx): HTMLElement {
     { class: 'view view-data' },
     pageHeader('Import & export',
       'Bring UTMs in from wherever your team tags links today, and send the classified table to wherever your reports are built. ' +
-      'Pasting and files work now; the live connections are next.'),
+      'Pasting, files and Google Analytics work now; warehouse connections are next.'),
 
     h('section', { class: 'data-section', 'aria-labelledby': 'import-title' },
       h('div', { class: 'section-title' }, h('h2', { id: 'import-title' }, icon('upload', 18), 'Import'),
@@ -73,9 +74,9 @@ export function dataView(ctx: Ctx): HTMLElement {
             linkButton('Add UTMs', hashFor('table', { add: '1' }), { icon: 'plus', kind: 'primary' }),
             linkButton('How to format a CSV', hashFor('table', { add: '1' }), { kind: 'ghost' }))),
 
-        card('chart', 'UTMs from Google Analytics 4', 'soon',
+        card('chart', 'UTMs from Google Analytics 4', ctx.googleClientId ? 'ready' : 'soon',
           [
-            h('p', null, 'Connect a GA4 property and pull every UTM that brought traffic in a date range. A Refresh button keeps the table current, so new campaigns show up without anyone pasting them in.'),
+            h('p', null, 'Connect Google Analytics and pull every UTM that brought traffic to a GA4 property in a date range. Run it again any time to bring in new campaigns; UTMs already in the table are never duplicated.'),
             h('div', { class: 'dedupe' },
               h('p', { class: 'dedupe-title' }, 'How deduplication works'),
               h('ul', { class: 'dedupe-list' },
@@ -86,10 +87,7 @@ export function dataView(ctx: Ctx): HTMLElement {
                   ? `In this workspace, ${plural(spellings, 'spelling')} became ${plural(table.utms.length, 'row')}: ${fmtInt(merged)} duplicate${merged === 1 ? '' : 's'} merged.`
                   : `In this workspace, all ${plural(spellings, 'spelling')} are different UTMs.`)),
           ],
-          disabledForm([
-            ['GA4 property ID', h('input', { disabled: true, placeholder: '123456789', 'aria-label': 'GA4 property ID' })],
-            ['Date range', select(GA4_RANGES, '90', { disabled: true, 'aria-label': 'Date range' })],
-          ], 'Connect Google Analytics')),
+          ga4Import(ctx)),
 
         card('chart', 'Sessions from Google Analytics 4', 'soon',
           [
@@ -105,10 +103,10 @@ export function dataView(ctx: Ctx): HTMLElement {
       ),
       h('details', { class: 'card under-hood' },
         h('summary', null, 'Under the hood: how GA4 maps to UTMs'),
-        h('p', null, 'UTMDM asks the GA4 Data API (runReport) for these session-scoped dimensions and metrics. Sessions without a UTM campaign, like ',
+        h('p', null, 'TagFluent asks the GA4 Data API (runReport) for these session-scoped dimensions and metrics. Sessions without a UTM campaign, like ',
           h('code', null, '(direct)'), ' and ', h('code', null, '(organic)'), ', are skipped, and ', h('code', null, '(not set)'), ' is read as empty.'),
         h('table', { class: 'mapping' },
-          h('thead', null, h('tr', null, h('th', { scope: 'col' }, 'GA4'), h('th', { scope: 'col' }, 'UTMDM'))),
+          h('thead', null, h('tr', null, h('th', { scope: 'col' }, 'GA4'), h('th', { scope: 'col' }, 'TagFluent'))),
           h('tbody', null,
             ...GA4_DIMENSIONS.map((d) => h('tr', null, h('td', null, h('code', null, d)), h('td', null, h('code', null, PART_FOR[d])))),
             ...GA4_METRICS.map((m) => h('tr', null, h('td', null, h('code', null, m)), h('td', null, m === 'sessions' ? 'Sessions column' : 'Key events column'))))),
@@ -133,18 +131,12 @@ export function dataView(ctx: Ctx): HTMLElement {
               onClick: () => downloadText(JSON.stringify(ws), `utmdm-backup-v${version}-${ctx.now().slice(0, 10)}.json`, 'application/json'),
             }),
             h('label', { class: 'button button-secondary', for: 'restore-file' }, icon('upload'), 'Restore a backup', restoreInput),
-            button('Start the demo over', {
-              kind: 'danger',
-              icon: 'restore',
-              onClick: () => {
-                if (!window.confirm('Start the demo over? Everything you changed in this browser goes.')) return;
-                ctx.replace({ ...createDemoWorkspace(ctx.now()), user: ws.user }, 'The demo is back to where it started.');
-              },
-            }))),
+            ws.changes.length ? button('Start with an empty table', { kind: 'danger', icon: 'close', onClick: () => startEmpty(ctx) }) : null,
+            isSample(ws) ? null : button('Load the sample data', { kind: 'ghost', icon: 'restore', onClick: () => loadSample(ctx) }))),
 
         card('database', 'Warehouses and databases', 'soon',
           [
-            h('p', null, 'Connect a destination once, and UTMDM writes the classified table to it on every new version: one row per UTM, one column per classification, stamped with its version.'),
+            h('p', null, 'Connect a destination once, and TagFluent writes the classified table to it on every new version: one row per UTM, one column per classification, stamped with its version.'),
             h('ul', { class: 'destinations' },
               ...DESTINATIONS.map((d) => h('li', { class: 'destination' },
                 h('span', { class: 'destination-name' }, icon('database', 16), d.name),
@@ -163,7 +155,7 @@ export function dataView(ctx: Ctx): HTMLElement {
             },
           })),
         h('p', { class: 'card-intro' }, 'Built from your columns as they are now, so adding a column here adds one there. Each destination upserts on ',
-          h('code', null, 'utm_key'), '. The rules and the version history can go alongside, as ', h('code', null, 'utmdm.rules'), ' and ', h('code', null, 'utmdm.changes'), '.'),
+          h('code', null, 'utm_key'), '. The rules and the version history can go alongside, as ', h('code', null, 'tagfluent.rules'), ' and ', h('code', null, 'tagfluent.changes'), '.'),
         h('pre', { class: 'code', tabindex: 0, 'aria-label': 'SQL table definition' }, h('code', null, warehouseDdl(table)))),
     ),
   );

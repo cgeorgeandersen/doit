@@ -21,6 +21,11 @@ export function meter(part: number, whole: number, label: string, size: 'big' | 
   );
 }
 
+/** The TagFluent wordmark: "Fluent" carries the mint highlight. */
+export function wordmark(): HTMLElement {
+  return h('span', { class: 'wordmark' }, 'Tag', h('em', null, 'Fluent'));
+}
+
 export function pageHeader(title: string, subtitle: Child | Child[], ...actions: Child[]): HTMLElement {
   return h(
     'header',
@@ -98,4 +103,30 @@ export function drawer(title: Child, closeHref: string, ...body: Child[]): HTMLE
       ...body,
     ),
   );
+}
+
+/** Light is the default; this switches to dark and back, and remembers the choice in this browser. */
+export function themeToggle(): HTMLElement {
+  const dark = () => document.documentElement.dataset.theme === 'dark';
+  const label = () => (dark() ? 'Switch to light mode' : 'Switch to dark mode');
+  const control = button(null, {
+    kind: 'ghost',
+    icon: dark() ? 'sun' : 'moon',
+    label: label(),
+    title: label(),
+    onClick: () => {
+      const theme = dark() ? 'light' : 'dark';
+      document.documentElement.dataset.theme = theme;
+      try {
+        localStorage.setItem('utmdm-theme', theme);
+      } catch {
+        // the choice lasts for this visit
+      }
+      control.replaceChildren(icon(theme === 'dark' ? 'sun' : 'moon'));
+      control.title = label();
+      control.setAttribute('aria-label', label());
+    },
+  });
+  control.classList.add('theme-toggle');
+  return control;
 }

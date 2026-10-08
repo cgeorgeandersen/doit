@@ -3,10 +3,11 @@ import './styles/tokens.css';
 import './styles/base.css';
 import './styles/app.css';
 
-import { createAuth, loadConfig } from './cloud/auth';
+import { createAuth, loadConfig, type Auth } from './cloud/auth';
 import { openCloudStore } from './cloud/cloud-store';
 import { browserStore } from './core/store';
 import { startApp } from './ui/app';
+import { authModeFor, authView } from './ui/auth-view';
 import { landingView } from './ui/landing';
 
 /*
@@ -21,23 +22,34 @@ async function boot(root: HTMLElement): Promise<void> {
     return;
   }
   const auth = createAuth(config);
-  try {
-    await auth.handleRedirect();
-  } catch (error) {
-    landingView(root, auth, error instanceof Error ? error.message : 'Sign-in failed.');
-    return;
-  }
   const account = auth.account();
   if (!account || !(await auth.accessToken())) {
-    landingView(root, auth);
+    signedOut(root, auth, config.apiUrl);
     return;
   }
   root.replaceChildren(Object.assign(document.createElement('p'), { className: 'loading', textContent: 'Opening your workspace…' }));
   try {
-    startApp(root, await openCloudStore(config.apiUrl, auth), { account });
+    startApp(root, await openCloudStore(config.apiUrl, auth), { account, googleClientId: config.googleClientId });
   } catch {
-    landingView(root, auth, "Couldn't open your workspace. Try again in a moment.");
+    signedOut(root, auth, config.apiUrl, "Couldn't open your workspace. Try again in a moment.");
   }
+}
+
+/** Before sign-in: the home page, or the sign-in pages at #/signin, #/signup and #/forgot. */
+function signedOut(root: HTMLElement, auth: Auth, apiUrl: string, problem?: string): void {
+  let shown: string | null = null;
+  const render = () => {
+    const mode = authModeFor(location.hash);
+    const page = mode ?? 'home';
+    if (page === shown) return;
+    shown = page;
+    if (mode) authView(root, auth, mode);
+    else landingView(root, apiUrl, problem);
+    window.scrollTo(0, 0);
+    document.title = mode ? 'Sign in · TagFluent' : 'TagFluent: your marketing source of truth';
+  };
+  window.addEventListener('hashchange', render);
+  render();
 }
 
 void boot(document.getElementById('app')!);

@@ -4,7 +4,8 @@ import type { Account } from '../cloud/auth';
 import type { SaveStatus, Store } from '../core/store';
 import { resolve, type Grid } from '../core/table';
 import { latest, openBook, record, undo, versionOf, type Book } from '../core/workspace';
-import { button } from './components';
+import { button, themeToggle, wordmark } from './components';
+import { isSample } from './fresh-start';
 import type { Ctx, ToastAction } from './ctx';
 import { fill, h } from './dom';
 import { icon } from './icons';
@@ -17,6 +18,8 @@ import { tableView } from './views/table';
 export interface AppOptions {
   /** The signed-in account, when the workspace is kept in the cloud. */
   account?: Account;
+  /** Turns on the GA4 import. */
+  googleClientId?: string;
   clock?: () => string;
 }
 
@@ -94,6 +97,7 @@ export function startApp(root: HTMLElement, store: Store, options: AppOptions = 
     get grid() { return grid; },
     get version() { return versionOf(book); },
     get params() { return route.params; },
+    googleClientId: options.googleClientId,
     now: clock,
     commit(draft, options = {}) {
       const next = record(book, draft, clock());
@@ -149,7 +153,7 @@ export function startApp(root: HTMLElement, store: Store, options: AppOptions = 
     const view = { table: tableView, rules: rulesView, data: dataView, history: historyView }[route.page](ctx);
     fill(root, h('a', { class: 'skip', href: '#main' }, 'Skip to content'), topbar(), h('main', { id: 'main', class: 'page' }, view),
       footer(), toastRegion);
-    document.title = `${PAGES.find((p) => p.page === route.page)!.label} · UTMDM`;
+    document.title = `${PAGES.find((p) => p.page === route.page)!.label} · TagFluent`;
     const wrap = root.querySelector('.table-wrap');
     if (wrap) wrap.scrollTo({ left: scrollLeft, top: scrollTop });
     if (focused) document.getElementById(focused)?.focus({ preventScroll: true });
@@ -162,8 +166,7 @@ export function startApp(root: HTMLElement, store: Store, options: AppOptions = 
       h(
         'div',
         { class: 'topbar-inner' },
-        h('a', { class: 'brand', href: '#/' }, h('span', { class: 'logo', 'aria-hidden': 'true' }, icon('database', 18)),
-          h('span', { class: 'brand-name' }, 'UTMDM')),
+        h('a', { class: 'brand', href: '#/', 'aria-label': 'TagFluent, your table' }, wordmark()),
         h('span', { class: 'workspace', title: signedIn ? 'Your workspace, saved to your account' : 'The workspace. In this copy it lives in your browser.' },
           icon('columns', 14), book.ws.name),
         h('nav', { class: 'nav', 'aria-label': 'Main' },
@@ -229,7 +232,7 @@ export function startApp(root: HTMLElement, store: Store, options: AppOptions = 
 
   function footer(): HTMLElement {
     return h('footer', { class: 'footer' },
-      h('p', null, h('strong', null, 'UTMDM'), ' demo. Zestify and its team are made up, and so are their UTMs. ',
+      h('p', null, h('strong', null, 'TagFluent'), isSample(book.ws) ? '. The sample data is made up: Zestify, its team and their UTMs. ' : '. ',
         signedIn ? 'Your workspace is saved to your account.' : 'Everything you do here stays in this browser.'));
   }
 
@@ -244,28 +247,4 @@ export function startApp(root: HTMLElement, store: Store, options: AppOptions = 
     document.querySelectorAll('details[open]').forEach((d) => d.removeAttribute('open'));
   });
   render();
-}
-
-function themeToggle(): HTMLElement {
-  const dark = () => document.documentElement.dataset.theme
-    ? document.documentElement.dataset.theme === 'dark'
-    : window.matchMedia('(prefers-color-scheme: dark)').matches;
-  const control = button(null, {
-    kind: 'ghost',
-    icon: dark() ? 'sun' : 'moon',
-    label: 'Switch light or dark theme',
-    title: dark() ? 'Light theme' : 'Dark theme',
-    onClick: () => {
-      const theme = dark() ? 'light' : 'dark';
-      document.documentElement.dataset.theme = theme;
-      try {
-        localStorage.setItem('utmdm-theme', theme);
-      } catch {
-        // the choice lasts for this visit
-      }
-      control.replaceChildren(icon(theme === 'dark' ? 'sun' : 'moon'));
-      control.title = theme === 'dark' ? 'Light theme' : 'Dark theme';
-    },
-  });
-  return control;
 }

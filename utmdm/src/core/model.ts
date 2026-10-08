@@ -1,5 +1,5 @@
 /*
- * The shapes UTMDM works with. A workspace is a list of changes; the table at
+ * The shapes TagFluent works with. A workspace is a list of changes; the table at
  * any version is what you get by applying the changes up to it, in order.
  */
 

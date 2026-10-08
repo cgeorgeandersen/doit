@@ -22,6 +22,8 @@ export interface Ctx {
   readonly grid: Grid;
   readonly version: number;
   readonly params: URLSearchParams;
+  /** The Google OAuth client for the GA4 import, when this site has one. */
+  readonly googleClientId?: string;
   now(): string;
   /** Saves a change as the next version and re-renders. Returns the new version, or null if nothing changed. */
   commit(draft: Draft, options?: CommitOptions): number | null;
@@ -30,6 +32,6 @@ export interface Ctx {
   go(hash: string): void;
   toast(message: string, actions?: ToastAction[]): void;
   setUser(name: string): void;
-  /** Replaces the whole workspace (a backup, or the demo again). */
+  /** Replaces the whole workspace (a backup, an empty table, or the sample again). */
   replace(ws: Workspace, message: string): void;
 }

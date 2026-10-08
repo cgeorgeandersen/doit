@@ -73,7 +73,7 @@ export function historyView(ctx: Ctx): HTMLElement {
         { class: 'card split-side' },
         h('h2', null, 'How versions work'),
         h('p', { class: 'card-intro' },
-          'UTMDM keeps a list of what was done: added these UTMs, added this rule, typed this value. Any version of the table is that list replayed up to that point, ' +
+          'TagFluent keeps a list of what was done: added these UTMs, added this rule, typed this value. Any version of the table is that list replayed up to that point, ' +
           'the way a bank balance is the sum of its transactions.'),
         h('p', { class: 'card-intro' }, 'That is why a restore never loses anything: it is one more entry on the list, and it can be undone like any other.'),
         h('p', { class: 'card-intro' }, 'Backups and exports are on ', h('a', { href: hashFor('data') }, 'Import & export'), '.'),

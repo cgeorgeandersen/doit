@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { Auth } from '../src/cloud/auth';
 import { openCloudStore } from '../src/cloud/cloud-store';
 import { createDemoWorkspace } from '../src/core/demo';
+import { emptyWorkspace } from '../src/core/workspace';
 import type { SaveStatus } from '../src/core/store';
 
 const auth = { accessToken: async () => 'token' } as unknown as Auth;
@@ -63,6 +64,21 @@ describe('the cloud store', () => {
     store.save(restored);
     await settle(statuses, 4);
     expect(calls[2]).toMatchObject({ method: 'PUT', path: '/workspace' });
+  });
+
+  it('clears the sample for an empty table, which loads as empty rather than as the sample again', async () => {
+    const calls = server(demo);
+    const store = await openCloudStore('https://api.example', auth);
+    const statuses: SaveStatus[] = [];
+    store.onStatus!((s) => statuses.push(s));
+    const empty = emptyWorkspace('My UTMs', 'george');
+    store.save(empty);
+    await settle(statuses, 2);
+    expect(calls[1]).toMatchObject({ method: 'PUT', path: '/workspace', body: { name: 'My UTMs', changes: [] } });
+
+    server(empty);
+    const reopened = await openCloudStore('https://api.example', auth);
+    expect(reopened.load()).toEqual(empty);
   });
 
   it('reports a version someone else saved first as a conflict', async () => {
