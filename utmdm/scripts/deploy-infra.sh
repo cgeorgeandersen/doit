@@ -18,7 +18,7 @@ echo "→ Backend ($STACK in $REGION) for $ORIGIN"
 python3 - "$work/template.yaml" <<'PY'
 import sys
 template = open('infra/template.yaml').read()
-for name, marker in (('infra/api.js', '__API_CODE__'), ('infra/demo.js', '__DEMO_CODE__'), ('infra/approve.js', '__APPROVE_CODE__')):
+for name, marker in (('infra/api.js', '__API_CODE__'), ('infra/demo.js', '__DEMO_CODE__'), ('infra/approve.js', '__APPROVE_CODE__'), ('infra/emails.js', '__EMAILS_CODE__')):
     code = open(name).read()
     assert len(code) <= 4096, f'{name} must stay under 4096 characters to inline in CloudFormation'
     block = '|\n' + ''.join('          ' + line + '\n' if line.strip() else '\n' for line in code.splitlines())

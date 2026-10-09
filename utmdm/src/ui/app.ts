@@ -10,6 +10,7 @@ import type { Ctx, ToastAction } from './ctx';
 import { fill, h } from './dom';
 import { icon } from './icons';
 import { PAGES, hashFor, parseRoute } from './routes';
+import { builderView } from './views/builder';
 import { dataView } from './views/data';
 import { historyView } from './views/history';
 import { rulesView } from './views/rules';
@@ -150,7 +151,7 @@ export function startApp(root: HTMLElement, store: Store, options: AppOptions = 
     const kept = root.querySelector('.table-wrap');
     const [scrollLeft, scrollTop] = [kept?.scrollLeft ?? 0, kept?.scrollTop ?? 0];
     route = parseRoute(location.hash);
-    const view = { table: tableView, rules: rulesView, data: dataView, history: historyView }[route.page](ctx);
+    const view = { table: tableView, rules: rulesView, builder: builderView, data: dataView, history: historyView }[route.page](ctx);
     fill(root, h('a', { class: 'skip', href: '#main' }, 'Skip to content'), topbar(), h('main', { id: 'main', class: 'page' }, view),
       footer(), toastRegion);
     document.title = `${PAGES.find((p) => p.page === route.page)!.label} · TagFluent`;

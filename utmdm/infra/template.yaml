@@ -50,6 +50,7 @@ Resources:
       DeletionProtection: ACTIVE
       LambdaConfig:
         PostConfirmation: !GetAtt ApprovalFunction.Arn
+        CustomMessage: !GetAtt EmailFunction.Arn
     DeletionPolicy: Retain
     UpdateReplacePolicy: Retain
 
@@ -138,6 +139,48 @@ Resources:
     Type: AWS::Lambda::Permission
     Properties:
       FunctionName: !Ref ApprovalFunction
+      Action: lambda:InvokeFunction
+      Principal: cognito-idp.amazonaws.com
+      SourceAccount: !Ref AWS::AccountId
+      SourceArn: !GetAtt UserPool.Arn
+
+  # ── branded emails (Cognito asks this for every sign-up and password email) ──
+  EmailRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal: { Service: lambda.amazonaws.com }
+            Action: sts:AssumeRole
+            Condition:
+              StringEquals: { aws:SourceAccount: !Ref AWS::AccountId }
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+
+  EmailFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub ${AppName}-emails
+      Runtime: nodejs22.x
+      Handler: index.handler
+      Role: !GetAtt EmailRole.Arn
+      MemorySize: 128
+      Timeout: 5
+      Code:
+        ZipFile: __EMAILS_CODE__
+
+  EmailLogs:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${AppName}-emails
+      RetentionInDays: 30
+
+  EmailPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref EmailFunction
       Action: lambda:InvokeFunction
       Principal: cognito-idp.amazonaws.com
       SourceAccount: !Ref AWS::AccountId
