@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { buildUtm, campaignName, landingPage, slug, timeChoices, type BuilderAnswers } from '../src/core/builder';
+import { buildUtm, campaignName, cleanValue, landingPage, slug, timeChoices, type BuilderAnswers } from '../src/core/builder';
 
 const answers = (over: Partial<BuilderAnswers> = {}): BuilderAnswers => ({
-  url: 'example.com/shop', source: 'facebook', sourceOther: '', medium: 'paid_social', time: '2026-10',
+  url: 'example.com/shop', source: 'facebook', medium: 'paid_social', time: '2026-10',
   objective: 'launch', theme: 'Summer Cup!', audience: 'prospecting', region: 'us', format: '', variant: '', term: '',
   ...over,
 });
@@ -30,7 +30,7 @@ describe('the UTM builder', () => {
   });
 
   it('says what is still needed instead of building half a link', () => {
-    const built = buildUtm(answers({ url: 'not a page', theme: '', source: 'other', sourceOther: '' }));
+    const built = buildUtm(answers({ url: 'not a page', theme: '', source: '  ' }));
     expect(built.url).toBe('');
     expect(built.missing).toEqual(['the landing page', 'the source', 'what the campaign is about']);
     expect(landingPage('example.com')?.href).toBe('https://example.com/');
@@ -44,4 +44,21 @@ describe('the UTM builder', () => {
     expect(choices.slice(6, 10).map((c) => c[0])).toEqual(['2026-q4', '2027-q1', '2027-q2', '2027-q3']);
     expect(choices.at(-1)![0]).toBe('evergreen');
   });
+
+  it('accepts your own answer on any question, cleaned the same way as the standard ones', () => {
+    expect(cleanValue('  Podcast Network ')).toBe('podcast_network');
+    expect(cleanValue('Paid--Social!!')).toBe('paid-social');
+    const built = buildUtm(answers({
+      source: 'Podcast Network', medium: 'Audio Ad', time: 'Black Friday 2026', objective: 'Referral Program',
+      audience: 'Cart abandoners', region: 'Texas', format: 'UGC Video', variant: 'Blue Button', term: '  Best  Running Shoes ',
+    }));
+    expect(built.parts).toEqual({
+      source: 'podcast_network',
+      medium: 'audio_ad',
+      campaign: 'black-friday-2026_referral-program_summer-cup_cart-abandoners_texas',
+      content: 'ugc-video_blue-button',
+      term: 'best running shoes',
+    });
+  });
 });
+

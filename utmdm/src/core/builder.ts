@@ -7,11 +7,10 @@ import type { UtmParts } from './model';
  * same UTM: 2026-10_launch_summer-cup_prospecting_us.
  */
 
+/** Every answer is text: a dropdown's value, or what someone typed instead. */
 export interface BuilderAnswers {
   url: string;
   source: string;
-  /** Free text, used when source is "other". */
-  sourceOther: string;
   medium: string;
   time: string;
   objective: string;
@@ -19,6 +18,7 @@ export interface BuilderAnswers {
   audience: string;
   region: string;
   format: string;
+  /** Free text that follows the format in utm_content, e.g. "v2" or "blue-button". */
   variant: string;
   term: string;
 }
@@ -37,7 +37,6 @@ export const SOURCES: Choice[] = [
   ['reddit', 'Reddit'],
   ['newsletter', 'Newsletter'],
   ['partner', 'Partner or affiliate'],
-  ['other', 'Something else…'],
 ];
 
 export const MEDIUMS: Choice[] = [
@@ -128,6 +127,19 @@ export function timeChoices(today: string): Choice[] {
   return [...months, ...quarters, ['evergreen', 'Evergreen (no end date)']];
 }
 
+/** A source or medium as typed: lower case, spaces become underscores, nothing but letters, digits, _ . and -. */
+export function cleanValue(text: string): string {
+  return text
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, '_')
+    .replace(/[^a-z0-9_.-]/g, '')
+    .replace(/([_.-])\1+/g, '$1')
+    .replace(/^[_.-]+|[_.-]+$/g, '');
+}
+
 /** One part of a name: lower case, words joined by hyphens, nothing but letters, digits and hyphens. */
 export function slug(text: string): string {
   return text
@@ -154,13 +166,13 @@ export interface Built {
 }
 
 export function buildUtm(a: BuilderAnswers): Built {
-  const source = a.source === 'other' ? slug(a.sourceOther) : a.source;
+  const source = cleanValue(a.source);
   const parts: UtmParts = {
     source,
-    medium: a.medium,
+    medium: cleanValue(a.medium),
     campaign: campaignName(a),
     content: [a.format, a.variant].map(slug).filter(Boolean).join('_'),
-    term: a.term.trim().toLowerCase().replace(/\s+/g, ' '),
+    term: a.term.trim().toLowerCase().replace(/\s+/g, ' ').slice(0, 100),
   };
   const missing: string[] = [];
   const page = landingPage(a.url);

@@ -19,10 +19,13 @@ import { hashFor } from '../routes';
  */
 let answers: BuilderAnswers | null = null;
 let mediumTouched = false;
+// Questions answered by typing instead of picking from the dropdown.
+let typed = new Set<keyof BuilderAnswers>();
+const OWN = '__own';
 
 function fresh(today: string): BuilderAnswers {
   return {
-    url: '', source: 'google', sourceOther: '', medium: DEFAULT_MEDIUM.google!, time: timeChoices(today)[0]![0],
+    url: '', source: 'google', medium: DEFAULT_MEDIUM.google!, time: timeChoices(today)[0]![0],
     objective: 'launch', theme: '', audience: 'prospecting', region: 'us', format: '', variant: '', term: '',
   };
 }
@@ -40,68 +43,95 @@ export function builderView(ctx: Ctx): HTMLElement {
         update();
       },
     });
-  const choose = (key: keyof BuilderAnswers, choices: Choice[], after?: () => void) =>
-    select(choices, a[key], {
-      id: `b-${key}`,
-      onchange: (e: Event) => {
-        a[key] = (e.target as HTMLSelectElement).value;
+
+  /** A dropdown of standard answers, plus "Type your own…", which opens a text box for anything else. */
+  const choose = (key: keyof BuilderAnswers, choices: Choice[], placeholder: string, after?: () => void) => {
+    const own = typed.has(key) || (a[key] !== '' && !choices.some(([v]) => v === a[key]));
+    const box = h('input', {
+      id: `b-${key}-own`, value: own ? a[key] : '', autocomplete: 'off', spellcheck: 'false', placeholder, maxlength: 40,
+      'aria-label': 'Your own answer',
+      oninput: (e: Event) => {
+        a[key] = (e.target as HTMLInputElement).value;
         after?.();
         update();
       },
     });
+    box.hidden = !own;
+    const picker = select([...choices, [OWN, 'Type your own…']], own ? OWN : a[key], {
+      id: `b-${key}`,
+      onchange: (e: Event) => {
+        const value = (e.target as HTMLSelectElement).value;
+        if (value === OWN) {
+          typed.add(key);
+          box.hidden = false;
+          a[key] = box.value;
+          box.focus();
+        } else {
+          typed.delete(key);
+          box.hidden = true;
+          a[key] = value;
+        }
+        after?.();
+        update();
+      },
+    });
+    return { picker, box, controls: [picker, box] as Child[] };
+  };
 
-  const otherSource = text('sourceOther', { placeholder: 'e.g. podcast-network' });
-  otherSource.hidden = a.source !== 'other';
-  const mediumSelect = choose('medium', MEDIUMS, () => (mediumTouched = true));
-  const sourceSelect = choose('source', SOURCES, () => {
-    otherSource.hidden = a.source !== 'other';
-    if (!otherSource.hidden) otherSource.focus();
+  const medium = choose('medium', MEDIUMS, 'e.g. podcast_ad', () => (mediumTouched = true));
+  const source = choose('source', SOURCES, 'e.g. podcast_network', () => {
     const suggested = DEFAULT_MEDIUM[a.source];
     if (!mediumTouched && suggested) {
       a.medium = suggested;
-      mediumSelect.value = suggested;
+      medium.picker.value = suggested;
+      medium.box.hidden = true;
+      typed.delete('medium');
     }
   });
 
-  const question = (n: number, label: string, hint: string, ...controls: Child[]) =>
+  const question = (n: number, label: string, hint: string, controls: Child[]) =>
     h('li', { class: 'bq' },
       h('span', { class: 'bq-n', 'aria-hidden': 'true' }, String(n)),
       h('div', { class: 'bq-body' },
-        h('label', { class: 'bq-label', for: (controls.find((c): c is HTMLElement => c instanceof HTMLElement) ?? null)?.id ?? undefined }, label),
+        h('label', { class: 'bq-label', for: (controls.find((c): c is HTMLElement => c instanceof HTMLElement))?.id }, label),
         h('p', { class: 'bq-hint' }, hint),
         h('div', { class: 'bq-controls' }, ...controls)));
 
   const form = h('section', { class: 'card builder-form', 'aria-label': 'Questions' },
-    h('div', { class: 'card-head' }, h('h2', null, 'Answer a few questions'),
+    h('div', { class: 'card-head' },
+      h('div', null, h('h2', null, 'Answer a few questions'),
+        h('p', { class: 'card-intro' }, 'Pick a standard answer, or choose "Type your own…" on any question.')),
       button('Start over', {
         kind: 'ghost', icon: 'restore',
         onClick: () => {
           answers = fresh(ctx.now());
           mediumTouched = false;
+          typed = new Set();
           ctx.render();
         },
       })),
     h('ol', { class: 'bq-list' },
       question(1, 'Where does the link go?', 'The landing page, with or without https://.',
-        text('url', { placeholder: 'https://example.com/summer-sale', inputmode: 'url', 'data-autofocus': 'true' })),
+        [text('url', { placeholder: 'https://example.com/summer-sale', inputmode: 'url' })]),
       question(2, 'Where will people click it?', 'The site, app or list the link appears in. This is utm_source.',
-        sourceSelect, otherSource),
+        source.controls),
       question(3, 'What kind of placement is it?', 'Paid, organic, email and so on. This is utm_medium; it follows the source until you change it.',
-        mediumSelect),
-      question(4, 'When does it run?', 'Pick the month or quarter it starts, or evergreen if it never ends.',
-        choose('time', timeChoices(ctx.now()))),
+        medium.controls),
+      question(4, 'When does it run?', 'The month or quarter it starts, evergreen, or your own label like "black-friday-2026".',
+        choose('time', timeChoices(ctx.now()), 'e.g. black-friday-2026').controls),
       question(5, 'What is it for?', 'The goal of the campaign.',
-        choose('objective', OBJECTIVES)),
+        choose('objective', OBJECTIVES, 'e.g. referral-program').controls),
       question(6, 'What is it about?', 'A short name for the product, offer or theme, like "summer cup" or "spring sale".',
-        text('theme', { placeholder: 'summer cup', maxlength: '40' })),
+        [text('theme', { placeholder: 'summer cup', maxlength: '40' })]),
       question(7, 'Who is it for?', 'The audience it targets.',
-        choose('audience', AUDIENCES)),
+        choose('audience', AUDIENCES, 'e.g. cart-abandoners').controls),
       question(8, 'Where?', 'The market it runs in.',
-        choose('region', REGIONS)),
-      question(9, 'Which creative? (optional)', 'The ad format, and a short label to tell versions apart. This is utm_content.',
-        choose('format', FORMATS), text('variant', { placeholder: 'v1 or 15s', maxlength: '30' })),
-      question(10, 'Search keyword? (optional)', 'Only for paid search. This is utm_term.',
-        text('term', { placeholder: 'running shoes', maxlength: '60' }))),
+        choose('region', REGIONS, 'e.g. texas').controls),
+      question(9, 'Content (utm_content, optional)', 'What tells this link apart from others in the same campaign: the creative format, plus anything you like, such as "v2" or "blue-button".',
+        [...choose('format', FORMATS, 'e.g. ugc-video').controls,
+          text('variant', { placeholder: 'Anything else, e.g. v2 or blue-button', maxlength: '40', 'aria-label': 'More content detail' })]),
+      question(10, 'Term (utm_term, optional)', 'Usually the paid search keyword, but any short text works.',
+        [text('term', { placeholder: 'running shoes', maxlength: '100' })])),
   );
 
   update();
