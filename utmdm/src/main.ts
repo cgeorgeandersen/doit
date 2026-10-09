@@ -4,7 +4,7 @@ import './styles/base.css';
 import './styles/app.css';
 
 import { createAuth, loadConfig, type Auth } from './cloud/auth';
-import { openCloudStore } from './cloud/cloud-store';
+import { MAIN_TABLE, openCloudStore, rememberTable, requestedTable } from './cloud/cloud-store';
 import { browserStore } from './core/store';
 import { startApp } from './ui/app';
 import { authModeFor, authView } from './ui/auth-view';
@@ -29,7 +29,15 @@ async function boot(root: HTMLElement): Promise<void> {
   }
   root.replaceChildren(Object.assign(document.createElement('p'), { className: 'loading', textContent: 'Opening your workspace…' }));
   try {
-    startApp(root, await openCloudStore(config.apiUrl, auth), { account, googleClientId: config.googleClientId });
+    let table = requestedTable(location.search);
+    let store = await openCloudStore(config.apiUrl, auth, table);
+    // A table that's gone (deleted, or a link from another account): open the first one instead.
+    if (table !== MAIN_TABLE && !store.tables.list.some((t) => t.id === table)) {
+      table = MAIN_TABLE;
+      store = await openCloudStore(config.apiUrl, auth, table);
+    }
+    rememberTable(table);
+    startApp(root, store, { account, googleClientId: config.googleClientId, tables: store.tables });
   } catch {
     signedOut(root, auth, config.apiUrl, "Couldn't open your workspace. Try again in a moment.");
   }

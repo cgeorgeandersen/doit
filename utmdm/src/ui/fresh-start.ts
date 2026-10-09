@@ -15,7 +15,8 @@ export function startEmpty(ctx: Ctx): void {
   const what = isSample(ctx.ws) ? 'the Zestify sample data' : 'every UTM, column, rule and version in this workspace';
   if (!window.confirm(`Start with an empty table? This clears ${what}, including its history, and can't be undone. ` +
     'Download a backup first if you might want it back.')) return;
-  ctx.replace(emptyWorkspace(OWN_NAME, ctx.ws.user), 'Your table is empty and ready for your own UTMs.');
+  // A table keeps the name someone gave it; only the sample's name goes with the sample.
+  ctx.replace(emptyWorkspace(isSample(ctx.ws) ? OWN_NAME : ctx.ws.name, ctx.ws.user), 'Your table is empty and ready for your own UTMs.');
   ctx.go(hashFor('table'));
 }
 

@@ -6,7 +6,7 @@ import { memoryStore, parseWorkspace } from '../src/core/store';
 import { cellOf, coverage, resolve } from '../src/core/table';
 import {
   addColumn, addRule, addUtms, columnNameProblem, deleteColumn, emptyWorkspace, historyEntries, latest, openBook,
-  record, restore, setCell, undo, versionOf, type Book,
+  record, restore, setCell, undo, versionOf, withTaxonomyOf, type Book,
 } from '../src/core/workspace';
 
 const AT = '2026-10-07T12:00:00.000Z';
@@ -162,5 +162,25 @@ describe('export and storage', () => {
     expect(parseWorkspace(JSON.stringify(ws))).toEqual(ws);
     expect(() => parseWorkspace('{"schema":1,"fields":[]}')).toThrow("That file isn't a TagFluent backup.");
     expect(() => parseWorkspace(JSON.stringify({ ...ws, changes: [{ ...ws.changes[0], version: 7 }] }))).toThrow();
+  });
+});
+
+describe('a new table from another one', () => {
+  it('copies the columns and rules, but no UTMs, typed values or history', () => {
+    const source = latest(openBook(createDemoWorkspace('2026-10-01T00:00:00Z')));
+    expect(source.utms.length).toBeGreaterThan(0);
+    const ws = withTaxonomyOf(source, 'Client B', 'george', '2026-10-09T00:00:00Z');
+    expect(ws.name).toBe('Client B');
+    expect(ws.changes).toHaveLength(1);
+    const table = latest(openBook(ws));
+    expect(table.columns).toEqual(source.columns);
+    expect(table.rules).toEqual(source.rules);
+    expect(table.utms).toEqual([]);
+    expect(table.typed).toEqual({});
+  });
+
+  it('is simply empty when there is nothing to copy', () => {
+    const ws = withTaxonomyOf(latest(openBook(emptyWorkspace('A', 'me'))), 'B', 'me', '2026-10-09T00:00:00Z');
+    expect(ws).toEqual(emptyWorkspace('B', 'me'));
   });
 });

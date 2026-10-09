@@ -59,8 +59,8 @@ Hosted on AWS in us-east-2. Visitors see a home page with **Sign in** and **Crea
 | --- | --- |
 | Site | An AWS Amplify app connected to this repository. **Every push to `main` builds, tests and deploys** (`amplify.yml`, headers in `customHttp.yml`) |
 | Sign-in | Amazon Cognito user pool `utmdm-users` with Cognito's hosted sign-in pages, authorization code flow with PKCE (`src/cloud/auth.ts`) |
-| Data | DynamoDB table `utmdm-workspaces`: one item per version (`pk` = `USER#<Cognito sub>`, `sk` = `C#<version>`) plus a `META` item. Point-in-time recovery and deletion protection are on |
-| API | API Gateway HTTP API with a Cognito JWT authorizer, in front of the Lambda `utmdm-api` (`infra/api.js`): `GET /workspace`, `POST /workspace/changes` (append; a version that already exists is a 409), `PUT /workspace` (replace) |
+| Data | DynamoDB table `utmdm-workspaces`. Each of a user's tables is one item per version (`sk` = `C#<version>`) plus a `META` item, under `pk` = `USER#<Cognito sub>` for the first table and `USER#<sub>#<table id>` for the others. The list of a user's tables is under `pk` = `TABLES#<sub>`. Point-in-time recovery and deletion protection are on |
+| API | API Gateway HTTP API with a Cognito JWT authorizer, in front of the Lambda `utmdm-api` (`infra/api.js`): `GET /workspace` (the table and the list of tables), `POST /workspace/changes` (append; a version that already exists is a 409), `PUT /workspace` (replace, or create a table), `DELETE /workspace`. Each takes `?table=<id>` (default `main`). An account can have up to 25 tables (`MAX_TABLES` in `infra/api.js`); a new one past that is a 403 |
 
 The backend is `infra/template.yaml` (stack `utmdm`). It changes rarely, so it isn't deployed on push: after changing `infra/`, sign in to the AWS CLI (`aws login --profile utmdm`) and run `scripts/deploy-infra.sh <amplify-app-id>`. That also gives the Amplify app the API and sign-in addresses as environment variables, which the build writes into `config.json`. Without them (`npm run dev`, a local build) the app runs on its own with the workspace in the browser.
 

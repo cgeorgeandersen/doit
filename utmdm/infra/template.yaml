@@ -265,7 +265,7 @@ Resources:
           - https://tagfluent.com
           - https://www.tagfluent.com
           - http://localhost:5173
-        AllowMethods: [GET, POST, PUT, OPTIONS]
+        AllowMethods: [GET, POST, PUT, DELETE, OPTIONS]
         AllowHeaders: [authorization, content-type]
         MaxAge: 600
 
@@ -311,6 +311,15 @@ Resources:
     Properties:
       ApiId: !Ref HttpApi
       RouteKey: PUT /workspace
+      AuthorizationType: JWT
+      AuthorizerId: !Ref Authorizer
+      Target: !Sub integrations/${Integration}
+
+  DeleteRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref HttpApi
+      RouteKey: DELETE /workspace
       AuthorizationType: JWT
       AuthorizerId: !Ref Authorizer
       Target: !Sub integrations/${Integration}

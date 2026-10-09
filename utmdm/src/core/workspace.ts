@@ -28,6 +28,22 @@ export function emptyWorkspace(name: string, user: string): Workspace {
   return { schema: 2, name, user, changes: [] };
 }
 
+/**
+ * A new workspace that starts with another table's columns and rules but none
+ * of its UTMs or typed values: one taxonomy for several clients or properties.
+ */
+export function withTaxonomyOf(source: Table, name: string, user: string, at: string): Workspace {
+  const empty = emptyWorkspace(name, user);
+  const ops: Op[] = [
+    ...source.columns.map((column): Op => ({ type: 'addColumn', column: structuredClone(column) })),
+    ...source.rules.map((rule): Op => ({ type: 'addRule', rule: structuredClone(rule) })),
+  ];
+  if (!ops.length) return empty;
+  const count = (n: number, one: string) => `${n} ${one}${n === 1 ? '' : 's'}`;
+  const summary = `Started with ${count(source.columns.length, 'column')} and ${count(source.rules.length, 'rule')} from another table`;
+  return record(openBook(empty), { summary, op: { type: 'batch', ops } }, at)?.ws ?? empty;
+}
+
 export const latest = (book: Book): Table => book.tables.at(-1)!;
 export const versionOf = (book: Book): number => book.ws.changes.length;
 

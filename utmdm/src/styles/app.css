@@ -113,6 +113,151 @@
 .account {
   position: relative;
 }
+
+/* The table switcher: which table is open, the others, and + for a new one. */
+.tables {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  min-width: 0;
+}
+.tables-menu {
+  position: relative;
+  min-width: 0;
+}
+.tables-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 240px;
+  padding: 5px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface-3);
+  color: var(--ink);
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;
+}
+.tables-chip::-webkit-details-marker {
+  display: none;
+}
+.tables-chip:hover {
+  border-color: var(--line-strong, var(--ink-3));
+}
+.tables-current {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tables-panel {
+  position: absolute;
+  left: 0;
+  top: calc(100% + 8px);
+  z-index: 30;
+  width: 300px;
+  padding: 14px;
+  display: grid;
+  gap: 12px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-2);
+  font-size: 14px;
+  color: var(--ink-2);
+}
+.tables-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  color: var(--ink);
+  font-weight: 650;
+}
+.tables-title .muted {
+  font-size: 12.5px;
+  font-weight: 500;
+}
+.tables-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 2px;
+  max-height: 260px;
+  overflow-y: auto;
+}
+.tables-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 7px 8px;
+  border: 0;
+  border-radius: var(--radius-s);
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+button.tables-item {
+  cursor: pointer;
+}
+button.tables-item:hover {
+  background: var(--surface-2);
+}
+.tables-item.is-current {
+  background: var(--accent-tint);
+  color: var(--accent);
+  font-weight: 650;
+}
+.tables-dot {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid var(--line);
+  border-radius: 50%;
+}
+.tables-note {
+  font-size: 13px;
+  color: var(--ink-3);
+}
+.tables-rename {
+  display: grid;
+  gap: 10px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+@media (max-width: 560px) {
+  /* Full width under the chip, so the menu never runs off the screen. */
+  .tables-panel {
+    position: fixed;
+    top: auto;
+    left: 16px;
+    right: 16px;
+    width: auto;
+    margin-top: 8px;
+  }
+  .tables-chip {
+    max-width: 170px;
+  }
+}
+.check-field {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+  color: var(--ink);
+  cursor: pointer;
+}
+.check-field input {
+  margin-top: 3px;
+}
+.check-field .field-hint {
+  display: block;
+  margin-top: 2px;
+}
 .account-chip {
   display: flex;
   align-items: center;

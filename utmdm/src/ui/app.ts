@@ -1,10 +1,11 @@
 import { createDemoWorkspace } from '../core/demo';
 import type { Workspace } from '../core/model';
 import type { Account } from '../cloud/auth';
+import { TableLimitError, type Tables } from '../cloud/cloud-store';
 import type { SaveStatus, Store } from '../core/store';
 import { resolve, type Grid } from '../core/table';
-import { latest, openBook, record, undo, versionOf, type Book } from '../core/workspace';
-import { button, themeToggle, wordmark } from './components';
+import { emptyWorkspace, latest, openBook, record, undo, versionOf, withTaxonomyOf, type Book } from '../core/workspace';
+import { button, field, themeToggle, wordmark } from './components';
 import { isSample } from './fresh-start';
 import type { Ctx, ToastAction } from './ctx';
 import { fill, h } from './dom';
@@ -21,12 +22,14 @@ export interface AppOptions {
   account?: Account;
   /** Turns on the GA4 import. */
   googleClientId?: string;
+  /** The account's tables, when it can have more than one. */
+  tables?: Tables;
   clock?: () => string;
 }
 
 export function startApp(root: HTMLElement, store: Store, options: AppOptions = {}): void {
   const clock = options.clock ?? (() => new Date().toISOString());
-  const { account: signedIn } = options;
+  const { account: signedIn, tables } = options;
   const fresh = (): Workspace => {
     const ws = createDemoWorkspace(clock());
     return signedIn ? { ...ws, user: signedIn.email.split('@')[0] ?? ws.user } : ws;
@@ -168,8 +171,9 @@ export function startApp(root: HTMLElement, store: Store, options: AppOptions = 
         'div',
         { class: 'topbar-inner' },
         h('a', { class: 'brand', href: '#/', 'aria-label': 'TagFluent, your table' }, wordmark()),
-        h('span', { class: 'workspace', title: signedIn ? 'Your workspace, saved to your account' : 'The workspace. In this copy it lives in your browser.' },
-          icon('columns', 14), book.ws.name),
+        tables
+          ? tablePicker(tables)
+          : h('span', { class: 'workspace', title: 'The workspace. In this copy it lives in your browser.' }, icon('columns', 14), book.ws.name),
         h('nav', { class: 'nav', 'aria-label': 'Main' },
           ...PAGES.map(({ page, label }) =>
             h('a', { href: hashFor(page), class: 'nav-link', 'aria-current': page === route.page ? 'page' : null }, label))),
@@ -178,6 +182,112 @@ export function startApp(root: HTMLElement, store: Store, options: AppOptions = 
           themeToggle(), account()),
       ),
     );
+  }
+
+  /** Which table is open, the others to switch to, and + for a new one. */
+  function tablePicker(t: Tables): HTMLElement {
+    const list = t.list.some((x) => x.id === t.current) ? t.list : [...t.list, { id: t.current, name: book.ws.name }];
+    const full = list.length >= t.limit;
+    const name = h('input', { id: 'table-name', value: book.ws.name, maxlength: 60, required: true, 'aria-label': 'Table name' });
+    const rename = (event: Event) => {
+      event.preventDefault();
+      const value = name.value.replace(/\s+/g, ' ').trim();
+      if (!value || value === book.ws.name) return;
+      set({ ...book, ws: { ...book.ws, name: value } });
+      const entry = t.list.find((x) => x.id === t.current);
+      if (entry) entry.name = value;
+      render();
+      toast(`Renamed this table to ${value}.`);
+    };
+    const remove = async () => {
+      if (!window.confirm(`Delete "${book.ws.name}"? This deletes its UTMs, columns, rules and history, and can't be undone. ` +
+        'Download a backup from Import & export first if you might want it back.')) return;
+      try {
+        await t.remove(t.current);
+        t.open(t.list[0]!.id);
+      } catch {
+        toast("Couldn't delete that table. Check your connection and try again.");
+      }
+    };
+    const newButton = (text: string | null) => button(text, {
+      icon: 'plus', kind: text ? 'secondary' : 'ghost', label: text ? undefined : 'New table',
+      title: full ? `Your account can have up to ${t.limit} tables` : 'New table',
+      disabled: full, onClick: () => newTableDialog(t),
+    });
+    return h('div', { class: 'tables' },
+      h('details', { class: 'tables-menu' },
+        h('summary', { class: 'tables-chip', title: 'Switch tables' },
+          icon('columns', 14), h('span', { class: 'tables-current' }, book.ws.name), icon('down', 14)),
+        h('div', { class: 'tables-panel' },
+          h('p', { class: 'tables-title' }, 'Your tables', h('span', { class: 'muted' }, `${list.length} of ${t.limit}`)),
+          h('ul', { class: 'tables-list' }, ...list.map((x) => h('li', null,
+            x.id === t.current
+              ? h('span', { class: 'tables-item is-current', 'aria-current': 'true' }, icon('check', 14), book.ws.name)
+              : h('button', { type: 'button', class: 'tables-item', onclick: () => t.open(x.id) }, h('span', { class: 'tables-dot' }), x.name)))),
+          newButton('New table'),
+          full ? h('p', { class: 'tables-note' }, `Your account can have up to ${t.limit} tables. Delete one to make room.`) : null,
+          h('form', { class: 'tables-rename', onsubmit: rename },
+            field('Rename this table', name),
+            h('div', { class: 'form-actions' },
+              button('Save name', { type: 'submit' }),
+              button('Delete table', {
+                kind: 'ghost', icon: 'trash', onClick: () => void remove(), disabled: list.length <= 1,
+                title: list.length <= 1 ? 'Your only table stays. Add another first.' : undefined,
+              }))))),
+      newButton(null));
+  }
+
+  /** Name a new table, optionally starting from this one's columns and rules, and open it. */
+  function newTableDialog(t: Tables): void {
+    const name = h('input', { id: 'new-table-name', required: true, maxlength: 60, autocomplete: 'off', placeholder: 'e.g. Acme Co. or EU property' });
+    const hasTaxonomy = ctx.table.columns.length > 0;
+    const copy = h('input', { id: 'new-table-copy', type: 'checkbox', checked: hasTaxonomy, disabled: !hasTaxonomy });
+    const status = h('p', { class: 'demo-status', role: 'status', 'aria-live': 'polite' });
+    const submit = button('Create table', { kind: 'primary', type: 'submit' });
+    const dialog: HTMLDialogElement = h('dialog', { class: 'demo-dialog table-dialog', 'aria-labelledby': 'new-table-title' },
+      h('button', { type: 'button', class: 'button button-ghost button-icon demo-close', 'aria-label': 'Close', onclick: () => dialog.close() }, icon('close')),
+      h('div', { class: 'demo-body' },
+        h('h2', { id: 'new-table-title' }, 'New table'),
+        h('p', { class: 'demo-intro' }, 'Each table has its own UTMs, columns, rules and history. Use one per client, brand or Google Analytics property.'),
+        h('form', {
+          class: 'demo-form',
+          onsubmit: (event: Event) => {
+            event.preventDefault();
+            void create();
+          },
+        },
+        field('Name', name),
+        h('label', { class: 'check-field', for: 'new-table-copy' }, copy,
+          h('span', null, h('strong', null, `Start with this table's columns and rules`),
+            h('span', { class: 'field-hint' }, hasTaxonomy
+              ? `${ctx.table.columns.length} columns and ${ctx.table.rules.length} rules from ${book.ws.name}, without its UTMs.`
+              : 'This table has no columns yet, so the new one starts empty.'))),
+        status,
+        h('div', { class: 'form-actions' }, submit))));
+
+    async function create(): Promise<void> {
+      const value = name.value.replace(/\s+/g, ' ').trim();
+      if (!value) return;
+      submit.disabled = true;
+      status.textContent = '';
+      const ws = copy.checked ? withTaxonomyOf(ctx.table, value, book.ws.user, clock()) : emptyWorkspace(value, book.ws.user);
+      try {
+        t.open(await t.create(ws));
+      } catch (error) {
+        status.className = 'demo-status is-error';
+        status.textContent = error instanceof TableLimitError
+          ? `Your account can have up to ${error.limit} tables. Delete one to make room.`
+          : "Couldn't create the table. Check your connection and try again.";
+        submit.disabled = false;
+      }
+    }
+
+    dialog.addEventListener('close', () => dialog.remove());
+    dialog.addEventListener('click', (event) => event.target === dialog && dialog.close());
+    root.querySelector<HTMLDetailsElement>('.tables-menu')?.removeAttribute('open');
+    document.body.append(dialog);
+    dialog.showModal();
+    name.focus();
   }
 
   function savedChip(): HTMLElement {
