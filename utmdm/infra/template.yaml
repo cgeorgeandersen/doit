@@ -8,7 +8,7 @@ Description: >-
 Parameters:
   DemoEmail:
     Type: String
-    Default: cgeorgeandersen@outlook.com
+    Default: george@tagfluent.com
     Description: Where "Book a demo" requests are emailed (the address confirms an SNS subscription once).
   AppName:
     Type: String
