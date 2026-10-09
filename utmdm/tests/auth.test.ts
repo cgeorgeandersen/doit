@@ -33,6 +33,23 @@ describe('sign-in through Cognito', () => {
     expect(await auth.accessToken()).toBe('acc');
   });
 
+  it('sends every email in lower case, so capitals never matter', async () => {
+    storage();
+    const calls: { body: any }[] = [];
+    const auth = createAuth(config, (async (_url: string, init: RequestInit) => {
+      calls.push({ body: JSON.parse(String(init.body)) });
+      return new Response(JSON.stringify({ AuthenticationResult: { AccessToken: 'acc', IdToken: idToken, RefreshToken: 'ref', ExpiresIn: 3600 } }));
+    }) as typeof fetch);
+    await auth.signIn(' Dana@Example.COM ', 'Password123');
+    await auth.signUp('Dana@Example.com', 'Password123');
+    await auth.confirmSignUp('DANA@example.com', '123456');
+    await auth.resendCode('Dana@example.com');
+    await auth.forgotPassword('Dana@Example.com');
+    await auth.resetPassword('Dana@Example.com', '123456', 'Password123');
+    expect(calls.map((c) => c.body.AuthParameters?.USERNAME ?? c.body.Username)).toEqual(Array(6).fill('dana@example.com'));
+    expect(calls[1]!.body.UserAttributes).toEqual([{ Name: 'email', Value: 'dana@example.com' }]);
+  });
+
   it('turns Cognito errors into sentences, and keeps the error name', async () => {
     storage();
     const auth = createAuth(config, (async () => new Response(JSON.stringify({ __type: 'NotAuthorizedException', message: 'Incorrect username or password.' }), { status: 400 })) as typeof fetch);

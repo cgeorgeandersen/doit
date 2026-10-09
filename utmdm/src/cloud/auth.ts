@@ -38,6 +38,15 @@ export class AuthError extends Error {
 
 const SESSION_KEY = 'utmdm:session';
 
+/**
+ * An email as Cognito should see it. The user pool compares sign-in names
+ * case-sensitively (a setting fixed when the pool was made), so every address
+ * is sent in lower case: Dana@Example.com and dana@example.com are one account.
+ */
+export function emailKey(email: string): string {
+  return email.trim().toLowerCase();
+}
+
 /** The deployed site's settings, written next to index.html at deploy time. Null when running without AWS. */
 export async function loadConfig(): Promise<CloudConfig | null> {
   try {
@@ -142,7 +151,7 @@ export function createAuth(config: CloudConfig, fetchImpl: typeof fetch = (...ar
       const result = await cognito<AuthResult>('InitiateAuth', {
         AuthFlow: 'USER_PASSWORD_AUTH',
         ClientId: config.clientId,
-        AuthParameters: { USERNAME: email.trim(), PASSWORD: password },
+        AuthParameters: { USERNAME: emailKey(email), PASSWORD: password },
       });
       const t = result.AuthenticationResult;
       if (!t) throw new AuthError(result.ChallengeName ?? 'Challenge', "This account needs a step this page can't do yet. Contact us and we'll sort it out.");
@@ -153,26 +162,26 @@ export function createAuth(config: CloudConfig, fetchImpl: typeof fetch = (...ar
     async signUp(email: string, password: string): Promise<void> {
       await cognito('SignUp', {
         ClientId: config.clientId,
-        Username: email.trim(),
+        Username: emailKey(email),
         Password: password,
-        UserAttributes: [{ Name: 'email', Value: email.trim() }],
+        UserAttributes: [{ Name: 'email', Value: emailKey(email) }],
       });
     },
 
     async confirmSignUp(email: string, code: string): Promise<void> {
-      await cognito('ConfirmSignUp', { ClientId: config.clientId, Username: email.trim(), ConfirmationCode: code.trim() });
+      await cognito('ConfirmSignUp', { ClientId: config.clientId, Username: emailKey(email), ConfirmationCode: code.trim() });
     },
 
     async resendCode(email: string): Promise<void> {
-      await cognito('ResendConfirmationCode', { ClientId: config.clientId, Username: email.trim() });
+      await cognito('ResendConfirmationCode', { ClientId: config.clientId, Username: emailKey(email) });
     },
 
     async forgotPassword(email: string): Promise<void> {
-      await cognito('ForgotPassword', { ClientId: config.clientId, Username: email.trim() });
+      await cognito('ForgotPassword', { ClientId: config.clientId, Username: emailKey(email) });
     },
 
     async resetPassword(email: string, code: string, password: string): Promise<void> {
-      await cognito('ConfirmForgotPassword', { ClientId: config.clientId, Username: email.trim(), ConfirmationCode: code.trim(), Password: password });
+      await cognito('ConfirmForgotPassword', { ClientId: config.clientId, Username: emailKey(email), ConfirmationCode: code.trim(), Password: password });
     },
 
     /** A valid access token, refreshed when it's about to expire, or null when signed out. */
