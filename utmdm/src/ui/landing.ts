@@ -187,44 +187,23 @@ function fact(iconName: IconName, title: string, text: string): HTMLElement {
 const tok = (text: string) => h('span', { class: 'tok' }, text);
 
 /*
- * The product in one picture: one campaign, already live in GA4 and tagged
- * three ways by three teams, becomes one campaign classified by meaning
- * (product, region and audience as well as channel), by rules that keep
- * classifying what arrives next. The brand and products are made up.
+ * The product in one picture, the same one as the link preview: one campaign,
+ * tagged three ways in GA4, becomes one campaign classified by meaning. The
+ * brand and products are made up.
  */
-const LIVE = [
-  { utm: 'FB / Paid_Social / SUMMER%20CUP_US / citrus12_prospect', who: 'Brand team', sessions: '4,812' },
-  { utm: 'fb / paid_social / summer cup - UK / lemonzero_lal-genz', who: 'Agency', sessions: '2,207' },
-  { utm: 'Facebook / paid-social / SummerCup_CA_retarget / variety-box', who: 'Canada team', sessions: '1,936' },
-];
-const CLASSIFIED = [
-  ['Sparkling Citrus 12-pack', 'United States', 'New customers'],
-  ['Lemon Zero 4-pack', 'United Kingdom', 'Gen Z lookalikes'],
-  ['Summer Variety Box', 'Canada', 'Past buyers'],
-];
-
 function heroVisual(): HTMLElement {
+  const raw = ['FB / Paid_Social / SUMMER%20CUP_US', 'fb / paid_social / summer cup - UK', 'Facebook / paid-social / SummerCup_CA'];
   const chip = (column: string, value: string) => h('span', { class: 'hv-chip' }, h('span', { class: 'hv-col' }, column), value);
-  return h('figure', { class: 'hero-visual' },
+  return h('figure', { class: 'hero-visual', 'aria-label': 'One campaign tagged three ways in Google Analytics becomes one campaign classified by channel, product, region and audience' },
     h('div', { class: 'hv-card hv-in' },
-      h('p', { class: 'hv-label' }, icon('chart', 14), 'Live in Google Analytics', h('span', { class: 'hv-meta' }, '3 teams · 3 spellings')),
-      h('ul', null, ...LIVE.map((r) => h('li', null,
-        h('span', { class: 'utm' }, r.utm),
-        h('span', { class: 'hv-who' }, `${r.who} · ${r.sessions} sessions`))))),
-    h('div', { class: 'hv-arrow', 'aria-hidden': 'true' }, icon('down', 18), h('span', null, 'Merged and classified by 6 rules')),
+      h('p', { class: 'hv-label' }, icon('chart', 14), 'Live in Google Analytics'),
+      h('ul', null, ...raw.map((r) => h('li', { class: 'utm' }, r)))),
+    h('div', { class: 'hv-arrow', 'aria-hidden': 'true' }, icon('down', 20)),
     h('div', { class: 'hv-card hv-out' },
-      h('p', { class: 'hv-label' }, icon('classified', 14), 'In TagFluent', h('span', { class: 'hv-meta' }, 'Version 14')),
-      h('div', { class: 'hv-campaign' },
-        h('p', { class: 'hv-name' }, 'Summer Cup 2026'),
-        h('div', { class: 'hv-chips' }, chip('Channel', 'Paid Social'), chip('Type', 'Seasonal promo'), chip('Initiative', 'Summer refresh'))),
-      h('table', { class: 'hv-table' },
-        h('caption', { class: 'sr-only' }, 'What each of the three UTMs means'),
-        h('thead', null, h('tr', null, ...['Product', 'Region', 'Audience'].map((c) => h('th', { scope: 'col' }, c)))),
-        h('tbody', null, ...CLASSIFIED.map((row) => h('tr', null, ...row.map((v) => h('td', null, v)))))),
-      h('p', { class: 'hv-foot' }, h('span', { class: 'hv-pulse', 'aria-hidden': 'true' }), 'New UTMs are classified as they arrive')),
-    h('figcaption', { class: 'sr-only' },
-      'One Facebook campaign, Summer Cup, tagged three different ways by a brand team, an agency and a regional team. ',
-      'TagFluent merges the spellings into one campaign and classifies each UTM by channel, type, initiative, product, region and audience.'));
+      h('p', { class: 'hv-label' }, icon('classified', 14), 'In TagFluent'),
+      h('p', { class: 'hv-name' }, 'Summer Cup 2026'),
+      h('div', { class: 'hv-chips' },
+        chip('Channel', 'Paid Social'), chip('Product', 'Sparkling Citrus'), chip('Region', 'US, UK, Canada'), chip('Audience', 'New customers'))));
 }
 
 /** The "Book a demo" form, sent to TagFluent's demo-request endpoint. */

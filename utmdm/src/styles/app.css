@@ -1833,16 +1833,16 @@ textarea {
 .hero-visual {
   margin: 0;
   display: grid;
-  gap: 8px;
+  gap: 10px;
   justify-items: stretch;
 }
 .hv-card {
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius-l);
-  padding: 16px 18px;
+  padding: 18px 20px;
   display: grid;
-  gap: 10px;
+  gap: 12px;
   min-width: 0;
 }
 .hv-in {
@@ -1856,27 +1856,18 @@ textarea {
   gap: 6px;
 }
 .hv-in li {
-  display: grid;
-  gap: 2px;
+  font-size: 13.5px;
+  color: var(--ink);
   padding: 7px 10px;
   border-radius: var(--radius-s);
   background: var(--surface-2);
-}
-.hv-in .utm {
-  font-size: 12.5px;
-  color: var(--ink);
   overflow-wrap: anywhere;
-}
-.hv-who {
-  font-size: 12px;
-  color: var(--ink-3);
 }
 .hv-out {
   border-color: transparent;
   box-shadow: var(--shadow-2);
   background: var(--accent);
   color: var(--accent-ink);
-  gap: 12px;
 }
 .hv-label {
   display: flex;
@@ -1888,101 +1879,37 @@ textarea {
   text-transform: uppercase;
   color: var(--ink-3);
 }
-.hv-meta {
-  margin-left: auto;
-  font-weight: 500;
-  letter-spacing: 0.02em;
-  text-transform: none;
-}
-.hv-out .hv-label,
-.hv-out .hv-foot {
+.hv-out .hv-label {
   color: color-mix(in srgb, var(--accent-ink) 72%, transparent);
-}
-.hv-campaign {
-  display: grid;
-  gap: 8px;
 }
 .hv-name {
   font-family: var(--font-display);
-  font-size: 24px;
+  font-size: 28px;
   line-height: 1.1;
 }
 .hv-chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 8px;
 }
 .hv-chip {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 3px 10px;
+  padding: 4px 12px;
   border-radius: 999px;
   background: var(--mint-tint);
   color: var(--mint-ink);
-  font-size: 12.5px;
-  font-weight: 600;
+  font-size: 13.5px;
+  font-weight: 650;
 }
 .hv-col {
   font-weight: 450;
   opacity: 0.8;
 }
-.hv-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 13px;
-  table-layout: fixed;
-}
-.hv-table th {
-  text-align: left;
-  font-size: 11.5px;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: color-mix(in srgb, var(--accent-ink) 68%, transparent);
-  padding: 0 8px 6px 0;
-}
-.hv-table td {
-  padding: 7px 8px 7px 0;
-  border-top: 1px solid color-mix(in srgb, var(--accent-ink) 18%, transparent);
-  vertical-align: top;
-  font-weight: 550;
-}
-.hv-table th:first-child,
-.hv-table td:first-child {
-  width: 42%;
-}
-.hv-foot {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 12.5px;
-}
-.hv-pulse {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--mint);
-  box-shadow: 0 0 0 0 color-mix(in srgb, var(--mint) 60%, transparent);
-  animation: hv-pulse 2.4s ease-out infinite;
-}
-@keyframes hv-pulse {
-  70% { box-shadow: 0 0 0 7px transparent; }
-  100% { box-shadow: 0 0 0 0 transparent; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .hv-pulse {
-    animation: none;
-  }
-}
 .hv-arrow {
   justify-self: center;
-  display: flex;
-  align-items: center;
-  gap: 6px;
   color: var(--ink-3);
-  font-size: 12.5px;
-  font-weight: 550;
 }
 
 /* The core promise, in three beats, right under the hero. */
@@ -2518,11 +2445,6 @@ textarea {
     right: auto;
     left: 28px;
     transform: none;
-  }
-}
-@media (max-width: 460px) {
-  .hv-in .hv-meta {
-    display: none;
   }
 }
 @media (max-width: 760px) {
