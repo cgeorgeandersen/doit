@@ -20,3 +20,16 @@ export function pageAddress(href: string): string {
   const query = kept.toString();
   return url.origin + url.pathname + (query ? `?${query}` : '');
 }
+
+/**
+ * Taps on a link that reaches an official are counted too, as the kind of
+ * link and the level of government (local, state or federal): never which
+ * official, which camera or where.
+ */
+export type ContactKind = 'email' | 'phone' | 'web';
+
+export function contactKind(href: string): ContactKind {
+  if (/^mailto:/i.test(href)) return 'email';
+  if (/^tel:/i.test(href)) return 'phone';
+  return 'web';
+}

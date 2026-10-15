@@ -3,21 +3,21 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>Track the Pole: who sees your drive?</title>
+    <title>Track the Pole: the cameras on your drive, and who answers for them</title>
     <meta
       name="description"
-      content="Enter two addresses and see every known Flock license plate camera along the way, how many would photograph your car, and who to contact about them."
+      content="Count the Flock license plate cameras that would photograph your car on any drive, then reach the officials who answer for each one: mayor and council, state legislators and members of Congress."
     />
     <meta name="color-scheme" content="light dark" />
     <meta name="theme-color" content="#0b0e12" media="(prefers-color-scheme: dark)" />
     <meta name="theme-color" content="#f3f1ec" media="(prefers-color-scheme: light)" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Track the Pole: who sees your drive?" />
+    <meta property="og:title" content="Track the Pole: the cameras on your drive, and who answers for them" />
     <meta property="og:site_name" content="Track the Pole" />
     <meta property="og:url" content="https://trackthepole.com/" />
     <meta
       property="og:description"
-      content="Map the Flock license plate cameras on any drive, count the ones that would photograph your car, and find out who answers for them."
+      content="Map the Flock license plate cameras on any drive, then reach the officials responsible for each one: your mayor and council, state legislators and members of Congress."
     />
     <link rel="canonical" href="https://trackthepole.com/" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
@@ -35,9 +35,9 @@
         <span class="brand-name">Track the Pole</span>
       </a>
       <nav class="topnav" aria-label="Sections">
-        <a href="#what">What they are</a>
+        <a href="#act" class="topnav-civic">Who answers for them</a>
         <a href="#records">What they record</a>
-        <a href="#act">What you can do</a>
+        <a href="#law">Is it legal?</a>
         <a href="#method">How we count</a>
       </nav>
       <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Switch to dark theme">
@@ -49,19 +49,19 @@
       <section id="tool" class="tool" aria-label="Route camera counter">
         <div class="panel">
           <div class="intro">
-            <p class="eyebrow">License plate cameras on your route</p>
-            <h1>Who sees your drive?</h1>
-            <p class="lede">
-              Enter where you start and where you’re going. Track the Pole maps the Flock license plate cameras along the
-              way and counts the ones that would photograph your car.
-            </p>
-            <p class="hint">
+            <p class="eyebrow">Flock license plate cameras</p>
+            <h1>Who’s watching your drive, and who answers for it?</h1>
+            <p class="lede">Enter a drive to count the cameras that would photograph your car.</p>
+            <div class="hint">
               <span class="hint-dot" aria-hidden="true"></span>
-              <span>
-                <strong>Click or tap any camera icon</strong> on the map to see the names and contact information of the
-                officials responsible for it.
-              </span>
-            </p>
+              <div class="hint-body">
+                <p>
+                  <strong>Tap any camera</strong> on the map to see the officials who answer for it, with their email,
+                  phone or website.
+                </p>
+                <button type="button" class="hint-button" id="near-me">Show the cameras near me</button>
+              </div>
+            </div>
           </div>
 
           <form id="route-form" class="route-form" autocomplete="off" novalidate>
@@ -112,7 +112,7 @@
               </div>
             </div>
 
-            <button type="submit" class="go" id="go">Count the cameras</button>
+            <button type="submit" class="go" id="go">Find the cameras and who answers</button>
             <p class="form-error" id="form-error" role="alert" hidden></p>
           </form>
 
@@ -271,9 +271,9 @@
             <li>
               <h3>Find out who answers for each camera</h3>
               <p>
-                Hover over or tap any camera on the map to see who runs it, if that’s known, and the mayor, state
-                legislators and members of Congress for that spot. Under your results, “Who’s responsible” lists them
-                for every camera on your route.
+                Tap any camera on the map to see the city or county that answers for it, its state legislators and
+                members of Congress, and how to reach each of them. Count a drive and “Who answers for these cameras”,
+                right under the count, lists them for every camera on your route.
               </p>
             </li>
             <li>
@@ -434,7 +434,9 @@
                 <a href="https://vercel.com/docs/analytics/privacy-policy" rel="noopener">Vercel Web Analytics</a>,
                 which runs through this site and sets no cookies. Each visit records the page’s address, with any route
                 taken out first; the site that linked you here; your browser, operating system and type of device; and
-                your approximate location, down to the city. Visitors are told apart by a scrambled code that Vercel
+                your approximate location, down to the city. When someone taps a link to reach an official, it also
+                records the kind of link (email, phone or website) and the level of government (local, state or
+                federal), never which official or where. Visitors are told apart by a scrambled code that Vercel
                 discards after 24 hours. Blocking it changes nothing else on the page.
               </dd>
             </div>

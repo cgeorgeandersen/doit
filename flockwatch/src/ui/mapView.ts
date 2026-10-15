@@ -222,6 +222,11 @@ export class MapView {
     });
   }
 
+  /** Moves to a point at street level, close enough to see and tap each camera. */
+  flyTo(p: LngLat): void {
+    this.map.easeTo({ center: p, zoom: Math.max(this.map.getZoom(), 14), duration: prefersReducedMotion() ? 0 : 1200 });
+  }
+
   project(camera: Camera): Pt {
     const p = this.map.project([camera.lon, camera.lat]);
     return { x: p.x, y: p.y };
