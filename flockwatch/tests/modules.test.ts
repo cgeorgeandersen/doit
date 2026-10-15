@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { pageAddress } from '../src/lib/analytics';
+import { contactKind, pageAddress } from '../src/lib/analytics';
 import { fmtDuration, fmtMiles, spacing } from '../src/lib/format';
 import { nearbyPlace, photonParams, toPlaces, type PhotonResponse } from '../src/lib/geocode';
 import { offsetPoint, type LngLat } from '../src/lib/geo';
@@ -36,6 +36,14 @@ describe('pageAddress', () => {
     expect(pageAddress('https://www.trackthepole.com/?from=33.749,-84.388&to=33.641,-84.428')).toBe(
       'https://www.trackthepole.com/',
     );
+  });
+});
+
+describe('contactKind', () => {
+  it('names the kind of link without keeping the address', () => {
+    expect(contactKind('mailto:rep@example.gov')).toBe('email');
+    expect(contactKind('tel:+12025550140')).toBe('phone');
+    expect(contactKind('https://www.example.gov/contact')).toBe('web');
   });
 });
 

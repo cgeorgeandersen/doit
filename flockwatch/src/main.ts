@@ -4,10 +4,10 @@ import './styles/base.css';
 import './styles/tool.css';
 import './styles/content.css';
 
-import { inject } from '@vercel/analytics';
+import { inject, track } from '@vercel/analytics';
 import { App } from './app';
 import { EXAMPLES } from './content/examples';
-import { pageAddress } from './lib/analytics';
+import { contactKind, pageAddress } from './lib/analytics';
 import { fmtDate, fmtInt } from './lib/format';
 import { loadMeta, loadOverview } from './lib/tiles';
 import { h, qs } from './ui/dom';
@@ -46,10 +46,15 @@ function showExamples(app: App): void {
 }
 
 // Counts visits on the live site with Vercel Web Analytics, taking the route
-// out of every address it reports. Development builds load nothing.
+// out of every address it reports, and taps on links that reach an official
+// (src/ui/contact.ts marks them). Development builds load nothing.
 function countVisits(): void {
   if (!import.meta.env.PROD) return;
   inject({ mode: 'production', beforeSend: (event) => ({ ...event, url: pageAddress(event.url) }) });
+  document.addEventListener('click', (e) => {
+    const link = e.target instanceof Element ? e.target.closest<HTMLAnchorElement>('a[data-contact]') : null;
+    if (link) track('Contact', { kind: contactKind(link.getAttribute('href') ?? ''), level: link.dataset.contact ?? '' });
+  });
 }
 
 function boot(): void {

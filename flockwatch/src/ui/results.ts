@@ -1,4 +1,4 @@
-/** The results under the form: the count, route choices, the camera list and who's responsible. */
+/** The results under the form: the count, who answers for those cameras, route choices and the camera list. */
 
 import type { Camera } from '../lib/camera';
 import { describeDirection, parseDirection } from '../lib/direction';
@@ -7,6 +7,7 @@ import type { Place } from '../lib/geocode';
 import type { ResponsibleSummary } from '../lib/officials';
 import type { RouteOption } from '../lib/route';
 import type { RouteCount, Sighting } from '../lib/seen';
+import { bodyButton, contactButtons } from './contact';
 import { fill, h, type Child } from './dom';
 
 export interface RouteResult {
@@ -38,6 +39,8 @@ export type ResponsibleState =
   | { state: 'done'; summary: ResponsibleSummary; checked: number; total: number };
 
 const LIST_PREVIEW = 8;
+/** Legislators shown before "Show all": a long drive can cross a dozen districts. */
+const PEOPLE_PREVIEW = 4;
 
 export class ResultsView {
   private readonly root: HTMLElement;
@@ -45,6 +48,7 @@ export class ResultsView {
   private readonly handlers: ResultHandlers;
   private model: ResultModel | null = null;
   private expanded = false;
+  private peopleExpanded = false;
   private responsible: ResponsibleState = { state: 'idle' };
   private bigNumber: HTMLElement | null = null;
 
@@ -57,6 +61,7 @@ export class ResultsView {
   show(model: ResultModel, opts: { countFrom?: number } = {}): void {
     if (model !== this.model) {
       this.expanded = false;
+      this.peopleExpanded = false;
       this.responsible = { state: 'idle' };
     }
     this.model = model;
@@ -122,9 +127,9 @@ export class ResultsView {
         ),
         h('p', { class: 'trip' }, `${fmtMiles(r.option.distance)} · ${fmtDuration(r.option.duration)} · ${m.from.label} → ${m.to.label}`),
       ),
+      h('div', { 'data-slot': 'responsible' }, ...this.renderResponsible()),
       m.results.length > 1 ? this.renderRoutes(m) : null,
       this.renderList(r),
-      h('div', { 'data-slot': 'responsible' }, ...this.renderResponsible()),
       h(
         'div',
         { class: 'actions' },
@@ -231,50 +236,61 @@ export class ResultsView {
     const total = m.results[m.selected]!.count.seen.length;
     if (!total) return [];
     const st = this.responsible;
-    const title = h('p', { class: 'block-title' }, 'Who’s responsible');
+    const these = plural(total, 'this camera', `these ${fmtInt(total)} cameras`);
+    const title = h('h2', { class: 'who-title' }, `Who answers for ${these}`);
 
     if (st.state === 'idle') {
       return [
-        title,
         h(
-          'button',
-          { type: 'button', class: 'button button-primary button-wide', onclick: () => this.handlers.findResponsible() },
-          `Find who answers for ${plural(total, 'this camera', `these ${fmtInt(total)} cameras`)}`,
+          'div',
+          { class: 'who-block' },
+          title,
+          h('p', { class: 'who-why' }, 'A city council or county commission usually approves the camera contract, and can cancel it.'),
+          h(
+            'button',
+            { type: 'button', class: 'button button-civic button-wide', onclick: () => this.handlers.findResponsible() },
+            `Find who answers for ${these}`,
+          ),
+          h('p', { class: 'note' }, 'Looks up the city or county, state legislators and members of Congress for each camera’s location.'),
         ),
-        h('p', { class: 'note', style: 'margin-top: 6px' }, 'Looks up the city or county, state legislators and members of Congress for each camera’s location.'),
       ];
     }
     if (st.state === 'loading') {
       return [
-        title,
-        h('div', { class: 'progress', role: 'progressbar', 'aria-valuemin': 0, 'aria-valuemax': st.total, 'aria-valuenow': st.done }, h('i', { style: `width: ${(100 * st.done) / Math.max(1, st.total)}%` })),
-        h('p', { class: 'note', style: 'margin-top: 6px' }, `Checked ${fmtInt(st.done)} of ${fmtInt(st.total)} cameras…`),
+        h(
+          'div',
+          { class: 'who-block' },
+          title,
+          h('div', { class: 'progress', role: 'progressbar', 'aria-valuemin': 0, 'aria-valuemax': st.total, 'aria-valuenow': st.done }, h('i', { style: `width: ${(100 * st.done) / Math.max(1, st.total)}%` })),
+          h('p', { class: 'note' }, `Checked ${fmtInt(st.done)} of ${fmtInt(st.total)} cameras…`),
+        ),
       ];
     }
 
     const s = st.summary;
-    const people = [...s.legislators, ...s.congress.filter((p) => p.role !== 'U.S. senator')];
-    const senators = s.congress.filter((p) => p.role === 'U.S. senator');
+    const people = [...s.legislators, ...s.congress];
+    const shownPeople = this.peopleExpanded ? people : people.slice(0, PEOPLE_PREVIEW);
+    const tally = [
+      s.places.length ? `${fmtInt(s.places.length)} local ${plural(s.places.length, 'government', 'governments')}` : '',
+      people.length ? `${fmtInt(people.length)} ${plural(people.length, 'legislator', 'legislators')}` : '',
+    ].filter(Boolean);
     return [
-      title,
       h(
         'div',
-        { class: 'responsible' },
+        { class: 'who-block' },
+        title,
+        tally.length ? h('p', { class: 'who-tally' }, `${tally.join(' and ')}. Start with the council or commission: it usually approves the contract, and can cancel it.`) : null,
         h(
           'ul',
           { class: 'gov-list' },
-          s.places.map((p) =>
+          s.places.map((p, i) =>
             h(
               'li',
-              null,
+              { 'data-lead': i === 0 ? '' : null },
               h('span', { class: 'gov-name' }, p.label),
               h('span', { class: 'gov-count' }, `${fmtInt(p.cameras)} ${plural(p.cameras, 'camera', 'cameras')}`),
-              h(
-                'span',
-                { class: 'gov-people' },
-                p.official ? `${p.official.role} ${p.official.name} · ${p.body}` : p.body,
-                p.website ? [' · ', h('a', { href: p.website, target: '_blank', rel: 'noopener' }, 'Website')] : null,
-              ),
+              h('span', { class: 'gov-people' }, p.official ? `${p.official.role} ${p.official.name} · ${p.body}` : p.body),
+              h('span', { class: 'gov-actions' }, bodyButton(p.body, p.website, i === 0 ? 'primary' : 'small')),
             ),
           ),
         ),
@@ -286,7 +302,7 @@ export class ResultsView {
               h(
                 'ul',
                 { class: 'gov-list' },
-                people.map((p) =>
+                shownPeople.map((p) =>
                   h(
                     'li',
                     null,
@@ -295,22 +311,31 @@ export class ResultsView {
                     h(
                       'span',
                       { class: 'gov-people' },
-                      [p.role, p.district ? (/^\d/.test(p.district) ? `District ${p.district}` : p.district) : ''].filter(Boolean).join(' · '),
-                      p.email ? [' · ', h('a', { href: `mailto:${p.email}` }, 'Email')] : null,
-                      p.phone ? [' · ', h('a', { href: `tel:${p.phone.replace(/[^\d+]/g, '')}` }, p.phone)] : null,
-                      p.url ? [' · ', h('a', { href: p.url, target: '_blank', rel: 'noopener' }, p.source === 'congress-legislators' ? 'Contact' : 'Profile')] : null,
+                      [p.role, p.district && p.role !== 'U.S. senator' ? (/^\d/.test(p.district) ? `District ${p.district}` : p.district) : ''].filter(Boolean).join(' · '),
                     ),
+                    h('span', { class: 'gov-actions' }, contactButtons(p)),
                   ),
                 ),
               ),
+              people.length > PEOPLE_PREVIEW
+                ? h(
+                    'button',
+                    {
+                      type: 'button',
+                      class: 'button more',
+                      onclick: () => {
+                        this.peopleExpanded = !this.peopleExpanded;
+                        this.setResponsible(this.responsible);
+                      },
+                    },
+                    this.peopleExpanded ? 'Show fewer' : `Show all ${fmtInt(people.length)} legislators`,
+                  )
+                : null,
             )
-          : null,
-        senators.length
-          ? h('p', { class: 'note' }, `U.S. senators: ${senators.map((p) => `${p.name}${p.party ? ` (${p.party})` : ''}`).join(', ')}.`)
           : null,
         st.checked < st.total ? h('p', { class: 'note' }, `Covers the first ${fmtInt(st.checked)} of the ${fmtInt(st.total)} cameras on this drive.`) : null,
         s.unresolved ? h('p', { class: 'note' }, `${fmtInt(s.unresolved)} ${plural(s.unresolved, 'camera', 'cameras')} couldn’t be looked up.`) : null,
-        h('p', { class: 'note' }, 'Hover over or tap a camera on the map for its own contacts. Mayors come from Wikidata and can lag after an election.'),
+        h('p', { class: 'note' }, 'Tap a camera on the map for its own contacts. Mayors come from Wikidata and can lag after an election.'),
       ),
     ];
   }

@@ -87,6 +87,7 @@ export class App {
     });
     qs('#swap').addEventListener('click', () => this.swap());
     qs('#locate').addEventListener('click', (e) => this.locate(this.from, e.currentTarget as HTMLButtonElement));
+    qs('#near-me').addEventListener('click', (e) => this.showNearMe(e.currentTarget as HTMLButtonElement));
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && this.card.pinned) this.card.close();
     });
@@ -247,6 +248,28 @@ export class App {
     if (!a) this.to.place = null;
   }
 
+  /**
+   * Zooms the map to the device's location so the cameras around it can be
+   * tapped without typing anything. The location stays in the browser.
+   */
+  private showNearMe(button: HTMLButtonElement): void {
+    if (!('geolocation' in navigator)) return this.showError('This browser can’t share its location.');
+    button.setAttribute('aria-busy', 'true');
+    this.showError(null);
+    navigator.geolocation.getCurrentPosition(
+      ({ coords }) => {
+        button.removeAttribute('aria-busy');
+        this.map.flyTo([coords.longitude, coords.latitude]);
+        if (window.matchMedia('(max-width: 959px)').matches) qs('.map-wrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      },
+      () => {
+        button.removeAttribute('aria-busy');
+        this.showError('Couldn’t get your location. Zoom in on the map instead, or type an address.');
+      },
+      { enableHighAccuracy: false, timeout: 10_000, maximumAge: 60_000 },
+    );
+  }
+
   /** Fills `box` with the device's location; the nearby street is filled in when the lookup answers. */
   private locate(box: AddressBox, button?: HTMLButtonElement): void {
     if (!('geolocation' in navigator)) return this.showError('This browser can’t share its location.');
@@ -281,7 +304,7 @@ export class App {
 
   private setBusy(busy: boolean): void {
     this.goButton.toggleAttribute('aria-busy', busy);
-    this.goButton.textContent = busy ? 'Counting…' : 'Count the cameras';
+    this.goButton.textContent = busy ? 'Counting…' : 'Find the cameras and who answers';
   }
 
   private setStatus(text: string): void {

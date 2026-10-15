@@ -170,6 +170,11 @@ svg {
   color: var(--ink);
 }
 
+.topnav .topnav-civic {
+  color: var(--civic);
+  font-weight: 700;
+}
+
 .theme-toggle {
   display: grid;
   place-items: center;

@@ -1,7 +1,8 @@
 /**
- * The card for one camera: what it is, who paid for and runs it, which way it
- * points, how it sees your route, and who answers for it. Hovering shows it
- * briefly; clicking or tapping pins it so its links can be used.
+ * The card for one camera. Who answers for it comes first, since that is what
+ * someone can act on; then how it sees your route, which way it points, and
+ * who paid for and runs it. Hovering shows a short version; clicking or
+ * tapping pins the full card so its links can be used.
  */
 
 import { osmLinks, type Camera } from '../lib/camera';
@@ -10,6 +11,7 @@ import { fmtMiles } from '../lib/format';
 import { fundingRows, type FundingRow } from '../lib/funding';
 import { lookupResponsible, type Official, type Responsible } from '../lib/officials';
 import { describeVerdict, isCounted, type Sighting } from '../lib/seen';
+import { bodyButton, contactButtons, lowerFirst } from './contact';
 import { fill, h, type Child } from './dom';
 
 type Pt = { x: number; y: number };
@@ -135,25 +137,16 @@ export class CameraCard {
     const cones = parseDirection(camera.direction);
     const links = osmLinks(camera);
     const s = this.sighting;
-    const brand = camera.brand ? `${camera.brand} · plate reader` : 'Plate reader · maker not recorded';
+    const pinned = this.pinned;
+    const brand = camera.brand ? `${camera.brand} camera` : 'Plate reader, maker not recorded';
 
     fill(
       this.el,
       h(
         'div',
         { class: 'card-top' },
-        h(
-          'div',
-          null,
-          h('p', { class: 'card-brand', 'data-kind': camera.flock ? 'flock' : 'other' }, brand),
-          h('h3', null, describeDirection(cones)),
-        ),
+        h('p', { class: 'card-brand', 'data-kind': camera.flock ? 'flock' : 'other' }, brand),
         h('button', { type: 'button', class: 'card-close', 'aria-label': 'Close', onclick: () => this.close() }, '×'),
-      ),
-      h(
-        'p',
-        { class: 'card-op' },
-        fundingRows(camera.operator, [camera.lon, camera.lat], camera.flock).map((row) => fundingRow(row, this.pinned)),
       ),
       s
         ? h(
@@ -163,15 +156,56 @@ export class CameraCard {
             describeVerdict(s.verdict),
           )
         : null,
-      h('div', { class: 'card-section' }, h('h4', null, 'Who answers for it'), this.renderOfficials()),
-      h('p', { class: 'card-hint' }, 'Click the camera for contact details.'),
       h(
-        'p',
-        { class: 'card-foot' },
-        h('a', { href: links.view, target: '_blank', rel: 'noopener' }, `OpenStreetMap #${camera.id}`),
-        h('a', { href: links.edit, target: '_blank', rel: 'noopener' }, 'Fix this camera'),
+        'div',
+        { class: 'card-who' },
+        h('h4', null, pinned ? 'Who answers for this camera' : 'Answers to'),
+        pinned ? this.renderOfficials() : this.renderSummary(),
       ),
+      pinned
+        ? h(
+            'div',
+            { class: 'card-section' },
+            h('h4', null, 'This camera'),
+            h('p', { class: 'card-dir' }, describeDirection(cones)),
+            h(
+              'p',
+              { class: 'card-op' },
+              fundingRows(camera.operator, [camera.lon, camera.lat], camera.flock).map((row) => fundingRow(row)),
+            ),
+          )
+        : h('p', { class: 'card-hint' }, 'Click the camera for how to reach them.'),
+      pinned
+        ? h(
+            'p',
+            { class: 'card-foot' },
+            h('a', { href: links.view, target: '_blank', rel: 'noopener' }, `OpenStreetMap #${camera.id}`),
+            h('a', { href: links.edit, target: '_blank', rel: 'noopener' }, 'Fix this camera'),
+          )
+        : null,
     );
+  }
+
+  /** The hover card's line: the place first, then everyone else in a few words. */
+  private renderSummary(): Child[] {
+    const o = this.officials;
+    if (o.state !== 'done') return this.renderOfficials();
+    const r = o.data;
+    if (!r) return this.renderOfficials();
+    const lead = leadOf(r);
+    const parts: string[] = [];
+    if (lead) parts.push(lead.official ? `${lead.official.role} and ${lowerFirst(lead.body)}` : lead.body);
+    if (r.local && r.county) parts.push(r.county.label);
+    if (r.state.length) {
+      parts.push(
+        r.jurisdiction.state.abbr === 'DC'
+          ? `${r.state.length} ${r.state.length === 1 ? 'council member' : 'council members'}`
+          : `${r.state.length} state ${r.state.length === 1 ? 'legislator' : 'legislators'}`,
+      );
+    }
+    if (r.federal.length) parts.push(`${r.federal.length} ${r.federal.length === 1 ? 'member' : 'members'} of Congress`);
+    if (!parts.length) return [h('p', { class: 'note' }, 'No officials found for this spot.')];
+    return [lead ? h('p', { class: 'who-name' }, lead.label) : null, h('p', { class: 'who-meta' }, parts.join(', '))];
   }
 
   private renderOfficials(): Child[] {
@@ -194,61 +228,43 @@ export class CameraCard {
     if (!r) return [h('p', { class: 'note' }, 'This camera is outside the United States.')];
 
     const blocks: Child[] = [];
-    const pinned = this.pinned;
-    if (r.local) {
+    const lead = leadOf(r);
+    if (lead) {
       blocks.push(
+        h('p', { class: 'who-name' }, lead.label),
         h(
-          'div',
-          { class: 'gov' },
-          h('span', { class: 'gov-area' }, r.local.label),
-          r.local.official ? person(r.local.official, pinned) : null,
-          h('span', { class: 'person' }, h('span', { class: 'role' }, r.local.body), pinned && r.local.website ? contactLink(r.local.website, 'Website') : null),
+          'p',
+          { class: 'who-meta' },
+          lead.official ? [h('strong', null, `${lead.official.role} ${lead.official.name}`), ' · '] : null,
+          lead.body,
+          lead.official?.url ? [' · ', h('a', { href: lead.official.url, target: '_blank', rel: 'noopener' }, 'Check on Wikidata')] : null,
         ),
+        h('p', { class: 'who-why' }, `The ${lowerFirst(lead.body)} usually approves camera contracts like this one, and can cancel them.`),
+        bodyButton(lead.body, lead.website, 'primary'),
       );
     }
-    if (r.county) {
-      blocks.push(
-        h(
-          'div',
-          { class: 'gov' },
-          h('span', { class: 'gov-area' }, r.local ? r.county.label : `${r.county.label} (unincorporated)`),
-          r.county.official ? person(r.county.official, pinned) : null,
-          h('span', { class: 'person' }, h('span', { class: 'role' }, r.county.body), pinned && r.county.website ? contactLink(r.county.website, 'Website') : null),
-        ),
+
+    const others: HTMLElement[] = [];
+    if (r.local && r.county) {
+      others.push(
+        row(r.county.label, [r.county.official ? `${r.county.official.role} ${r.county.official.name}` : '', r.county.body].filter(Boolean).join(' · '), bodyButton(r.county.body, r.county.website, 'small')),
       );
     }
-    if (r.state.length) {
-      const label = r.jurisdiction.state.abbr === 'DC' ? 'D.C. Council' : `${r.jurisdiction.state.name} legislature`;
-      blocks.push(h('div', { class: 'gov' }, h('span', { class: 'gov-area' }, label), r.state.map((p) => person(p, pinned))));
-    }
-    if (r.federal.length) {
-      const house = r.federal.filter((p) => !p.role.includes('senator'));
-      const senators = r.federal.filter((p) => p.role.includes('senator'));
-      blocks.push(
-        h(
-          'div',
-          { class: 'gov' },
-          h('span', { class: 'gov-area' }, 'Congress'),
-          house.map((p) => person(p, pinned)),
-          pinned
-            ? senators.map((p) => person(p, pinned))
-            : senators.length
-              ? h(
-                  'span',
-                  { class: 'person' },
-                  h('span', { class: 'role' }, 'U.S. senators'),
-                  h('span', { class: 'who' }, senators.map((p) => `${p.name}${p.party ? ` (${p.party})` : ''}`).join(', ')),
-                )
-              : null,
-        ),
-      );
-    }
+    for (const p of [...r.state, ...r.federal]) others.push(personRow(p));
+    if (others.length) blocks.push(h('div', { class: 'who-also' }, h('h4', null, lead ? 'Also answers for it' : 'Answers for it'), others));
     if (!blocks.length) blocks.push(h('p', { class: 'note' }, 'No officials found for this spot.'));
     return blocks;
   }
 }
 
-function fundingRow(row: FundingRow, withSource: boolean): HTMLElement {
+/** The government closest to the camera: its city or town, or its county on unincorporated land. */
+function leadOf(r: Responsible): { label: string; body: string; official?: Official; website?: string } | null {
+  if (r.local) return r.local;
+  if (r.county) return { ...r.county, label: `${r.county.label} (unincorporated)` };
+  return null;
+}
+
+function fundingRow(row: FundingRow): HTMLElement {
   return h(
     'span',
     { class: 'op-row' },
@@ -256,33 +272,15 @@ function fundingRow(row: FundingRow, withSource: boolean): HTMLElement {
     row.name ? h('strong', null, row.name) : 'unknown',
     row.kind ? [' ', h('span', { class: 'op-kind' }, row.kind)] : null,
     row.how ? `, ${row.how}` : null,
-    withSource && row.source ? [' · ', h('a', { href: row.source, target: '_blank', rel: 'noopener' }, 'source')] : null,
+    row.source ? [' · ', h('a', { href: row.source, target: '_blank', rel: 'noopener' }, 'source')] : null,
   );
 }
 
-function person(p: Official, withContact: boolean): HTMLElement {
-  const meta = [p.party, p.district && !p.role.startsWith('U.S. senator') ? (/^\d/.test(p.district) ? `District ${p.district}` : p.district) : '']
-    .filter(Boolean)
-    .join(' · ');
-  return h(
-    'span',
-    { class: 'person' },
-    h('span', { class: 'role' }, p.role),
-    h('span', { class: 'who' }, p.name),
-    meta ? h('span', null, meta) : null,
-    withContact ? contact(p) : null,
-  );
+function row(name: string, meta: string, actions: HTMLElement | null): HTMLElement {
+  return h('div', { class: 'who-row' }, h('span', { class: 'who-row-name' }, h('strong', null, name), meta ? h('span', null, meta) : null), actions);
 }
 
-function contactLink(href: string, text: string): HTMLElement {
-  return h('span', { class: 'contact' }, h('a', { href, target: '_blank', rel: 'noopener' }, text));
-}
-
-function contact(p: Official): HTMLElement | null {
-  const links: HTMLElement[] = [];
-  if (p.email) links.push(h('a', { href: `mailto:${p.email}` }, 'Email'));
-  if (p.phone) links.push(h('a', { href: `tel:${p.phone.replace(/[^\d+]/g, '')}` }, p.phone));
-  const label = p.source === 'congress-legislators' ? 'Contact' : p.source === 'Wikidata' ? 'Check on Wikidata' : 'Profile';
-  if (p.url) links.push(h('a', { href: p.url, target: '_blank', rel: 'noopener' }, label));
-  return links.length ? h('span', { class: 'contact' }, links) : null;
+function personRow(p: Official): HTMLElement {
+  const district = p.district && !p.role.startsWith('U.S. senator') ? (/^\d/.test(p.district) ? `District ${p.district}` : p.district) : '';
+  return row(`${p.name}${p.party ? ` (${p.party})` : ''}`, [p.role, district].filter(Boolean).join(' · '), contactButtons(p));
 }
