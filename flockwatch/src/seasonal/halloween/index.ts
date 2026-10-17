@@ -1,7 +1,7 @@
 /*
  * Halloween decorations: cobwebs in two corners, a pumpkin in the logo and
- * favicon, and a spider that drops down its thread on page load, takes a
- * photo with a flash, and climbs back up.
+ * favicon, a spider that drops down its thread on page load, takes a photo
+ * with a flash, and climbs back up, and a ghost peeking onto the map.
  *
  * Everything lives in this folder and is switched on by one call in main.ts.
  * The styles only apply under `html.halloween`, which this module adds, and
@@ -60,6 +60,18 @@ function pumpkin(transform: string): SVGElement {
   );
 }
 
+/** A small ghost, about to peek out from the map's left edge. */
+function ghost(): SVGElement {
+  return svg(
+    'svg',
+    { class: 'hw-ghost-body', viewBox: '0 0 60 72' },
+    svg('path', { class: 'hw-ghost-sheet', d: 'M6 32a24 24 0 0 1 48 0v32q-4 7-8 0q-4 7-8 0q-4 7-8 0q-4 7-8 0q-4 7-8 0q-4 7-8 0z' }),
+    svg('ellipse', { class: 'hw-ghost-eye', cx: 23, cy: 30, rx: 3.2, ry: 4.4 }),
+    svg('ellipse', { class: 'hw-ghost-eye', cx: 37, cy: 30, rx: 3.2, ry: 4.4 }),
+    svg('ellipse', { class: 'hw-ghost-eye', cx: 30, cy: 42, rx: 3, ry: 3.6 }),
+  );
+}
+
 /** A spider hanging head down, holding a camera pointed at the map. (0, 0) is where the thread meets it. */
 function spider(): SVGElement {
   const leg = (d: string) => svg('path', { d });
@@ -103,8 +115,10 @@ export function startHalloween(now = new Date()): void {
       web('hw-web-map'),
       h('div', { class: 'hw-flash-wash', 'aria-hidden': 'true' }),
       h('div', { class: 'hw-spider', 'aria-hidden': 'true' }, h('div', { class: 'hw-thread' }), spider()),
+      h('div', { class: 'hw-ghost', 'aria-hidden': 'true' }, ghost()),
+      h('span', { class: 'hw-boo', 'aria-hidden': 'true' }, 'boo. cameras can’t see me.'),
     );
-    // The spider's run starts once the map is on screen: at once on wide
+    // The spider's run and the ghost's "boo" start once the map is on screen: at once on wide
     // screens, and when it's scrolled to on phones, where it sits below the form.
     const seen = new IntersectionObserver(
       ([entry]) => {

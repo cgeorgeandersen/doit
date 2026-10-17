@@ -174,6 +174,96 @@ html.halloween .panel {
   animation: hw-wash var(--hw-run) var(--hw-delay) both;
 }
 
+/* ---------------------------------------------------------------- ghost -- */
+
+/*
+ * The ghost peeks out from the map's left edge (from behind the panel on wide
+ * screens) and floats a little. It says "boo" for a few seconds after the
+ * spider is done, then just peeks. Once a route is on the map it slips back
+ * out of sight, so it never sits on top of someone's drive.
+ */
+.halloween .hw-ghost {
+  position: absolute;
+  top: 46%;
+  left: 0;
+  z-index: 4;
+  width: 64px;
+  height: 120px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.halloween .hw-ghost-body {
+  width: 78px;
+  margin-left: -26px;
+  transition: translate 0.6s ease-in;
+  animation: hw-float 4s ease-in-out infinite;
+}
+
+.halloween .hw-ghost-sheet {
+  fill: #f4f1ea;
+  stroke: var(--ink-3);
+  stroke-width: 1.2;
+}
+
+.halloween .hw-ghost-eye {
+  fill: #14181d;
+}
+
+.halloween .hw-boo {
+  position: absolute;
+  top: calc(46% - 6px);
+  left: 60px;
+  z-index: 4;
+  padding: 3px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--overlay);
+  box-shadow: var(--shadow-1);
+  color: var(--ink-2);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.halloween .hw-go .hw-boo {
+  animation: hw-boo 5.4s calc(var(--hw-delay) + var(--hw-run)) both;
+}
+
+.halloween .has-result .hw-ghost-body {
+  translate: -100% 0;
+}
+
+.halloween .has-result .hw-boo {
+  display: none;
+}
+
+@keyframes hw-float {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(6deg);
+  }
+  50% {
+    transform: translate(4px, -8px) rotate(10deg);
+  }
+}
+
+/* Fades only, so it stays for people who ask for less motion. */
+@keyframes hw-boo {
+  0% {
+    opacity: 0;
+  }
+  8%,
+  88% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
 @keyframes hw-drop {
   0% {
     transform: translateY(0);
@@ -251,12 +341,14 @@ html.halloween .panel {
   }
 }
 
-/* No drop and no flash for people who ask for less motion: the spider just hangs. */
+/* No drop, flash or float for people who ask for less motion: the spider
+   just hangs and the ghost just peeks. */
 @media (prefers-reduced-motion: reduce) {
   .halloween .hw-go .hw-thread,
   .halloween .hw-go .hw-spider-body,
   .halloween .hw-go .hw-flash,
-  .halloween .hw-go .hw-flash-wash {
+  .halloween .hw-go .hw-flash-wash,
+  .halloween .hw-ghost-body {
     animation: none;
   }
 }

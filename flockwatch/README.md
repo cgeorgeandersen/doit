@@ -104,7 +104,7 @@ The explainer’s facts are dated and sourced in [`index.html`](index.html) (Sou
 
 ## Halloween decorations
 
-Through October and on November 1, the page wears cobwebs in two corners and a pumpkin in the logo and favicon, and a spider drops down its thread over the map, takes a photo with a flash, and climbs back up (once, when the map first comes on screen; people who ask their device for less motion get a spider that just hangs there). It all lives in [`src/seasonal/halloween/`](src/seasonal/halloween/) and switches itself off on November 2, so nothing has to be done for it to go away. To remove it from the code, delete that folder and `tests/halloween.test.ts`, and take the `startHalloween` import and call out of [`src/main.ts`](src/main.ts). Left in, it comes back each October.
+Through October and on November 1, the page wears cobwebs in two corners and a pumpkin in the logo and favicon, a spider drops down its thread over the map, takes a photo with a flash, and climbs back up (once, when the map first comes on screen), and a ghost peeks onto the map from its left edge and says “boo” for a few seconds. None of it catches a click, a drag or a scroll, so the map works the same under it, and the ghost slips out of sight once a route is on the map. People who ask their device for less motion get a spider that just hangs there and a ghost that doesn’t float. It all lives in [`src/seasonal/halloween/`](src/seasonal/halloween/) and switches itself off on November 2, so nothing has to be done for it to go away. To remove it from the code, delete that folder and `tests/halloween.test.ts`, and take the `startHalloween` import and call out of [`src/main.ts`](src/main.ts). Left in, it comes back each October.
 
 ## Project layout
 
