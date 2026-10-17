@@ -10,6 +10,7 @@ import { EXAMPLES } from './content/examples';
 import { contactKind, pageAddress } from './lib/analytics';
 import { fmtDate, fmtInt } from './lib/format';
 import { loadMeta, loadOverview } from './lib/tiles';
+import { startHalloween } from './seasonal/halloween';
 import { h, qs } from './ui/dom';
 import { currentTheme, initTheme } from './ui/theme';
 
@@ -59,6 +60,7 @@ function countVisits(): void {
 
 function boot(): void {
   countVisits();
+  startHalloween();
   const app = new App(currentTheme());
   initTheme(qs<HTMLButtonElement>('#theme-toggle'), (theme) => app.setTheme(theme));
   showStats();
