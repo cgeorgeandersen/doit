@@ -1,0 +1,85 @@
+/*
+ * Design tokens. Warm paper and ink, with one wax-seal red for the brand, the
+ * selected answer and the main button. Green means "voted" and always comes
+ * with a check mark and a word, never color alone.
+ */
+:root {
+  --font-sans: 'Public Sans Variable', 'Public Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Fraunces Variable', 'Fraunces', Georgia, 'Times New Roman', serif;
+
+  --radius-s: 8px;
+  --radius: 12px;
+  --radius-l: 18px;
+  --page-max: 680px;
+  --gutter: 16px;
+
+  --bg: #f6f1ea;
+  --surface: #fffdf9;
+  --surface-2: #faf6f0;
+  --surface-3: #f0e8dd;
+  --ink: #241b17;
+  --ink-2: #554740;
+  --ink-3: #74655d;
+  --line: #e7ddd1;
+  --line-strong: #cfc1b2;
+  --accent: #a32f3b;
+  --accent-hover: #8a2531;
+  --accent-ink: #ffffff;
+  --accent-tint: #f8e8e6;
+  --accent-track: #efd5d1;
+  --focus: #a32f3b;
+  --good: #2b7a4b;
+  --good-tint: #e4f2e9;
+
+  --shadow-1: 0 1px 2px rgba(36, 27, 23, 0.05), 0 4px 16px rgba(36, 27, 23, 0.06);
+  --shadow-2: 0 8px 24px rgba(36, 27, 23, 0.16);
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --bg: #15100e;
+    --surface: #1e1815;
+    --surface-2: #231c19;
+    --surface-3: #2c2420;
+    --ink: #f3ebe4;
+    --ink-2: #cbbdb3;
+    --ink-3: #a5958b;
+    --line: #332a25;
+    --line-strong: #4a3d36;
+    --accent: #f08a8f;
+    --accent-hover: #f6a8ab;
+    --accent-ink: #2b0c10;
+    --accent-tint: #3a1f21;
+    --accent-track: #4d2a2c;
+    --focus: #f6a8ab;
+    --good: #7fd3a0;
+    --good-tint: #18301f;
+    --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.35);
+    --shadow-2: 0 8px 24px rgba(0, 0, 0, 0.5);
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme='dark'] {
+  --bg: #15100e;
+  --surface: #1e1815;
+  --surface-2: #231c19;
+  --surface-3: #2c2420;
+  --ink: #f3ebe4;
+  --ink-2: #cbbdb3;
+  --ink-3: #a5958b;
+  --line: #332a25;
+  --line-strong: #4a3d36;
+  --accent: #f08a8f;
+  --accent-hover: #f6a8ab;
+  --accent-ink: #2b0c10;
+  --accent-tint: #3a1f21;
+  --accent-track: #4d2a2c;
+  --focus: #f6a8ab;
+  --good: #7fd3a0;
+  --good-tint: #18301f;
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --shadow-2: 0 8px 24px rgba(0, 0, 0, 0.5);
+  color-scheme: dark;
+}
