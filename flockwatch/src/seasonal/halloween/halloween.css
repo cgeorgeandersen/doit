@@ -1,0 +1,262 @@
+/*
+ * Halloween decorations (see index.ts). Every rule sits under html.halloween,
+ * so none of this applies unless the module switched it on. The decorations
+ * stay grey, white and pumpkin orange, and orange only in the logo: red and
+ * amber mean cameras, so nothing on the map may look like either.
+ */
+
+html.halloween {
+  --hw-run: 3.4s;
+  --hw-delay: 0.5s;
+}
+
+html.halloween .tool,
+html.halloween .panel {
+  position: relative;
+}
+
+/* ------------------------------------------------------------- cobwebs -- */
+
+.halloween .hw-web {
+  position: absolute;
+  top: 0;
+  z-index: 4;
+  pointer-events: none;
+  fill: none;
+  stroke: var(--ink-3);
+  stroke-width: 1;
+  opacity: 0.55;
+}
+
+/* Top right of the panel on wide screens; on phones the panel has no box of
+   its own, so this lands in the top right of the page under the top bar. */
+.halloween .hw-web-panel {
+  right: 0;
+  width: 118px;
+  height: 118px;
+  transform: scaleX(-1);
+}
+
+.halloween .hw-web-map {
+  left: 0;
+  width: 170px;
+  height: 170px;
+}
+
+@media (max-width: 959px) {
+  .halloween .hw-web-map {
+    width: 120px;
+    height: 120px;
+  }
+}
+
+/* -------------------------------------------------------------- pumpkin -- */
+
+.halloween .brand-dot {
+  display: none;
+}
+
+.halloween .brand-mark {
+  overflow: visible;
+}
+
+.halloween .hw-pumpkin-body {
+  fill: #f07a1a;
+  stroke: #b4510a;
+  stroke-width: 0.8;
+}
+
+.halloween .hw-pumpkin-front {
+  fill: #ff8c2a;
+}
+
+.halloween .hw-pumpkin-stem {
+  fill: #3d7a2e;
+}
+
+.halloween .hw-pumpkin-face {
+  fill: #2a1300;
+}
+
+/* --------------------------------------------------------------- spider -- */
+
+/*
+ * One 3.4-second run, half a second after the map comes on screen (index.ts
+ * sets .hw-go): the spider drops down its thread and bounces, holds still,
+ * the flash goes off, and it climbs back up. The thread grows and shrinks on
+ * the same keyframes, so it always ends at the spider. Afterwards it hangs
+ * still.
+ */
+.halloween .hw-spider {
+  --rest: 34px;
+  --drop: 140px;
+  position: absolute;
+  top: 0;
+  right: 60px;
+  z-index: 4;
+  width: 40px;
+  pointer-events: none;
+}
+
+.halloween .hw-thread {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 1px;
+  height: var(--rest);
+  background: var(--ink-3);
+}
+
+.halloween .hw-spider-body {
+  position: absolute;
+  top: var(--rest);
+  left: 0;
+  width: 40px;
+  overflow: visible;
+}
+
+.halloween .hw-spider-ink {
+  fill: var(--ink);
+}
+
+.halloween .hw-spider-legs {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+}
+
+.halloween .hw-camera {
+  fill: var(--surface-3);
+  stroke: var(--ink);
+  stroke-width: 1;
+}
+
+.halloween .hw-lens {
+  fill: var(--ink-2);
+  stroke: var(--ink);
+  stroke-width: 1;
+}
+
+.halloween .hw-flash {
+  fill: #fffdf0;
+  stroke: #fffdf0;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  opacity: 0;
+  /* A faint outline keeps the flash visible on the light map. */
+  filter: drop-shadow(0 0 1.5px rgba(20, 24, 29, 0.5));
+}
+
+/* A faint wash over the map as the flash goes off. */
+.halloween .hw-flash-wash {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background: #fffdf0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.halloween .hw-go .hw-thread {
+  animation: hw-thread var(--hw-run) var(--hw-delay) both;
+}
+
+.halloween .hw-go .hw-spider-body {
+  animation: hw-drop var(--hw-run) var(--hw-delay) both;
+}
+
+.halloween .hw-go .hw-flash {
+  animation: hw-flash var(--hw-run) var(--hw-delay) both;
+}
+
+.halloween .hw-go .hw-flash-wash {
+  animation: hw-wash var(--hw-run) var(--hw-delay) both;
+}
+
+@keyframes hw-drop {
+  0% {
+    transform: translateY(0);
+    animation-timing-function: cubic-bezier(0.3, 0.6, 0.4, 1);
+  }
+  28% {
+    transform: translateY(var(--drop));
+    animation-timing-function: ease-out;
+  }
+  33% {
+    transform: translateY(calc(var(--drop) - 8px));
+    animation-timing-function: ease-in;
+  }
+  38%,
+  64% {
+    transform: translateY(var(--drop));
+    animation-timing-function: ease-in-out;
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes hw-thread {
+  0% {
+    height: var(--rest);
+    animation-timing-function: cubic-bezier(0.3, 0.6, 0.4, 1);
+  }
+  28% {
+    height: calc(var(--rest) + var(--drop));
+    animation-timing-function: ease-out;
+  }
+  33% {
+    height: calc(var(--rest) + var(--drop) - 8px);
+    animation-timing-function: ease-in;
+  }
+  38%,
+  64% {
+    height: calc(var(--rest) + var(--drop));
+    animation-timing-function: ease-in-out;
+  }
+  100% {
+    height: var(--rest);
+  }
+}
+
+@keyframes hw-flash {
+  0%,
+  45% {
+    opacity: 0;
+    transform: translate(0, 40px) scale(0.3);
+  }
+  47% {
+    opacity: 1;
+    transform: translate(0, 40px) scale(1);
+  }
+  58%,
+  100% {
+    opacity: 0;
+    transform: translate(0, 40px) scale(1.7);
+  }
+}
+
+@keyframes hw-wash {
+  0%,
+  45% {
+    opacity: 0;
+  }
+  47% {
+    opacity: 0.16;
+  }
+  56%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* No drop and no flash for people who ask for less motion: the spider just hangs. */
+@media (prefers-reduced-motion: reduce) {
+  .halloween .hw-go .hw-thread,
+  .halloween .hw-go .hw-spider-body,
+  .halloween .hw-go .hw-flash,
+  .halloween .hw-go .hw-flash-wash {
+    animation: none;
+  }
+}

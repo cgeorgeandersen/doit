@@ -102,6 +102,10 @@ npm run preview      # serve dist/ with the same security headers as Vercel, and
 
 The explainer’s facts are dated and sourced in [`index.html`](index.html) (Sources, at the end of the article). When something changes (Flock’s retention default, the Norfolk appeal, new state laws), update the sentence and its source; `npm test` checks that citation numbers still line up. The example routes in [`src/content/examples.ts`](src/content/examples.ts) were chosen in October 2026 from well-mapped areas.
 
+## Halloween decorations
+
+Through October and on November 1, the page wears cobwebs in two corners and a pumpkin in the logo and favicon, and a spider drops down its thread over the map, takes a photo with a flash, and climbs back up (once, when the map first comes on screen; people who ask their device for less motion get a spider that just hangs there). It all lives in [`src/seasonal/halloween/`](src/seasonal/halloween/) and switches itself off on November 2, so nothing has to be done for it to go away. To remove it from the code, delete that folder and `tests/halloween.test.ts`, and take the `startHalloween` import and call out of [`src/main.ts`](src/main.ts). Left in, it comes back each October.
+
 ## Project layout
 
 ```
@@ -113,6 +117,7 @@ flockwatch/
   src/ui/               map, address boxes, camera card, results panel, theme
   src/app.ts            ties search, routing, counting and the map together
   src/styles/           design tokens (light and dark), layout, explainer
+  src/seasonal/         holiday decorations that switch themselves on and off by date
   tests/                Vitest suites and real Census fixtures
 ```
 
