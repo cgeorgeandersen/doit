@@ -8,11 +8,19 @@
     {
       "source": "/api/census/:path*",
       "destination": "https://geocoding.geo.census.gov/geocoder/geographies/:path*"
+    },
+    {
+      "source": "/api/boundary/:path*",
+      "destination": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Places_CouSub_ConCity_SubMCD/MapServer/:path*"
     }
   ],
   "headers": [
     {
       "source": "/api/census/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400, s-maxage=2592000" }]
+    },
+    {
+      "source": "/api/boundary/(.*)",
       "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400, s-maxage=2592000" }]
     },
     {

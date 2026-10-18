@@ -2,7 +2,7 @@
 
 Live at [trackthepole.com](https://trackthepole.com). (The code keeps its working name, FlockWatch, in this `flockwatch/` folder, which is the Vercel project’s Root Directory.)
 
-Enter two addresses and Track the Pole maps every known Flock license plate camera along the drive, counts the ones that would photograph your car, and tells you who answers for each one: the mayor or county, state legislators and members of Congress for that spot, with a way to reach each. That last part is what sets it apart from other camera maps, so the page leads with it: the headline, the camera card and the route results all put the officials first. Below the map, a short explainer covers what the cameras record, who can search the data, the legal picture, and what people can do. Every factual claim there links to a source.
+Enter two addresses and Track the Pole maps every known Flock license plate camera along the drive, counts the ones that would photograph your car, and tells you who answers for each one (or pick a town to see every camera inside it): the mayor or county, state legislators and members of Congress for that spot, with a way to reach each. That last part is what sets it apart from other camera maps, so the page leads with it: the headline, the camera card and the route results all put the officials first. Below the map, a short explainer covers what the cameras record, who can search the data, the legal picture, and what people can do. Every factual claim there links to a source.
 
 | Part | What it does |
 | --- | --- |
@@ -10,6 +10,7 @@ Enter two addresses and Track the Pole maps every known Flock license plate came
 | **The count** | Routes the drive (with alternatives), finds the cameras that would see the car, and shows the number, how often one comes up, and a numbered list. When there's an alternative route with fewer cameras, it says so. |
 | **The camera card** | Hover over (or tap) any camera. Who answers for it comes first: the city, town or county (on unincorporated land) with a button to its council’s website, then its state legislators and members of Congress with email, phone and contact-form buttons. Below that: whether it sees your front or rear plate, which way it faces, and who paid for and runs it when that’s known. Hovering shows a one-line summary of who answers. |
 | **Who answers for these cameras** | For a whole route, right under the count: every city or county and every legislator whose territory holds a counted camera, with camera counts and contact buttons. |
+| **Cameras in a town** | Under the route boxes: pick a city or town and the map outlines its legal boundary and shows every mapped plate reader inside it, Flock and others, each one clickable. The count comes with the same “Who answers for these cameras” block, and the town can be shared as `#town=Decatur,+GA`. |
 | **Cameras near me** | Zooms the map to the visitor’s location at street level, so cameras can be tapped without typing an address. The location stays in the browser. |
 | **The explainer** | What Flock cameras are and record, retention and sharing, the law, what you can do, how we count, data and privacy. |
 
@@ -22,6 +23,7 @@ Enter two addresses and Track the Pole maps every known Flock license plate came
 | Routes | [OSRM](https://project-osrm.org) on [FOSSGIS](https://routing.openstreetmap.de/about.html)’s server, falling back to the OSRM demo server | From the browser, one request per search |
 | Address search | [Photon](https://photon.komoot.io) (komoot), U.S. results only | From the browser, as you type |
 | City and town suggestions | U.S. Census Bureau [gazetteer of places](https://www.census.gov/geographies/reference-files/time-series/geo/gazetteer-files.html) and [population estimates](https://www.census.gov/programs-surveys/popest.html) | Fetched at build time, one small file per first letter |
+| Town boundaries | U.S. Census Bureau [TIGERweb](https://tigerweb.geo.census.gov) (incorporated and Census-designated places) | Through this site’s `/api/boundary`, when someone counts a town |
 | Districts for a camera | [U.S. Census Geocoder](https://geocoding.geo.census.gov) | Through this site’s `/api/census` (the Census server doesn’t allow cross-site calls) |
 | State legislators | [Open States](https://open.pluralpolicy.com/data/) bulk CSVs | Fetched at build time |
 | Members of Congress | [unitedstates/congress-legislators](https://github.com/unitedstates/congress-legislators) | Fetched at build time |
@@ -40,6 +42,17 @@ The rules live in `COUNT_RULES` in [`src/lib/seen.ts`](src/lib/seen.ts) and are 
 4. Otherwise it counts when the route passes through its view (±40° of where it points, within 60 m) while traveling within 50° of its line of sight: away from the camera (it sees the rear plate) or toward it (the front). A camera aimed at a side street, a parking lot or the far side of a divided road is shown as “nearby, not counted”.
 
 Counts are minimums: only cameras volunteers have mapped are known.
+
+### Counting a town
+
+[`src/lib/town.ts`](src/lib/town.ts). A town's count is every mapped plate reader inside its boundary, with no direction rule, so it measures something different from a route's count, and the page says so under “How we count”.
+
+1. The town box offers only the Census list of places (`citiesOnly` in [`src/ui/combobox.ts`](src/ui/combobox.ts)), so every pick comes with the Census's own point for it, which always lies inside the place.
+2. TIGERweb is asked which incorporated place, then which Census-designated place (an unincorporated community), contains that point. No name matching is needed. The outline comes back simplified to about 10 m (Decatur, GA is 5 KB; Houston, 200 KB).
+3. The 1° camera tiles under the outline's bounding box are loaded, and each camera inside the box is tested against the outline: cast a line from the camera and count how many times it crosses the border. An odd count means inside. Holes in a city (an unincorporated pocket) and cities in several pieces need no special case.
+4. “Who answers for these cameras” looks up at most 120 cameras, spread from one end of the town to the other, because legislative districts can split a city.
+
+Townships and New England towns that the Census doesn't list as places (it calls them county subdivisions) aren't offered yet.
 
 ## The address boxes
 
@@ -81,22 +94,22 @@ npm test           # Vitest
 npm run typecheck  # TypeScript, strict
 ```
 
-The tests cover the geometry; the direction parser against every format found in the data; the counting rules on synthetic roads (rear and front captures, cameras aimed at cross streets and parallel roads, unknown directions, a corner, a performance check with 40,000 cameras); the officials logic against real Census answers saved in `tests/fixtures/` (cities, a Pennsylvania township, DC, Boston, a newly incorporated city) and against stale-Wikidata cases; address labels and city matching (ranking, states, accents, alternate names); who-paid labels against real operator names, including look-alikes such as the Falls Church Police Department; the zip reader for the Census file; share links; and the page’s content: every citation number must match its source’s place in the list.
+The tests cover the geometry; the direction parser against every format found in the data; the counting rules on synthetic roads (rear and front captures, cameras aimed at cross streets and parallel roads, unknown directions, a corner, a performance check with 40,000 cameras); the officials logic against real Census answers saved in `tests/fixtures/` (cities, a Pennsylvania township, DC, Boston, a newly incorporated city) and against stale-Wikidata cases; address labels and city matching (ranking, states, accents, alternate names); who-paid labels against real operator names, including look-alikes such as the Falls Church Police Department; the zip reader for the Census file; share links for routes and towns; the inside-the-town test on squares, holes, L shapes and multi-part cities and on Decatur, GA's real Census outline (`tests/fixtures/tiger-decatur-ga.json`); and the page’s content: every citation number must match its source’s place in the list.
 
 ## Build and deploy
 
 ```bash
 npm run build        # typecheck, then write the static site to dist/ (uses whatever is in public/data/)
 npm run build:deploy # fetch fresh data, then build: what Vercel runs
-npm run preview      # serve dist/ with the same security headers as Vercel, and the Census proxy
+npm run preview      # serve dist/ with the same security headers as Vercel, and the Census proxies
 ```
 
-- **Vercel:** import the repository as a new project and set its Root Directory to `flockwatch`. [`vercel.json`](vercel.json) runs `npm run build:deploy`, so every deploy carries that day’s camera data; it also rewrites `/api/census/*` to the Census Geocoder and sets the security headers, including a Content-Security-Policy that limits the page to the services listed above. If the data fetch fails, the build fails and the previous deployment stays live.
+- **Vercel:** import the repository as a new project and set its Root Directory to `flockwatch`. [`vercel.json`](vercel.json) runs `npm run build:deploy`, so every deploy carries that day’s camera data; it also rewrites `/api/census/*` to the Census Geocoder and `/api/boundary/*` to TIGERweb, and sets the security headers, including a Content-Security-Policy that limits the page to the services listed above. If the data fetch fails, the build fails and the previous deployment stays live.
 - **Domain:** in the Vercel project, Settings → Domains, add `trackthepole.com` and `www.trackthepole.com` (redirecting to it), then add the DNS records Vercel shows wherever the domain was bought. HTTPS is automatic. The page’s canonical and sharing links point to trackthepole.com.
 - **Fresh data on a schedule:** camera data changes daily. To redeploy regularly without a code change, create a Deploy Hook in the Vercel project (Settings → Git → Deploy Hooks) and call it on a schedule, for example from a scheduled GitHub Action that keeps the hook URL in a repository secret.
 - **Visit counts:** Web Analytics is turned on in the Vercel project’s Analytics tab, and [`src/main.ts`](src/main.ts) loads Vercel’s script in production builds (`npm run dev` loads nothing). Vercel’s script reports the page’s full address, and a shared link ends in `#from=…&to=…`, so [`src/lib/analytics.ts`](src/lib/analytics.ts) cuts every address down to its path plus any `utm_*` or `ref` tags before it’s sent. Taps on links that reach an official (marked `data-contact` in [`src/ui/contact.ts`](src/ui/contact.ts)) are sent as a `Contact` event with the kind of link (email, phone or web) and the level of government, never which official or where; that count, not visits, is the measure of whether the page leads people to act. Custom events need a Vercel plan that includes them. Blockers using the EasyPrivacy list (on by default in uBlock Origin) stop the script, so visit counts are minimums too. “Data and privacy” on the page says what’s collected; keep it in step.
 - **Checks:** [`.github/workflows/flockwatch-ci.yml`](../.github/workflows/flockwatch-ci.yml) installs, tests and builds on every push and pull request that touches this folder. It doesn’t fetch data or deploy.
-- **Elsewhere:** any static host works for `dist/`, but the officials lookup needs `/api/census/` forwarded to `https://geocoding.geo.census.gov/geocoder/geographies/`. Without it, cards say officials couldn’t be looked up and link to USA.gov.
+- **Elsewhere:** any static host works for `dist/`, but the officials lookup needs `/api/census/` forwarded to `https://geocoding.geo.census.gov/geocoder/geographies/`, and counting a town needs `/api/boundary/` forwarded to `https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Places_CouSub_ConCity_SubMCD/MapServer/`. Without the first, cards say officials couldn’t be looked up and link to USA.gov; without the second, the town box shows an error.
 
 ## Keep the facts current
 

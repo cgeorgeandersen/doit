@@ -5,13 +5,14 @@ import type { LngLat } from './lib/geo';
 import { summarizeResponsible } from './lib/officials';
 import { findRoutes, NoRouteError } from './lib/route';
 import { COUNT_RULES, countAlongRoute, type Sighting } from './lib/seen';
-import { decodeRoute, encodeRoute } from './lib/share';
-import { camerasNearRoute } from './lib/tiles';
+import { decodeRoute, decodeTown, encodeRoute, encodeTown } from './lib/share';
+import { camerasInBBox, camerasNearRoute } from './lib/tiles';
+import { camerasInTown, loadTown, spreadSample } from './lib/town';
 import { CameraCard } from './ui/card';
 import { AddressBox } from './ui/combobox';
 import { qs } from './ui/dom';
 import { MapView } from './ui/mapView';
-import { ResultsView, type ResultModel, type RouteResult } from './ui/results';
+import { ResultsView, type ResultModel, type RouteResult, type TownResult } from './ui/results';
 import type { Theme } from './ui/theme';
 
 const MAX_RESPONSIBLE_LOOKUPS = 120;
@@ -20,13 +21,17 @@ export class App {
   readonly map: MapView;
   private readonly from: AddressBox;
   private readonly to: AddressBox;
+  private readonly townBox: AddressBox;
   private readonly card: CameraCard;
   private readonly results: ResultsView;
   private readonly form = qs<HTMLFormElement>('#route-form');
   private readonly goButton = qs<HTMLButtonElement>('#go');
   private readonly error = qs('#form-error');
+  private readonly townGo = qs<HTMLButtonElement>('#town-go');
+  private readonly townError = qs('#town-error');
   private readonly status = qs('#map-status');
   private model: ResultModel | null = null;
+  private town: TownResult | null = null;
   /** Where each camera stands relative to the selected route. */
   private sightings = new Map<number, Sighting>();
   private runSeq = 0;
@@ -71,7 +76,7 @@ export class App {
 
     this.results = new ResultsView(qs('#results'), qs('#map-count'), {
       selectRoute: (i) => this.selectRoute(i),
-      showCamera: (s) => this.showCamera(s),
+      showCamera: (c) => this.showCamera(c),
       hoverCamera: (c) => this.map.focus(c ?? (this.card.pinned ? this.card.camera : null)),
       findResponsible: () => void this.findResponsible(),
       share: (button) => void this.share(button),
@@ -81,9 +86,22 @@ export class App {
       },
     });
 
+    this.townBox = new AddressBox(
+      qs('#town-input'),
+      qs('#town-list'),
+      () => (this.map.map.getZoom() > 5.5 ? this.map.center() : undefined),
+      () => void this.runTown(),
+      null,
+      { citiesOnly: true },
+    );
+
     this.form.addEventListener('submit', (e) => {
       e.preventDefault();
       void this.run();
+    });
+    qs('#town-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      void this.runTown();
     });
     qs('#swap').addEventListener('click', () => this.swap());
     qs('#locate').addEventListener('click', (e) => this.locate(this.from, e.currentTarget as HTMLButtonElement));
@@ -100,8 +118,15 @@ export class App {
     await this.run();
   }
 
-  /** Opens a route shared as #from=lat,lon&to=lat,lon. */
+  /** Opens a route shared as #from=lat,lon&to=lat,lon, or a town shared as #town=Name,+ST. */
   async openShared(hash: string): Promise<boolean> {
+    const town = decodeTown(hash);
+    if (town) {
+      this.townBox.input.value = town;
+      this.townBox.place = null;
+      await this.runTown();
+      return true;
+    }
     const shared = decodeRoute(hash);
     if (!shared) return false;
     const label = async (p: LngLat, fallback: string): Promise<Place> => {
@@ -120,6 +145,8 @@ export class App {
   private async run(): Promise<void> {
     const seq = ++this.runSeq;
     this.showError(null);
+    this.showTownError(null);
+    this.setTownBusy(false);
     this.setBusy(true);
     try {
       const [from, to] = await Promise.all([this.from.resolve(), this.to.resolve()]);
@@ -150,8 +177,10 @@ export class App {
         return { option, count, flock, other: count.seen.length - flock };
       });
       this.model = { from, to, results, selected: 0 };
+      this.town = null;
       this.setStatus('');
       document.body.classList.add('has-result');
+      document.body.classList.remove('has-town');
       this.card.hide();
       this.map.focus(null);
       if (window.matchMedia('(max-width: 959px)').matches) qs('.map-wrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -166,6 +195,57 @@ export class App {
       );
     } finally {
       if (seq === this.runSeq) this.setBusy(false);
+    }
+  }
+
+  /** Outlines a town and shows every mapped plate reader inside it. */
+  private async runTown(): Promise<void> {
+    const seq = ++this.runSeq;
+    this.showError(null);
+    this.showTownError(null);
+    this.setBusy(false);
+    this.setTownBusy(true);
+    try {
+      const place = await this.townBox.resolve();
+      if (seq !== this.runSeq) return;
+      if (!place) {
+        const typed = this.townBox.input.value.trim();
+        this.showTownError(typed ? `We couldn’t find a city or town called “${typed}”. Pick one from the list.` : 'Enter a city or town.');
+        this.townBox.input.focus();
+        return;
+      }
+
+      this.setStatus(`Finding the limits of ${place.label}…`);
+      const town = await loadTown(place.label, place.detail, [place.lon, place.lat]);
+      if (seq !== this.runSeq) return;
+      if (!town) {
+        this.setStatus('');
+        this.showTownError(`The Census Bureau has no boundary for ${place.label}, ${place.detail}.`);
+        return;
+      }
+
+      this.setStatus(`Counting the cameras in ${town.name}…`);
+      const loaded = await camerasInBBox(town.bbox);
+      if (seq !== this.runSeq) return;
+      // Flock first, then north to south, so the list reads like the map.
+      const cameras = camerasInTown(loaded, town).sort((a, b) => Number(b.flock) - Number(a.flock) || b.lat - a.lat);
+      const flock = cameras.filter((c) => c.flock).length;
+      this.town = { town, cameras, flock, other: cameras.length - flock };
+      this.model = null;
+      this.sightings = new Map();
+      this.setStatus('');
+      document.body.classList.add('has-result', 'has-town');
+      this.card.hide();
+      this.map.focus(null);
+      this.results.showTown(this.town);
+      this.map.showTown({ outline: town.outline, bbox: town.bbox, cameras });
+      if (window.matchMedia('(max-width: 959px)').matches) qs('.map-wrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } catch (err) {
+      if (seq !== this.runSeq) return;
+      this.setStatus('');
+      this.showTownError(`Something went wrong: ${err instanceof Error ? err.message : String(err)}. Please try again in a moment.`);
+    } finally {
+      if (seq === this.runSeq) this.setTownBusy(false);
     }
   }
 
@@ -192,21 +272,21 @@ export class App {
     this.applySelection(false);
   }
 
-  private showCamera(s: Sighting): void {
-    const camera: Camera = s.camera;
+  private showCamera(camera: Camera): void {
     this.map.focus(camera);
     this.map.flyToCamera(camera);
     let done = false;
     const pin = () => {
       if (done) return;
       done = true;
-      this.card.pin(camera, s, this.map.project(camera));
+      this.card.pin(camera, this.sightings.get(camera.id) ?? null, this.map.project(camera));
     };
     this.map.map.once('moveend', pin);
     window.setTimeout(pin, 900);
   }
 
   private async findResponsible(): Promise<void> {
+    if (this.town) return this.findTownResponsible(this.town);
     const model = this.model;
     if (!model) return;
     const seen = model.results[model.selected]!.count.seen;
@@ -222,10 +302,22 @@ export class App {
     if (this.model === model) this.results.setResponsible({ state: 'done', summary, checked: checked.length, total: seen.length });
   }
 
+  private async findTownResponsible(town: TownResult): Promise<void> {
+    // The town is one government, but legislative districts can split it: check cameras from all over it.
+    const checked = spreadSample(town.cameras, MAX_RESPONSIBLE_LOOKUPS);
+    this.results.setResponsible({ state: 'loading', done: 0, total: checked.length });
+    const summary = await summarizeResponsible(checked, (done, total) => {
+      if (this.town === town) this.results.setResponsible({ state: 'loading', done, total });
+    });
+    if (this.town === town) this.results.setResponsible({ state: 'done', summary, checked: checked.length, total: town.cameras.length });
+  }
+
   private async share(button: HTMLButtonElement): Promise<void> {
     const m = this.model;
-    if (!m) return;
-    history.replaceState(null, '', encodeRoute([m.from.lon, m.from.lat], [m.to.lon, m.to.lat]));
+    const t = this.town;
+    if (t) history.replaceState(null, '', encodeTown(t.town.name, t.town.state));
+    else if (m) history.replaceState(null, '', encodeRoute([m.from.lon, m.from.lat], [m.to.lon, m.to.lat]));
+    else return;
     const url = location.href;
     try {
       await navigator.clipboard.writeText(url);
@@ -305,6 +397,16 @@ export class App {
   private setBusy(busy: boolean): void {
     this.goButton.toggleAttribute('aria-busy', busy);
     this.goButton.textContent = busy ? 'Counting…' : 'Find the cameras and who answers';
+  }
+
+  private setTownBusy(busy: boolean): void {
+    this.townGo.toggleAttribute('aria-busy', busy);
+    this.townGo.textContent = busy ? 'Counting…' : 'Count';
+  }
+
+  private showTownError(text: string | null): void {
+    this.townError.hidden = !text;
+    this.townError.textContent = text ?? '';
   }
 
   private setStatus(text: string): void {

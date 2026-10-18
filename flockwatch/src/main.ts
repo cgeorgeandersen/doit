@@ -68,7 +68,7 @@ function boot(): void {
   loadOverview()
     .then((cells) => app.map.setOverview(cells))
     .catch((err) => console.warn('Could not load the camera overview', err));
-  if (location.hash.includes('from=')) void app.openShared(location.hash);
+  if (/[#&](?:from|town)=/.test(location.hash)) void app.openShared(location.hash);
   // Handy in development: inspect the map from the browser console.
   if (import.meta.env.DEV) Object.assign(window, { flockwatch: app });
 }
