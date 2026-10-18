@@ -1,7 +1,8 @@
 /**
  * Visit counting (Vercel Web Analytics). Vercel's script reports the page's
  * full address, and a shared link (or the address bar once someone copies
- * one) ends in #from=…&to=…, the start and end of someone's drive. Every
+ * one) ends in #from=…&to=…, the start and end of someone's drive, or in
+ * #town=…. Every
  * report goes through pageAddress() first, so it carries the page's path and
  * nothing a visitor typed or chose.
  */
