@@ -8,6 +8,9 @@
   border-bottom: 1px solid var(--line);
 }
 
+/* Scrolling the panel doesn't spill over into the page, except while the page
+   is scrolled down: then scrolling up over the panel brings the page back
+   (main.ts sets data-page-scrolled), so the title can't get stuck under the header. */
 .panel {
   display: flex;
   flex-direction: column;
@@ -19,6 +22,10 @@
   background: var(--surface);
   border-right: 1px solid var(--line);
   scrollbar-gutter: stable;
+}
+
+[data-page-scrolled] .panel {
+  overscroll-behavior: auto;
 }
 
 .intro {
@@ -370,9 +377,12 @@
   }
 }
 
-/* On phones the box scrolls to the top when focused; leave room for the header. */
-.field {
-  scroll-margin-top: calc(var(--topbar-h) + var(--space-2));
+/* On phones the box scrolls to the top when focused; leave room for the header.
+   Phones only: on a wide screen the margin made the whole page scroll when a box low in the panel was focused. */
+@media (max-width: 959px) {
+  .field {
+    scroll-margin-top: calc(var(--topbar-h) + var(--space-2));
+  }
 }
 
 /* ------------------------------------------------------------ examples -- */
@@ -407,6 +417,64 @@
 
 .has-result .examples {
   display: none;
+}
+
+/* ---------------------------------------------------------- town form -- */
+
+.town-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    'town go'
+    'err  err';
+  column-gap: var(--space-2);
+  row-gap: var(--space-2);
+  align-items: end;
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--line);
+}
+
+.field[data-field='town'] {
+  grid-area: town;
+}
+
+.town-go {
+  grid-area: go;
+  height: 48px;
+  padding: 0 var(--space-4);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.town-go:hover {
+  border-color: var(--ink-3);
+  background: var(--surface-3);
+}
+
+.town-go[aria-busy='true'] {
+  cursor: progress;
+  opacity: 0.75;
+}
+
+.town-form .form-error {
+  grid-area: err;
+}
+
+.pin-town {
+  color: var(--route);
+}
+
+.pin-town svg {
+  width: 18px;
+  height: 18px;
+  fill: color-mix(in srgb, var(--route) 14%, transparent);
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linejoin: round;
 }
 
 /* ------------------------------------------------------------- results -- */
@@ -874,6 +942,15 @@
   display: flex;
 }
 
+.map-legend > .town-key,
+.has-town .map-legend > .route-key {
+  display: none;
+}
+
+.has-town .map-legend > .town-key {
+  display: flex;
+}
+
 /* Attribution, in our colors */
 .maplibregl-ctrl-attrib.maplibregl-compact,
 .maplibregl-ctrl-attrib {
@@ -905,6 +982,12 @@
 .key-passed {
   background: transparent;
   box-shadow: inset 0 0 0 2px var(--passed);
+}
+
+.key-town {
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--route) 14%, transparent);
+  box-shadow: inset 0 0 0 2px var(--route);
 }
 
 .key-all {
@@ -1304,6 +1387,7 @@
   .intro,
   .route-form,
   .examples,
+  .town-form,
   .results,
   .stat-line {
     padding-left: var(--space-4);
@@ -1319,6 +1403,10 @@
     margin-top: var(--space-4);
   }
   .examples {
+    order: 3;
+    margin-top: var(--space-4);
+  }
+  .town-form {
     order: 3;
     margin-top: var(--space-4);
   }
