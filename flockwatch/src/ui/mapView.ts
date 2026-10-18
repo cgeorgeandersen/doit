@@ -1,20 +1,18 @@
 /**
  * The map: a heat map of every mapped camera when zoomed out, individual
- * cameras when zoomed in, and either the route with the cameras that see it
- * or a town's outline with the cameras inside it.
+ * cameras when zoomed in, and the route with the cameras that see it.
  */
 
 import * as maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url';
-import type { Feature, FeatureCollection, LineString, Point, Polygon } from 'geojson';
+import type { Feature, FeatureCollection, LineString, Point } from 'geojson';
 import type { Camera } from '../lib/camera';
 import { DEFAULT_HALF_ANGLE, parseDirection } from '../lib/direction';
 import { bboxOf, cumulativeDistances, lerp, type BBox, type LngLat } from '../lib/geo';
 import type { RouteOption } from '../lib/route';
 import type { Sighting } from '../lib/seen';
 import { camerasInBBox, tilesForBBox, type OverviewCell } from '../lib/tiles';
-import type { Outline } from '../lib/town';
 import { h, prefersReducedMotion } from './dom';
 import { cssColor, type Theme } from './theme';
 
@@ -54,13 +52,7 @@ interface Display {
   passedBy: Sighting[];
 }
 
-interface TownDisplay {
-  outline: Outline;
-  bbox: BBox;
-  cameras: Camera[];
-}
-
-const empty = <G extends Point | LineString | Polygon>(): FeatureCollection<G> => ({ type: 'FeatureCollection', features: [] });
+const empty = <G extends Point | LineString>(): FeatureCollection<G> => ({ type: 'FeatureCollection', features: [] });
 
 /** A soft wedge pointing up, apex at the bottom center: one camera's field of view. */
 function coneImage(color: string, alpha: number): ImageData {
@@ -93,10 +85,8 @@ export class MapView {
   private readonly events: MapEvents;
   private overview: FeatureCollection<Point> = empty();
   private viewport = new Map<number, Camera>();
-  /** Cameras on the route, or in the town: drawn above the rest, and always visible. */
-  private highlighted = new Map<number, Camera>();
+  private routeCams = new Map<number, Camera>();
   private display: Display | null = null;
-  private town: TownDisplay | null = null;
   /** Distance along the selected route drawn so far, in meters (Infinity when complete). */
   private drawn = Infinity;
   private frame = 0;
@@ -165,10 +155,8 @@ export class MapView {
   showRoutes(display: Display, opts: { animate: boolean; fit: boolean; onDraw?: (seen: number) => void }): Promise<void> {
     cancelAnimationFrame(this.frame);
     this.display = display;
-    this.town = null;
-    this.highlighted = new Map([...display.seen, ...display.passedBy].map((s) => [s.camera.id, s.camera]));
+    this.routeCams = new Map([...display.seen, ...display.passedBy].map((s) => [s.camera.id, s.camera]));
     this.refreshCams();
-    this.refreshTown();
     const route = display.routes[display.selected]!;
     this.placeEndpoints(route.line);
     if (opts.fit) {
@@ -210,22 +198,11 @@ export class MapView {
   clearRoutes(): void {
     cancelAnimationFrame(this.frame);
     this.display = null;
-    this.highlighted.clear();
+    this.routeCams.clear();
     for (const m of this.markers) m.remove();
     this.markers = [];
     this.refreshCams();
     this.refreshRoute();
-  }
-
-  /** Outlines a town and shows every camera inside it, replacing any route. */
-  showTown(town: TownDisplay): void {
-    this.clearRoutes();
-    this.town = town;
-    this.highlighted = new Map(town.cameras.map((c) => [c.id, c]));
-    this.refreshCams();
-    this.refreshTown();
-    this.refreshRoute();
-    this.fit(town.bbox, prefersReducedMotion());
   }
 
   /** Rings one camera (from the list or a click), or none. */
@@ -318,7 +295,6 @@ export class MapView {
       cams: empty(),
       cones: empty(),
       routes: empty(),
-      town: empty(),
       'route-cams': empty(),
       focus: empty(),
     };
@@ -397,28 +373,6 @@ export class MapView {
       paint: { 'icon-opacity': ['interpolate', ['linear'], ['zoom'], 13.5, 0, 14.5, 1] },
     });
 
-    // The town's fill sits under every camera and the base map's labels; its edge, above the roads.
-    this.map.addLayer(
-      {
-        id: 'town-fill',
-        type: 'fill',
-        source: 'town',
-        paint: { 'fill-color': route, 'fill-opacity': dark ? 0.1 : 0.07 },
-      },
-      'overview-heat',
-    );
-    this.map.addLayer({
-      id: 'town-line',
-      type: 'line',
-      source: 'town',
-      layout: { 'line-join': 'round' },
-      paint: {
-        'line-color': route,
-        'line-width': ['interpolate', ['linear'], ['zoom'], 8, 1.5, 14, 3],
-        'line-opacity': 0.9,
-      },
-    });
-
     this.map.addLayer({
       id: 'route-alt',
       type: 'line',
@@ -484,10 +438,9 @@ export class MapView {
     });
 
     this.refreshCams();
-    this.refreshTown();
     this.refreshRoute();
     if (this.focusId !== null) {
-      const cam = this.highlighted.get(this.focusId) ?? this.viewport.get(this.focusId);
+      const cam = this.routeCams.get(this.focusId) ?? this.viewport.get(this.focusId);
       if (cam) this.focus(cam);
     }
   }
@@ -517,33 +470,21 @@ export class MapView {
   private refreshCams(): void {
     const features: Array<Feature<Point>> = [];
     for (const c of this.viewport.values()) {
-      if (this.highlighted.has(c.id)) continue;
+      if (this.routeCams.has(c.id)) continue;
       features.push({ type: 'Feature', geometry: { type: 'Point', coordinates: [c.lon, c.lat] }, properties: { id: c.id, flock: c.flock ? 1 : 0 } });
     }
     this.source('cams')?.setData({ type: 'FeatureCollection', features });
     this.refreshCones();
   }
 
-  /** The highlighted cameras drawn so far: the route's, as the line reaches them, or the town's. */
-  private visibleHighlights(): Array<{ camera: Camera; kind: Kind; n: number }> {
-    const out: Array<{ camera: Camera; kind: Kind; n: number }> = [];
-    if (this.town) {
-      for (const camera of this.town.cameras) out.push({ camera, kind: camera.flock ? 'flock' : 'other', n: 0 });
-    }
-    if (!this.display) return out;
+  private visibleSightings(): Array<{ s: Sighting; kind: Kind; n: number }> {
+    if (!this.display) return [];
+    const out: Array<{ s: Sighting; kind: Kind; n: number }> = [];
     this.display.seen.forEach((s, i) => {
-      if (s.along <= this.drawn) out.push({ camera: s.camera, kind: s.camera.flock ? 'flock' : 'other', n: i + 1 });
+      if (s.along <= this.drawn) out.push({ s, kind: s.camera.flock ? 'flock' : 'other', n: i + 1 });
     });
-    if (this.drawn === Infinity) for (const s of this.display.passedBy) out.push({ camera: s.camera, kind: 'passed', n: 0 });
+    if (this.drawn === Infinity) for (const s of this.display.passedBy) out.push({ s, kind: 'passed', n: 0 });
     return out;
-  }
-
-  private refreshTown(): void {
-    const t = this.town;
-    this.source('town')?.setData({
-      type: 'FeatureCollection',
-      features: t ? [{ type: 'Feature', geometry: t.outline, properties: {} }] : [],
-    });
   }
 
   private refreshRoute(): void {
@@ -562,13 +503,13 @@ export class MapView {
     this.source('routes')?.setData({ type: 'FeatureCollection', features: routes });
     this.source('route-cams')?.setData({
       type: 'FeatureCollection',
-      features: this.visibleHighlights()
+      features: this.visibleSightings()
         // Counted cameras on top of uncounted ones.
         .sort((a, b) => Number(a.kind !== 'passed') - Number(b.kind !== 'passed'))
-        .map(({ camera, kind, n }) => ({
+        .map(({ s, kind, n }) => ({
           type: 'Feature',
-          geometry: { type: 'Point', coordinates: [camera.lon, camera.lat] },
-          properties: { id: camera.id, kind, n },
+          geometry: { type: 'Point', coordinates: [s.camera.lon, s.camera.lat] },
+          properties: { id: s.camera.id, kind, n },
         })),
     });
     this.refreshCones();
@@ -583,9 +524,9 @@ export class MapView {
       }
     };
     if (this.map.getZoom() >= 13.5) {
-      for (const c of this.viewport.values()) if (!this.highlighted.has(c.id)) add(c, c.flock ? 'bg-flock' : 'bg-other');
+      for (const c of this.viewport.values()) if (!this.routeCams.has(c.id)) add(c, c.flock ? 'bg-flock' : 'bg-other');
     }
-    for (const { camera, kind } of this.visibleHighlights()) add(camera, kind);
+    for (const { s, kind } of this.visibleSightings()) add(s.camera, kind);
     this.source('cones')?.setData({ type: 'FeatureCollection', features });
   }
 
@@ -598,7 +539,7 @@ export class MapView {
       if (!this.map.getLayer(layer)) continue;
       const hit = this.map.queryRenderedFeatures(box, { layers: [layer] })[0];
       const id = hit?.properties?.id as number | undefined;
-      if (id !== undefined) return this.highlighted.get(id) ?? this.viewport.get(id) ?? null;
+      if (id !== undefined) return this.routeCams.get(id) ?? this.viewport.get(id) ?? null;
     }
     return null;
   }

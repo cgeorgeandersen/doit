@@ -13,13 +13,6 @@ const census = {
   rewrite: (path: string) => path.replace(/^\/api\/census/, '/geocoder/geographies'),
 };
 
-/** Town outlines from the Census's TIGERweb, through /api/boundary/… for the same reasons (src/lib/town.ts). */
-const boundary = {
-  target: 'https://tigerweb.geo.census.gov',
-  changeOrigin: true,
-  rewrite: (path: string) => path.replace(/^\/api\/boundary/, '/arcgis/rest/services/TIGERweb/Places_CouSub_ConCity_SubMCD/MapServer'),
-};
-
 /** `vite preview` sends the same security headers as Vercel, so the CSP is tested before it ships. */
 function vercelHeaders(): Record<string, string> {
   const config = JSON.parse(readFileSync(resolve(import.meta.dirname, 'vercel.json'), 'utf8')) as {
@@ -31,8 +24,8 @@ function vercelHeaders(): Record<string, string> {
 
 export default defineConfig({
   base: '/',
-  server: { proxy: { '/api/census': census, '/api/boundary': boundary } },
-  preview: { proxy: { '/api/census': census, '/api/boundary': boundary }, headers: vercelHeaders() },
+  server: { proxy: { '/api/census': census } },
+  preview: { proxy: { '/api/census': census }, headers: vercelHeaders() },
   worker: { format: 'es' },
   build: {
     target: 'es2022',

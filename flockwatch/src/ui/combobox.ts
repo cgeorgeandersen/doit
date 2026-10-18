@@ -8,7 +8,6 @@
  *   The list fills in and sharpens as you go, with a "Searching…" row while
  *   an answer is on its way.
  * - Clicking into an empty box offers "Use my current location".
- * - A box made with `citiesOnly` (the town box) offers only the Census list.
  *
  * Keys follow the WAI-ARIA combobox pattern: arrows move through the list,
  * Enter picks the highlighted suggestion (or the first one), Escape closes.
@@ -88,7 +87,6 @@ export class AddressBox {
   private readonly near: () => LngLat | undefined;
   private readonly onPick: () => void;
   private readonly onLocate: (() => void) | null;
-  private readonly citiesOnly: boolean;
   private items: Item[] = [];
   private itemsFor = '';
   private active = -1;
@@ -108,14 +106,12 @@ export class AddressBox {
     near: () => LngLat | undefined,
     onPick: () => void,
     onLocate: (() => void) | null = null,
-    opts: { citiesOnly?: boolean } = {},
   ) {
     this.input = input;
     this.list = list;
     this.near = near;
     this.onPick = onPick;
     this.onLocate = onLocate;
-    this.citiesOnly = opts.citiesOnly ?? false;
     input.addEventListener('input', () => this.onInput());
     input.addEventListener('keydown', (e) => this.onKey(e));
     input.addEventListener('focus', () => this.onFocus());
@@ -145,11 +141,6 @@ export class AddressBox {
     if (first?.type === 'place') {
       this.set(first.place);
       return first.place;
-    }
-    if (this.citiesOnly) {
-      const city = (await localPlaces(q, this.near(), 1))[0];
-      if (city) this.set(city);
-      return city ?? null;
     }
     // A city typed in full ("Boulder" or "Boulder, CO") doesn't need to wait for the geocoder.
     const city = /^\d/.test(q) ? undefined : (await localPlaces(q, this.near(), 1))[0];
@@ -198,7 +189,7 @@ export class AddressBox {
 
   private scheduleRemote(): void {
     window.clearTimeout(this.timer);
-    if (this.citiesOnly || this.query().length < 3) return;
+    if (this.query().length < 3) return;
     const wait = Date.now() - this.lastSentAt >= MAX_WAIT_MS ? 0 : DEBOUNCE_MS;
     this.timer = window.setTimeout(() => this.sendRemote(), wait);
   }
@@ -253,7 +244,6 @@ export class AddressBox {
     if (q.length >= 3 && !this.place) {
       if (this.sent > this.shown) note = [h('span', { class: 's-spinner', 'aria-hidden': 'true' }), 'Searching addresses and places…'];
       else if (this.failed) note = ['Address search isn’t answering right now. Cities still work.'];
-      else if (!items.length && this.citiesOnly && this.cities.query === q) note = ['No matching city or town. Check the spelling, or add the state.'];
       else if (!items.length && this.shown > 0) note = ['No matches. Try adding a city, state or ZIP code.'];
     }
 

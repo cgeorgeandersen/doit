@@ -120,32 +120,6 @@
             <span class="examples-label">Or try a drive:</span>
           </div>
 
-          <form id="town-form" class="town-form" autocomplete="off" novalidate>
-            <div class="field" data-field="town">
-              <label for="town-input">Or count every camera in a town</label>
-              <div class="combo">
-                <span class="pin pin-town" aria-hidden="true">
-                  <svg viewBox="0 0 24 24"><path d="M4 7l5-3 6 3 5-3v13l-5 3-6-3-5 3z" /></svg>
-                </span>
-                <input
-                  id="town-input"
-                  name="town"
-                  type="text"
-                  inputmode="search"
-                  placeholder="City or town"
-                  role="combobox"
-                  aria-autocomplete="list"
-                  aria-expanded="false"
-                  aria-controls="town-list"
-                  spellcheck="false"
-                />
-                <ul id="town-list" class="suggestions" role="listbox" aria-label="Matching cities and towns" hidden></ul>
-              </div>
-            </div>
-            <button type="submit" class="town-go" id="town-go">Count</button>
-            <p class="form-error" id="town-error" role="alert" hidden></p>
-          </form>
-
           <div id="results" class="results" aria-live="polite"></div>
 
           <p class="stat-line" id="stat-line"></p>
@@ -157,9 +131,6 @@
             <span class="route-key"><i class="key key-flock"></i>Flock camera on your route</span>
             <span class="route-key"><i class="key key-other"></i>Other plate reader on your route</span>
             <span class="route-key"><i class="key key-passed"></i>Nearby, not counted</span>
-            <span class="town-key"><i class="key key-flock"></i>Flock camera in this town</span>
-            <span class="town-key"><i class="key key-other"></i>Other plate reader in this town</span>
-            <span class="town-key"><i class="key key-town"></i>Town boundary</span>
             <span><i class="key key-all"></i><span class="key-all-label">Mapped license plate cameras</span></span>
           </div>
           <div class="map-status" id="map-status" role="status"></div>
@@ -386,13 +357,6 @@
             feet) of your route. Flock cameras are counted separately from other makers’ plate readers, such as
             Motorola Solutions, Genetec and Axis, which read plates too.
           </p>
-          <p>
-            Counting a town is simpler: every mapped plate reader inside its legal boundary, from the Census Bureau,
-            whichever way it faces and whoever made it. So a town’s number and a drive’s number measure different
-            things: one is every camera in a place, the other is the cameras that would photograph your car on the
-            way through. A town is a city, town or village, or an unincorporated community the Census maps, whose
-            county governs it.
-          </p>
           <p class="callout">
             <strong>Every count here is a minimum.</strong> The map only knows the cameras volunteers have found and
             recorded, and some places are far better mapped than others. Some mapped cameras may since have moved or
@@ -423,8 +387,7 @@
                 <a href="https://photon.komoot.io" rel="noopener">Photon</a> from komoot, with city and town
                 suggestions from the
                 <a href="https://www.census.gov/geographies/reference-files/time-series/geo/gazetteer-files.html" rel="noopener">U.S. Census Bureau’s gazetteer</a>
-                and population estimates; town boundaries from the Census Bureau’s
-                <a href="https://tigerweb.geo.census.gov" rel="noopener">TIGERweb</a>.
+                and population estimates.
               </dd>
             </div>
             <div>
@@ -457,8 +420,7 @@
               <dd>
                 Track the Pole has no accounts, cookies or ads, and keeps nothing you enter. To work, it has to send a
                 few things to the services above: what you type in the address boxes goes to Photon; your route’s
-                start and end go to the routing server; the town you count goes to the Census Bureau (through this
-                site); when you look up who answers for a camera, that camera’s
+                start and end go to the routing server; when you look up who answers for a camera, that camera’s
                 location goes to the Census Geocoder (through this site) and to Wikidata; and the map’s images come
                 from OpenFreeMap. Camera data comes from this site, so the route itself is never sent anywhere. The
                 page’s security policy allows it to talk to those services and nothing else. Shared links round your
@@ -471,7 +433,7 @@
                 To see how many people use it, the site counts visits with
                 <a href="https://vercel.com/docs/analytics/privacy-policy" rel="noopener">Vercel Web Analytics</a>,
                 which runs through this site and sets no cookies. Each visit records the page’s address, with any route
-                or town taken out first; the site that linked you here; your browser, operating system and type of device; and
+                taken out first; the site that linked you here; your browser, operating system and type of device; and
                 your approximate location, down to the city. When someone taps a link to reach an official, it also
                 records the kind of link (email, phone or website) and the level of government (local, state or
                 federal), never which official or where. Visitors are told apart by a scrambled code that Vercel

@@ -1,7 +1,4 @@
-/**
- * The results under the form: the count, who answers for those cameras, route
- * choices and the camera list. A town shows the same, for the cameras inside it.
- */
+/** The results under the form: the count, who answers for those cameras, route choices and the camera list. */
 
 import type { Camera } from '../lib/camera';
 import { describeDirection, parseDirection } from '../lib/direction';
@@ -9,8 +6,7 @@ import { fmtDuration, fmtInt, fmtMiles, plural, spacing } from '../lib/format';
 import type { Place } from '../lib/geocode';
 import type { ResponsibleSummary } from '../lib/officials';
 import type { RouteOption } from '../lib/route';
-import type { RouteCount } from '../lib/seen';
-import type { Town } from '../lib/town';
+import type { RouteCount, Sighting } from '../lib/seen';
 import { bodyButton, contactButtons } from './contact';
 import { fill, h, type Child } from './dom';
 
@@ -28,17 +24,9 @@ export interface ResultModel {
   selected: number;
 }
 
-export interface TownResult {
-  town: Town;
-  /** Every mapped plate reader inside the town, Flock first. */
-  cameras: Camera[];
-  flock: number;
-  other: number;
-}
-
 export interface ResultHandlers {
   selectRoute(index: number): void;
-  showCamera(camera: Camera): void;
+  showCamera(sighting: Sighting): void;
   hoverCamera(camera: Camera | null): void;
   findResponsible(): void;
   share(button: HTMLButtonElement): void;
@@ -59,7 +47,6 @@ export class ResultsView {
   private readonly mapCount: HTMLElement;
   private readonly handlers: ResultHandlers;
   private model: ResultModel | null = null;
-  private town: TownResult | null = null;
   private expanded = false;
   private peopleExpanded = false;
   private responsible: ResponsibleState = { state: 'idle' };
@@ -72,28 +59,17 @@ export class ResultsView {
   }
 
   show(model: ResultModel, opts: { countFrom?: number } = {}): void {
-    if (model !== this.model) this.reset();
+    if (model !== this.model) {
+      this.expanded = false;
+      this.peopleExpanded = false;
+      this.responsible = { state: 'idle' };
+    }
     this.model = model;
-    this.town = null;
     this.render(opts.countFrom);
-  }
-
-  showTown(town: TownResult): void {
-    if (town !== this.town) this.reset();
-    this.town = town;
-    this.model = null;
-    this.render();
-  }
-
-  private reset(): void {
-    this.expanded = false;
-    this.peopleExpanded = false;
-    this.responsible = { state: 'idle' };
   }
 
   clear(): void {
     this.model = null;
-    this.town = null;
     this.root.replaceChildren();
     this.mapCount.replaceChildren();
   }
@@ -110,7 +86,6 @@ export class ResultsView {
   }
 
   private render(countFrom?: number): void {
-    if (this.town) return this.renderTown(this.town);
     const m = this.model;
     if (!m) return;
     const r = m.results[m.selected]!;
@@ -171,70 +146,6 @@ export class ResultsView {
     );
   }
 
-  private renderTown(t: TownResult): void {
-    const n = t.cameras.length;
-    const name = t.town.name;
-    this.bigNumber = h('span', { class: 'big-number', 'data-zero': n === 0 ? '' : null }, fmtInt(n));
-    fill(this.mapCount, h('b', null, fmtInt(n)), ` plate ${plural(n, 'reader', 'readers')} in ${name}`);
-
-    fill(
-      this.root,
-      h(
-        'div',
-        { class: 'result-head' },
-        h(
-          'p',
-          { class: 'big-count' },
-          this.bigNumber,
-          h('span', { class: 'big-label' }, `license plate ${plural(n, 'camera', 'cameras')} mapped inside ${name}`),
-        ),
-        n > 0
-          ? h('p', { class: 'result-sub' }, 'Each one records the plate, make and color of every car that passes, and the time.')
-          : h(
-              'p',
-              { class: 'result-sub' },
-              `No mapped plate readers inside ${name}. That doesn’t mean there are none: only the cameras volunteers have found are on the map. `,
-              h('a', { href: 'https://deflock.me', target: '_blank', rel: 'noopener' }, 'Help map them'),
-              '.',
-            ),
-        n > 0
-          ? h(
-              'div',
-              { class: 'tallies' },
-              h('span', { class: 'tally' }, h('i', { class: 'key key-flock' }), h('b', null, fmtInt(t.flock)), ' Flock'),
-              t.other > 0
-                ? h('span', { class: 'tally' }, h('i', { class: 'key key-other' }), h('b', null, fmtInt(t.other)), ` other plate ${plural(t.other, 'reader', 'readers')}`)
-                : null,
-            )
-          : null,
-        h(
-          'p',
-          { class: 'trip' },
-          t.town.incorporated
-            ? `Inside the limits of ${t.town.censusName}, ${t.town.state}`
-            : `${name}, ${t.town.state} is an unincorporated community, governed by its county`,
-        ),
-      ),
-      h('div', { 'data-slot': 'responsible' }, ...this.renderResponsible()),
-      this.cameraList(
-        `Cameras in ${name} (${fmtInt(n)})`,
-        t.cameras.map((camera) => ({ camera, at: '' })),
-      ),
-      h(
-        'div',
-        { class: 'actions' },
-        h('button', { type: 'button', class: 'button', onclick: (e: Event) => this.handlers.share(e.currentTarget as HTMLButtonElement) }, 'Copy link to this town'),
-      ),
-      h(
-        'p',
-        { class: 'note' },
-        'Counts include only cameras volunteers have mapped, so the real number may be higher. The outline is the Census Bureau’s boundary. ',
-        h('a', { href: '#method' }, 'How we count'),
-        '.',
-      ),
-    );
-  }
-
   private renderRoutes(m: ResultModel): HTMLElement {
     const fastest = m.results[0]!;
     const fewest = Math.min(...m.results.map((r) => r.flock));
@@ -267,24 +178,18 @@ export class ResultsView {
   }
 
   private renderList(r: RouteResult): HTMLElement | null {
-    return this.cameraList(
-      `Cameras along the way (${fmtInt(r.count.seen.length)})`,
-      r.count.seen.map((s) => ({ camera: s.camera, at: `mi ${(s.along / 1609.344).toFixed(1)}` })),
-    );
-  }
-
-  /** A numbered list of cameras, each one a button that shows it on the map. */
-  private cameraList(title: string, rows: Array<{ camera: Camera; at: string }>): HTMLElement | null {
-    if (!rows.length) return null;
-    const shown = this.expanded ? rows : rows.slice(0, LIST_PREVIEW);
+    const seen = r.count.seen;
+    if (!seen.length) return null;
+    const shown = this.expanded ? seen : seen.slice(0, LIST_PREVIEW);
     return h(
       'div',
       null,
-      h('p', { class: 'block-title' }, title),
+      h('p', { class: 'block-title' }, `Cameras along the way (${fmtInt(seen.length)})`),
       h(
         'ol',
         { class: 'cam-list' },
-        shown.map(({ camera: c, at }, i) => {
+        shown.map((s, i) => {
+          const c = s.camera;
           const what = c.flock ? 'Flock Safety' : c.brand || 'Plate reader';
           const detail = [describeDirection(parseDirection(c.direction)), c.operator].filter(Boolean).join(' · ');
           return h(
@@ -295,7 +200,7 @@ export class ResultsView {
               {
                 type: 'button',
                 class: 'cam-row',
-                onclick: () => this.handlers.showCamera(c),
+                onclick: () => this.handlers.showCamera(s),
                 onmouseenter: () => this.handlers.hoverCamera(c),
                 onmouseleave: () => this.handlers.hoverCamera(null),
                 onfocus: () => this.handlers.hoverCamera(c),
@@ -303,12 +208,12 @@ export class ResultsView {
               },
               h('span', { class: 'cam-index', 'data-kind': c.flock ? 'flock' : 'other' }, String(i + 1)),
               h('span', { class: 'cam-what' }, h('b', null, what), h('span', null, detail)),
-              at ? h('span', { class: 'cam-at' }, at) : null,
+              h('span', { class: 'cam-at' }, `mi ${(s.along / 1609.344).toFixed(1)}`),
             ),
           );
         }),
       ),
-      rows.length > LIST_PREVIEW
+      seen.length > LIST_PREVIEW
         ? h(
             'button',
             {
@@ -319,7 +224,7 @@ export class ResultsView {
                 this.render();
               },
             },
-            this.expanded ? 'Show fewer' : `Show all ${fmtInt(rows.length)}`,
+            this.expanded ? 'Show fewer' : `Show all ${fmtInt(seen.length)}`,
           )
         : null,
     );
@@ -327,7 +232,8 @@ export class ResultsView {
 
   private renderResponsible(): Child[] {
     const m = this.model;
-    const total = this.town ? this.town.cameras.length : m ? m.results[m.selected]!.count.seen.length : 0;
+    if (!m) return [];
+    const total = m.results[m.selected]!.count.seen.length;
     if (!total) return [];
     const st = this.responsible;
     const these = plural(total, 'this camera', `these ${fmtInt(total)} cameras`);
@@ -427,15 +333,7 @@ export class ResultsView {
                 : null,
             )
           : null,
-        st.checked < st.total
-          ? h(
-              'p',
-              { class: 'note' },
-              this.town
-                ? `Covers ${fmtInt(st.checked)} cameras spread across ${this.town.town.name}, of its ${fmtInt(st.total)}.`
-                : `Covers the first ${fmtInt(st.checked)} of the ${fmtInt(st.total)} cameras on this drive.`,
-            )
-          : null,
+        st.checked < st.total ? h('p', { class: 'note' }, `Covers the first ${fmtInt(st.checked)} of the ${fmtInt(st.total)} cameras on this drive.`) : null,
         s.unresolved ? h('p', { class: 'note' }, `${fmtInt(s.unresolved)} ${plural(s.unresolved, 'camera', 'cameras')} couldn’t be looked up.`) : null,
         h('p', { class: 'note' }, 'Tap a camera on the map for its own contacts. Mayors come from Wikidata and can lag after an election.'),
       ),
