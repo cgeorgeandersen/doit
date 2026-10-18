@@ -8,6 +8,9 @@
   border-bottom: 1px solid var(--line);
 }
 
+/* Scrolling the panel doesn't spill over into the page, except while the page
+   is scrolled down: then scrolling up over the panel brings the page back
+   (main.ts sets data-page-scrolled), so the title can't get stuck under the header. */
 .panel {
   display: flex;
   flex-direction: column;
@@ -19,6 +22,10 @@
   background: var(--surface);
   border-right: 1px solid var(--line);
   scrollbar-gutter: stable;
+}
+
+[data-page-scrolled] .panel {
+  overscroll-behavior: auto;
 }
 
 .intro {
@@ -370,9 +377,12 @@
   }
 }
 
-/* On phones the box scrolls to the top when focused; leave room for the header. */
-.field {
-  scroll-margin-top: calc(var(--topbar-h) + var(--space-2));
+/* On phones the box scrolls to the top when focused; leave room for the header.
+   Phones only: on a wide screen the margin made the whole page scroll when a box low in the panel was focused. */
+@media (max-width: 959px) {
+  .field {
+    scroll-margin-top: calc(var(--topbar-h) + var(--space-2));
+  }
 }
 
 /* ------------------------------------------------------------ examples -- */

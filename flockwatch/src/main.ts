@@ -58,8 +58,18 @@ function countVisits(): void {
   });
 }
 
+// The panel keeps its scrolling to itself, so if the page itself is scrolled
+// down (the explainer, or a browser bringing a box into view) the panel has to
+// let go, or scrolling up over it could never bring the title back.
+function watchPageScroll(): void {
+  const update = () => document.documentElement.toggleAttribute('data-page-scrolled', window.scrollY > 0);
+  window.addEventListener('scroll', update, { passive: true });
+  update();
+}
+
 function boot(): void {
   countVisits();
+  watchPageScroll();
   startHalloween();
   const app = new App(currentTheme());
   initTheme(qs<HTMLButtonElement>('#theme-toggle'), (theme) => app.setTheme(theme));
