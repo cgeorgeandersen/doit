@@ -1,7 +1,7 @@
 /**
- * Shareable links. A route goes in the part of the URL after "#", which
- * browsers never send to a server, and its ends are rounded to three decimal
- * places (about 100 m) so a shared commute doesn't reveal a front door.
+ * Shareable links. A route or a town goes in the part of the URL after "#",
+ * which browsers never send to a server. A route's ends are rounded to three
+ * decimal places (about 100 m) so a shared commute doesn't reveal a front door.
  */
 
 import type { LngLat } from './geo';
@@ -26,4 +26,14 @@ export function decodeRoute(hash: string): { from: LngLat; to: LngLat } | null {
   const from = parsePoint(params.get('from'));
   const to = parsePoint(params.get('to'));
   return from && to ? { from, to } : null;
+}
+
+/** A town goes in by name, e.g. #town=Decatur,+GA. */
+export function encodeTown(name: string, state: string): string {
+  return `#town=${encodeURIComponent(`${name}, ${state}`).replace(/%2C/g, ',').replace(/%20/g, '+')}`;
+}
+
+export function decodeTown(hash: string): string | null {
+  const town = new URLSearchParams(hash.replace(/^#/, '')).get('town')?.trim();
+  return town ? town.slice(0, 100) : null;
 }
