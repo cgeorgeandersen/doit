@@ -27,7 +27,7 @@ describe('parseCensus', () => {
     expect(census('atlanta')).toEqual({
       state: { name: 'Georgia', abbr: 'GA' },
       local: { name: 'Atlanta city', label: 'City of Atlanta', kind: 'city', gnis: '02403126' },
-      county: { name: 'Fulton County', gnis: '01694833', governs: true },
+      county: { name: 'Fulton County', gnis: '01694833', fips: '13121', governs: true },
       upper: { name: 'State Senate District 36', basename: '36' },
       lower: { name: 'State House District 58', basename: '58' },
       congressional: 5,
@@ -47,7 +47,7 @@ describe('parseCensus', () => {
   it('notes counties without a government of their own', () => {
     const boston = census('boston');
     expect(boston.local?.label).toBe('City of Boston');
-    expect(boston.county).toEqual({ name: 'Suffolk County', gnis: '00606939', governs: false });
+    expect(boston.county).toEqual({ name: 'Suffolk County', gnis: '00606939', fips: '25025', governs: false });
     expect(boston.upper?.basename).toBe('Third Suffolk');
     expect(boston.lower?.basename).toBe('3rd Suffolk');
   });

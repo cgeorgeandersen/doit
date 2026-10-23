@@ -1,0 +1,1518 @@
+{
+  "state": "GA",
+  "counties": {
+    "13009": {
+      "county": "Baldwin",
+      "body": "Board of Commissioners",
+      "source": "https://www.baldwincountyga.com/Directory.aspx?DID=10",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Kendrick Butts", "seat": "Chairman, District 2", "email": "kbutts@baldwincountyga.com"},
+        {"name": "Emily C. Davis", "seat": "District 1", "email": "ecdavis@baldwincountyga.com"},
+        {"name": "Sammy Hall", "seat": "District 3", "email": "shall@baldwincountyga.com"},
+        {"name": "Andrew Strickland", "seat": "District 4", "email": "astrickland@baldwincountyga.com"},
+        {"name": "Scott Little", "seat": "District 5, vice chairman", "email": "slittle@baldwincountyga.com"}
+      ]
+    },
+    "13011": {
+      "county": "Banks",
+      "body": "Board of Commissioners",
+      "source": "https://www.bankscountyga.org/Directory.aspx?DID=25",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Taylor Griffith", "seat": "Chairman", "email": "chairman@co.banks.ga.us"},
+        {"name": "Danny Maxwell", "seat": "District 1, vice chairman", "email": "djmaxwell@co.banks.ga.us"},
+        {"name": "Bo Garrison", "seat": "District 2", "email": "bogarrison@co.banks.ga.us"},
+        {"name": "Chris Ausburn", "seat": "District 3", "email": "causburn@co.banks.ga.us"},
+        {"name": "Keith Roberts", "seat": "District 4", "email": "bkroberts@co.banks.ga.us"}
+      ]
+    },
+    "13013": {
+      "county": "Barrow",
+      "body": "Board of Commissioners",
+      "source": "https://www.barrowga.org/Directory.aspx?DID=51",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Pat Graham", "seat": "Chairman", "email": "pgraham@barrowga.org"},
+        {"name": "Joe Goodman", "seat": "District 1", "email": "jgoodman@barrowga.org"},
+        {"name": "Kenny Shook", "seat": "District 2", "email": "kshook@barrowga.org"},
+        {"name": "Rolando Alvarez", "seat": "District 3", "email": "ralvarez@barrowga.org"},
+        {"name": "Alex Ward", "seat": "District 4", "email": "award@barrowga.org"},
+        {"name": "Tim Walker", "seat": "District 5", "email": "twalker@barrowga.org"},
+        {"name": "Deborah Lynn", "seat": "District 6", "email": "dlynn@barrowga.org"}
+      ]
+    },
+    "13015": {
+      "county": "Bartow",
+      "body": "Sole Commissioner",
+      "shared": "commissionerpublic@bartowcountyga.gov",
+      "phone": "770-387-5030",
+      "source": "https://www.bartowcountyga.gov/departments/county_commissioner/index.php",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Steve Taylor", "seat": "Sole commissioner"}
+      ]
+    },
+    "13019": {
+      "county": "Berrien",
+      "body": "Board of Commissioners",
+      "phone": "(229) 686-5421",
+      "source": "https://berriencountygeorgia.com/commissioners/",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "John Nugent", "seat": "District 1"},
+        {"name": "Ronnie Gaskins", "seat": "District 2"},
+        {"name": "Jimmy Parker", "seat": "District 3"},
+        {"name": "Kylon Fort", "seat": "District 4"},
+        {"name": "David Harrod", "seat": "District 5"}
+      ]
+    },
+    "13021": {
+      "county": "Bibb",
+      "body": "Mayor and Commission",
+      "source": "https://www.maconbibb.us/commissioners/",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Lester Miller", "seat": "Mayor", "email": "miller@maconbibb.us"},
+        {"name": "Valerie Wynn", "seat": "District 1, mayor pro tem", "email": "mbcwynn@maconbibb.us", "phone": "478-957-3020"},
+        {"name": "Paul Bronson", "seat": "District 2", "email": "mbcbronson@maconbibb.us", "phone": "478-737-9553"},
+        {"name": "Stanley Stewart", "seat": "District 3", "email": "mbcstewart@maconbibb.us", "phone": "478-229-1550"},
+        {"name": "Joey Hulett", "seat": "District 4", "email": "mbchulett@maconbibb.us", "phone": "478-407-4619"},
+        {"name": "Andrea Cooke", "seat": "District 5", "email": "mbccooke@maconbibb.us", "phone": "478-718-0265"},
+        {"name": "Raymond Wilder", "seat": "District 6", "email": "mbcwilder@maconbibb.us", "phone": "478-737-9506"},
+        {"name": "Bill Howell", "seat": "District 7", "email": "mbchowell@maconbibb.us", "phone": "478-731-9178"},
+        {"name": "Donice Bryant", "seat": "District 8", "email": "mbcbryant@maconbibb.us", "phone": "478-407-4618"},
+        {"name": "Brendalyn Bailey", "seat": "District 9", "email": "mbcbailey@maconbibb.us", "phone": "478-382-0459"}
+      ]
+    },
+    "13025": {
+      "county": "Brantley",
+      "body": "Board of Commissioners",
+      "source": "https://brantleycounty-ga.gov/board-of-commissioners",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Skipper Harris", "seat": "Chairman"},
+        {"name": "Harold Herndon", "seat": "Commissioner"},
+        {"name": "Randy Davison", "seat": "Commissioner"},
+        {"name": "Brian Hendrix", "seat": "Commissioner"},
+        {"name": "Andy Riggins", "seat": "Commissioner"}
+      ]
+    },
+    "13027": {
+      "county": "Brooks",
+      "body": "Board of Commissioners",
+      "source": "https://brookscountyga.gov/about/board-of-commissioners",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Lee Larko", "seat": "District 1", "email": "llarko@brookscountyga.gov"},
+        {"name": "Patrick Folsom", "seat": "District 2", "email": "pfolsom@brookscountyga.gov"},
+        {"name": "Willie Cody", "seat": "District 3", "email": "wcody@brookscountyga.gov"},
+        {"name": "Myra Exum", "seat": "District 4", "email": "mexum@brookscountyga.gov"},
+        {"name": "James Maxwell", "seat": "District 5", "email": "jmaxwell@brookscountyga.gov"}
+      ]
+    },
+    "13031": {
+      "county": "Bulloch",
+      "body": "Board of Commissioners",
+      "shared": "info@bullochcounty.net",
+      "phone": "912-764-6245",
+      "source": "https://bullochcounty.net/commissioners/",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "David Bennett", "seat": "Chairman", "email": "dbennett@bullochcounty.net"},
+        {"name": "Ray Mosley", "seat": "District 1", "email": "rmosley@bullochcounty.net"},
+        {"name": "Anthony Simmons", "seat": "District 1", "email": "asimmons@bullochcounty.net"},
+        {"name": "Ray Davis", "seat": "District 2", "email": "rdavis@bullochcounty.net"},
+        {"name": "Toby Conner", "seat": "District 2", "email": "toby.conner@bullochcounty.net"},
+        {"name": "Nick Newkirk", "seat": "District 2", "email": "nnewkirk@bullochcounty.net"},
+        {"name": "Timmy Rushing", "seat": "District 2", "email": "trushing@bullochcounty.net"}
+      ]
+    },
+    "13033": {
+      "county": "Burke",
+      "body": "Board of Commissioners",
+      "phone": "(706) 554-2324",
+      "source": "https://www.burkecounty-ga.gov/departments/board_of_commissioners/index.php",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Evans Martin", "seat": "Chairman, District 3", "email": "e.martin@burkecounty-ga.gov"},
+        {"name": "Rodney Braswell", "seat": "District 1", "email": "r.braswell@burkecounty-ga.gov"},
+        {"name": "Terri Lodge Kelly", "seat": "District 2, vice chairman", "email": "t.kelly@burkecounty-ga.gov"},
+        {"name": "R. Tommy Nix", "seat": "District 4", "email": "t.nix@burkecounty-ga.gov"},
+        {"name": "Q.U. \"Art\" Lively III", "seat": "District 5", "email": "a.lively@burkecounty-ga.gov"}
+      ]
+    },
+    "13035": {
+      "county": "Butts",
+      "body": "Board of Commissioners",
+      "source": "https://buttscountyga.com/",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Mike Wilson", "seat": "District 1", "email": "mwilson@buttscounty.org"},
+        {"name": "Jeremiah Hosford", "seat": "District 2", "email": "jhosford@buttscounty.org"},
+        {"name": "Joe Brown", "seat": "District 3", "email": "jbrown@buttscounty.org"},
+        {"name": "J. Keith Douglas", "seat": "District 4", "email": "kdouglas@buttscounty.org"},
+        {"name": "Russ Crumbley", "seat": "District 5", "email": "rcrumbley@buttscounty.org"}
+      ]
+    },
+    "13037": {
+      "county": "Calhoun",
+      "body": "Board of Commissioners",
+      "shared": "ccboc@windstream.net",
+      "phone": "(229) 849-4835",
+      "source": "https://calhouncountyga.com/commissioners/",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Conner Collins", "seat": "Chairman, District 3"},
+        {"name": "William Hawkins", "seat": "District 1"},
+        {"name": "Brenda Weathersby", "seat": "District 2"},
+        {"name": "Tommy Manry", "seat": "District 4"},
+        {"name": "Charlie Williams", "seat": "District 5, vice chairman"}
+      ]
+    },
+    "13045": {
+      "county": "Carroll",
+      "body": "Board of Commissioners",
+      "source": "https://www.carrollcountyga.gov/Directory.aspx?DID=22",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Michelle Morgan", "seat": "Chairman", "email": "mmorgan@carrollcountyga.gov", "phone": "770-830-5800"},
+        {"name": "Montrell McClendon", "seat": "District 1", "email": "mmcclendon@carrollcountyga.gov", "phone": "404-387-8823"},
+        {"name": "Clint Chance", "seat": "District 2", "email": "cchance@carrollcountyga.gov", "phone": "404-313-4990"},
+        {"name": "Tommy Lee", "seat": "District 3", "email": "tlee@carrollcountyga.gov", "phone": "678-633-4954"},
+        {"name": "Steve Fuller", "seat": "District 4", "email": "sfuller@carrollcountyga.gov"},
+        {"name": "Ben Hicks", "seat": "District 5", "email": "bhicks@carrollcountyga.gov", "phone": "470-521-3534"},
+        {"name": "Danny Bailey", "seat": "District 6", "email": "dbailey@carrollcountyga.gov", "phone": "678-378-6291"}
+      ]
+    },
+    "13049": {
+      "county": "Charlton",
+      "body": "Board of Commissioners",
+      "source": "https://www.charltoncountyga.us/Directory.aspx?DID=40",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Alphya Benefield", "seat": "Chairwoman", "email": "alphyab@yahoo.com"},
+        {"name": "James E. Everett", "seat": "Commissioner", "email": "jevephotochristianbooks@windstream.net"},
+        {"name": "Jesse Crews", "seat": "District 3", "email": "jesse_crews@yahoo.com"},
+        {"name": "Drew Jones", "seat": "District 4", "email": "drewjones2@gmail.com"},
+        {"name": "Luke Gowen", "seat": "District 5", "email": "lukegowen@yahoo.com"}
+      ]
+    },
+    "13051": {
+      "county": "Chatham",
+      "body": "Board of Commissioners",
+      "source": "https://www.chathamcountyga.gov/Commission/Commissioners",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Chester A. Ellis", "seat": "Chairman", "email": "chairman@chathamcounty.org"},
+        {"name": "Anthony Wayne Noha", "seat": "District 1", "email": "district1@chathamcounty.org"},
+        {"name": "Malinda Scott Hodge", "seat": "District 2", "email": "district2@chathamcounty.org"},
+        {"name": "Bobby Lockett", "seat": "District 3", "email": "district3@chathamcounty.org"},
+        {"name": "Brian M. Hussey", "seat": "District 4", "email": "district4@chathamcounty.org"},
+        {"name": "Tanya Milton", "seat": "District 5", "email": "district5@chathamcounty.org"},
+        {"name": "Aaron \"Adot\" Whitely", "seat": "District 6", "email": "district6@chathamcounty.org"},
+        {"name": "Dean Kicklighter", "seat": "District 7", "email": "deankicklighter@yahoo.com"},
+        {"name": "Marsha Buford", "seat": "District 8", "email": "district8@chathamcounty.org"}
+      ]
+    },
+    "13057": {
+      "county": "Cherokee",
+      "body": "Board of Commissioners",
+      "source": "https://www.cherokeecountyga.gov/BOC/",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Harry Johnston", "seat": "Chairman", "email": "hjohnston@cherokeecountyga.gov"},
+        {"name": "Will Cagle", "seat": "District 1, vice chair", "email": "wcagle@cherokeecountyga.gov"},
+        {"name": "Richard Weatherby", "seat": "District 2", "email": "rbweatherby@cherokeecountyga.gov"},
+        {"name": "Benny Carter", "seat": "District 3", "email": "bcarter@cherokeecountyga.gov"},
+        {"name": "Corey Ragsdale", "seat": "District 4", "email": "caragsdale@cherokeecountyga.gov"}
+      ]
+    },
+    "13059": {
+      "county": "Clarke",
+      "body": "Mayor and Commission",
+      "source": "https://www.accgov.com/m/directory/department?did=168",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Kelly Girtz", "seat": "Mayor", "email": "kelly.girtz@accgov.com"},
+        {"name": "Patrick Davenport", "seat": "District 1", "email": "patrick.davenport@accgov.com"},
+        {"name": "Melissa Link", "seat": "District 2", "email": "melissa.link@accgov.com"},
+        {"name": "Tiffany Taylor", "seat": "District 3", "email": "tiffany.taylor@accgov.com"},
+        {"name": "Allison Wright", "seat": "District 4", "email": "allison.wright@accgov.com"},
+        {"name": "Dexter Fisher", "seat": "District 5", "email": "dexter.fisher@accgov.com"},
+        {"name": "Stephanie Johnson", "seat": "District 6", "email": "stephanie.johnson@accgov.com"},
+        {"name": "John Culpepper", "seat": "District 7", "email": "john.culpepper@accgov.com"},
+        {"name": "Carol Myers", "seat": "District 8", "email": "carol.myers@accgov.com"},
+        {"name": "Ovita Thornton", "seat": "District 9", "email": "ovita.thornton@accgov.com"},
+        {"name": "Mike Hamby", "seat": "District 10", "email": "mike.hamby@accgov.com"}
+      ]
+    },
+    "13061": {
+      "county": "Clay",
+      "body": "Board of Commissioners",
+      "source": "https://www.claycountyga.net/team-3",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "James Davenport", "seat": "Chairman, District 4", "email": "james.davenport@claycountyga.net"},
+        {"name": "Gail Hubbard", "seat": "District 1", "email": "gail.hubbard@claycountyga.net"},
+        {"name": "Lola Spann", "seat": "District 2, vice chairman", "email": "lola.spann@claycountyga.net"},
+        {"name": "Samuel Johnson", "seat": "District 3", "email": "samuel.johnson@claycountyga.net"},
+        {"name": "Ronnie Crozier", "seat": "District 5", "email": "ronnie.crozier@claycountyga.net"}
+      ]
+    },
+    "13063": {
+      "county": "Clayton",
+      "body": "Board of Commissioners",
+      "source": "https://www.claytoncountyga.gov/government/board-of-commissioners/",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Alieka Anderson-Henry", "seat": "Chairwoman", "phone": "(770) 477-3208"},
+        {"name": "Alaina Reaves", "seat": "District 1", "email": "alaina.reaves@claytoncountyga.gov", "phone": "(770) 477-3213"},
+        {"name": "Gail Hambrick", "seat": "District 2, vice chair", "email": "gail.hambrick@claytoncountyga.gov", "phone": "(770) 603-4135"},
+        {"name": "Tashe' Allen", "seat": "District 3", "email": "tashe.allen@claytoncountyga.gov"},
+        {"name": "DeMont Davis", "seat": "District 4", "email": "demont.davis@claytoncountyga.gov", "phone": "(770) 477-3216"}
+      ]
+    },
+    "13065": {
+      "county": "Clinch",
+      "body": "Board of Commissioners",
+      "phone": "912-487-2667",
+      "source": "https://clinchcountyga.gov/board-of-commissioners.html",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Henry Moylan", "seat": "Chairman, District 5"},
+        {"name": "Bob Johnson", "seat": "District 1"},
+        {"name": "Chad Brown", "seat": "District 2, vice chairman"},
+        {"name": "Tanya O'Berry", "seat": "District 3"},
+        {"name": "Debra Thomas", "seat": "District 4"}
+      ]
+    },
+    "13067": {
+      "county": "Cobb",
+      "body": "Board of Commissioners",
+      "source": "https://www.cobbcounty.gov/communications/info-center/county-contact-directory",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Lisa Cupid", "seat": "Chairwoman", "email": "lisa.cupid@cobbcounty.gov", "phone": "(770) 528-3305"},
+        {"name": "Keli Gambrill", "seat": "District 1", "email": "keli.gambrill@cobbcounty.gov", "phone": "(770) 528-3313"},
+        {"name": "Erick Allen", "seat": "District 2", "email": "erick.allen@cobbcounty.gov", "phone": "(770) 528-3315"},
+        {"name": "JoAnn Birrell", "seat": "District 3", "email": "joann.birrell@cobbcounty.gov", "phone": "(770) 528-3317"},
+        {"name": "Monique Sheffield", "seat": "District 4", "email": "monique.sheffield@cobbcounty.gov", "phone": "(770) 528-3312"}
+      ]
+    },
+    "13069": {
+      "county": "Coffee",
+      "body": "Board of Commissioners",
+      "source": "https://www.coffeecounty-ga.gov/government/board_of_commissioners/index.php",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "George McIver", "seat": "District 1"},
+        {"name": "Jimmy Kitchens", "seat": "District 2"},
+        {"name": "AJ Dovers", "seat": "District 3"},
+        {"name": "Johnny Wayne Jowers", "seat": "District 4"},
+        {"name": "Ted O'Steen", "seat": "District 5"}
+      ]
+    },
+    "13071": {
+      "county": "Colquitt",
+      "body": "Board of Commissioners",
+      "source": "https://www.colquittcountyga.gov/government/county_commissioners/index.php",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Denver F. Braswell", "seat": "Chairman, District 7", "phone": "(229) 873-7126"},
+        {"name": "Barbara Jelks", "seat": "District 1", "phone": "(229) 529-7621"},
+        {"name": "Chris Hunnicutt", "seat": "District 2", "phone": "(229) 456-0245"},
+        {"name": "Marc DeMott", "seat": "District 3", "phone": "(229) 985-5661"},
+        {"name": "Mike Boyd", "seat": "District 4", "phone": "(229) 873-4278"},
+        {"name": "Paul Nagy", "seat": "District 5", "phone": "(229) 891-8072"},
+        {"name": "Johnny Hardin", "seat": "District 6", "phone": "(229) 891-6373"}
+      ]
+    },
+    "13073": {
+      "county": "Columbia",
+      "body": "Board of Commissioners",
+      "shared": "commissioners@columbiacountyga.gov",
+      "phone": "706-868-3379",
+      "source": "https://www.columbiacountyga.gov/304/Board-of-Commissioners",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Doug Duncan", "seat": "Chairman"},
+        {"name": "Connie Melear", "seat": "District 1"},
+        {"name": "Jim Steed", "seat": "District 2"},
+        {"name": "Michael W. Carraway", "seat": "District 3"},
+        {"name": "Alison Couch", "seat": "District 4"}
+      ]
+    },
+    "13077": {
+      "county": "Coweta",
+      "body": "Board of Commissioners",
+      "source": "https://www.coweta.ga.us/169/Board-of-Commissioners",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Jeff Fisher", "seat": "District 1", "email": "jfisher@coweta.ga.us"},
+        {"name": "Bill McKenzie", "seat": "District 2", "email": "bpmckenzie@coweta.ga.us"},
+        {"name": "Bob Blackburn", "seat": "District 3", "email": "bblackburn@coweta.ga.us"},
+        {"name": "John Reidelbach", "seat": "District 4", "email": "jreidelbach@coweta.ga.us"},
+        {"name": "Al Smith", "seat": "District 5", "email": "alsmith@coweta.ga.us"}
+      ]
+    },
+    "13079": {
+      "county": "Crawford",
+      "body": "Board of Commissioners",
+      "source": "https://www.crawfordcountyga.org/county-commissioners/",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Dale Jump", "seat": "District 5, chairman", "email": "d.jump@crawfordcountyga.org"},
+        {"name": "Omar Dickey", "seat": "District 1", "email": "o.dickey@crawfordcountyga.org"},
+        {"name": "Troy Cook", "seat": "District 2", "email": "t.cook@crawfordcountyga.org"},
+        {"name": "Justin Spillers", "seat": "District 3, vice chair", "email": "j.spillers@crawfordcountyga.org"},
+        {"name": "Melvin Smith", "seat": "District 4", "email": "m.smith@crawfordcountyga.org"}
+      ]
+    },
+    "13083": {
+      "county": "Dade",
+      "body": "Board of Commissioners",
+      "shared": "info@dadecounty-ga.gov",
+      "source": "https://www.dadecounty-ga.gov/Directory.aspx?DID=19",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Don Townsend", "seat": "County executive", "email": "d.townsend@dadecounty-ga.gov"},
+        {"name": "Bob Woods", "seat": "Commissioner", "email": "bwoods@dadecounty-ga.gov"},
+        {"name": "Bill Pullen", "seat": "Commissioner", "email": "bpullen@dadecounty-ga.gov"},
+        {"name": "Melissa Christiansen Bradford", "seat": "Commissioner", "email": "mcbradford@dadecounty-ga.gov"},
+        {"name": "Phillip Hartline", "seat": "Commissioner", "email": "phartline@dadecounty-ga.gov"}
+      ]
+    },
+    "13085": {
+      "county": "Dawson",
+      "body": "Board of Commissioners",
+      "source": "https://www.dawsoncountyga.gov/426/Board-of-Commissioners",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Billy Thurmond", "seat": "Chairman", "email": "chairman@dawsoncountyga.gov"},
+        {"name": "Seth Stowers", "seat": "District 1", "email": "district1@dawsoncountyga.gov"},
+        {"name": "Chris Gaines", "seat": "District 2", "email": "district2@dawsoncountyga.gov"},
+        {"name": "Alexa Bruce", "seat": "District 3", "email": "district3@dawsoncountyga.gov"},
+        {"name": "Chad Turkett", "seat": "District 4", "email": "district4@dawsoncountyga.gov"}
+      ]
+    },
+    "13087": {
+      "county": "Decatur",
+      "body": "Board of Commissioners",
+      "phone": "229-248-3030",
+      "source": "https://www.decaturcountyga.gov/county-commission/county-commissioners/",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "George Anderson", "seat": "District 1", "email": "captgeorgea96@yahoo.com"},
+        {"name": "Steve Brock", "seat": "District 2", "email": "sbrc78@msn.com"},
+        {"name": "Dennis Brinson", "seat": "Commissioner", "email": "dennisbrinson@bellsouth.net"},
+        {"name": "Rusty Davis", "seat": "Commissioner", "email": "tjdavisfarms@gmail.com"},
+        {"name": "Bobby Barber Jr.", "seat": "Commissioner", "email": "bhbarberjr@gmail.com"},
+        {"name": "Pete Stephens", "seat": "District 6", "email": "petestephensdistrict6@gmail.com"}
+      ]
+    },
+    "13089": {
+      "county": "DeKalb",
+      "body": "Board of Commissioners",
+      "source": "https://dekalbcountyga.gov/government/board-of-commissioners",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Robert Patrick", "seat": "District 1", "email": "rjpatrick@dekalbcountyga.gov"},
+        {"name": "Michelle Long Spears", "seat": "District 2", "email": "mlspears@dekalbcountyga.gov"},
+        {"name": "Nicole Massiah", "seat": "District 3", "email": "namassiah@dekalbcountyga.gov"},
+        {"name": "Chakira Johnson", "seat": "District 4", "email": "cjjohnson2@dekalbcountyga.gov"},
+        {"name": "Mereda Davis Johnson", "seat": "District 5", "email": "mdjohnson@dekalbcountyga.gov"},
+        {"name": "Ted Terry", "seat": "Super District 6", "email": "ted@dekalbcountyga.gov"},
+        {"name": "LaDena Bolton", "seat": "Super District 7", "email": "labolton@dekalbcountyga.gov"}
+      ]
+    },
+    "13095": {
+      "county": "Dougherty",
+      "body": "Board of Commissioners",
+      "source": "https://www.dougherty.ga.us/Government/Dougherty-County-Board-of-Commissioners",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Lorenzo L. Heard", "seat": "Chairman", "email": "lheard@dougherty.ga.us"},
+        {"name": "Ed Newsome", "seat": "District 1", "email": "enewsome@dougherty.ga.us"},
+        {"name": "Victor Edwards", "seat": "District 2", "email": "vedwards@dougherty.ga.us"},
+        {"name": "Clinton Johnson", "seat": "District 3", "email": "cljohnson@dougherty.ga.us"},
+        {"name": "Russell Gray", "seat": "District 4", "email": "rgray@dougherty.ga.us"},
+        {"name": "Gloria Gaines", "seat": "District 5", "email": "ggaines@dougherty.ga.us"},
+        {"name": "Anthony Jones", "seat": "District 6", "email": "anjones@dougherty.ga.us"}
+      ]
+    },
+    "13097": {
+      "county": "Douglas",
+      "body": "Board of Commissioners",
+      "source": "https://www.douglascountyga.gov/Directory.aspx?DID=67",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Romona Jackson Jones", "seat": "Chairman", "email": "rjacksonjones@douglascountyga.gov"},
+        {"name": "Henry Mitchell III", "seat": "District 1", "email": "hmitchell@douglascountyga.gov"},
+        {"name": "Whitney Kenner Jones", "seat": "District 2", "email": "wkennerjones@douglascountyga.gov"},
+        {"name": "Martin W. Raxton", "seat": "District 3", "email": "mraxton@douglascountyga.gov"},
+        {"name": "Mark Alcarez", "seat": "District 4", "email": "malcarez@douglascountyga.gov"}
+      ]
+    },
+    "13099": {
+      "county": "Early",
+      "body": "Board of Commissioners",
+      "source": "https://www.earlycountyga.org/board-of-commisioners",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Hank Jester", "seat": "Chairman"},
+        {"name": "Rex LaDon Durham", "seat": "District 1"},
+        {"name": "Jeffery Haynes", "seat": "District 2"},
+        {"name": "Charlie Sol", "seat": "District 3"},
+        {"name": "Taylor Bridges", "seat": "District 4"}
+      ]
+    },
+    "13101": {
+      "county": "Echols",
+      "body": "Board of Commissioners",
+      "shared": "ecboc@echolscountyga.com",
+      "phone": "229-559-6538",
+      "source": "https://echolscountyga.com/departments/commissioners/",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Kenneth Petty", "seat": "Chairman"},
+        {"name": "Bobbi Pohlman-Rodgers", "seat": "Vice chair"},
+        {"name": "Stanley Corbett", "seat": "Commissioner"},
+        {"name": "Bobby Walker", "seat": "Commissioner"},
+        {"name": "Justin Staten", "seat": "Commissioner"}
+      ]
+    },
+    "13103": {
+      "county": "Effingham",
+      "body": "Board of Commissioners",
+      "source": "https://www.effinghamcounty.org/Directory.aspx?DID=57",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Damon Rahn", "seat": "Chairman (at large)", "email": "drahn@effinghamcounty.org"},
+        {"name": "Forrest Floyd", "seat": "District 1", "email": "ffloyd@effinghamcounty.org"},
+        {"name": "Roger Burdette", "seat": "District 2", "email": "rburdette@effinghamcounty.org"},
+        {"name": "Jamie DeLoach", "seat": "District 3", "email": "jamiedeloachdistrict3@gmail.com"},
+        {"name": "Beth Helmly", "seat": "District 4", "email": "bhelmly@effinghamcounty.org"},
+        {"name": "Phil Kieffer", "seat": "District 5", "email": "philkiefferdistrict5@gmail.com"}
+      ]
+    },
+    "13105": {
+      "county": "Elbert",
+      "body": "Board of Commissioners",
+      "shared": "elbertcounty@elbertga.us",
+      "phone": "706-283-2000",
+      "source": "https://www.elbertga.us/",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Lee Vaughn", "seat": "Chairman", "email": "lvaughn@elbertga.us"},
+        {"name": "David Hunt", "seat": "District 1", "email": "dhunt@elbertga.us"},
+        {"name": "Casey Freeman Jr.", "seat": "District 2", "email": "cfreeman@elbertga.us"},
+        {"name": "Chris Alexander", "seat": "District 3", "email": "calexander@elbertga.us"},
+        {"name": "Mike Scoggins", "seat": "District 4", "email": "mscoggins@elbertga.us"},
+        {"name": "Freddie Jones", "seat": "District 5", "email": "fjones@elbertga.us"}
+      ]
+    },
+    "13107": {
+      "county": "Emanuel",
+      "body": "Board of Commissioners",
+      "source": "https://www.emanuelco-ga.gov/Directory.aspx?DID=12",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Jim Sherrod", "seat": "Chairman, District 4", "email": "jsherrod@emanuelco-ga.gov"},
+        {"name": "Kawame Coleman", "seat": "District 1", "email": "kcoleman@emanuelco-ga.gov"},
+        {"name": "Ricky Thompson", "seat": "District 2", "email": "rthompson@emanuelco-ga.gov"},
+        {"name": "John Moore", "seat": "District 3", "email": "jmoore@emanuelco-ga.gov"},
+        {"name": "Timmy Oliver", "seat": "District 5, vice chairman", "email": "toliver@emanuelco-ga.gov"}
+      ]
+    },
+    "13111": {
+      "county": "Fannin",
+      "body": "Board of Commissioners",
+      "phone": "706-632-2203",
+      "source": "https://fannincountyga.com/board-of-commissioners/",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Jamie Hensley", "seat": "Chairman", "email": "jhensley@fannincountyga.org"},
+        {"name": "Johnny Scearce", "seat": "Post 1", "email": "jscearce@fannincountyga.org"},
+        {"name": "Glenn Patterson", "seat": "Post 2", "email": "gpatterson@fannincountyga.org"}
+      ]
+    },
+    "13113": {
+      "county": "Fayette",
+      "body": "Board of Commissioners",
+      "shared": "boardofcommissioners@fayettecountyga.gov",
+      "source": "https://www.fayettecountyga.gov/government/board_of_commissioners/index.php",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Lee Hearn", "seat": "Chairman, District 2", "email": "lhearn@fayettecountyga.gov", "phone": "770.305.5122"},
+        {"name": "Eric Maxwell", "seat": "District 1", "email": "emaxwell@fayettecountyga.gov", "phone": "770.305.5123"},
+        {"name": "Edward G. Gibbons Jr.", "seat": "Vice Chairman, District 3", "email": "egibbons@fayettecountyga.gov", "phone": "770.305.5120"},
+        {"name": "Charles D. Rousseau", "seat": "District 4", "email": "crousseau@fayettecountyga.gov", "phone": "770.305.5121"},
+        {"name": "Charles W. Oddo", "seat": "District 5 (at large)", "email": "coddo@fayettecountyga.gov", "phone": "770.305.5104"}
+      ]
+    },
+    "13117": {
+      "county": "Forsyth",
+      "body": "Board of Commissioners",
+      "source": "https://www.forsythco.com/government/departments/board-of-commissioners/",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Kerry Hill", "seat": "District 1", "email": "kmhill@forsythco.com", "phone": "(678) 513-5881"},
+        {"name": "Alfred John", "seat": "District 2", "email": "ajohn@forsythco.com", "phone": "770-888-8878"},
+        {"name": "Todd Levent", "seat": "District 3", "email": "tlevent@forsythco.com", "phone": "678-513-5883"},
+        {"name": "Mendy Moore", "seat": "District 4", "email": "mpmoore@forsythco.com", "phone": "(678) 513-5884"},
+        {"name": "Laura Semanson", "seat": "District 5", "email": "losemanson@forsythco.com", "phone": "678-513-5885"}
+      ]
+    },
+    "13119": {
+      "county": "Franklin",
+      "body": "Board of Commissioners",
+      "source": "https://www.franklincountyga.gov/Directory.aspx?DID=41",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Courtney Long", "seat": "Chair", "email": "clong@franklincountyga.gov"},
+        {"name": "Wanda Thompson", "seat": "Commissioner", "email": "wthompson@franklincountyga.gov"},
+        {"name": "Cory Pulliam", "seat": "Commissioner", "email": "cpulliam@franklincountyga.gov"},
+        {"name": "Elizabeth Busby", "seat": "Commissioner", "email": "ebusby@franklincountyga.gov"},
+        {"name": "Josh Smith", "seat": "Commissioner", "email": "jsmith@franklincountyga.gov"}
+      ]
+    },
+    "13121": {
+      "county": "Fulton",
+      "body": "Board of Commissioners",
+      "source": "https://www.fultoncountyga.gov/Commissioners",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Robb Pitts", "seat": "Chairman", "email": "robb.pitts@fultoncountyga.gov"},
+        {"name": "Bridget Thorne", "seat": "District 1", "email": "bridget.thorne@fultoncountyga.gov"},
+        {"name": "Bob Ellis", "seat": "District 2", "email": "bob.ellis@fultoncountyga.gov"},
+        {"name": "Dana Barrett", "seat": "District 3", "email": "dana.barrett@fultoncountyga.gov"},
+        {"name": "Marvin S. Arrington Jr.", "seat": "District 5", "email": "marvin.arrington@fultoncountyga.gov"},
+        {"name": "Khadijah Abdur-Rahman", "seat": "District 6, vice chair", "email": "khadijah.abdur-rahman@fultoncountyga.gov"}
+      ]
+    },
+    "13127": {
+      "county": "Glynn",
+      "body": "Board of Commissioners",
+      "shared": "commissioners@glynncounty-ga.gov",
+      "phone": "912-554-7403",
+      "source": "https://www.glynncounty.org/government/departments/board-commissioners/meet-commissioners",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Sammy Tostensen", "seat": "District 1"},
+        {"name": "Bob Duncan", "seat": "District 2"},
+        {"name": "Thomas \"Wayne\" Neal", "seat": "District 3"},
+        {"name": "David Sweat", "seat": "District 4"},
+        {"name": "Allen Booker", "seat": "District 5"},
+        {"name": "Bo Clark", "seat": "At-large post 1"},
+        {"name": "Walter Rafolski", "seat": "At-large post 2"}
+      ]
+    },
+    "13129": {
+      "county": "Gordon",
+      "body": "Board of Commissioners",
+      "source": "https://www.gordoncountyga.gov/Directory.aspx?DID=16",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "M.L. Bud Owens", "seat": "Chair, District 1", "email": "bud.owens@gordoncountyga.gov"},
+        {"name": "Chad Steward", "seat": "District 2", "email": "chad.steward@gordoncountyga.gov"},
+        {"name": "Randy Abernathy", "seat": "District 3", "email": "randy.abernathy@gordoncountyga.gov"},
+        {"name": "Kurt Sutherland", "seat": "District 4", "email": "kurt.sutherland@gordoncountyga.gov"},
+        {"name": "Kevin Cunningham", "seat": "District 5, vice chair", "email": "kevin.cunningham@gordoncountyga.gov"}
+      ]
+    },
+    "13131": {
+      "county": "Grady",
+      "body": "Board of Commissioners",
+      "shared": "gcboc@gradyco.org",
+      "phone": "(229) 377-1512",
+      "source": "https://gradycountyga.gov/government/board-of-commissioners/",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Yancey Maxwell", "seat": "District 1", "email": "d1@gradyco.org"},
+        {"name": "Ray Prince", "seat": "District 2", "email": "d2@gradyco.org"},
+        {"name": "Sam Kines", "seat": "District 3, vice chairman", "email": "d3@gradyco.org"},
+        {"name": "LaFaye Copeland", "seat": "District 4, chairman", "email": "d4@gradyco.org"},
+        {"name": "Phillip Drew", "seat": "District 5", "email": "d5@gradyco.org"}
+      ]
+    },
+    "13133": {
+      "county": "Greene",
+      "body": "Board of Commissioners",
+      "shared": "info@greenecountyga.gov",
+      "source": "https://www.greenecountyga.gov/Directory.aspx?DID=13",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Gary Usry", "seat": "Chairman", "email": "gusry@greenecountyga.gov"},
+        {"name": "Angela Walker Deering", "seat": "District 1", "email": "awdeering@greenecountyga.gov"},
+        {"name": "Jeffery L. Smith", "seat": "District 2", "email": "jlsmith@greenecountyga.gov"},
+        {"name": "Dee Lindsey", "seat": "District 3", "email": "dlindsey@greenecountyga.gov"},
+        {"name": "Mark Blanton", "seat": "Commissioner", "email": "mblanton@greenecountyga.gov"},
+        {"name": "Ernie Filice", "seat": "Commissioner", "email": "ecf@greenecountyga.gov"}
+      ]
+    },
+    "13135": {
+      "county": "Gwinnett",
+      "body": "Board of Commissioners",
+      "source": "https://www.gwinnettcounty.com/government/departments/board-of-commissioners/about",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Nicole Love Hendrickson", "seat": "Chairwoman", "email": "nicole.hendrickson@gwinnettcounty.com", "phone": "770-822-7010"},
+        {"name": "Kirkland Carden", "seat": "District 1", "email": "kirkland.carden@gwinnettcounty.com", "phone": "770-822-7001"},
+        {"name": "Ben Ku", "seat": "District 2", "email": "ben.ku@gwinnettcounty.com", "phone": "770-822-7002"},
+        {"name": "Jasper Watkins III", "seat": "District 3", "email": "jasper.watkins@gwinnettcounty.com", "phone": "770-822-7003"},
+        {"name": "Matthew Holtkamp", "seat": "District 4", "email": "matthew.holtkamp@gwinnettcounty.com", "phone": "770-822-7004"}
+      ]
+    },
+    "13137": {
+      "county": "Habersham",
+      "body": "Board of Commissioners",
+      "shared": "commoffice@habershamga.com",
+      "source": "https://www.habershamga.com/commissioners.cfm",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Commissioner Woodall", "seat": "District 1", "email": "kwoodall@habershamga.com"},
+        {"name": "Commissioner Mealor", "seat": "District 2", "email": "dmealor@habershamga.com"},
+        {"name": "Danny McClellon", "seat": "District 3", "email": "dmcclellon@habershamga.com"},
+        {"name": "Commissioner Harkness", "seat": "District 4", "email": "bharkness@habershamga.com"},
+        {"name": "Commissioner Akins", "seat": "District 5", "email": "takins@habershamga.com"}
+      ]
+    },
+    "13139": {
+      "county": "Hall",
+      "body": "Board of Commissioners",
+      "source": "https://www.hallcounty.org/Directory.aspx?DID=93",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "David Gibbs", "seat": "Chairman", "email": "dgibbs@hallcounty.org", "phone": "770-535-8288"},
+        {"name": "Kathy Cooper", "seat": "District 1", "email": "kcooper@hallcounty.org"},
+        {"name": "Billy Powell", "seat": "District 2", "email": "bpowell@hallcounty.org"},
+        {"name": "Gregg Poole", "seat": "District 3", "email": "gpoole@hallcounty.org"},
+        {"name": "Jeff Stowe", "seat": "District 4", "email": "jstowe@hallcounty.org"}
+      ]
+    },
+    "13141": {
+      "county": "Hancock",
+      "body": "Board of Commissioners",
+      "phone": "(706) 444-5746",
+      "source": "https://www.hancockcountyga.gov/board-of-commissioners",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Adrick Alexander Ingram", "seat": "Chairman", "email": "chairman@hancockcountyga.gov"},
+        {"name": "Jeremiah Hall", "seat": "District 1", "email": "jhall@hancockcountyga.gov"},
+        {"name": "Steve O. Hill", "seat": "District 2", "email": "shill@hancockcountyga.gov"},
+        {"name": "Charles Jackson", "seat": "District 3", "email": "cjackson3@hancockcountyga.gov"},
+        {"name": "Randolph Clayton", "seat": "District 4", "email": "rclayton@hancockcountyga.gov"}
+      ]
+    },
+    "13143": {
+      "county": "Haralson",
+      "body": "Board of Commissioners",
+      "phone": "770-646-2002",
+      "source": "https://www.haralsoncountyga.gov/board-of-commissioners.cfm",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Brian L. Walker", "seat": "Chairman and CEO", "email": "brianlwalker@haralsoncountyga.gov"},
+        {"name": "David Tarpley", "seat": "District 1", "email": "dtarpley888@charter.net"},
+        {"name": "Danny Elsberry", "seat": "District 2", "email": "dannyelsberry@haralsoncountyga.gov"},
+        {"name": "Eddie Ivey", "seat": "District 3", "email": "eddieivey@haralsoncountyga.gov"},
+        {"name": "Ryan Farmer", "seat": "District 4", "email": "ryanfarmer@haralsoncountyga.gov"}
+      ]
+    },
+    "13145": {
+      "county": "Harris",
+      "body": "Board of Commissioners",
+      "source": "https://www.harriscountyga.gov/board-of-commissioners/",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Scott Lightsey", "seat": "District 1", "email": "hcgadistrict1@harriscountyga.gov"},
+        {"name": "Robert Grant", "seat": "District 2", "email": "hcgadistrict2@harriscountyga.gov"},
+        {"name": "Greg Gantt", "seat": "District 3", "email": "hcgadistrict3@harriscountyga.gov"},
+        {"name": "Bobby Irions", "seat": "District 4, vice chairman", "email": "hcgadistrict4@harriscountyga.gov"},
+        {"name": "Susan Andrews", "seat": "District 5", "email": "hcgadistrict5@harriscountyga.gov"}
+      ]
+    },
+    "13147": {
+      "county": "Hart",
+      "body": "Board of Commissioners",
+      "source": "https://www.hartcountyga.gov/commissioners.html",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Marshall Sayer", "seat": "Chairman, District 3"},
+        {"name": "Michael Bennett", "seat": "District 1", "email": "michaelbennett55@hartcom.net"},
+        {"name": "Frankie Teasley", "seat": "District 2", "email": "frankie.teasley63@gmail.com"},
+        {"name": "Jeff Brown", "seat": "District 4", "email": "jeffdbrown21@gmail.com"},
+        {"name": "Joey Dorsey", "seat": "District 5, vice chair", "email": "joeydorsey@yahoo.com"}
+      ]
+    },
+    "13151": {
+      "county": "Henry",
+      "body": "Board of Commissioners",
+      "source": "https://www.henrycountyga.gov/board-of-commissioners",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Carlotta Harrell", "seat": "Chair", "email": "charrell@henrycountyga.gov"},
+        {"name": "Johnny Wilson", "seat": "District 1", "email": "johnnywilson@henrycountyga.gov"},
+        {"name": "Neat Robinson", "seat": "District 2", "email": "nrobinson@henrycountyga.gov"},
+        {"name": "Dee W. Anglyn III", "seat": "District 3, vice chair", "email": "danglyn@henrycountyga.gov"},
+        {"name": "Michael T. Price", "seat": "District 4", "email": "mprice@henrycountyga.gov"},
+        {"name": "Kevin J. Lewis", "seat": "District 5", "email": "klewis@henrycountyga.gov"}
+      ]
+    },
+    "13153": {
+      "county": "Houston",
+      "body": "Board of Commissioners",
+      "source": "https://www.houstoncountyga.gov/commissioner/contact-information.cms",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Dan Perdue", "seat": "Chairman, Post 1", "email": "chairman@houstoncountyga.gov"},
+        {"name": "Shane Gottwals", "seat": "Post 2", "email": "post2@houstoncountyga.gov"},
+        {"name": "Gail Robinson", "seat": "Post 3", "email": "post3@houstoncountyga.gov"},
+        {"name": "Tal Talton", "seat": "Post 4", "email": "post4@houstoncountyga.gov"},
+        {"name": "Mark Byrd", "seat": "Post 5", "email": "post5@houstoncountyga.gov"}
+      ]
+    },
+    "13157": {
+      "county": "Jackson",
+      "body": "Board of Commissioners",
+      "source": "https://www.jacksoncountygov.com/Directory.aspx?DID=44",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Marty Clark", "seat": "Chairman", "email": "mclark@jacksoncountygov.com"},
+        {"name": "Jim Hix", "seat": "District 1", "email": "jhix@jacksoncountygov.com"},
+        {"name": "Chas Hardy", "seat": "District 2", "email": "chardy@jacksoncountygov.com"},
+        {"name": "Ty Clack", "seat": "District 3", "email": "tclack@jacksoncountygov.com"},
+        {"name": "Marty Seagraves", "seat": "District 4", "email": "mseagraves@jacksoncountygov.com"},
+        {"name": "Cole Elrod", "seat": "District 5", "email": "celrod@jacksoncountygov.com"}
+      ]
+    },
+    "13163": {
+      "county": "Jefferson",
+      "body": "Board of Commissioners",
+      "phone": "478-625-3332",
+      "source": "https://www.jeffersoncountyga.gov/Directory.aspx?DID=30",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Mitchell McGraw", "seat": "Chairman", "email": "mmcgraw@jeffersoncountyga.gov"},
+        {"name": "Gonice Davis", "seat": "District 1", "email": "gdavis@jeffersoncountyga.gov"},
+        {"name": "Rodney McKinnie", "seat": "District 2", "email": "rmckinnie@jeffersoncountyga.gov"},
+        {"name": "Wayne Davis", "seat": "District 3"},
+        {"name": "William R. Toulson Jr.", "seat": "District 4", "email": "wtoulson@jeffersoncountyga.gov"}
+      ]
+    },
+    "13169": {
+      "county": "Jones",
+      "body": "Board of Commissioners",
+      "source": "https://www.jonescountyga.org/board-of-commissioners/",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Chris Weidner", "seat": "Chairman", "email": "chris.weidner@jonescountyga.org"},
+        {"name": "Sam Kitchens", "seat": "District 1, vice chair", "email": "sam.kitchens@jonescountyga.org"},
+        {"name": "M. John Wood", "seat": "District 2", "email": "john.wood@jonescountyga.org"},
+        {"name": "Wendy Vaughn", "seat": "District 3", "email": "wendy.vaughn@jonescountyga.org"},
+        {"name": "Daylon Martin", "seat": "District 4", "email": "daylon.martin@jonescountyga.org"}
+      ]
+    },
+    "13175": {
+      "county": "Laurens",
+      "body": "Board of Commissioners",
+      "source": "https://www.laurenscoga.org/Directory.aspx?DID=21",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Brenda Chain", "seat": "District 1", "email": "chainb@dlcga.com"},
+        {"name": "Trae Kemp", "seat": "District 2", "email": "kempt@dlcga.com"},
+        {"name": "Gerad Mathis", "seat": "District 3", "email": "mathisg@dlcga.com"},
+        {"name": "Jimmy Rogers", "seat": "District 4", "email": "rogersji@dlcga.com"},
+        {"name": "Kevin Tanner", "seat": "District 5", "email": "tannerk@dlcga.com"}
+      ]
+    },
+    "13177": {
+      "county": "Lee",
+      "body": "Board of Commissioners",
+      "phone": "(229) 759-6000",
+      "source": "https://www.leecountyga.gov/government/board-of-commissioners",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Luke Singletary", "seat": "District 2, chairman", "email": "luke.singletary@leecountyga.gov"},
+        {"name": "Dennis Roland", "seat": "District 1", "email": "droland@leecountyga.gov"},
+        {"name": "Billy Mathis", "seat": "District 3", "email": "mathislaw@att.net"},
+        {"name": "Chris Guarnieri", "seat": "District 4, vice chairman", "email": "chris.guarnieri@leecountyga.gov"},
+        {"name": "George Walls", "seat": "District 5", "email": "wallsgeorge1947@gmail.com"}
+      ]
+    },
+    "13179": {
+      "county": "Liberty",
+      "body": "Board of Commissioners",
+      "source": "https://www.libertycountyga.gov/Directory.aspx?DID=30",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Donald Lovette", "seat": "Chairman", "email": "donald.lovette@libertycountyga.com"},
+        {"name": "Marion Stevens Sr.", "seat": "District 1", "email": "marion.stevens@libertycountyga.com"},
+        {"name": "Justin L. Frasier", "seat": "District 2", "email": "justin.frasier@libertycountyga.com"},
+        {"name": "Connie Thrift", "seat": "District 3", "email": "connie.thrift@libertycountyga.com"},
+        {"name": "Timothy Blount", "seat": "District 4", "email": "timmy.blount@libertycountyga.gov"},
+        {"name": "Gary Gilliard", "seat": "District 5", "email": "gary.gilliard@libertycountyga.com"},
+        {"name": "Eddie J. Walden", "seat": "District 6, vice chairman", "email": "eddie.walden@libertycountyga.com"}
+      ]
+    },
+    "13185": {
+      "county": "Lowndes",
+      "body": "Board of Commissioners",
+      "shared": "commissioner@lowndescounty.com",
+      "source": "https://www.lowndescounty.com/Directory.aspx?DID=19",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Bill Slaughter", "seat": "Chairman"},
+        {"name": "Joyce E. Evans", "seat": "District 1"},
+        {"name": "Scott Orenstein", "seat": "District 2"},
+        {"name": "Mark Wisenbaker", "seat": "District 3"},
+        {"name": "Demarcus Marshall", "seat": "District 4"},
+        {"name": "Michael Smith", "seat": "District 5"}
+      ]
+    },
+    "13187": {
+      "county": "Lumpkin",
+      "body": "Board of Commissioners",
+      "shared": "boc@lumpkincounty.gov",
+      "source": "https://www.lumpkincounty.gov/Directory.aspx?DID=23",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Rhett Stringer", "seat": "Chairman", "email": "rhett.stringer@lumpkincounty.gov"},
+        {"name": "Tucker Greene", "seat": "District 1", "email": "tucker.greene@lumpkincounty.gov"},
+        {"name": "Bobby Mayfield", "seat": "District 2", "email": "bobby.mayfield@lumpkincounty.gov"},
+        {"name": "Nathan Davis", "seat": "District 3", "email": "nathan.davis@lumpkincounty.gov"},
+        {"name": "Jeff Moran", "seat": "District 4", "email": "jeff.moran@lumpkincounty.gov"}
+      ]
+    },
+    "13189": {
+      "county": "McDuffie",
+      "body": "Board of Commissioners",
+      "source": "https://www.thomson-mcduffie.gov/m/directory",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Chase Beggs", "seat": "Chairman", "email": "chase.beggs@thomson-mcduffie.gov"},
+        {"name": "Sammie Wilson Sr.", "seat": "Vice chairman", "email": "sammie.wilson@thomson-mcduffie.gov"},
+        {"name": "Bill Jopling", "seat": "Commissioner", "email": "bill.jopling@thomson-mcduffie.gov"},
+        {"name": "Steven Hollimon", "seat": "Commissioner", "email": "steven.hollimon@thomson-mcduffie.gov"},
+        {"name": "Fred Favors", "seat": "Commissioner", "email": "fred.favors@thomson-mcduffie.gov"}
+      ]
+    },
+    "13191": {
+      "county": "McIntosh",
+      "body": "Board of Commissioners",
+      "phone": "912-437-6671",
+      "source": "https://www.mcintoshcountyga.com/Directory.aspx?DID=13",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Kate Pontello Karwacki", "seat": "Chair, District 1"},
+        {"name": "Christopher Jarriel", "seat": "District 2"},
+        {"name": "Roger Lotson", "seat": "District 3"},
+        {"name": "Henderson Hope", "seat": "District 4"},
+        {"name": "Davis Poole", "seat": "At large, vice chair"}
+      ]
+    },
+    "13193": {
+      "county": "Macon",
+      "body": "Board of Commissioners",
+      "source": "https://www.maconcountyga.gov/board-of-commissioners.cfm",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Bob Melvin", "seat": "Chairman, District 5", "email": "melvin4002002@yahoo.com"},
+        {"name": "Carl Oliver", "seat": "District 1", "email": "carloliver59@gmail.com"},
+        {"name": "Ben Haugabook", "seat": "District 2, vice chairman", "email": "benhaugabook@yahoo.com"},
+        {"name": "A. Richmond Felton", "seat": "District 3", "email": "red_white_31057@yahoo.com"},
+        {"name": "Linda Barfield", "seat": "District 4", "email": "mst12@windstream.net"}
+      ]
+    },
+    "13197": {
+      "county": "Marion",
+      "body": "Board of Commissioners",
+      "shared": "marionga@windstream.net",
+      "phone": "(229) 649-2603",
+      "source": "https://www.marioncountyga.org/government-courts/board-of-commissioners/",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "George Neal Jr.", "seat": "Chairman, District 4"},
+        {"name": "Norman Royal", "seat": "District 1"},
+        {"name": "Shane Grier", "seat": "District 2"},
+        {"name": "Jerry Anthony", "seat": "District 3"},
+        {"name": "Marshall Fontaine", "seat": "At large"}
+      ]
+    },
+    "13199": {
+      "county": "Meriwether",
+      "body": "Board of Commissioners",
+      "source": "https://www.meriwethercountyga.gov/Directory.aspx?DID=18",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Emmett Collins", "seat": "Chairman, District 3", "email": "e.collins@meriwethercountyga.gov"},
+        {"name": "Gene King", "seat": "District 1", "email": "g.king@meriwethercountyga.gov"},
+        {"name": "Jennifer Snelson", "seat": "District 2, vice chairman", "email": "j.snelson@meriwethercountyga.gov"},
+        {"name": "Bryan Threadgill", "seat": "District 4", "email": "b.threadgill@meriwethercountyga.gov"},
+        {"name": "Adam Worsley", "seat": "District 5", "email": "a.worsley@meriwethercountyga.gov"}
+      ]
+    },
+    "13201": {
+      "county": "Miller",
+      "body": "Board of Commissioners",
+      "phone": "229-758-4104",
+      "source": "https://millercountyga.gov/boc.html",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Ladon Calhoun", "seat": "Chairman, District 5", "email": "district5@millercountyga.gov"},
+        {"name": "Cristene Bush", "seat": "District 1", "email": "district1@millercountyga.gov"},
+        {"name": "Jeff Cox", "seat": "District 2, vice chairman", "email": "district2@millercountyga.gov"},
+        {"name": "Keith Bowen", "seat": "District 3", "email": "distric3@millercountyga.gov"},
+        {"name": "Nicole Nixon", "seat": "District 4", "email": "district4@millercountyga.gov"}
+      ]
+    },
+    "13205": {
+      "county": "Mitchell",
+      "body": "Board of Commissioners",
+      "source": "https://www.mitchellcountyga.net/commissioners/",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Benjamin Hayward", "seat": "District 1, chairman", "email": "bhayward@camillaga.net"},
+        {"name": "B. Keith Jones", "seat": "District 2", "email": "mrbkeithjones@aol.com"},
+        {"name": "Reggie Bostick", "seat": "District 3, vice chairman", "email": "reggiebostick@gmail.com"},
+        {"name": "Julius Hatcher", "seat": "District 4", "email": "jchatcher11@gmail.com"},
+        {"name": "David Griner", "seat": "District 5", "email": "dgriner@southginco.com"}
+      ]
+    },
+    "13207": {
+      "county": "Monroe",
+      "body": "Board of Commissioners",
+      "source": "https://www.monroecoga.org/commissioners/",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Alan Gibbs", "seat": "Chairman", "email": "agibbs@monroecoga.org"},
+        {"name": "Lamarcus Davis", "seat": "District 1", "email": "ldavis@monroecoga.org"},
+        {"name": "Eddie Rowland", "seat": "District 2", "email": "erowland@monroecoga.org"},
+        {"name": "John Ambrose", "seat": "District 3", "email": "jambrose@monroecoga.org"},
+        {"name": "Al Turner", "seat": "District 4", "email": "aturner@monroecoga.org"}
+      ]
+    },
+    "13211": {
+      "county": "Morgan",
+      "body": "Board of Commissioners",
+      "source": "https://www.morgancountyga.gov/Directory.aspx?DID=7",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Carl Jones", "seat": "District 1", "email": "carl.jones@morgancountyga.gov"},
+        {"name": "Blake McCormack", "seat": "District 2", "email": "bmccormack@morgancountyga.gov"},
+        {"name": "Ben Riden", "seat": "District 3", "email": "briden@morgancountyga.gov"},
+        {"name": "Philipp von Hanstein", "seat": "District 4"},
+        {"name": "Nathan Park", "seat": "District 5", "email": "nathan.park@morgancountyga.gov"}
+      ]
+    },
+    "13213": {
+      "county": "Murray",
+      "body": "Sole Commissioner",
+      "source": "https://www.murraycountyga.org/Directory.aspx?DID=3",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Noah Bishop", "seat": "Sole commissioner", "email": "nbishop@murraycountyga.gov"}
+      ]
+    },
+    "13215": {
+      "county": "Muscogee",
+      "body": "Columbus Council",
+      "source": "https://columbusga.gov/council",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Simi Barnes", "seat": "District 1", "email": "barnes.simi@columbusga.org"},
+        {"name": "Glenn Davis", "seat": "District 2", "email": "glenndavis@columbusga.org"},
+        {"name": "Bruce Huff", "seat": "District 3", "email": "bhuff@columbusga.org"},
+        {"name": "Toyia Tucker", "seat": "District 4", "email": "tucker.toyia@columbusga.org"},
+        {"name": "Charmaine Crabb", "seat": "District 5", "email": "crabb.charmaine@columbusga.org"},
+        {"name": "Gary Allen", "seat": "District 6", "email": "gallen@columbusga.org"},
+        {"name": "JoAnne Cogle", "seat": "District 7", "email": "cogle.joanne@columbusga.org"},
+        {"name": "Walker Garrett", "seat": "District 8", "email": "wgarrett@columbusga.org"},
+        {"name": "Cathy Cook", "seat": "District 9", "email": "cook.cathy@columbusga.org"},
+        {"name": "Travis L. Chambers", "seat": "District 10", "email": "chambers.travis@columbusga.org"}
+      ]
+    },
+    "13219": {
+      "county": "Oconee",
+      "body": "Board of Commissioners",
+      "source": "https://www.oconeecountyga.gov/Directory.aspx?DID=29",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "John Daniell", "seat": "Chairman", "email": "jdaniell@oconee.ga.us"},
+        {"name": "Mark Thomas", "seat": "Post 1", "email": "mthomas@oconee.ga.us"},
+        {"name": "Chuck Horton", "seat": "Post 2", "email": "chorton@oconee.ga.us"},
+        {"name": "Amrey Harden", "seat": "Post 3", "email": "aharden@oconee.ga.us"},
+        {"name": "Mark Saxon", "seat": "Post 4", "email": "msaxon@oconee.ga.us"}
+      ]
+    },
+    "13221": {
+      "county": "Oglethorpe",
+      "body": "Board of Commissioners",
+      "shared": "boc@oglethorpecountyga.gov",
+      "phone": "(706) 743-5270",
+      "source": "https://www.oglethorpecountyga.gov/boc",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Jay Paul", "seat": "Chairman", "email": "jaypaul@oglethorpecountyga.gov"},
+        {"name": "Howard Sanders", "seat": "District 1", "email": "howardsanders514@yahoo.com"},
+        {"name": "Andy Saxon", "seat": "District 2", "email": "red529@windstream.net"},
+        {"name": "David Clark", "seat": "District 3", "email": "drclarkdist3@windstream.net"},
+        {"name": "William C. Brown", "seat": "District 4", "email": "wbrownboc4@gmail.com"},
+        {"name": "Tracy Norman", "seat": "District 5", "email": "commissionertracynorman@gmail.com"}
+      ]
+    },
+    "13223": {
+      "county": "Paulding",
+      "body": "Board of Commissioners",
+      "shared": "commissioners@paulding.gov",
+      "source": "https://www.paulding.gov/Directory.aspx?DID=5",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Tim Estes", "seat": "Chairman"},
+        {"name": "Keith Dunn", "seat": "Post 1"},
+        {"name": "Sandy Kaecher", "seat": "Commissioner"},
+        {"name": "Virginia Galloway", "seat": "Post 3"},
+        {"name": "Dean Schneider", "seat": "Commissioner"}
+      ]
+    },
+    "13225": {
+      "county": "Peach",
+      "body": "Board of Commissioners",
+      "source": "https://peachcounty.gov/peach-county-board-of-commissioners/",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Roy Lewis", "seat": "Chairman, Post 1", "email": "roy-lewis@peachcounty.gov"},
+        {"name": "Shanita Howell", "seat": "Post 2", "email": "shanita-howell@peachcounty.gov"},
+        {"name": "Betty Hill", "seat": "Post 3", "email": "betty-hill@peachcounty.gov"},
+        {"name": "Martin Moseley", "seat": "Post 4", "email": "martin-moseley@peachcounty.gov"},
+        {"name": "Wade Yoder", "seat": "Post 5 (at large)", "email": "wade-yoder@peachcounty.gov"}
+      ]
+    },
+    "13227": {
+      "county": "Pickens",
+      "body": "Board of Commissioners",
+      "shared": "lthomason@pickenscountyga.gov",
+      "phone": "706-253-8817",
+      "source": "https://www.pickenscountyga.gov/Directory.aspx?DID=7",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Kris Stancil", "seat": "Chairman"},
+        {"name": "Josh Tippens", "seat": "Post 1 (west)"},
+        {"name": "Josh Tatum", "seat": "Post 2 (east)"}
+      ]
+    },
+    "13229": {
+      "county": "Pierce",
+      "body": "Board of Commissioners",
+      "phone": "912-449-2022",
+      "source": "https://piercecountyga.gov/district-commissioners/",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Neal Bennett", "seat": "Chairman"},
+        {"name": "Troy Mattox", "seat": "District 1"},
+        {"name": "Graham Raley", "seat": "District 2"},
+        {"name": "Randy Dixon", "seat": "District 3"},
+        {"name": "David Lowman", "seat": "District 4"}
+      ]
+    },
+    "13233": {
+      "county": "Polk",
+      "body": "Board of Commissioners",
+      "source": "https://www.polkga.org/government/board_of_commissioners/index.php",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Chuck Thaxton", "seat": "Chairman"},
+        {"name": "Michael Gravett", "seat": "Vice chairman"},
+        {"name": "Linda Liles", "seat": "Commissioner"},
+        {"name": "David McElwee", "seat": "Commissioner"},
+        {"name": "John Paschal", "seat": "Commissioner"},
+        {"name": "Hal Floyd", "seat": "Commissioner"}
+      ]
+    },
+    "13237": {
+      "county": "Putnam",
+      "body": "Board of Commissioners",
+      "source": "https://www.putnamcountyga.us/Directory.aspx?DID=39",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Bill Sharp", "seat": "Chairman", "email": "bsharp@putnamcountyga.us"},
+        {"name": "Tom McElhenney", "seat": "District 1, vice chairman", "email": "tmcelhenney@putnamcountyga.us"},
+        {"name": "Richard Garrett", "seat": "District 2", "email": "rgarrett@putnamcountyga.us"},
+        {"name": "Stephen Hersey", "seat": "District 3", "email": "shersey@putnamcountyga.us"},
+        {"name": "Jeff Wooten", "seat": "District 4", "email": "jwooten@putnamcountyga.us"}
+      ]
+    },
+    "13239": {
+      "county": "Quitman",
+      "body": "Board of Commissioners",
+      "source": "https://www.gqc-ga.org/home/government/city-county-commission/",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Carvel Lewis", "seat": "Chairman, Post 3", "email": "cclewis@gqc-ga.org"},
+        {"name": "Jerry Green", "seat": "Post 1", "email": "jgreen@gqc-ga.org"},
+        {"name": "Richard Baggett", "seat": "Post 2", "email": "rwbaggett@gqc-ga.org"},
+        {"name": "David Kinsey", "seat": "Post 4, vice chairman"},
+        {"name": "Willie H. Bussey", "seat": "Post 5"}
+      ]
+    },
+    "13245": {
+      "county": "Richmond",
+      "body": "Augusta Commission",
+      "source": "https://www.augustaga.gov/652/Augusta-Commission",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Garnett Johnson", "seat": "Mayor", "email": "mayorjohnson@augustaga.gov"},
+        {"name": "Jordan Johnson", "seat": "District 1", "email": "cjohnson4@augustaga.gov"},
+        {"name": "Stacy Pulliam", "seat": "District 2", "email": "spulliam@augustaga.gov"},
+        {"name": "Catherine Smith-Rice", "seat": "District 3", "email": "cmcknight@augustaga.gov"},
+        {"name": "Lonnie Wimberly", "seat": "District 4", "email": "lwimberly@augustaga.gov"},
+        {"name": "Don Clark", "seat": "District 5", "email": "dclark@augustaga.gov"},
+        {"name": "Tony Lewis", "seat": "District 6", "email": "tony.lewis@augustaga.gov"},
+        {"name": "Tina Slendak", "seat": "District 7", "email": "tslendak@augustaga.gov"},
+        {"name": "Brandon Garrett", "seat": "District 8", "email": "bgarrett@augustaga.gov"},
+        {"name": "Francine Scott", "seat": "District 9", "email": "fscott@augustaga.gov"},
+        {"name": "Wayne Guilfoyle", "seat": "District 10", "email": "wguilfoyle@augustaga.gov"}
+      ]
+    },
+    "13247": {
+      "county": "Rockdale",
+      "body": "Board of Commissioners",
+      "phone": "(770) 278-7001",
+      "source": "https://www.rockdalecountyga.gov/rockdale-board-of-commissioners/",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "JaNice Van Ness", "seat": "Chair and CEO", "email": "janice.vanness@rockdalecountyga.gov"},
+        {"name": "Tuwanya Smith", "seat": "Post 1", "email": "tuwanya.smith@rockdalecountyga.gov"},
+        {"name": "Doreen Williams", "seat": "Post 2", "email": "doreen.williams@rockdalecountyga.gov"}
+      ]
+    },
+    "13253": {
+      "county": "Seminole",
+      "body": "Board of Commissioners",
+      "source": "https://www.seminolecountyga.com/Directory.aspx?DID=13",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Shelia Williams", "seat": "Chairman, District 2", "email": "sdw1953@yahoo.com"},
+        {"name": "Mark Spooner", "seat": "District 1", "email": "mspooner@gmail.com"},
+        {"name": "Brenda Peterson", "seat": "District 3", "email": "bpeterso1962@gmail.com"},
+        {"name": "Jeffrey Braswell", "seat": "District 4", "email": "jbraswell.dist4@yahoo.com"},
+        {"name": "Darius Culverson", "seat": "District 5, vice chairman", "email": "comd5@icloud.com"}
+      ]
+    },
+    "13255": {
+      "county": "Spalding",
+      "body": "Board of Commissioners",
+      "phone": "(770) 467-4280",
+      "source": "https://www.spaldingcounty.com/government/board-of-commissioners",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Gwen Flowers-Taylor", "seat": "District 1", "email": "gflowers-taylor@spaldingcounty.com"},
+        {"name": "James R. Dutton", "seat": "District 2, vice chairman", "email": "jrdutton@spaldingcounty.com"},
+        {"name": "Reginald Watts", "seat": "District 3", "email": "rwatts@spaldingcounty.com"},
+        {"name": "Ryan Bowlden", "seat": "District 4", "email": "rbowlden@spaldingcounty.com"},
+        {"name": "Clay W. Davis III", "seat": "District 5", "email": "cwdavis@spaldingcounty.com"}
+      ]
+    },
+    "13257": {
+      "county": "Stephens",
+      "body": "Board of Commissioners",
+      "phone": "706-886-9491",
+      "source": "https://stephenscountyga.gov/board-of-commissioners/",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Tara Simmons", "seat": "Post 1", "email": "tsimmons@stephenscountyga.gov"},
+        {"name": "Debbie Whitlock", "seat": "Post 2", "email": "debbiewhitlock13@gmail.com"},
+        {"name": "Craig Oglesby", "seat": "Post 3", "email": "coglesby@stephenscountyga.gov"},
+        {"name": "Chris Rickman", "seat": "Post 4", "email": "crickman@stephenscountyga.gov"},
+        {"name": "Chuck Wright", "seat": "Post 5", "email": "cwright@stephenscountyga.gov"}
+      ]
+    },
+    "13261": {
+      "county": "Sumter",
+      "body": "Board of Commissioners",
+      "source": "https://www.sumtercountyga.us/Directory.aspx?DID=3",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "David Baldwin", "seat": "Chairman, District 4", "email": "dbaldwin@sumtercountyga.us"},
+        {"name": "Clay Jones", "seat": "District 1", "email": "cjones@sumtercountyga.us"},
+        {"name": "Mark Waddell", "seat": "District 2", "email": "mwaddell@sumtercountyga.us"},
+        {"name": "Jim Reid", "seat": "District 3", "email": "jreid@sumtercountyga.us"},
+        {"name": "Jessie Smith", "seat": "District 5", "email": "jsmith@sumtercountyga.us"}
+      ]
+    },
+    "13267": {
+      "county": "Tattnall",
+      "body": "Board of Commissioners",
+      "phone": "912-557-4335",
+      "source": "https://www.tattnallcountyga.com/board-of-commissioners.cfm",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "William (Bill) J. Kicklighter", "seat": "Chairman"},
+        {"name": "Ricky C. Jarriel", "seat": "District 1"},
+        {"name": "Bobby Kennedy", "seat": "District 2"},
+        {"name": "Billy Conley", "seat": "District 3", "email": "bdconley@windstream.net"},
+        {"name": "Wayne Tatum", "seat": "District 4"},
+        {"name": "Wanda Sue Allen", "seat": "District 5"}
+      ]
+    },
+    "13273": {
+      "county": "Terrell",
+      "body": "Board of Commissioners",
+      "source": "https://terrellcountyga.gov/page1.html",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Wilbur T. Gamble III", "seat": "Chairman (at large)", "email": "wtg@colliergamble.com"},
+        {"name": "Eddie Owens", "seat": "District 1", "email": "eddieedgewood@gmail.com"},
+        {"name": "Ernest M. Johnson", "seat": "District 2", "email": "johnsonandsonfuneralservice@yahoo.com"},
+        {"name": "Larron Copeland", "seat": "District 3, vice chairman", "email": "showtimefarms@hotmail.com"},
+        {"name": "Brad Stafford", "seat": "District 4", "email": "bradstafford@windstream.net"}
+      ]
+    },
+    "13275": {
+      "county": "Thomas",
+      "body": "Board of Commissioners",
+      "phone": "(229) 225-4100",
+      "source": "https://thomascountyboc.org/about-us/county-commissioners",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Mark NeSmith", "seat": "Chairman, District 4"},
+        {"name": "Jeremy G. Rich", "seat": "District 1"},
+        {"name": "Moses L. Gross", "seat": "District 2"},
+        {"name": "Kenneth E. Hickey", "seat": "District 3"},
+        {"name": "Donnie L. Baggett", "seat": "District 5, vice chair"},
+        {"name": "Phillip V. Brown", "seat": "District 7"},
+        {"name": "Zippy T. Vonier", "seat": "District 8"}
+      ]
+    },
+    "13277": {
+      "county": "Tift",
+      "body": "Board of Commissioners",
+      "phone": "(229) 386-7850",
+      "source": "https://www.tiftcounty.org/county_commissionersgovernment/county_commissioners/index.php",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Tony McBrayer", "seat": "Chairman", "email": "tony.mcbrayer@tiftcounty.org"},
+        {"name": "Donnie Hester", "seat": "District 1", "email": "donnie.hester@tiftcounty.org"},
+        {"name": "Melissa Hughes", "seat": "District 2, vice chair", "email": "melissa.hughes@tiftcounty.org"},
+        {"name": "Paul Webb", "seat": "District 3", "email": "paul.webb@tiftcounty.org"},
+        {"name": "Stan Stalnaker", "seat": "District 4", "email": "stan.stalnaker@tiftcounty.org"},
+        {"name": "Tyler Riddle", "seat": "District 5", "email": "tyler.riddle@tiftcounty.org"},
+        {"name": "Greg Wood", "seat": "District 6", "email": "greg.wood@tiftcounty.org"}
+      ]
+    },
+    "13279": {
+      "county": "Toombs",
+      "body": "Board of Commissioners",
+      "shared": "tccommissioners@gmail.com",
+      "phone": "912-526-3311",
+      "source": "https://toombscountyga.gov/county-commission-2/",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Tommy Rollins", "seat": "Chairman"},
+        {"name": "Alfred Cason", "seat": "District 1"},
+        {"name": "Buck Moon", "seat": "District 2"},
+        {"name": "Darriel Nobels", "seat": "District 3"},
+        {"name": "David Beasley", "seat": "District 4"}
+      ]
+    },
+    "13285": {
+      "county": "Troup",
+      "body": "Board of Commissioners",
+      "source": "https://www.troupcountyga.gov/government/commissioners/index.php",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Patrick Crews", "seat": "Chairman, District 1", "email": "pcrews@troupcountyga.gov"},
+        {"name": "James L. Thrailkill Sr.", "seat": "District 2", "email": "jthrailkill@troupcountyga.gov"},
+        {"name": "Rex Scott", "seat": "District 3", "email": "rscott@troupcountyga.gov"},
+        {"name": "Morris Jones", "seat": "District 4", "email": "mjones@troupcountyga.gov"},
+        {"name": "Jimmy D. McCamey Jr.", "seat": "District 5", "email": "jmccamey@troupcountyga.gov"}
+      ]
+    },
+    "13287": {
+      "county": "Turner",
+      "body": "Board of Commissioners",
+      "source": "https://www.turnercountygeorgia.com/commissioners.html",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Dana L. Whiddon", "seat": "Chairwoman, District 3", "email": "dwhiddon@turnercountygeorgia.com"},
+        {"name": "Joe Burgess", "seat": "District 1", "email": "joeburgess1944@yahoo.com"},
+        {"name": "Allen Weaver", "seat": "District 2"},
+        {"name": "Brad Calhoun", "seat": "District 4, vice chairman", "email": "bradcalhountc@gmail.com"},
+        {"name": "Nick Denham", "seat": "District 5", "email": "ndenham@turnercountygeorgia.com"}
+      ]
+    },
+    "13289": {
+      "county": "Twiggs",
+      "body": "Board of Commissioners",
+      "source": "https://www.twiggscounty.us/county-commissioners/",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Ken Fowler", "seat": "Chairman (at large)"},
+        {"name": "Lonnie Ford", "seat": "District 1"},
+        {"name": "Clay Floyd", "seat": "District 2"},
+        {"name": "Keith Washington", "seat": "District 3"},
+        {"name": "Steve Birdsong", "seat": "District 4, vice chairman"}
+      ]
+    },
+    "13291": {
+      "county": "Union",
+      "body": "Sole Commissioner",
+      "source": "https://www.unioncountyga.gov/Directory.aspx?DID=10",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Harold Collins", "seat": "Sole commissioner", "email": "uccommissioner@uniongov.com"}
+      ]
+    },
+    "13293": {
+      "county": "Upson",
+      "body": "Board of Commissioners",
+      "source": "https://www.upsoncountyga.org/Directory.aspx?DID=47",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Dan Brue", "seat": "Chairman", "email": "dbrue@upsoncountyga.org"},
+        {"name": "Christopher Biggs", "seat": "District 1", "email": "cbiggs@upsoncountyga.org"},
+        {"name": "James Ellington", "seat": "District 2", "email": "jellington@upsoncountyga.org"},
+        {"name": "Paul Jones", "seat": "District 3", "email": "pjones@upsoncountyga.org"},
+        {"name": "Benjamin Watson", "seat": "District 4", "email": "bwatson@upsoncountyga.org"}
+      ]
+    },
+    "13295": {
+      "county": "Walker",
+      "body": "Board of Commissioners",
+      "phone": "706-638-1437",
+      "source": "https://www.walkercountyga.gov/government/board_of_commissioners/index.php",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Angie Teems", "seat": "Chairwoman", "email": "countychair@walkerga.us"},
+        {"name": "Robert Blakemore", "seat": "District 1", "email": "district1@walkerga.us"},
+        {"name": "Mark Askew", "seat": "District 2", "email": "district2@walkerga.us"},
+        {"name": "Brian Hart", "seat": "District 3", "email": "district3@walkerga.us"},
+        {"name": "Gene Wilson", "seat": "District 4", "email": "district4@walkerga.us"}
+      ]
+    },
+    "13297": {
+      "county": "Walton",
+      "body": "Board of Commissioners",
+      "source": "https://www.waltoncountyga.gov/Directory.aspx?DID=44",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "David Thompson", "seat": "Chair", "email": "davidg.thompson@co.walton.ga.us"},
+        {"name": "Amarie Warren", "seat": "District 1", "email": "amarie.warren@co.walton.ga.us"},
+        {"name": "Pete Myers", "seat": "District 2", "email": "pete.myers@co.walton.ga.us"},
+        {"name": "Timmy Shelnutt", "seat": "District 3", "email": "timmy@andersongrading.com"},
+        {"name": "Lee Bradford", "seat": "District 4", "email": "bradford4walton@gmail.com"},
+        {"name": "Jeremy Adams", "seat": "District 5", "email": "dradams@co.walton.ga.us"},
+        {"name": "Kirklyn Dixon", "seat": "District 6", "email": "kirklyn.dixon@co.walton.ga.us"}
+      ]
+    },
+    "13299": {
+      "county": "Ware",
+      "body": "Board of Commissioners",
+      "source": "https://www.warecountyga.gov/commission",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Elmer Thrift", "seat": "Chairman", "email": "ethrift@warecountyga.gov", "phone": "(912) 548-7253"},
+        {"name": "Leonard Burse", "seat": "District 1", "email": "lbjr1953@gmail.com", "phone": "(912) 281-7196"},
+        {"name": "Jon Tindall", "seat": "District 2", "email": "jontindall@yahoo.com", "phone": "(912) 590-2438"},
+        {"name": "Timmy Lucas", "seat": "District 3", "email": "lucastimothy@bellsouth.net", "phone": "(912) 286-1890"},
+        {"name": "Barry Cox", "seat": "District 4", "email": "barry1960cox@gmail.com", "phone": "(912) 288-8678"}
+      ]
+    },
+    "13303": {
+      "county": "Washington",
+      "body": "Board of Commissioners",
+      "shared": "boc@washingtoncountyga.gov",
+      "source": "https://washingtoncountyga.gov/Directory.aspx?DID=21",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Mel Daniel Jr.", "seat": "Chairman", "email": "mdaniel@washingtoncountyga.gov"},
+        {"name": "Harlan Archer", "seat": "District 1", "email": "htarcher@yahoo.com"},
+        {"name": "Bobby Jackson", "seat": "District 2"},
+        {"name": "James Hitchcock Jr.", "seat": "District 3"},
+        {"name": "Frank Simmons Jr.", "seat": "District 4, vice chairman"}
+      ]
+    },
+    "13305": {
+      "county": "Wayne",
+      "body": "Board of Commissioners",
+      "source": "https://www.waynecountyga.us/department/index.php?structureid=12",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Mike Gordon", "seat": "District 1", "email": "mgordon@waynecountyga.us"},
+        {"name": "Kevin McCrary", "seat": "District 2", "email": "kmccrary@waynecountyga.us"},
+        {"name": "Tim Hopkins", "seat": "District 3", "email": "thopkins@waynecountyga.us"},
+        {"name": "James \"Boot\" Thomas", "seat": "District 4", "email": "jthomas@waynecountyga.us"},
+        {"name": "Randy Franks", "seat": "District 5", "email": "rfranks@waynecountyga.us"}
+      ]
+    },
+    "13307": {
+      "county": "Webster",
+      "body": "Board of Commissioners",
+      "shared": "websterco@windstream.net",
+      "phone": "(229) 828-5775",
+      "source": "https://webstercountyga.org/commissioners/",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Darrell Holbrook", "seat": "Chair (at large)"},
+        {"name": "David Ingram", "seat": "District 1"},
+        {"name": "Darrell Jones", "seat": "District 2"},
+        {"name": "Melvin Crimes", "seat": "District 3"},
+        {"name": "Jack Holbrook", "seat": "District 4"}
+      ]
+    },
+    "13311": {
+      "county": "White",
+      "body": "Board of Commissioners",
+      "source": "https://www.whitecountyga.gov/Directory.aspx?DID=35",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Travis Turner", "seat": "Chairman", "email": "travis.turner@whitecountyga.gov"},
+        {"name": "Shan Ash", "seat": "District 1", "email": "sash@whitecountyga.gov"},
+        {"name": "Lyn Holcomb", "seat": "District 2", "email": "lholcomb@whitecountyga.gov"},
+        {"name": "Edwin Nix", "seat": "District 3", "email": "enix@whitecountyga.gov"},
+        {"name": "Craig Bryant", "seat": "District 4", "email": "cbryant@whitecountyga.gov"}
+      ]
+    },
+    "13313": {
+      "county": "Whitfield",
+      "body": "Board of Commissioners",
+      "phone": "706-275-7500",
+      "source": "https://www.whitfieldcountyga.com/government/elected_officials/board_of_commissioners/index.php",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Jevin Jensen", "seat": "Chair", "email": "jjensen@whitfieldcountyga.com"},
+        {"name": "Barry Robbins", "seat": "District 1", "email": "brobbins@whitfieldcountyga.com"},
+        {"name": "Robby Staten", "seat": "District 2", "email": "rstaten@whitfieldcountyga.com"},
+        {"name": "John Thomas", "seat": "District 3", "email": "jthomas@whitfieldcountyga.com"},
+        {"name": "Greg Jones", "seat": "District 4", "email": "gjones@whitfieldcountyga.com"}
+      ]
+    },
+    "13315": {
+      "county": "Wilcox",
+      "body": "Board of Commissioners",
+      "source": "https://www.wilcoxcountygeorgia.com/Directory.aspx?DID=17",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Jamie Handley", "seat": "Chairman, District 5"},
+        {"name": "Jowan Johnson", "seat": "District 1"},
+        {"name": "Kerney Hair", "seat": "District 2"},
+        {"name": "Mel Powell", "seat": "District 3"},
+        {"name": "Clay Reid", "seat": "District 4, vice chair"}
+      ]
+    },
+    "13319": {
+      "county": "Wilkinson",
+      "body": "Board of Commissioners",
+      "shared": "info@wilkinsoncounty.net",
+      "source": "https://www.wilkinsoncounty.net/",
+      "checked": "2026-10-23",
+      "members": [
+        {"name": "Anthony (Tony) Bentley", "seat": "Chairman", "email": "abentley@wilkinsoncounty.net"},
+        {"name": "Zachery (Flint) Shepherd", "seat": "District 1, vice chair", "email": "z.shepherd@wilkinsoncounty.net"},
+        {"name": "James Hagins", "seat": "District 2", "email": "jhagins@wilkinsoncounty.net"},
+        {"name": "Robert Dame", "seat": "District 3", "email": "rdame@wilkinsoncounty.net"},
+        {"name": "Anderson Ford", "seat": "District 4", "email": "aford@wilkinsoncounty.net"}
+      ]
+    }
+  }
+}

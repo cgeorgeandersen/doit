@@ -14,7 +14,11 @@
  *      time and served from this site.
  *   3. The mayor or county leader, from Wikidata, matched by the Census's
  *      GNIS code for the place.
+ *   4. The county's commissioners, where they have been collected
+ *      (src/lib/boards.ts), matched by the county's Census code.
  */
+
+import { loadBoard, type CountyBoard } from './boards';
 
 export interface Area {
   name: string;
@@ -26,8 +30,8 @@ export interface Jurisdiction {
   state: { name: string; abbr: string };
   /** City, town, village, borough or township government, if the spot is inside one. */
   local: (Area & { label: string; kind: string }) | null;
-  /** The county, and whether it has a government of its own (some, as in Connecticut, don't). */
-  county: (Area & { governs: boolean }) | null;
+  /** The county, its five-digit Census code, and whether it has a government of its own (some, as in Connecticut, don't). */
+  county: (Area & { fips: string; governs: boolean }) | null;
   upper: { name: string; basename: string } | null;
   lower: { name: string; basename: string } | null;
   /** House district number; 0 for at-large seats and delegates. */
@@ -49,7 +53,7 @@ export interface Official {
 export interface Responsible {
   jurisdiction: Jurisdiction;
   local: { label: string; body: string; official?: Official; website?: string } | null;
-  county: { label: string; body: string; official?: Official; website?: string } | null;
+  county: { label: string; body: string; official?: Official; website?: string; board?: CountyBoard } | null;
   state: Official[];
   federal: Official[];
 }
@@ -117,7 +121,7 @@ export function parseCensus(json: CensusResponse): Jurisdiction | null {
     local,
     county:
       county?.NAME && state.STUSAB !== 'DC'
-        ? { name: county.NAME, gnis: county.COUNTYNS ?? '', governs: GOVERNS.has(county.FUNCSTAT ?? '') }
+        ? { name: county.NAME, gnis: county.COUNTYNS ?? '', fips: county.GEOID ?? '', governs: GOVERNS.has(county.FUNCSTAT ?? '') }
         : null,
     upper: upper?.NAME ? { name: upper.NAME, basename: upper.BASENAME ?? upper.NAME } : null,
     lower: lower?.NAME ? { name: lower.NAME, basename: lower.BASENAME ?? lower.NAME } : null,
@@ -472,6 +476,15 @@ export interface PlaceSummary {
   cameras: number;
   official?: Official;
   website?: string;
+  /** For unincorporated county land, the county's commissioners when they have been collected. */
+  board?: CountyBoard;
+}
+
+export interface BoardSummary {
+  label: string;
+  board: CountyBoard;
+  /** Cameras in the county, inside cities or not. */
+  cameras: number;
 }
 
 /** The elected body that usually approves police camera contracts for a kind of government. */
@@ -503,6 +516,8 @@ export interface ResponsibleSummary {
   legislators: Array<Official & { cameras: number }>;
   /** Members of Congress, most cameras first. */
   congress: Array<Official & { cameras: number }>;
+  /** County boards whose counties hold the cameras, where collected, most cameras first. */
+  boards: BoardSummary[];
   /** Cameras whose location couldn't be looked up (outside the U.S., or a failed request). */
   unresolved: number;
 }
@@ -523,6 +538,7 @@ export async function summarizeResponsible(
 
   const places = new Map<string, Omit<PlaceSummary, 'body'> & { area: Area | null; kind: string }>();
   const people = new Map<string, Official & { cameras: number }>();
+  const counties = new Map<string, { state: string; name: string; cameras: number }>();
   const congress = new Map<string, Official & { cameras: number }>();
   const tally = (map: Map<string, Official & { cameras: number }>, o: Official) => {
     const key = `${o.role}|${o.name}|${o.district ?? ''}`;
@@ -549,6 +565,11 @@ export async function summarizeResponsible(
     const place = places.get(label) ?? { label, cameras: 0, area, kind: j.local?.kind ?? 'county' };
     place.cameras++;
     places.set(label, place);
+    if (county?.governs && county.fips) {
+      const c = counties.get(county.fips) ?? { state: j.state.abbr, name: county.name, cameras: 0 };
+      c.cameras++;
+      counties.set(county.fips, c);
+    }
 
     const file = await loadStateFile(j.state.abbr).catch(() => null);
     if (!file) continue;
@@ -556,9 +577,13 @@ export async function summarizeResponsible(
     for (const o of matchCongress(j, file)) tally(congress, o);
   }
 
-  const heads = await loadHeads([...places.values()].map((p) => p.area?.gnis ?? '')).catch(
-    () => new Map<string, HeadOfGovernment | undefined>(),
-  );
+  const [heads, boards] = await Promise.all([
+    loadHeads([...places.values()].map((p) => p.area?.gnis ?? '')).catch(() => new Map<string, HeadOfGovernment | undefined>()),
+    Promise.all(
+      [...counties].map(async ([fips, c]) => ({ fips, ...c, board: await loadBoard(c.state, fips).catch(() => null) })),
+    ),
+  ]);
+  const boardOf = new Map(boards.flatMap((b) => (b.board ? [[b.name, b.board] as const] : [])));
   const byCount = <T extends { cameras: number }>(a: T, b: T) => b.cameras - a.cameras;
   return {
     places: [...places.values()]
@@ -570,11 +595,20 @@ export async function summarizeResponsible(
           if (head.headUrl) out.official.url = head.headUrl;
         }
         if (head?.website) out.website = head.website;
+        const board = kind === 'county' ? boardOf.get(p.label.replace(/^Unincorporated /, '')) : undefined;
+        if (board) {
+          out.board = board;
+          out.body = board.body;
+          delete out.official;
+        }
         return out;
       })
       .sort(byCount),
     legislators: [...people.values()].sort(byCount),
     congress: [...congress.values()].sort(byCount),
+    boards: boards
+      .flatMap((b) => (b.board ? [{ label: b.name, board: b.board, cameras: b.cameras }] : []))
+      .sort(byCount),
     unresolved,
   };
 }
@@ -591,11 +625,15 @@ export async function lookupResponsible(
 ): Promise<Responsible | null> {
   const jurisdiction = await lookupJurisdiction(lon, lat);
   if (!jurisdiction) return null;
-  const file = await loadStateFile(jurisdiction.state.abbr).catch(() => null);
+  const county = jurisdiction.county?.governs ? jurisdiction.county : null;
+  const [file, board] = await Promise.all([
+    loadStateFile(jurisdiction.state.abbr).catch(() => null),
+    county ? loadBoard(jurisdiction.state.abbr, county.fips).catch(() => null) : null,
+  ]);
   const responsible: Responsible = {
     jurisdiction,
     local: jurisdiction.local ? { label: jurisdiction.local.label, body: governingBody(jurisdiction.local.kind) } : null,
-    county: jurisdiction.county?.governs ? { label: jurisdiction.county.name, body: governingBody('county') } : null,
+    county: county ? { label: county.name, body: board?.body ?? governingBody('county'), ...(board ? { board } : {}) } : null,
     state: file ? matchLegislators(jurisdiction, file) : [],
     federal: file ? matchCongress(jurisdiction, file) : [],
   };
@@ -604,10 +642,11 @@ export async function lookupResponsible(
   const heads = await loadHeads([jurisdiction.local?.gnis ?? '', jurisdiction.county?.gnis ?? '']).catch(
     () => new Map<string, HeadOfGovernment | undefined>(),
   );
-  const fill = (target: { official?: Official; website?: string } | null, area: Area | null, kind: string) => {
+  const fill = (target: { official?: Official; website?: string; board?: CountyBoard } | null, area: Area | null, kind: string) => {
     const head = area ? heads.get(area.gnis) : undefined;
     if (!target || !head) return;
-    if (head.head) {
+    // A collected board names its own chair; Wikidata's can be a term behind.
+    if (head.head && !target.board) {
       target.official = { role: officeTitle(head.office, kind), name: head.head, source: 'Wikidata' };
       if (head.headUrl) target.official.url = head.headUrl;
     }

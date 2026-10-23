@@ -11,7 +11,7 @@ import type { ResponsibleSummary } from '../lib/officials';
 import type { RouteOption } from '../lib/route';
 import type { RouteCount } from '../lib/seen';
 import type { Town } from '../lib/town';
-import { bodyButton, contactButtons } from './contact';
+import { boardButton, bodyButton, contactButtons } from './contact';
 import { fill, h, type Child } from './dom';
 
 export interface RouteResult {
@@ -362,6 +362,9 @@ export class ResultsView {
     }
 
     const s = st.summary;
+    const where = this.town ? 'town' : 'drive';
+    // A county already listed for its unincorporated land, with every one of its cameras there, needn't appear twice.
+    const boards = s.boards.filter((b) => !s.places.some((p) => p.board === b.board && p.cameras === b.cameras));
     const people = [...s.legislators, ...s.congress];
     const shownPeople = this.peopleExpanded ? people : people.slice(0, PEOPLE_PREVIEW);
     const tally = [
@@ -384,10 +387,38 @@ export class ResultsView {
               h('span', { class: 'gov-name' }, p.label),
               h('span', { class: 'gov-count' }, `${fmtInt(p.cameras)} ${plural(p.cameras, 'camera', 'cameras')}`),
               h('span', { class: 'gov-people' }, p.official ? `${p.official.role} ${p.official.name} · ${p.body}` : p.body),
-              h('span', { class: 'gov-actions' }, bodyButton(p.body, p.website, i === 0 ? 'primary' : 'small')),
+              h(
+                'span',
+                { class: 'gov-actions' },
+                p.board
+                  ? boardButton(p.board, { cameras: p.cameras, where }, i === 0 ? 'primary' : 'small')
+                  : bodyButton(p.body, p.website, i === 0 ? 'primary' : 'small'),
+              ),
             ),
           ),
         ),
+        boards.length
+          ? h(
+              'div',
+              null,
+              h('p', { class: 'block-title' }, 'County commissioners for these cameras'),
+              h('p', { class: 'who-why' }, 'They set the sheriff’s budget and vote on county camera contracts, inside city limits or not.'),
+              h(
+                'ul',
+                { class: 'gov-list' },
+                boards.map((b) =>
+                  h(
+                    'li',
+                    null,
+                    h('span', { class: 'gov-name' }, b.label),
+                    h('span', { class: 'gov-count' }, `${fmtInt(b.cameras)} ${plural(b.cameras, 'camera', 'cameras')}`),
+                    h('span', { class: 'gov-people' }, `${b.board.body} · ${b.board.members.map((m) => m.name).join(', ')}`),
+                    h('span', { class: 'gov-actions' }, boardButton(b.board, { cameras: b.cameras, where }, 'small')),
+                  ),
+                ),
+              ),
+            )
+          : null,
         people.length
           ? h(
               'div',
