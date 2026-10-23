@@ -5,13 +5,14 @@
  * tapping pins the full card so its links can be used.
  */
 
+import type { CountyBoard } from '../lib/boards';
 import { osmLinks, type Camera } from '../lib/camera';
 import { describeDirection, parseDirection } from '../lib/direction';
 import { fmtMiles } from '../lib/format';
 import { fundingRows, type FundingRow } from '../lib/funding';
 import { lookupResponsible, type Official, type Responsible } from '../lib/officials';
 import { describeVerdict, isCounted, type Sighting } from '../lib/seen';
-import { bodyButton, contactButtons, lowerFirst } from './contact';
+import { boardButton, boardDetails, bodyButton, contactButtons, lowerFirst } from './contact';
 import { fill, h, type Child } from './dom';
 
 type Pt = { x: number; y: number };
@@ -229,6 +230,7 @@ export class CameraCard {
 
     const blocks: Child[] = [];
     const lead = leadOf(r);
+    const about = { camera: this.camera ? osmLinks(this.camera).view : 'https://www.openstreetmap.org' };
     if (lead) {
       blocks.push(
         h('p', { class: 'who-name' }, lead.label),
@@ -240,14 +242,18 @@ export class CameraCard {
           lead.official?.url ? [' · ', h('a', { href: lead.official.url, target: '_blank', rel: 'noopener' }, 'Check on Wikidata')] : null,
         ),
         h('p', { class: 'who-why' }, `The ${lowerFirst(lead.body)} usually approves camera contracts like this one, and can cancel them.`),
-        bodyButton(lead.body, lead.website, 'primary'),
+        lead.board ? boardButton(lead.board, about, 'primary') : bodyButton(lead.body, lead.website, 'primary'),
+        ...(lead.board ? boardDetails(lead.board) : []),
       );
     }
 
     const others: HTMLElement[] = [];
     if (r.local && r.county) {
+      const { board } = r.county;
       others.push(
-        row(r.county.label, [r.county.official ? `${r.county.official.role} ${r.county.official.name}` : '', r.county.body].filter(Boolean).join(' · '), bodyButton(r.county.body, r.county.website, 'small')),
+        board
+          ? row(r.county.label, `${board.body} · ${board.members.map((m) => m.name).join(', ')}`, boardButton(board, about, 'small'))
+          : row(r.county.label, [r.county.official ? `${r.county.official.role} ${r.county.official.name}` : '', r.county.body].filter(Boolean).join(' · '), bodyButton(r.county.body, r.county.website, 'small')),
       );
     }
     for (const p of [...r.state, ...r.federal]) others.push(personRow(p));
@@ -258,7 +264,7 @@ export class CameraCard {
 }
 
 /** The government closest to the camera: its city or town, or its county on unincorporated land. */
-function leadOf(r: Responsible): { label: string; body: string; official?: Official; website?: string } | null {
+function leadOf(r: Responsible): { label: string; body: string; official?: Official; website?: string; board?: CountyBoard } | null {
   if (r.local) return r.local;
   if (r.county) return { ...r.county, label: `${r.county.label} (unincorporated)` };
   return null;

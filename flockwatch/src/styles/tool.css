@@ -1201,6 +1201,13 @@
   color: var(--ink-2);
 }
 
+/* Who an "Email all" button reaches, under the button. */
+.board-names {
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: var(--ink-2);
+}
+
 .who-also {
   display: grid;
   margin-top: var(--space-2);
