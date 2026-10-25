@@ -1,0 +1,37 @@
+/*
+ * One look, day or night: a wood-paneled courtroom with brass fittings. The
+ * cards that sit on top (the docket, the newspaper) are paper and ink. Red
+ * is for objections, the death penalty and anything overturned.
+ */
+:root {
+  --font-sans: 'Public Sans Variable', 'Public Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Fraunces Variable', 'Fraunces', Georgia, 'Times New Roman', serif;
+
+  --night: #1a0f0a;
+  --wall: #3a2317;
+  --wall-2: #311d13;
+  --wood: #6b3d1f;
+  --wood-light: #8a5228;
+  --wood-dark: #2a170d;
+  --brass: #d4ad55;
+  --brass-dim: #9c7d3a;
+  --cream: #f6ecd9;
+  --cream-2: #d9c8ad;
+  --cream-3: #a9967a;
+
+  --paper: #f4ead5;
+  --paper-2: #eadcc1;
+  --ink: #2a1d17;
+  --ink-2: #5b4a3e;
+  --rule: #c7b496;
+
+  --red: #b23a3a;
+  --red-bright: #e0605a;
+  --green: #3f7d4f;
+
+  --radius-s: 8px;
+  --radius: 14px;
+  --gutter: 16px;
+  --stage-max: 980px;
+  color-scheme: dark;
+}

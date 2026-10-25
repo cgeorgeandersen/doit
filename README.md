@@ -1,6 +1,6 @@
 # doit
 
-This repository holds six websites, a data prototype and an old iOS app.
+This repository holds seven websites (one of them a game), a data prototype and an old iOS app.
 
 | Folder | What it is | Live at |
 | --- | --- | --- |
@@ -10,6 +10,7 @@ This repository holds six websites, a data prototype and an old iOS app.
 | [`flockwatch/`](flockwatch/) | **Track the Pole**: enter two addresses and see the Flock license plate cameras along the drive, how many would photograph your car, and who answers for each one | [trackthepole.com](https://trackthepole.com) (Vercel, with Root Directory `flockwatch`) |
 | [`utmdm/`](utmdm/) | **UTMDM**: a shared table for classifying a team's UTMs. Type in a cell, or write a rule like "if campaign contains cup, then Type is Marketing"; add any column; every change is a version you can undo. A demo with fictional data that runs in the browser. | Vercel, with Root Directory `utmdm` |
 | [`sealed/`](sealed/) | **Sealed**: a group vote where every ballot stays secret until everyone has voted. Make a list, send the link, everyone rates, picks or ranks on their own phone, and the combined result opens when the last vote is in. | Vercel, with Root Directory `sealed` and an Upstash Redis database |
+| [`all-rise/`](all-rise/) | **All Rise**: a courtroom game where you're the judge. Hear the prosecution and the defense, keep the gallery in order, then strike the gavel: set them free, fine them, lock them up or worse. Six cases of 30 to 45 seconds; some ridiculous, some genuinely hard. | Vercel, with Root Directory `all-rise` |
 | [`campaign-mapping/`](campaign-mapping/) | **Campaign Mapping Layer**: classifies messy UTM strings from independent operators with a versioned rule table, and reports how much of the data and spend the rules cover. Synthetic data only. | Not deployed yet |
 | `Doit/`, `Doit.xcodeproj/` | A 2019 iOS to-do app | Not deployed |
 
@@ -36,6 +37,10 @@ See [`utmdm/README.md`](utmdm/README.md).
 ## Sealed
 
 See [`sealed/README.md`](sealed/README.md).
+
+## All Rise
+
+See [`all-rise/README.md`](all-rise/README.md).
 
 ## Campaign Mapping Layer
 

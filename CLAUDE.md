@@ -1,6 +1,6 @@
 # This repository
 
-Seven independent projects share this repository. Changing one never requires touching another. The six websites each deploy as their own Vercel project with their own Root Directory; the Campaign Mapping Layer is a Python app that isn't deployed (Streamlit can't run on Vercel; see its README).
+Eight independent projects share this repository. Changing one never requires touching another. The seven websites each deploy as their own Vercel project with their own Root Directory; the Campaign Mapping Layer is a Python app that isn't deployed (Streamlit can't run on Vercel; see its README).
 
 | Folder | What it is | Guide |
 | --- | --- | --- |
@@ -11,6 +11,7 @@ Seven independent projects share this repository. Changing one never requires to
 | `campaign-mapping/` | Campaign Mapping Layer, a prototype that classifies messy UTM strings with a versioned rule table and reports coverage; synthetic data only (Python, SQLite, Streamlit). The engine in `campaign_mapping/` must never import Streamlit | [`campaign-mapping/README.md`](campaign-mapping/README.md) |
 | `utmdm/` | UTMDM, a shared, versioned table for classifying a team's UTMs by typing in cells or with sentence rules, with columns the team adds, and an Import & export page where the GA4 and warehouse connections are still placeholders; runs entirely in the browser (Vite, vanilla TypeScript). Its engine in `src/core/` has no DOM code, and the workspace is a list of changes that `store.ts` saves | [`utmdm/README.md`](utmdm/README.md) |
 | `sealed/` | Sealed, a group vote where every ballot stays secret until everyone has voted (Vite, vanilla TypeScript, one Vercel Function in `api/` with Upstash Redis). `src/core/` is shared by browser and server and has no DOM; server-side relative imports end in `.js`; no API response may ever include another person's ballot | [`sealed/README.md`](sealed/README.md) |
+| `all-rise/` | All Rise, a courtroom game: hear both sides, strike the gavel, sentence anyone from a fine to the death penalty; six cases of 30 to 45 seconds each, silly and serious (Vite, vanilla TypeScript, no runtime dependencies). Every word of the cases is in `src/core/cases.ts`; `src/core/` has no DOM code | [`all-rise/README.md`](all-rise/README.md) |
 | `Doit/`, `Doit.xcodeproj/` | A 2019 iOS app, not deployed | — |
 
 - The root `vercel.json` serves `what-do-i-actually-do/`. Don't repoint it; the other sites set their Root Directory in Vercel instead.
