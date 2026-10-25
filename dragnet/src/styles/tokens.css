@@ -1,0 +1,46 @@
+/*
+ * Design tokens. Dragnet is always dark: it imitates an operations console,
+ * the kind of screen wall a Real-Time Crime Center runs on. Cyan is the
+ * system's own voice; amber warns; red is a hit or a harm; magenta marks what
+ * the data reveals about a person that they never chose to share.
+ */
+:root {
+  color-scheme: dark;
+  --font-ui: 'IBM Plex Sans Condensed', 'Roboto Condensed', 'Arial Narrow', system-ui, sans-serif;
+  --font-body: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+  --bg: #05090d;
+  --bg-2: #081017;
+  --panel: #0b141c;
+  --panel-2: #0f1b25;
+  --panel-3: #142331;
+  --line: #1a2a38;
+  --line-2: #24394b;
+  --text: #d6e2ee;
+  --text-2: #a9bccd;
+  --muted: #7d92a6;
+  --faint: #4a5b6d;
+  --accent: #39d0ff;
+  --accent-2: #1f8fb8;
+  --accent-ink: #001a24;
+  --accent-tint: rgba(57, 208, 255, 0.1);
+  --warn: #ffb547;
+  --warn-tint: rgba(255, 181, 71, 0.1);
+  --danger: #ff5c69;
+  --danger-tint: rgba(255, 79, 94, 0.12);
+  --ok: #3ee09a;
+  --sens: #ff6ad5;
+  --sens-tint: rgba(255, 95, 210, 0.1);
+  --violet: #a38bff;
+
+  --radius-s: 4px;
+  --radius: 6px;
+  --radius-l: 10px;
+  --gutter: 16px;
+  --rail-w: 76px;
+  --panel-w: 430px;
+  --top-h: 56px;
+  --shadow: 0 10px 40px rgba(0, 0, 0, 0.55);
+  --focus: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent);
+}

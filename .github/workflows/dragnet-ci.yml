@@ -1,0 +1,36 @@
+# Checks Dragnet (dragnet/) on every push to master and pull request that touches
+# it: install, tests, and a type-checked production build. Hosting is on Vercel
+# (see dragnet/vercel.json); this workflow does not deploy.
+name: Dragnet
+
+on:
+  push:
+    branches: [master]
+    paths: ['dragnet/**', '.github/workflows/dragnet-ci.yml']
+  pull_request:
+    paths: ['dragnet/**', '.github/workflows/dragnet-ci.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dragnet-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: dragnet
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: dragnet/package-lock.json
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
