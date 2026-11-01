@@ -1,6 +1,6 @@
 # doit
 
-This repository holds six websites, a data prototype and an old iOS app.
+This repository holds six websites, a seventh in the design stage, a data prototype and an old iOS app.
 
 | Folder | What it is | Live at |
 | --- | --- | --- |
@@ -11,6 +11,7 @@ This repository holds six websites, a data prototype and an old iOS app.
 | [`utmdm/`](utmdm/) | **UTMDM**: a shared table for classifying a team's UTMs. Type in a cell, or write a rule like "if campaign contains cup, then Type is Marketing"; add any column; every change is a version you can undo. A demo with fictional data that runs in the browser. | Vercel, with Root Directory `utmdm` |
 | [`sealed/`](sealed/) | **Sealed**: a group vote where every ballot stays secret until everyone has voted. Make a list, send the link, everyone rates, picks or ranks on their own phone, and the combined result opens when the last vote is in. | Vercel, with Root Directory `sealed` and an Upstash Redis database |
 | [`campaign-mapping/`](campaign-mapping/) | **Campaign Mapping Layer**: classifies messy UTM strings from independent operators with a versioned rule table, and reports how much of the data and spend the rules cover. Synthetic data only. | Not deployed yet |
+| [`cherokee-small-jobs/`](cherokee-small-jobs/) | **Cherokee Small Jobs**: a website for a handyman company in Cherokee County, GA. Four homepage design options to choose from, in red, white and black. | Not deployed yet |
 | `Doit/`, `Doit.xcodeproj/` | A 2019 iOS to-do app | Not deployed |
 
 ## What Do I Actually Do?

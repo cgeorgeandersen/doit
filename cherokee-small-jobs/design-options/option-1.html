@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cherokee Small Jobs | Handyman in Cherokee County, GA</title>
+<meta name="description" content="Handyman repairs, installs and odd jobs across Cherokee County, Georgia. Drywall, painting, TV mounting, minor plumbing, doors, decks and more. Free estimates.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,800&family=Barlow:wght@400;500;600&display=swap">
+<style>
+/* Option 1, Shop Floor. Layout: full-bleed black bands on a 1240px column; hazard tape and a tape-measure strip mark the seams. */
+:root{
+  --ink:#0d0c0c;
+  --steel:#181616;
+  --line:#2f2a2a;
+  --red:#e1251b;
+  --white:#ffffff;
+  --mute:#b5adac;
+  --display:"Barlow Condensed","Arial Narrow","Helvetica Neue",Arial,sans-serif;
+  --body:"Barlow","Helvetica Neue",Arial,sans-serif;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--ink);color:var(--white);font:400 1.0625rem/1.6 var(--body)}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--red);outline-offset:3px}
+.wrap{max-width:1240px;margin-inline:auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+.ic{width:1.25em;height:1.25em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+h1,h2,h3,h4{font-family:var(--display);text-transform:uppercase;line-height:.92;margin:0;text-wrap:balance}
+h2{font-size:clamp(2.75rem,6vw,4.75rem);font-weight:800}
+h3{font-size:1.5rem;font-weight:700;letter-spacing:.02em;line-height:1}
+p{margin:0}
+.eyebrow{font:700 .95rem/1 var(--display);letter-spacing:.2em;text-transform:uppercase;color:var(--red)}
+.red{color:var(--red)}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.6em;font:700 1.2rem/1 var(--display);letter-spacing:.08em;text-transform:uppercase;text-decoration:none;padding:1em 1.4em;border:2px solid var(--red);background:var(--red);color:var(--white);cursor:pointer;transition:background .15s,color .15s,border-color .15s}
+.btn:hover{background:var(--white);border-color:var(--white);color:var(--ink)}
+.btn-ghost{background:transparent;border-color:var(--white)}
+.btn-sm{font-size:1.05rem;padding:.7em 1em}
+.btn-black{background:var(--ink);border-color:var(--ink)}
+
+/* Header */
+.top{position:sticky;top:0;z-index:20;background:var(--ink)}
+.top-in{display:flex;align-items:center;gap:28px;min-height:76px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;margin-right:auto}
+.mark{width:46px;height:46px;background:var(--red);display:grid;place-items:center}
+.mark .ic{width:26px;height:26px}
+.brand-txt{font:800 1.5rem/.9 var(--display);text-transform:uppercase;letter-spacing:.02em}
+.brand-txt small{display:block;font-size:.72rem;letter-spacing:.26em;color:var(--mute);font-weight:600;margin-top:5px}
+.nav{display:flex;gap:28px}
+.nav a{font:600 1.05rem/1 var(--display);letter-spacing:.12em;text-transform:uppercase;text-decoration:none;color:var(--mute)}
+.nav a:hover{color:var(--white)}
+/* tape measure: a major tick every 80px, eighths between */
+.tape{height:14px;background-color:var(--ink);background-image:repeating-linear-gradient(90deg,var(--red) 0 2px,transparent 2px 80px),repeating-linear-gradient(90deg,var(--red) 0 1px,transparent 1px 10px);background-size:100% 14px,100% 6px;background-repeat:no-repeat}
+@media (max-width:860px){.nav{display:none}}
+@media (max-width:420px){.brand-txt small{display:none}.top-in{gap:12px}.top .btn-sm span{display:none}}
+
+/* Hero */
+.hero{padding-block:clamp(44px,7vw,96px) clamp(44px,6vw,80px)}
+.hero .eyebrow{margin-bottom:22px}
+.hero h1{font-size:clamp(4.1rem,13.5vw,11.25rem);font-weight:800;line-height:.84}
+.hero h1 em{font-style:italic;color:var(--red)}
+.hero-grid{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:clamp(24px,4vw,56px);margin-top:clamp(32px,4vw,52px);padding-top:30px;border-top:2px solid var(--white)}
+.lede{font-size:1.2rem;max-width:36ch}
+.cta-col{display:flex;flex-direction:column;gap:12px;align-items:stretch;max-width:340px}
+.facts{list-style:none;margin:0;padding:0;display:grid;gap:14px;align-content:start}
+.facts li{display:flex;gap:12px;align-items:center;font:700 1.2rem/1.1 var(--display);letter-spacing:.06em;text-transform:uppercase}
+.facts .ic{color:var(--red);width:22px;height:22px;stroke-width:2.5}
+@media (max-width:900px){.hero-grid{grid-template-columns:1fr}}
+
+/* Hazard tape and ticker */
+.hazard{height:20px;background:repeating-linear-gradient(-45deg,var(--red) 0 20px,var(--ink) 20px 40px)}
+.ticker{overflow:hidden;background:var(--steel);border-bottom:1px solid var(--line)}
+.ticker-track{display:flex;width:max-content;animation:tick 48s linear infinite}
+.ticker span{font:800 1.6rem/1 var(--display);text-transform:uppercase;letter-spacing:.06em;padding-block:18px;white-space:nowrap;display:flex;align-items:center}
+.ticker span::after{content:"";width:10px;height:10px;background:var(--red);margin-inline:28px;transform:rotate(45deg)}
+@keyframes tick{to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){.ticker-track{animation:none}}
+
+/* Sections */
+.band{padding-block:clamp(64px,9vw,120px)}
+.band-steel{background:var(--steel)}
+.sec-head{display:grid;grid-template-columns:1fr 1fr;gap:20px 56px;align-items:end;margin-bottom:48px}
+.sec-head .eyebrow{grid-column:1/-1}
+.sec-lede{color:var(--mute);font-size:1.15rem;max-width:46ch}
+@media (max-width:800px){.sec-head{grid-template-columns:1fr}}
+
+.svc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
+.svc{background:var(--ink);padding:28px 24px 32px;display:flex;flex-direction:column;gap:12px;transition:background .15s}
+.svc .ic{width:36px;height:36px;color:var(--red);stroke-width:1.75;margin-bottom:6px}
+.svc p{color:var(--mute);font-size:.98rem;line-height:1.5}
+.svc:hover{background:var(--red)}
+.svc:hover .ic,.svc:hover p{color:var(--white)}
+@media (max-width:1040px){.svc-grid{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:740px){.svc-grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:460px){.svc-grid{grid-template-columns:1fr}}
+
+.listband{background:var(--red);padding-block:clamp(56px,8vw,100px)}
+.listband-in{display:grid;grid-template-columns:1fr 1.1fr;gap:32px 64px;align-items:center}
+.listband h2{font-size:clamp(3rem,7vw,5.75rem)}
+.listband p{font-size:1.2rem;max-width:44ch;margin-bottom:22px}
+.tags{list-style:none;margin:0 0 28px;padding:0;display:flex;flex-wrap:wrap;gap:10px}
+.tags li{border:2px solid var(--white);padding:.45em .8em;font:700 1.05rem/1 var(--display);letter-spacing:.08em;text-transform:uppercase}
+@media (max-width:800px){.listband-in{grid-template-columns:1fr}}
+
+.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(24px,4vw,48px)}
+.steps li{border-top:2px solid var(--line);padding-top:22px;display:grid;gap:12px;align-content:start}
+.num{font:800 7rem/.8 var(--display);color:transparent;-webkit-text-stroke:2px var(--red)}
+.steps p{color:var(--mute)}
+@media (max-width:800px){.steps{grid-template-columns:1fr}}
+
+.area{display:grid;grid-template-columns:1fr 1.2fr;gap:40px 64px;align-items:start}
+.area .sec-lede{margin-top:20px}
+.towns{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line)}
+.towns li{display:flex;align-items:center;gap:10px;padding:18px 0;border-bottom:1px solid var(--line);font:700 1.45rem/1 var(--display);text-transform:uppercase;letter-spacing:.03em}
+.towns .ic{color:var(--red);width:20px;height:20px}
+@media (max-width:860px){.area{grid-template-columns:1fr}}
+@media (max-width:520px){.towns{grid-template-columns:repeat(2,1fr)}}
+
+.reviews{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.review{margin:0;border:2px dashed var(--line);padding:28px;display:grid;gap:16px;align-content:start}
+.stars{color:var(--red);letter-spacing:.2em;font-size:1.1rem}
+.review blockquote{margin:0;font-size:1.15rem}
+.review figcaption{font:700 1rem/1 var(--display);letter-spacing:.12em;text-transform:uppercase;color:var(--mute)}
+@media (max-width:860px){.reviews{grid-template-columns:1fr}}
+
+.est{display:grid;grid-template-columns:1fr 1.15fr;gap:48px 72px;align-items:start}
+.est .sec-lede{margin-top:20px}
+.phone-big{display:inline-block;margin-top:32px;font:800 clamp(2.4rem,5vw,3.6rem)/1 var(--display);color:var(--red);text-decoration:none;letter-spacing:.01em}
+.hours{margin-top:10px;color:var(--mute);font:600 1.05rem/1 var(--display);letter-spacing:.14em;text-transform:uppercase}
+.form{display:grid;gap:18px;background:var(--steel);padding:clamp(22px,4vw,36px);border-top:6px solid var(--red)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.form label{display:grid;gap:8px;font:700 .95rem/1 var(--display);letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}
+.form input,.form select,.form textarea{font:400 1.05rem/1.4 var(--body);color:var(--white);background:var(--ink);border:1px solid var(--line);padding:.8em .9em;width:100%;border-radius:0}
+.form input:focus,.form select:focus,.form textarea:focus{outline:none;border-color:var(--red)}
+.form input[type=file]{padding:.6em}
+.form .btn{justify-self:start}
+.note{min-height:1.4em;color:var(--white)}
+@media (max-width:860px){.est{grid-template-columns:1fr}}
+@media (max-width:480px){.row2{grid-template-columns:1fr}}
+
+.foot{background:var(--ink)}
+.foot-in{display:grid;grid-template-columns:1.4fr 1fr 1fr 1.2fr;gap:32px;padding-block:56px 40px}
+.foot h4{font-size:1rem;letter-spacing:.2em;color:var(--red);margin-bottom:12px;font-weight:700}
+.foot p,.foot a{color:var(--mute);text-decoration:none;display:block}
+.foot a:hover{color:var(--white)}
+.legal{border-top:1px solid var(--line);padding-block:20px 88px;color:var(--mute);font-size:.9rem}
+@media (max-width:860px){.foot-in{grid-template-columns:1fr 1fr}}
+@media (max-width:480px){.foot-in{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
+  <symbol id="i-wall" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="1"/><path d="M3 9.3h18M3 14.7h18M9 4v5.3M15 9.3v5.4M9 14.7V20"/></symbol>
+  <symbol id="i-roller" viewBox="0 0 24 24"><rect x="3" y="3" width="15" height="6" rx="1.5"/><path d="M18 6h2.5v5.5H11V15"/><rect x="9" y="15" width="4" height="6" rx="1"/></symbol>
+  <symbol id="i-tv" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="15" rx="2"/><path d="M17 2l-5 5-5-5"/></symbol>
+  <symbol id="i-box" viewBox="0 0 24 24"><path d="M16.5 9.4L7.5 4.2"/><path d="M21 16V8a2 2 0 0 0-1-1.7l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.7l7 4a2 2 0 0 0 2 0l7-4a2 2 0 0 0 1-1.7z"/><path d="M3.3 7L12 12l8.7-5M12 22V12"/></symbol>
+  <symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 2.7l5.7 5.7a8 8 0 1 1-11.3 0z"/></symbol>
+  <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-4 10.5c.8.8 1.5 1.7 1.5 3v.5h5v-.5c0-1.3.7-2.2 1.5-3A6 6 0 0 0 12 3z"/></symbol>
+  <symbol id="i-door" viewBox="0 0 24 24"><path d="M6 21V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v17M3 21h18M14.5 12h.01"/></symbol>
+  <symbol id="i-square" viewBox="0 0 24 24"><path d="M4 3v17h17v-4H8V3z"/><path d="M4 7h2M4 11h2M12 20v-2M16 20v-2"/></symbol>
+  <symbol id="i-tile" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></symbol>
+  <symbol id="i-fence" viewBox="0 0 24 24"><path d="M4 21V7l1.5-2.5L7 7v14M10.5 21V7L12 4.5 13.5 7v14M17 21V7l1.5-2.5L20 7v14M2 10.5h20M2 16.5h20"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></symbol>
+  <symbol id="i-wrench" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></symbol>
+  <symbol id="i-hammer" viewBox="0 0 24 24"><path d="M3.5 20.5l9-9"/><path d="M11.7 3.9l8.5 8.5-2.9 2.8-8.5-8.5z"/></symbol>
+  <symbol id="i-list" viewBox="0 0 24 24"><path d="M10 6h11M10 12h11M10 18h11"/><path d="M3 6l1.5 1.5L7 5M3 12l1.5 1.5L7 11M3 18l1.5 1.5L7 17"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+  <symbol id="i-camera" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></symbol>
+  <symbol id="i-tag" viewBox="0 0 24 24"><path d="M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0L2 12V2h10l8.6 8.6a2 2 0 0 1 0 2.8z"/><path d="M7 7h.01"/></symbol>
+</svg>
+
+
+<header class="top">
+  <div class="wrap top-in">
+    <a class="brand" href="#top" aria-label="Cherokee Small Jobs home">
+      <span class="mark"><svg class="ic"><use href="#i-hammer"/></svg></span>
+      <span class="brand-txt">Cherokee Small Jobs<small>Handyman · Cherokee Co., GA</small></span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="#services">Services</a>
+      <a href="#how">How it works</a>
+      <a href="#area">Service area</a>
+      <a href="#estimate">Free estimate</a>
+    </nav>
+    <a class="btn btn-sm" href="tel:+17705550142"><svg class="ic"><use href="#i-phone"/></svg><span>(770) 555-0142</span></a>
+  </div>
+  <div class="tape" aria-hidden="true"></div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap">
+      <p class="eyebrow">Handyman · Cherokee County, Georgia</p>
+      <h1>No job too <em>small.</em></h1>
+      <div class="hero-grid">
+        <p class="lede">Leaky faucet, sticking door, a TV that needs mounting, a list that keeps getting longer. One call and it's handled, from Ball Ground down to Towne Lake.</p>
+        <div class="cta-col">
+          <a class="btn" href="#estimate">Get a free estimate <svg class="ic"><use href="#i-arrow"/></svg></a>
+          <a class="btn btn-ghost" href="tel:+17705550142"><svg class="ic"><use href="#i-phone"/></svg>Call or text</a>
+        </div>
+        <ul class="facts">
+          <li><svg class="ic"><use href="#i-check"/></svg>Free estimates</li>
+          <li><svg class="ic"><use href="#i-check"/></svg>Price agreed up front</li>
+          <li><svg class="ic"><use href="#i-check"/></svg>We clean up after</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <div class="hazard" aria-hidden="true"></div>
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-track">
+      <span>Drywall</span><span>Painting</span><span>TV Mounting</span><span>Furniture Assembly</span><span>Faucets &amp; Toilets</span><span>Light Fixtures</span><span>Ceiling Fans</span><span>Doors &amp; Locks</span><span>Trim &amp; Carpentry</span><span>Tile &amp; Grout</span><span>Decks &amp; Fences</span><span>Pressure Washing</span><span>Gutters</span><span>Grab Bars</span>
+      <span>Drywall</span><span>Painting</span><span>TV Mounting</span><span>Furniture Assembly</span><span>Faucets &amp; Toilets</span><span>Light Fixtures</span><span>Ceiling Fans</span><span>Doors &amp; Locks</span><span>Trim &amp; Carpentry</span><span>Tile &amp; Grout</span><span>Decks &amp; Fences</span><span>Pressure Washing</span><span>Gutters</span><span>Grab Bars</span>
+    </div>
+  </div>
+
+  <section id="services" class="band">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">What we fix</p>
+        <h2>The whole<br>to-do list.</h2>
+        <p class="sec-lede">The repairs, installs and odd jobs that are too small for a contractor and too annoying to keep putting off.</p>
+      </div>
+      <div class="svc-grid">
+        <article class="svc"><svg class="ic"><use href="#i-wall"/></svg><h3>Drywall Repair</h3><p>Holes, cracks, water spots, texture matching</p></article>
+        <article class="svc"><svg class="ic"><use href="#i-roller"/></svg><h3>Painting</h3><p>Rooms, accent walls, trim, doors, touch-ups</p></article>
+        <article class="svc"><svg class="ic"><use href="#i-tv"/></svg><h3>TV &amp; Wall Mounting</h3><p>TVs, shelves, mirrors, art, curtain rods, blinds</p></article>
+        <article class="svc"><svg class="ic"><use href="#i-box"/></svg><h3>Furniture Assembly</h3><p>Flat-pack furniture, beds, cribs, desks, patio sets</p></article>
+        <article class="svc"><svg class="ic"><use href="#i-drop"/></svg><h3>Minor Plumbing</h3><p>Leaky faucets, running toilets, disposals, fixture swaps</p></article>
+        <article class="svc"><svg class="ic"><use href="#i-bulb"/></svg><h3>Lights &amp; Fans</h3><p>Light fixtures, ceiling fans, video doorbells, switch swaps</p></article>
+        <article class="svc"><svg class="ic"><use href="#i-door"/></svg><h3>Doors &amp; Locks</h3><p>Sticking doors, new interior doors, deadbolts, weatherstripping</p></article>
+        <article class="svc"><svg class="ic"><use href="#i-square"/></svg><h3>Carpentry &amp; Trim</h3><p>Baseboards, trim, wood rot, cabinet doors and hardware</p></article>
+        <article class="svc"><svg class="ic"><use href="#i-tile"/></svg><h3>Tile &amp; Flooring</h3><p>Grout and tile repair, squeaky floors, LVP fixes, thresholds</p></article>
+        <article class="svc"><svg class="ic"><use href="#i-fence"/></svg><h3>Decks &amp; Fences</h3><p>Loose boards, railings, gates, fence pickets and posts</p></article>
+        <article class="svc"><svg class="ic"><use href="#i-home"/></svg><h3>Exterior Upkeep</h3><p>Pressure washing, gutter cleaning, caulking, window screens</p></article>
+        <article class="svc"><svg class="ic"><use href="#i-shield"/></svg><h3>Safety &amp; Access</h3><p>Grab bars, handrails, smoke and CO detectors, childproofing</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="listband">
+    <div class="wrap listband-in">
+      <h2>Got a list?<br>Bring it.</h2>
+      <div>
+        <p>Most visits knock out several small jobs at once. Send the whole list and we'll price it as one visit.</p>
+        <ul class="tags">
+          <li>Honey-do lists</li><li>Move-in &amp; move-out fixes</li><li>Rental turnovers</li><li>Home inspection repairs</li><li>Getting ready to sell</li>
+        </ul>
+        <a class="btn btn-black" href="#estimate">Send your list <svg class="ic"><use href="#i-arrow"/></svg></a>
+      </div>
+    </div>
+  </section>
+
+  <section id="how" class="band band-steel">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">How it works</p>
+        <h2>Three steps.<br>No runaround.</h2>
+      </div>
+      <ol class="steps">
+        <li><span class="num" aria-hidden="true">1</span><h3>Tell us what's broken</h3><p>Call, text or fill out the form. A few photos help us price it right the first time.</p></li>
+        <li><span class="num" aria-hidden="true">2</span><h3>Get a price up front</h3><p>You'll know the cost before we pick up a tool, with no surprise add-ons.</p></li>
+        <li><span class="num" aria-hidden="true">3</span><h3>We fix it and clean up</h3><p>We show up when we say, do the work right, and leave the place the way we found it, minus the problem.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="area" class="band">
+    <div class="wrap area">
+      <div>
+        <p class="eyebrow">Service area</p>
+        <h2 style="margin-top:20px">Up and down 575.</h2>
+        <p class="sec-lede">We work all over Cherokee County. Not sure you're in range? Call and ask.</p>
+      </div>
+      <ul class="towns">
+        <li><svg class="ic"><use href="#i-pin"/></svg>Canton</li>
+        <li><svg class="ic"><use href="#i-pin"/></svg>Woodstock</li>
+        <li><svg class="ic"><use href="#i-pin"/></svg>Holly Springs</li>
+        <li><svg class="ic"><use href="#i-pin"/></svg>Ball Ground</li>
+        <li><svg class="ic"><use href="#i-pin"/></svg>Waleska</li>
+        <li><svg class="ic"><use href="#i-pin"/></svg>Hickory Flat</li>
+        <li><svg class="ic"><use href="#i-pin"/></svg>Towne Lake</li>
+        <li><svg class="ic"><use href="#i-pin"/></svg>Free Home</li>
+        <li><svg class="ic"><use href="#i-pin"/></svg>Sixes</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="reviews" class="band band-steel">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Reviews</p>
+        <h2>Neighbors<br>say it best.</h2>
+        <p class="sec-lede">These three spots are placeholders for your first real Google reviews.</p>
+      </div>
+      <div class="reviews">
+        <figure class="review"><div class="stars" aria-hidden="true">★★★★★</div><blockquote>A customer's own words go here: what you fixed and how it went.</blockquote><figcaption>Customer name · Canton</figcaption></figure>
+        <figure class="review"><div class="stars" aria-hidden="true">★★★★★</div><blockquote>A second review, ideally about a different kind of job.</blockquote><figcaption>Customer name · Woodstock</figcaption></figure>
+        <figure class="review"><div class="stars" aria-hidden="true">★★★★★</div><blockquote>A third, from another part of the county.</blockquote><figcaption>Customer name · Ball Ground</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <section id="estimate" class="band">
+    <div class="wrap est">
+      <div>
+        <p class="eyebrow">Free estimate</p>
+        <h2 style="margin-top:20px">Tell us what needs fixing.</h2>
+        <p class="sec-lede">Send a few details and we'll get back to you with a price. Rather talk it through? Call or text.</p>
+        <a class="phone-big" href="tel:+17705550142">(770) 555-0142</a>
+        <p class="hours">Mon–Sat · 8am–6pm</p>
+      </div>
+      <form class="form" data-demo>
+        <div class="row2">
+          <label for="f1-name">Name<input id="f1-name" name="name" autocomplete="name" required></label>
+          <label for="f1-phone">Phone<input id="f1-phone" name="phone" type="tel" autocomplete="tel" required></label>
+        </div>
+        <label for="f1-town">Town
+          <select id="f1-town" name="town">
+            <option>Canton</option><option>Woodstock</option><option>Holly Springs</option><option>Ball Ground</option><option>Waleska</option><option>Hickory Flat</option><option>Towne Lake</option><option>Free Home</option><option>Sixes</option><option>Somewhere else in Cherokee County</option>
+          </select>
+        </label>
+        <label for="f1-job">What needs doing?<textarea id="f1-job" name="job" rows="5" placeholder="e.g. Patch two holes in the hallway, mount a 65-inch TV, fix a running toilet"></textarea></label>
+        <label for="f1-photos">Photos (optional)<input id="f1-photos" name="photos" type="file" accept="image/*" multiple></label>
+        <button class="btn" type="submit">Request my estimate <svg class="ic"><use href="#i-arrow"/></svg></button>
+        <p class="note" data-note role="status"></p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="hazard" aria-hidden="true"></div>
+  <div class="wrap foot-in">
+    <a class="brand" href="#top" aria-label="Cherokee Small Jobs home">
+      <span class="mark"><svg class="ic"><use href="#i-hammer"/></svg></span>
+      <span class="brand-txt">Cherokee Small Jobs<small>Handyman · Cherokee Co., GA</small></span>
+    </a>
+    <div><h4>Call or text</h4><a href="tel:+17705550142">(770) 555-0142</a><a href="mailto:hello@cherokeesmalljobs.com">hello@cherokeesmalljobs.com</a></div>
+    <div><h4>Hours</h4><p>Monday–Saturday<br>8am–6pm</p></div>
+    <div><h4>Serving</h4><p>Canton, Woodstock, Holly Springs, Ball Ground and the rest of Cherokee County, GA</p></div>
+  </div>
+  <div class="wrap legal">© 2026 Cherokee Small Jobs</div>
+</footer>
+
+<nav class="csj-pill" aria-label="Design options">
+  <a href="option-4.html" aria-label="Previous design: Punch List">&lsaquo;</a>
+  <span>Option 1<span class="csj-of"> of 4</span> &middot; <b>Shop Floor</b></span>
+  <a href="option-2.html" aria-label="Next design: Front Porch">&rsaquo;</a>
+  <a class="csj-all" href="index.html">All options</a>
+</nav>
+<style>
+.csj-pill{position:fixed;z-index:999;left:50%;transform:translateX(-50%);bottom:calc(14px + env(safe-area-inset-bottom,0px));display:flex;align-items:center;gap:2px;padding:5px;background:#141212;color:#fff;border:1px solid rgba(255,255,255,.18);border-radius:999px;font:500 13px/1 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;box-shadow:0 8px 28px rgba(0,0,0,.35);white-space:nowrap}
+.csj-pill a{color:#fff;text-decoration:none;padding:9px 12px;border-radius:999px;font-size:15px}
+.csj-pill a:hover{background:rgba(255,255,255,.14)}
+.csj-pill b{font-weight:650}
+.csj-pill>span{padding:0 4px}
+.csj-pill .csj-all{background:#e1251b;font-size:13px;margin-left:4px}
+.csj-pill .csj-all:hover{background:#c41c13}
+@media (max-width:420px){.csj-of{display:none}}
+</style>
+<script>
+document.querySelectorAll("form[data-demo]").forEach(function (f) {
+  f.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var note = f.querySelector("[data-note]");
+    if (note) note.textContent = "Thanks! This is a design preview, so the form isn't connected yet.";
+  });
+});
+</script>
+</body>
+</html>
