@@ -1,0 +1,12 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import ServiceMenu from '../components/ServiceMenu.astro';
+---
+
+<Base title="Page not found" noindex>
+  <PageHero label="Error 404" title="That page isn't here" lede="The link may be old, or the address has a typo. Here's everything we fix instead.">
+    <div class="cta-row"><a class="btn" href="/">Go to the home page</a></div>
+  </PageHero>
+  <ServiceMenu />
+</Base>

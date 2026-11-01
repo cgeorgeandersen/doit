@@ -1,0 +1,25 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import CountyMap from '../components/CountyMap.astro';
+import Closer from '../components/Closer.astro';
+import { SITE } from '../config/site';
+---
+
+<Base title={`Service area: ${SITE.county}, ${SITE.state}`} description={`Handyman service across ${SITE.county}, Georgia: ${SITE.towns.join(', ')}.`}>
+  <PageHero label="Proudly serving" title={`All of ${SITE.county}`} lede="Up and down 575 and out to the county line, from Ball Ground in the north to Towne Lake in the south." />
+
+  <section class="sec" aria-label="Towns we serve">
+    <div class="wrap area-grid">
+      <CountyMap />
+      <div>
+        <h2>Towns we work in</h2>
+        <ul class="town-list">{SITE.towns.map((t) => <li><Icon name="pin" />{t}</li>)}</ul>
+        <p class="lede" style="margin:26px 0 0;text-align:left">Somewhere else in {SITE.county}? Call or text {SITE.phone.display} and ask. If you're close by, we'd like to hear from you.</p>
+      </div>
+    </div>
+  </section>
+
+  <Closer />
+</Base>

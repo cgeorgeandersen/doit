@@ -1,0 +1,59 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import Icon from '../../components/Icon.astro';
+import ServiceMenu from '../../components/ServiceMenu.astro';
+import ListBand from '../../components/ListBand.astro';
+import { SITE, telHref } from '../../config/site';
+import { SERVICES, type Service } from '../../content/services';
+
+export const getStaticPaths = (() => SERVICES.map((service) => ({ params: { slug: service.slug }, props: { service } }))) satisfies GetStaticPaths;
+
+interface Props {
+  service: Service;
+}
+const { service } = Astro.props;
+const site = Astro.site ?? new URL('http://localhost:4321');
+const where = `${SITE.county}, ${SITE.state}`;
+const estimateHref = `/estimate?service=${service.slug}`;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: service.name,
+  serviceType: service.name,
+  description: service.intro,
+  url: new URL(`/services/${service.slug}`, site).href,
+  provider: { '@id': new URL('/#business', site).href },
+  areaServed: { '@type': 'AdministrativeArea', name: `${SITE.county}, ${SITE.stateName}` },
+};
+---
+
+<Base title={`${service.name} in ${where}`} description={`${service.intro.split('. ')[0]}. Handyman ${service.name.toLowerCase()} across ${where}. Free estimates.`} jsonLd={jsonLd}>
+  <PageHero label={`Handyman · ${where}`} title={service.name} lede={service.intro} crumbs={[{ label: 'Services', href: '/services' }]}>
+    <div slot="above" class="svc-icon"><Icon name={service.icon} /></div>
+    <div class="cta-row">
+      <a class="btn" href={estimateHref}>Get a Free Estimate</a>
+      <a class="btn btn-white" href={telHref}><Icon name="phone" />Call {SITE.phone.display}</a>
+    </div>
+  </PageHero>
+
+  <section class="sec" aria-label={`${service.name} details`}>
+    <div class="wrap svc-grid">
+      <div>
+        <h2>Common jobs</h2>
+        <ul class="stubs">{service.jobs.map((j) => <li><Icon name="check" />{j}</li>)}</ul>
+      </div>
+      <aside class="notes">
+        <h2>Good to know</h2>
+        {service.notes.map((n) => <p>{n}</p>)}
+        <p>Not sure it's a job for us? Text a photo to {SITE.phone.display} and ask.</p>
+        <a class="btn" href={estimateHref}>Send a Job Ticket</a>
+      </aside>
+    </div>
+  </section>
+
+  <ListBand />
+  <ServiceMenu label="While we're there" heading="Other jobs we can knock out" except={service.slug} />
+</Base>

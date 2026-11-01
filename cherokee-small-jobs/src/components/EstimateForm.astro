@@ -1,0 +1,68 @@
+---
+/**
+ * The job ticket. It posts JSON to /api/estimate (api/estimate.ts), which emails
+ * it to the business. src/scripts/estimate-form.ts handles sending, errors and
+ * the "received" stamp, and ticks a service when the page has ?service=<slug>.
+ */
+import { SITE, telHref } from '../config/site';
+import { SERVICES } from '../content/services';
+
+interface Props {
+  heading?: string;
+}
+const { heading = 'Job Ticket' } = Astro.props;
+---
+
+<div class="ticket" data-ticket>
+  <div class="perf" aria-hidden="true"></div>
+  <div class="ticket-head"><h2>{heading}</h2><span class="ticket-tag">Free estimate</span></div>
+  <form data-estimate-form novalidate>
+    <div class="row2">
+      <label class="line-field" for="t-name"><span>Name <i aria-hidden="true">*</i></span><input id="t-name" name="name" autocomplete="name" maxlength="100" required /></label>
+      <label class="line-field" for="t-phone"><span>Phone <i aria-hidden="true">*</i></span><input id="t-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="20" required /></label>
+    </div>
+    <div class="row2">
+      <label class="line-field" for="t-addr"><span>Street address</span><input id="t-addr" name="address" autocomplete="street-address" maxlength="200" /></label>
+      <label class="line-field" for="t-town"><span>Town <i aria-hidden="true">*</i></span>
+        <select id="t-town" name="town" required>
+          <option value="">Choose your town</option>
+          {SITE.towns.map((t) => <option>{t}</option>)}
+          <option>Elsewhere in {SITE.county}</option>
+        </select>
+      </label>
+    </div>
+    <fieldset>
+      <legend>Type of work (tick all that apply)</legend>
+      <div class="boxes">
+        {SERVICES.map((s) => <label><input type="checkbox" name="services" value={s.slug} />{s.formLabel}</label>)}
+      </div>
+    </fieldset>
+    <label class="line-field" for="t-details"><span>Describe the job</span><textarea id="t-details" name="details" rows="4" maxlength="4000" placeholder="e.g. Patch two holes in the hallway and fix the running toilet upstairs"></textarea></label>
+    <fieldset>
+      <legend>Best way to reach you</legend>
+      <div class="boxes">
+        <label><input type="radio" name="contact" value="call" checked />Call</label>
+        <label><input type="radio" name="contact" value="text" />Text</label>
+        <label><input type="radio" name="contact" value="email" />Email</label>
+      </div>
+    </fieldset>
+    <label class="line-field" for="t-email" data-email-field><span>Email <span data-email-optional>(optional)</span></span><input id="t-email" name="email" type="email" autocomplete="email" maxlength="200" /></label>
+    <div class="hp" aria-hidden="true"><label for="t-company">Company</label><input id="t-company" name="company" tabindex="-1" autocomplete="off" /></div>
+    <p class="form-status" data-status role="alert"></p>
+    <div class="ticket-foot">
+      <small>Have photos? Text them to <a class="textlink" href={`sms:${SITE.phone.e164}`}>{SITE.phone.display}</a> after you send this.</small>
+      <button class="btn" type="submit">Submit Ticket</button>
+    </div>
+  </form>
+  <div class="done" data-done hidden tabindex="-1">
+    <p class="stamp">Received</p>
+    <h2 data-done-title>Thanks!</h2>
+    <p data-done-text>We'll be in touch with a price.</p>
+    <p>Need to add something? Call or text <a class="textlink" href={telHref}>{SITE.phone.display}</a>.</p>
+  </div>
+</div>
+
+<script>
+  import { initEstimateForm } from '../scripts/estimate-form';
+  document.querySelectorAll<HTMLElement>('[data-ticket]').forEach(initEstimateForm);
+</script>

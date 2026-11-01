@@ -1,0 +1,58 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import EstimateForm from '../components/EstimateForm.astro';
+import { SITE, telHref, smsHref, mailHref } from '../config/site';
+---
+
+<Base title="Free estimate" description={`Get a free estimate from ${SITE.name}. Fill out a job ticket or call or text ${SITE.phone.display}.`}>
+  <PageHero label="Free estimate" title="Fill out a job ticket" lede="Tell us what needs doing. We'll get back to you with a price before any work starts." />
+
+  <section class="sec ticket-sec" aria-label="Job ticket">
+    <div class="wrap est-grid">
+      <EstimateForm />
+      <aside class="contact-card">
+        <h2>Rather talk?</h2>
+        <ul>
+          <li><Icon name="phone" /><b>Call</b><a href={telHref}>{SITE.phone.display}</a></li>
+          <li><Icon name="message" /><b>Text</b><a href={smsHref}>{SITE.phone.display}</a></li>
+          <li><Icon name="mail" /><b>Email</b><a href={mailHref}>{SITE.email}</a></li>
+          <li><Icon name="clock" /><b>Hours</b><span>{SITE.hours.display}</span></li>
+        </ul>
+        <p class="tip"><Icon name="camera" /> Photos help us price the job right. Text them to {SITE.phone.display} with your name.</p>
+      </aside>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="faq-h">
+    <div class="wrap">
+      <div class="sec-head"><p class="label ruled">Questions</p><h2 id="faq-h">Before you send it</h2></div>
+      <div class="faq">
+        <details>
+          <summary>Do estimates cost anything?</summary>
+          <div class="answer"><p>No. Estimates are free.</p></div>
+        </details>
+        <details>
+          <summary>How do you price a job?</summary>
+          <div class="answer"><p>You get a price before any work starts. If you have a list of small jobs, we price the whole visit together, so you know the total up front.</p></div>
+        </details>
+        <details>
+          <summary>Where do you work?</summary>
+          <div class="answer"><p>All over {SITE.county}: {SITE.towns.join(', ')}. Not sure you're in range? Call or text and ask.</p></div>
+        </details>
+        <details>
+          <summary>Is there anything you don't do?</summary>
+          <div class="answer">
+            <p>Some work needs a licensed specialist. If your job is one of these, we'll tell you up front:</p>
+            <ul>{SITE.referOut.map((r) => <li>{r}</li>)}</ul>
+          </div>
+        </details>
+        <details>
+          <summary>Can I send photos?</summary>
+          <div class="answer"><p>Please do. Text them to {SITE.phone.display} with your name, and we'll match them to your ticket.</p></div>
+        </details>
+      </div>
+    </div>
+  </section>
+</Base>

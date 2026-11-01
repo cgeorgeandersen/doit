@@ -1,0 +1,44 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import ServiceMenu from '../components/ServiceMenu.astro';
+import ListBand from '../components/ListBand.astro';
+import Steps from '../components/Steps.astro';
+import TownLine from '../components/TownLine.astro';
+import Reviews from '../components/Reviews.astro';
+import EstimateForm from '../components/EstimateForm.astro';
+import { SITE, telHref } from '../config/site';
+const promises = SITE.promises;
+---
+
+<Base>
+  <section class="hero">
+    <div class="wrap">
+      <p class="label ruled">Handyman · {SITE.county}, {SITE.state}</p>
+      <h1>Small Jobs, <span>Done Right.</span></h1>
+      <p class="lede">The fixes, installs and odd jobs every house needs, handled by a local handyman who shows up on time and leaves the place clean.</p>
+      <div class="cta-row">
+        <a class="btn" href="#estimate">Get a Free Estimate</a>
+        <a class="btn btn-white" href={telHref}><Icon name="phone" />Call {SITE.phone.display}</a>
+      </div>
+      <div class="ribbon">
+        <p>{promises.map((p, i) => (<>{i > 0 && <b aria-hidden="true">★</b>}<span>{p}</span></>))}</p>
+      </div>
+    </div>
+  </section>
+
+  <ServiceMenu>
+    <p class="board-foot"><a class="textlink" href="/services">See every job we do →</a></p>
+  </ServiceMenu>
+  <ListBand />
+  <Steps ticketHref="#estimate" />
+  <TownLine />
+  <Reviews />
+
+  <section id="estimate" class="sec ticket-sec" aria-label="Free estimate">
+    <div class="wrap">
+      <div class="sec-head"><p class="label ruled">Free estimate</p><h2>Fill out a job ticket</h2><p class="sub">Tell us what needs doing and we'll get back to you with a price.</p></div>
+      <EstimateForm />
+    </div>
+  </section>
+</Base>

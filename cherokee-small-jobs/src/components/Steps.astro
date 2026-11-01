@@ -1,0 +1,18 @@
+---
+interface Props {
+  /** Where step 1 points people: the form further down this page, or the estimate page. */
+  ticketHref?: string;
+}
+const { ticketHref = '/estimate' } = Astro.props;
+---
+
+<section id="how" class="sec" aria-labelledby="how-h">
+  <div class="wrap">
+    <div class="sec-head"><p class="label ruled">How it works</p><h2 id="how-h">Easy as one, two, three</h2></div>
+    <ol class="steps">
+      <li><div class="roundel" aria-hidden="true">1</div><h3>Tell us the job</h3><p>Call, text or fill out a <a class="textlink" href={ticketHref}>job ticket</a>. Photos help us get the price right.</p></li>
+      <li><div class="roundel" aria-hidden="true">2</div><h3>Get your price</h3><p>You'll know what it costs before any work starts. No surprises.</p></li>
+      <li><div class="roundel" aria-hidden="true">3</div><h3>Consider it done</h3><p>We show up on time, do it right, and sweep up before we go.</p></li>
+    </ol>
+  </div>
+</section>

@@ -1,0 +1,27 @@
+---
+/** Shows nothing until SITE.reviews has at least one real review in it. */
+import { SITE } from '../config/site';
+const reviews = SITE.reviews;
+---
+
+{
+  reviews.length > 0 && (
+    <section id="reviews" class="sec" aria-labelledby="reviews-h">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="label ruled">Word around town</p>
+          <h2 id="reviews-h">From our neighbors</h2>
+        </div>
+        <div class="reviews">
+          {reviews.map((r) => (
+            <figure class="review">
+              <div class="stars" aria-hidden="true">★★★★★</div>
+              <blockquote>{r.quote}</blockquote>
+              <figcaption>{r.name} · {r.town}</figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}

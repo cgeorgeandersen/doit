@@ -1,0 +1,12 @@
+---
+/** One line icon from src/lib/icons.ts, sized by the surrounding text unless a class says otherwise. */
+import { ICONS, type IconName } from '../lib/icons';
+
+interface Props {
+  name: IconName;
+  class?: string;
+}
+const { name, class: cls } = Astro.props;
+---
+
+<svg class:list={['ic', cls]} viewBox="0 0 24 24" aria-hidden="true" focusable="false" set:html={ICONS[name]} />

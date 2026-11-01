@@ -1,0 +1,11 @@
+---
+/** Fixed to the bottom of the screen on phones only (see .actionbar in global.css). */
+import Icon from './Icon.astro';
+import { telHref, smsHref } from '../config/site';
+---
+
+<nav class="actionbar" aria-label="Contact">
+  <a href={telHref}><Icon name="phone" />Call</a>
+  <a href={smsHref}><Icon name="message" />Text</a>
+  <a class="primary" href="/estimate"><Icon name="ticket" />Estimate</a>
+</nav>

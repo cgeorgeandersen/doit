@@ -1,0 +1,27 @@
+---
+import Icon from './Icon.astro';
+import { SITE, telHref } from '../config/site';
+
+interface Props {
+  label?: string;
+  title?: string;
+  sub?: string;
+}
+const {
+  label = 'Free estimate',
+  title = 'Tell us what needs fixing',
+  sub = 'Fill out a job ticket or give us a call. You get a price before any work starts.',
+} = Astro.props;
+---
+
+<section class="sec closer" aria-labelledby="closer-h">
+  <div class="wrap">
+    <p class="label ruled">{label}</p>
+    <h2 id="closer-h">{title}</h2>
+    <p class="sub">{sub}</p>
+    <div class="cta-row">
+      <a class="btn" href="/estimate">Get a Free Estimate</a>
+      <a class="btn btn-white" href={telHref}><Icon name="phone" />Call {SITE.phone.display}</a>
+    </div>
+  </div>
+</section>

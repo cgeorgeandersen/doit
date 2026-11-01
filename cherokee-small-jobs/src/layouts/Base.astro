@@ -1,0 +1,102 @@
+---
+/**
+ * The page shell every route uses: fonts and styles, everything search engines
+ * and link previews read, the header, footer and the phone action bar.
+ */
+import '@fontsource/alfa-slab-one/400.css';
+import '@fontsource-variable/libre-franklin/wght.css';
+import '../styles/global.css';
+
+import displayUrl from '@fontsource/alfa-slab-one/files/alfa-slab-one-latin-400-normal.woff2?url';
+import textUrl from '@fontsource-variable/libre-franklin/files/libre-franklin-latin-wght-normal.woff2?url';
+import ActionBar from '../components/ActionBar.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { SITE } from '../config/site';
+import { SERVICES } from '../content/services';
+
+interface Props {
+  /** The page's own title; the layout adds " | Cherokee Small Jobs". Omit on the home page. */
+  title?: string;
+  description?: string;
+  noindex?: boolean;
+  /** Extra structured data for this page, on top of the business listing every page carries. */
+  jsonLd?: Record<string, unknown>;
+}
+const { title, description = SITE.description, noindex = false, jsonLd } = Astro.props;
+
+const site = Astro.site ?? new URL('http://localhost:4321');
+const fullTitle = title ? `${title} | ${SITE.name}` : `${SITE.name} | Handyman in ${SITE.county}, ${SITE.state}`;
+const path = Astro.url.pathname.replace(/\.html$/, '').replace(/\/index$/, '').replace(/\/+$/, '') || '/';
+const canonical = new URL(path, site).href;
+const image = new URL('/og.png', site).href;
+
+/** The business listing search engines read: a service-area business with no storefront address. */
+const business = {
+  '@context': 'https://schema.org',
+  '@type': 'HomeAndConstructionBusiness',
+  '@id': new URL('/#business', site).href,
+  name: SITE.name,
+  description: SITE.description,
+  url: new URL('/', site).href,
+  image,
+  logo: new URL('/apple-touch-icon.png', site).href,
+  telephone: SITE.phone.e164,
+  email: SITE.email,
+  address: { '@type': 'PostalAddress', addressRegion: SITE.state, addressCountry: 'US' },
+  areaServed: [
+    { '@type': 'AdministrativeArea', name: `${SITE.county}, ${SITE.stateName}` },
+    ...SITE.towns.map((t) => ({ '@type': 'Place', name: `${t}, ${SITE.state}` })),
+  ],
+  openingHoursSpecification: [
+    { '@type': 'OpeningHoursSpecification', dayOfWeek: SITE.hours.days, opens: SITE.hours.opens, closes: SITE.hours.closes },
+  ],
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: 'Handyman services',
+    itemListElement: SERVICES.map((s) => ({
+      '@type': 'Offer',
+      itemOffered: { '@type': 'Service', name: s.name, url: new URL(`/services/${s.slug}`, site).href },
+    })),
+  },
+};
+const structured = jsonLd ? [business, jsonLd] : business;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#141111" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="preload" href={displayUrl} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={textUrl} as="font" type="font/woff2" crossorigin />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:image" content={image} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`${SITE.name}: small jobs, done right. Handyman in ${SITE.county}, ${SITE.state}.`} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <script type="application/ld+json" set:html={JSON.stringify(structured)} />
+  </head>
+  <body>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+    <ActionBar />
+  </body>
+</html>

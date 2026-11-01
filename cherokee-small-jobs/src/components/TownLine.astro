@@ -1,0 +1,17 @@
+---
+/** The home page's service-area band: town names set like a painted sign. */
+import { SITE } from '../config/site';
+const last = SITE.towns.length - 1;
+---
+
+<section id="area" class="sec area on-black" aria-labelledby="area-h">
+  <div class="wrap">
+    <p class="label ruled">Proudly serving</p>
+    <h2 id="area-h">All of {SITE.county}</h2>
+    <p class="townline">
+      {SITE.towns.map((t, i) => (<><span>{t}</span>{i < last && <i aria-hidden="true">★</i>} </>))}
+    </p>
+    <p class="sub">Up and down 575 and out to the county line. Not sure you're in range? Give us a call.</p>
+    <a class="textlink" href="/service-area">See the service area →</a>
+  </div>
+</section>

@@ -1,0 +1,28 @@
+---
+interface Props {
+  label: string;
+  title: string;
+  lede?: string;
+  /** Breadcrumb links shown above the label, e.g. [{ label: 'Services', href: '/services' }]. */
+  crumbs?: { label: string; href: string }[];
+}
+const { label, title, lede, crumbs } = Astro.props;
+---
+
+<section class="page-hero">
+  <div class="wrap">
+    {
+      crumbs && (
+        <nav class="crumbs" aria-label="Breadcrumb">
+          <a href="/">Home</a>
+          {crumbs.map((c) => (<><span aria-hidden="true">/</span><a href={c.href}>{c.label}</a></>))}
+        </nav>
+      )
+    }
+    <slot name="above" />
+    <p class="label ruled">{label}</p>
+    <h1>{title}</h1>
+    {lede && <p class="lede">{lede}</p>}
+    <slot />
+  </div>
+</section>

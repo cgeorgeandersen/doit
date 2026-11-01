@@ -1,0 +1,30 @@
+{
+  "name": "cherokee-small-jobs",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Cherokee Small Jobs: handyman repairs, installs and odd jobs across Cherokee County, Georgia.",
+  "license": "MIT",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "test": "vitest run"
+  },
+  "engines": {
+    "node": "22.x"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.4",
+    "@fontsource-variable/libre-franklin": "^5.3.0",
+    "@fontsource/alfa-slab-one": "^5.3.0",
+    "astro": "^7.4.4"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.12",
+    "@types/node": "^26.6.6",
+    "typescript": "^6.0.3",
+    "vitest": "^5.0.5"
+  }
+}

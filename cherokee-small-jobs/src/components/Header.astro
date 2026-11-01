@@ -1,0 +1,34 @@
+---
+/** Awning, scallops and the black header bar with the badge hanging below it. */
+import Badge from './Badge.astro';
+import Icon from './Icon.astro';
+import { SITE, telHref } from '../config/site';
+
+const path = Astro.url.pathname.replace(/\.html$/, '').replace(/\/+$/, '') || '/';
+const current = (href: string) => (path === href || path.startsWith(`${href}/`) ? 'page' : undefined);
+const [services, area, estimate] = SITE.nav;
+---
+
+<a class="skip" href="#main">Skip to content</a>
+<div class="awning" aria-hidden="true"></div>
+<div class="scallop" aria-hidden="true"></div>
+<header class="top">
+  <div class="wrap top-in">
+    <nav class="nav nav-l" aria-label="Main">
+      {services && <a href={services.href} aria-current={current(services.href)}>{services.label}</a>}
+      {area && <a href={area.href} aria-current={current(area.href)}>{area.label}</a>}
+    </nav>
+    <a class="badge-link" href="/" aria-label={`${SITE.name} home`}><Badge id="hb" /></a>
+    <div class="nav nav-r">
+      {estimate && <a class="navlink" href={estimate.href} aria-current={current(estimate.href)}>{estimate.label}</a>}
+      <a class="phone" href={telHref} aria-label={`Call ${SITE.phone.display}`}><Icon name="phone" /><span class="num">{SITE.phone.display}</span></a>
+      <details class="mnav">
+        <summary><Icon name="menu" />Menu</summary>
+        <nav aria-label="Main">
+          <a href="/" aria-current={path === '/' ? 'page' : undefined}>Home</a>
+          {SITE.nav.map((item) => <a href={item.href} aria-current={current(item.href)}>{item.label}</a>)}
+        </nav>
+      </details>
+    </div>
+  </div>
+</header>

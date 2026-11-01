@@ -1,0 +1,38 @@
+---
+import Badge from './Badge.astro';
+import { SITE, telHref, smsHref, mailHref } from '../config/site';
+import { SERVICES } from '../content/services';
+---
+
+<footer class="foot">
+  <div class="foot-awning" aria-hidden="true"></div>
+  <div class="wrap foot-in">
+    <a href="/" aria-label={`${SITE.name} home`}><Badge id="fb" /></a>
+    <div>
+      <h2>Get in touch</h2>
+      <ul>
+        <li><a href={telHref}>Call {SITE.phone.display}</a></li>
+        <li><a href={smsHref}>Text {SITE.phone.display}</a></li>
+        <li><a href={mailHref}>{SITE.email}</a></li>
+        <li><a href="/estimate">Free estimate</a></li>
+      </ul>
+      <h2 style="margin-top:26px">Hours</h2>
+      <p>{SITE.hours.display}</p>
+    </div>
+    <div>
+      <h2>Serving</h2>
+      <p>{SITE.towns.slice(0, 4).join(', ')} and the rest of {SITE.county}, {SITE.state}</p>
+      <p style="margin-top:10px"><a href="/service-area">See the service area</a></p>
+    </div>
+    <div>
+      <h2>Services</h2>
+      <ul class="svc-links">
+        {SERVICES.map((s) => <li><a href={`/services/${s.slug}`}>{s.name}</a></li>)}
+      </ul>
+    </div>
+  </div>
+  <div class="wrap legal">
+    <span>© {new Date().getFullYear()} {SITE.name}</span>
+    <span>Handyman services in {SITE.county}, {SITE.stateName}</span>
+  </div>
+</footer>

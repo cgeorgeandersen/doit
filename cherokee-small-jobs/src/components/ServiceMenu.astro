@@ -1,0 +1,39 @@
+---
+/** The black "service menu" board: every service, each linking to its own page. */
+import Icon from './Icon.astro';
+import { SERVICES } from '../content/services';
+
+interface Props {
+  heading?: string;
+  label?: string;
+  /** Leave one service off the board, e.g. the one whose page you're on. */
+  except?: string;
+}
+const { heading = 'What we fix around the house', label = 'The Service Menu', except } = Astro.props;
+const list = SERVICES.filter((s) => s.slug !== except);
+---
+
+<section id="services" class="menu on-black" aria-labelledby="menu-h">
+  <div class="wrap">
+    <div class="board">
+      <div class="board-head">
+        <p class="label ruled">{label}</p>
+        <h2 id="menu-h">{heading}</h2>
+      </div>
+      <ul class="items">
+        {
+          list.map((s) => (
+            <li class="item">
+              <a href={`/services/${s.slug}`}>
+                <Icon name={s.icon} />
+                <h3>{s.name}</h3>
+                <p>{s.short}</p>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <slot />
+    </div>
+  </div>
+</section>

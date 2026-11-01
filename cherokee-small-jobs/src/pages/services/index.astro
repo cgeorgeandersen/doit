@@ -1,0 +1,43 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import Icon from '../../components/Icon.astro';
+import ListBand from '../../components/ListBand.astro';
+import Closer from '../../components/Closer.astro';
+import { SITE } from '../../config/site';
+import { SERVICES } from '../../content/services';
+---
+
+<Base title="Services" description={`Every handyman job we do in ${SITE.county}, ${SITE.state}: drywall, painting, TV mounting, furniture assembly, minor plumbing, lights and fans, doors, carpentry, tile, decks, exterior upkeep and safety.`}>
+  <PageHero label="The Service Menu" title="Everything we fix" lede="Twelve kinds of work, from a single drywall patch to a whole honey-do list. Pick one to see the jobs it covers." />
+
+  <section class="sec" aria-label="Services">
+    <div class="wrap">
+      <div class="svc-cards">
+        {
+          SERVICES.map((s) => (
+            <article class="svc-card">
+              <div class="head"><Icon name={s.icon} /><h2>{s.name}</h2></div>
+              <ul>{s.jobs.map((j) => <li>{j}</li>)}</ul>
+              <a class="textlink" href={`/services/${s.slug}`}>More about {s.name} →</a>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="sec on-black" aria-labelledby="refer-h">
+    <div class="wrap refer">
+      <div>
+        <p class="label" style="color:var(--red-bright)">Honest about the limits</p>
+        <h2 id="refer-h">Jobs we send to a specialist</h2>
+        <p>Some work needs a licensed trade or a contractor. If your job is one of these, we'll tell you up front instead of taking it on.</p>
+      </div>
+      <ul>{SITE.referOut.map((r) => <li>{r}</li>)}</ul>
+    </div>
+  </section>
+
+  <ListBand />
+  <Closer title="Don't see your job? Ask anyway." sub="If it's a small job around the house, there's a good chance we do it. Send a ticket or give us a call." />
+</Base>

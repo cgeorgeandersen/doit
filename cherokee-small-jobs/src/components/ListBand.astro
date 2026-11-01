@@ -1,0 +1,18 @@
+---
+import Icon from './Icon.astro';
+import { SITE } from '../config/site';
+---
+
+<section class="listband" aria-labelledby="list-h">
+  <div class="wrap listband-in">
+    <div>
+      <p class="label">Bring the whole list</p>
+      <h2 id="list-h">Got a list? We'll work right down it.</h2>
+      <p>Most visits take care of several small jobs at once. Send it all over and we'll price it as one trip.</p>
+      <a class="btn" href="/estimate">Send Your List</a>
+    </div>
+    <ul class="stubs">
+      {SITE.lists.map((item) => <li><Icon name="check" />{item}</li>)}
+    </ul>
+  </div>
+</section>
